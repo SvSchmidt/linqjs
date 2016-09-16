@@ -24,11 +24,9 @@
     } catch (err) {
       // no module loader (simple <script>-tag) -> assign Maybe directly to the global object
       // -> (0, eval)('this') is a robust way for getting a reference to the global object
-      factory((this || (0, eval)('this'))['linqjs'] = {}); // jshint ignore:line
+      factory(window.linqjs = {}); // jshint ignore:line
     }
   })(function (linqjs) {
-    console.log('foo');
-
     function __assign(target, source) {
       target = Object(target);
 
