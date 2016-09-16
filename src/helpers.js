@@ -57,6 +57,31 @@
     return typeof obj === 'function'
   }
 
+  function isNumeric (n) {
+    return !isNaN(parseFloat(n))
+  }
+
+  function filterArray (arr, predicate = (elem, index) => true, stopAfter = Infinity) {
+    __assert(isArray(arr), 'arr must be array!')
+    __assertFunction(predicate)
+    __assert(isNumeric(stopAfter), 'stopAfter must be numeric!')
+
+    let result = []
+    const length = arr.length
+
+    for (let i = 0; i < length; i++) {
+      if (predicate(arr[i], i)) {
+        result.push(arr[i])
+
+        if (result.length >= stopAfter) {
+          break;
+        }
+      }
+    }
+
+    return result
+  }
+
   function removeDuplicates (arr, equalityCompareFn = (a, b) => a === b) {
     __assert(isArray(arr), 'arr must be array!')
     __assertFunction(equalityCompareFn)

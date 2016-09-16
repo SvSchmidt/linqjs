@@ -81,6 +81,36 @@
       return typeof obj === 'function';
     }
 
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n));
+    }
+
+    function filterArray(arr) {
+      var predicate = arguments.length <= 1 || arguments[1] === undefined ? function (elem, index) {
+        return true;
+      } : arguments[1];
+      var stopAfter = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
+
+      __assert(isArray(arr), 'arr must be array!');
+      __assertFunction(predicate);
+      __assert(isNumeric(stopAfter), 'stopAfter must be numeric!');
+
+      var result = [];
+      var length = arr.length;
+
+      for (var i = 0; i < length; i++) {
+        if (predicate(arr[i], i)) {
+          result.push(arr[i]);
+
+          if (result.length >= stopAfter) {
+            break;
+          }
+        }
+      }
+
+      return result;
+    }
+
     function removeDuplicates(arr) {
       var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? function (a, b) {
         return a === b;
@@ -130,38 +160,6 @@
     ToDictionary, ToInfinity,ToJSON, ToLookup, ToNegativeInfinity, ToObject, ToString, Trace, Unfold, Union, Where, Write, WriteLine, Zip
     */
 
-    function Contains(elem) {
-      return !!~this.indexOf(elem);
-    }
-
-    function First() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
-        return true;
-      } : arguments[0];
-
-      __assertFunction(predicate);
-
-      var length = this.length;
-
-      for (var i = 0; i < length; i++) {
-        if (predicate(this[i])) {
-          return this[i];
-        }
-      }
-
-      return null;
-    }
-
-    function Last() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
-        return true;
-      } : arguments[0];
-
-      __assertFunction(predicate);
-
-      return this.reverse().First(predicate);
-    }
-
     function install() {
       __assign(Array.prototype, linqjs);
     }
@@ -210,7 +208,53 @@
       return removeDuplicates(this.Concat(second), equalityCompareFn);
     }
 
+    function Contains(elem) {
+      return !!~this.indexOf(elem);
+    }
+
+    function First() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      var result = filterArray(this, predicate, 1);
+
+      if (result[0]) {
+        return result[0];
+      }
+
+      return null;
+    }
+
+    function Last() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      return this.reverse().First(predicate);
+    }
+
+    function Single() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      var result = filterArray(this, predicate);
+
+      if (result.length === 1) {
+        return result[0];
+      }
+
+      throw new Error('Sequence contains more than one element');
+    }
+
     /* Export public interface */
-    __export({ Contains: Contains, First: First, Last: Last, install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Contains: Contains, First: First, Last: Last, Single: Single });
   });
 })();

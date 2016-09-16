@@ -86,7 +86,7 @@ describe('linqjs', function () {
     })
   })
 
-  describe('First/Last', function () {
+  describe('Array access', function () {
     describe('First', function () {
       it('should return first element of an array', function () {
         expect([1, 2, 3, 4].First()).to.be.equal(1)
@@ -106,9 +106,21 @@ describe('linqjs', function () {
         expect([10, 20, 30, 40, 50].Last(x => x > 20)).to.be.equal(50)
       })
     })
+
+    describe('Single', function () {
+      it('should return the element matching the predicate', function () {
+        expect([1,2,3].Single(x => x % 2 === 0)).to.be.equal(2)
+        expect([1].Single()).to.be.equal(1)
+      })
+
+      it('should throw an error if the result contains more than one element', function () {
+        expect(function () { [1,2].Single() }).to.throw(Error)
+        expect(function () { [1,2,3].Single(x => x > 1) }).to.throw(Error)
+      })
+    })
   })
 
-  describe('Concat/Union', function () {
+  describe('Concat', function () {
     describe('Concat', function () {
       it('should concatenate two arrays', function () {
         expect([1, 2, 3].Concat([4, 5, 6])).to.be.deep.equal([1, 2, 3, 4, 5, 6])

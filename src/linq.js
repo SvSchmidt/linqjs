@@ -8,32 +8,8 @@
   ToDictionary, ToInfinity,ToJSON, ToLookup, ToNegativeInfinity, ToObject, ToString, Trace, Unfold, Union, Where, Write, WriteLine, Zip
   */
 
-  function Contains (elem) {
-    return !!~this.indexOf(elem)
-  }
-
-  function First (predicate = x => true) {
-    __assertFunction(predicate)
-
-    const length = this.length
-
-    for (let i = 0; i < length; i++) {
-      if (predicate(this[i])) {
-        return this[i];
-      }
-    }
-
-    return null;
-  }
-
-  function Last (predicate = x => true) {
-    __assertFunction(predicate)
-
-    return this.reverse().First(predicate)
-  }
-
   function install () {
     __assign(Array.prototype, linqjs)
   }
 
-  __export({ Contains, First, Last, install })
+  __export({ install })
