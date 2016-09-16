@@ -5,4 +5,6 @@ defineSourceFiles([
   'src/concatenation.js',
   'src/search.js',
   'src/access.js',
+  'src/heap.js',
+  'src/order.js',
 ])

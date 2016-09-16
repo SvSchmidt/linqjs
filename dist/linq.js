@@ -5,6 +5,8 @@
  */
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 (function () {
   'use strict';
 
@@ -55,6 +57,10 @@
 
     function __assertFunction(param) {
       __assert(isFunction(param), 'Parameter must be function!');
+    }
+
+    function __assertArray(param) {
+      __assert(isArray(param), 'Parameter must be array!');
     }
 
     function isES6() {
@@ -264,7 +270,304 @@
       throw new Error('Sequence contains more than one element');
     }
 
+    /**
+     * Default comparator implementation that uses the "<" operator.
+     * Retuns values as specified by the comparator function fir Array.sort().
+     * 
+     * @param  {T}  a   Element "a" to be compared.
+     * @param  {T}  b   Element "b" to be compared.
+     * @param {any} <T> Element type.
+     *
+     * @return {number} Returns -1 if "a" is smaller than "b",
+     *                  returns  1 if "b" is smaller than "a",
+     *                  returns  0 if they are equal.
+     */
+    var defaultComparator = function defaultComparator(a, b) {
+      if (a < b) {
+        return -1;
+      }
+      if (b < a) {
+        return 1;
+      }
+      return 0;
+    };
+
+    /*
+     * Partially sorted heap that contains the smallest element within root position.
+     */
+    var MinHeap = function () {
+
+      /**
+       * Creates the heap from the array of elements with the given comparator function.
+       * 
+       * @param {T[]}              elements   Array with elements to create the heap from.
+       *                                      Will be modified in place for heap logic.
+       * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
+       * @param {any}              <T>        Heap element type.
+       */
+      function MinHeap(elements) {
+        var comparator = arguments.length <= 1 || arguments[1] === undefined ? defaultComparator : arguments[1];
+
+        __assertArray(elements);
+        __assertFunction(comparator);
+
+        this.comparator = comparator;
+        this.elements = elements;
+
+        // for heapify to work we have to start counting at index 1
+        this.elements.unshift(null);
+
+        // create heap ordering
+        createHeap(this.elements, this.comparator);
+      }
+
+      /**
+       * Places the element at the given position into the correct position within the heap.
+       * 
+       * @param {T}                elements   Array with elements used for the heap.
+       * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
+       * @param {number}           i          Index of the element that will be placed to the correct position.
+       * @param {any}              <T>        Heap element type.
+       */
+      function heapify(elements, comparator, i) {
+        var left = 2 * i;
+        var right = 2 * i + 1;
+        var bestIndex = i;
+
+        // check if the element is currently misplaced
+        if (left <= elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
+          bestIndex = left;
+        }
+        if (right <= elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
+          bestIndex = right;
+        }
+
+        // if the element is misplaced, swap elements and continue until we get the right position
+        if (bestIndex !== i) {
+          var tmp = elements[i];
+          elements[i] = elements[bestIndex];
+          elements[bestIndex] = tmp;
+
+          // let misplaced elements "bubble up" to get heap properties
+          heapify(elements, comparator, bestIndex);
+        }
+      }
+
+      /**
+       * Creates a heap from the given array using the given comparator.
+       * 
+       * @param {T[]}              elements   Array with elements used for the heap.
+       *                                      Will be modified in place for heap logic.
+       * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
+       * @param {any}              <T>        Heap element type.
+       */
+      function createHeap(elements, comparator) {
+        for (var i = Math.floor(elements.length / 2); i > 0; i--) {
+
+          // do fancy stuff
+          heapify(elements, comparator, i);
+        }
+      }
+
+      /**
+       * Checks if the heap contains at least one element.
+       * 
+       * @return {boolean} If the heap contains elements or not.
+       */
+      MinHeap.prototype.hasTopElement = function () {
+        return this.elements.length > 1;
+      };
+
+      /**
+       * Gets and removes the top element from the heap.
+       * This method performs a bit of reordering to keep heap properties.
+       * 
+       * @param {any} <T> Heap element type.
+       * 
+       * @return {T} Top element from heap.
+       */
+      MinHeap.prototype.getTopElement = function () {
+        var topElement = this.elements[1];
+        this.elements[1] = this.elements.pop();
+
+        // only reorder stuff, if we have more than 2 value elements
+        if (this.elements.length > 3) {
+
+          heapify(this.elements, this.comparator, 1);
+        }
+        return topElement;
+      };
+
+      /**
+       * Creates an iterator for this heap instance.
+       * 
+       * @return {Iterator} Iterator for the heap.
+       */
+      MinHeap.prototype[Symbol.iterator] = function () {
+
+        // keep matching heap instance
+        var heap = this;
+        return {
+          next: function next() {
+            if (heap.hasTopElement()) {
+              return {
+                done: false,
+                value: heap.getTopElement()
+              };
+            }
+            return {
+              done: true
+            };
+          }
+        };
+      };
+
+      return MinHeap;
+    }();
+
+    /*
+     * Partially sorted heap that contains the largest element within root position.
+     */
+    var MaxHeap = function () {
+
+      /**
+       * Creates the heap from the array of elements with the given comparator function.
+       * 
+       * @param {T[]}               elements   Array with elements to create the heap from.
+       *                                       Will be modified in place for heap logic.
+       * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
+       * @param {any}               <T>        Heap element type.
+       */
+      function MaxHeap(elements) {
+        var comparator = arguments.length <= 1 || arguments[1] === undefined ? defaultComparator : arguments[1];
+
+        __assertArray(elements);
+        __assertFunction(comparator);
+
+        // simply negate the result of the comparator function so we get reverse ordering within the heap
+        MinHeap.apply(this, [elements, function (a, b) {
+          return -1 * comparator(a, b);
+        }]);
+      }
+
+      // inheritance stuff (we don't want to implement stuff twice)
+      MaxHeap.prototype = Object.create(MinHeap.prototype);
+      MaxHeap.prototype.constructor = MaxHeap;
+
+      return MaxHeap;
+    }();
+
+    /**
+     * Creates an array from the values of the given iterable.
+     * 
+     * @param  {Iterable<T>} iterable Iterable to create an array from.
+     * @param  {any}         <T>      Element type.
+     * 
+     * @return {T[]} Array with elements from the iterator.
+     */
+    function getArrayFromIterable(iterable) {
+      return [].concat(_toConsumableArray(iterable));
+    } // TODO: change implementation to use iterators!
+
+    function Order() {
+      return this.OrderBy(defaultComparator);
+    }
+
+    function OrderCompare() {
+      return this.sort(defaultComparator);
+    }
+
+    function OrderBy(comparator) {
+      __assertFunction(comparator);
+      var heap = new MinHeap(this, comparator);
+      return getArrayFromIterable(heap);
+    }
+
+    function OrderDescending() {
+      return this.OrderByDescending(defaultComparator);
+    }
+
+    function OrderByDescending(comparator) {
+      __assertFunction(comparator);
+      var heap = new MaxHeap(this, comparator);
+      return getArrayFromIterable(heap);
+    }
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function getTimestamp() {
+      return new Date().getTime();
+    }
+
+    function HeapSpeedTest() {
+      var aFaster = 0;
+      var bFaster = 0;
+      var equallyFast = 0;
+      for (var test = 1; test <= 100; test++) {
+        var list = [];
+        var length = getRandomInt(10, 1000 * test);
+        var take = getRandomInt(1, 10);
+        for (var i = 0; i < length; i++) {
+          list.push(getRandomInt(-1000000, 1000000));
+        }
+        var listA = list;
+        var listB = list.slice(0);
+        console.log('Test #' + test + ' with ' + length + ' random elements, taking the first ' + take + ':');
+
+        var startA = getTimestamp();
+        var resA = listA.sort(defaultComparator).slice(0, take);
+        var endA = getTimestamp();
+        var timeA = endA - startA;
+        console.log(' -> Array.sort() finished after ' + timeA + ' milliseconds');
+
+        var startB = getTimestamp();
+        var heap = new MinHeap(listB, defaultComparator);
+        var iterator = heap[Symbol.iterator]();
+        var resB = [];
+        for (var _i = 0; _i < take; _i++) {
+          resB.push(iterator.next().value);
+        }
+        var endB = getTimestamp();
+        var timeB = endB - startB;
+        if (timeB > timeA) {
+          console.warn(' -> Heap finished after ' + timeB + ' milliseconds and took ' + (timeB - timeA) + ' milliseconds longer');
+        } else {
+          console.log(' -> Heap finished after ' + timeB + ' milliseconds');
+        }
+
+        var success = true;
+        for (var _i2 = 0; _i2 < length; _i2++) {
+          if (resA[_i2] !== resB[_i2]) {
+            success = false;
+            break;
+          }
+        }
+        if (success) {
+          console.log(' -> Finished successfully.');
+        } else {
+          console.error(' -> Finished with different results!', resA, resB);
+        }
+
+        if (timeA < timeB) {
+          aFaster++;
+        } else if (timeB < timeA) {
+          bFaster++;
+        } else {
+          equallyFast++;
+        }
+      }
+
+      var total = aFaster + bFaster + equallyFast;
+      console.log('Array.sort() was faster: ' + aFaster + '/' + total);
+      console.log('Heap         was faster: ' + bFaster + '/' + total);
+      console.log('Both where equally fast: ' + equallyFast + '/' + total);
+    }
+
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Where: Where, Contains: Contains, First: First, Last: Last, Single: Single });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Where: Where, Contains: Contains, First: First, Last: Last, Single: Single, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
   });
 })();

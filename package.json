@@ -8,6 +8,11 @@
     "build": "grunt"
   },
   "author": "Sven Schmidt",
+  "contributors": [
+    {
+      "name": "Gerriet Hinrichs"
+    }
+  ],
   "license": "MIT",
   "licenses": [
     {

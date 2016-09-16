@@ -28,6 +28,10 @@
     __assert(isFunction(param), 'Parameter must be function!')
   }
 
+  function __assertArray(param) {
+    __assert(isArray(param), 'Parameter must be array!')
+  }
+
   function isES6 () {
     // use evaluation to prevent babel to transpile this test into ES5
     return new Function(`
