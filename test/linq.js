@@ -120,6 +120,18 @@ describe('linqjs', function () {
     })
   })
 
+  describe('Array search', function () {
+    describe('Where', function () {
+      it('should return a new sequence containing the elements matching the predicate', function () {
+        expect([1,2,3].Where(x => x > 1)).to.be.deep.equal([2,3])
+      })
+
+      it('should accept index-based predicate', function () {
+        expect([1,2,3,4,5].Where((elem, index) => index > 1)).to.be.deep.equal([3,4,5])
+      })
+    })
+  })
+
   describe('Concat', function () {
     describe('Concat', function () {
       it('should concatenate two arrays', function () {

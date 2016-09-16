@@ -208,6 +208,16 @@
       return removeDuplicates(this.Concat(second), equalityCompareFn);
     }
 
+    function Where() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      return filterArray(this, predicate);
+    }
+
     function Contains(elem) {
       return !!~this.indexOf(elem);
     }
@@ -255,6 +265,6 @@
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Contains: Contains, First: First, Last: Last, Single: Single });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Where: Where, Contains: Contains, First: First, Last: Last, Single: Single });
   });
 })();
