@@ -314,9 +314,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         this.comparator = comparator;
         this.elements = elements;
 
-        // for heapify to work we have to start counting at index 1
-        this.elements.unshift(null);
-
         // create heap ordering
         createHeap(this.elements, this.comparator);
       }
@@ -330,15 +327,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @param {any}              <T>        Heap element type.
        */
       function heapify(elements, comparator, i) {
-        var left = 2 * i;
-        var right = 2 * i + 1;
+        var right = 2 * (i + 1);
+        var left = right - 1;
         var bestIndex = i;
 
         // check if the element is currently misplaced
-        if (left <= elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
+        if (left < elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
           bestIndex = left;
         }
-        if (right <= elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
+        if (right < elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
           bestIndex = right;
         }
 
@@ -362,7 +359,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @param {any}              <T>        Heap element type.
        */
       function createHeap(elements, comparator) {
-        for (var i = Math.floor(elements.length / 2); i > 0; i--) {
+        for (var i = Math.floor(elements.length / 2); i >= 0; i--) {
 
           // do fancy stuff
           heapify(elements, comparator, i);
@@ -375,7 +372,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @return {boolean} If the heap contains elements or not.
        */
       MinHeap.prototype.hasTopElement = function () {
-        return this.elements.length > 1;
+        return this.elements.length > 0;
       };
 
       /**
@@ -387,14 +384,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @return {T} Top element from heap.
        */
       MinHeap.prototype.getTopElement = function () {
-        var topElement = this.elements[1];
-        this.elements[1] = this.elements.pop();
-
-        // only reorder stuff, if we have more than 2 value elements
-        if (this.elements.length > 3) {
-
-          heapify(this.elements, this.comparator, 1);
+        // special case: only one element left
+        if (this.elements.length == 1) {
+          return this.elements.pop();
         }
+
+        var topElement = this.elements[0];
+        var tmp = this.elements.pop();
+        this.elements[0] = tmp;
+
+        // do fancy stuff
+        heapify(this.elements, this.comparator, 0);
+
         return topElement;
       };
 

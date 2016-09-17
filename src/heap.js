@@ -40,9 +40,6 @@ let MinHeap = (function () {
         this.comparator = comparator;
         this.elements   = elements;
 
-        // for heapify to work we have to start counting at index 1
-        this.elements.unshift(null);
-
         // create heap ordering
         createHeap(this.elements, this.comparator);
     }
@@ -56,15 +53,15 @@ let MinHeap = (function () {
      * @param {any}              <T>        Heap element type.
      */
     function heapify(elements, comparator, i) {
-        let left      = 2 * i;
-        let right     = 2 * i + 1;
+        let right     = 2 * (i + 1);
+        let left      = right - 1;
         let bestIndex = i;
 
         // check if the element is currently misplaced
-        if (left <= elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
+        if (left < elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
             bestIndex = left;
         }
-        if (right <= elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
+        if (right < elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
             bestIndex = right;
         }
 
@@ -88,7 +85,7 @@ let MinHeap = (function () {
      * @param {any}              <T>        Heap element type.
      */
     function createHeap(elements, comparator) {
-        for (let i = Math.floor(elements.length / 2); i > 0; i--) {
+        for (let i = Math.floor(elements.length / 2); i >= 0; i--) {
 
             // do fancy stuff
             heapify(elements, comparator, i);
@@ -101,7 +98,7 @@ let MinHeap = (function () {
      * @return {boolean} If the heap contains elements or not.
      */
     MinHeap.prototype.hasTopElement = function () {
-        return this.elements.length > 1;
+        return this.elements.length > 0;
     };
 
     /**
@@ -113,14 +110,18 @@ let MinHeap = (function () {
      * @return {T} Top element from heap.
      */
     MinHeap.prototype.getTopElement = function () {
-        let topElement = this.elements[1];
-        this.elements[1] = this.elements.pop();
-
-        // only reorder stuff, if we have more than 2 value elements
-        if (this.elements.length > 3) {
-
-            heapify(this.elements, this.comparator, 1);
+        // special case: only one element left
+        if (this.elements.length == 1) {
+            return this.elements.pop();
         }
+
+        let topElement = this.elements[0];
+        let tmp = this.elements.pop();
+        this.elements[0] = tmp;
+
+        // do fancy stuff
+        heapify(this.elements, this.comparator, 0);
+    
         return topElement;
     };
 
