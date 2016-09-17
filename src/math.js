@@ -28,4 +28,4 @@
     return Sum.call(this) / this.length
   }
 
-  __export({ Min, Max, Average })
+  __export({ Min, Max, Average, Sum })
