@@ -54,10 +54,6 @@
     return str.charAt(0).toUpperCase() + str.substr(1)
   }
 
-  function isNative (obj) {
-    return /native code/.test(Object(obj).toString())
-  }
-
   function isArray (obj) {
     return Object.prototype.toString.call(obj) === '[object Array]'
   }
@@ -119,7 +115,15 @@
     return result
   }
 
-  function getDefault (constructor) {
+  const nativeConstructors = [
+    Object, Number, Boolean, String, Symbol
+  ]
+
+  function isNative (obj) {
+    return /native code/.test(Object(obj).toString()) || !!~nativeConstructors.indexOf(obj)
+  }
+
+  function getDefault (constructor = Object) {
     if (constructor && isNative(constructor) && typeof constructor === 'function') {
       let defaultValue = constructor()
 

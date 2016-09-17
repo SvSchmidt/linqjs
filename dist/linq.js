@@ -79,11 +79,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return str.charAt(0).toUpperCase() + str.substr(1);
     }
 
-    function isNative(obj) {
-      return (/native code/.test(Object(obj).toString())
-      );
-    }
-
     function isArray(obj) {
       return Object.prototype.toString.call(obj) === '[object Array]';
     }
@@ -154,7 +149,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return result;
     }
 
-    function getDefault(constructor) {
+    var nativeConstructors = [Object, Number, Boolean, String, Symbol];
+
+    function isNative(obj) {
+      return (/native code/.test(Object(obj).toString()) || !!~nativeConstructors.indexOf(obj)
+      );
+    }
+
+    function getDefault() {
+      var constructor = arguments.length <= 0 || arguments[0] === undefined ? Object : arguments[0];
+
       if (constructor && isNative(constructor) && typeof constructor === 'function') {
         var defaultValue = constructor();
 
@@ -256,6 +260,48 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return null;
     }
 
+    function resultOrDefault(arr, originalFn) {
+      var predicateOrConstructor = arguments.length <= 2 || arguments[2] === undefined ? function (x) {
+        return true;
+      } : arguments[2];
+      var constructor = arguments.length <= 3 || arguments[3] === undefined ? Object : arguments[3];
+
+      __assertArray(arr);
+
+      var predicate = void 0;
+
+      if (isNative(predicateOrConstructor)) {
+        predicate = function predicate(x) {
+          return true;
+        };
+        constructor = predicateOrConstructor;
+      } else {
+        predicate = predicateOrConstructor;
+      }
+
+      __assertFunction(predicate);
+      __assert(isNative(constructor), 'constructor must be native constructor, e.g. Number!');
+
+      if (!isEmpty(arr)) {
+        var result = originalFn.call(arr, predicate);
+
+        if (result) {
+          return result;
+        }
+      }
+
+      return getDefault(constructor);
+    }
+
+    function FirstOrDefault() {
+      var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+      var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
+
+      return resultOrDefault(this, First, predicateOrConstructor, constructor);
+    }
+
     function Last() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
         return true;
@@ -265,6 +311,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assertNotEmpty(this);
 
       return this.reverse().First(predicate);
+    }
+
+    function LastOrDefault() {
+      var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+      var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
+
+      return resultOrDefault(this.reverse(), Last, predicateOrConstructor, constructor);
     }
 
     function Single() {
@@ -282,6 +337,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
 
       throw new Error('Sequence contains more than one element');
+    }
+
+    function SingleOrDefault() {
+      var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+      var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
+
+      return resultOrDefault(this, Single, predicateOrConstructor, constructor);
     }
 
     /**
@@ -583,6 +647,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Where: Where, Contains: Contains, First: First, Last: Last, Single: Single, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Concat: Concat, Union: Union, Where: Where, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
   });
 })();

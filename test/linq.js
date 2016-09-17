@@ -100,6 +100,22 @@ describe('linqjs', function () {
       })
     })
 
+    describe('FirstOrDefault/LastOrDefault/SingleOrDefault', function () {
+      it('should return default instead of throwing an error if sequence is empty', function () {
+        expect([].FirstOrDefault()).to.be.null
+        expect([].FirstOrDefault(Number)).to.be.equal(0)
+        expect([].FirstOrDefault(x => x > 1, Boolean)).to.be.false
+
+        expect([].LastOrDefault()).to.be.null
+        expect([].LastOrDefault(Number)).to.be.equal(0)
+        expect([].LastOrDefault(x => x > 1, Boolean)).to.be.false
+
+        expect([].SingleOrDefault()).to.be.null
+        expect([].SingleOrDefault(Number)).to.be.equal(0)
+        expect([].SingleOrDefault(x => x > 1, Boolean)).to.be.false
+      })
+    })
+
     describe('Last', function () {
       it('should return last element of an array', function () {
         expect([1,2,3,4].Last()).to.be.equal(4)
