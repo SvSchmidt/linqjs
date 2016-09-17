@@ -2,7 +2,6 @@ function Contains (elem) {
   return !!~this.indexOf(elem)
 }
 
-
 /**
  * Take - Returns count elements of the sequence starting from the beginning
  *
@@ -11,7 +10,7 @@ function Contains (elem) {
  * @return {Array}
  */
 function Take (count = 0) {
-  __assert(isNumeric(count))
+  __assert(isNumeric(count), 'First parameter must be numeric!')
 
   if (count <= 0) {
     return []
@@ -21,27 +20,67 @@ function Take (count = 0) {
 }
 
 /**
- * TakeWhile - Takes elements from the beginning of a sequence until the predicate returns false for an element
+ * findFirstNonMatchingIndex - Returns the first index of the array which does not match the predicate
+ *
+ * @param  {Array} arr
+ * @param  {Function} predicate
+ * @return {Number}
+ */
+function findFirstNonMatchingIndex (arr, predicate) {
+  __assertArray(arr)
+
+  const length = arr.length
+
+  for (let i = 0; i < length; i++) {
+    if (!predicate(arr[i], i)) {
+      return i
+    }
+  }
+
+  return arr.length - 1
+}
+
+/**
+ * Skip - Skips count elements of the sequence and returns the remaining ones
+ *
+ * @see https://msdn.microsoft.com/de-de/library/bb358985(v=vs.110).aspx
+ * @param  {Nu,ber count = 0 amount of elements to skip
+ * @return {Array}
+ */
+function Skip (count = 0) {
+  __assert(isNumeric(count), 'First parameter must be numeric!')
+
+  if (count <= 0) {
+    return this
+  }
+
+  return this.slice(count, this.length)
+}
+
+/**
+ * TakeWhile - Takes elements from the beginning of a sequence until the predicate yields false for an element
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
- * @param  {Function} predicate     the predicate with (elem) => boolean or (elem, index) => boolean
+ * @param  {Function} predicate     the predicate of the form elem => boolean or (elem, index) => boolean
  * @return {Array}
  */
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  let result = []
-  const length = this.length
+  return this.Take(findFirstNonMatchingIndex(this, predicate))
+}
 
-  for (let i = 0; i < length; i++) {
-    if (predicate(this[i], i)) {
-      result.push(this[i])
-    } else {
-      break
-    }
-  }
+/**
+ * SkipWhile - Skips elements in the array until the predicate yields false and returns the remaining elements
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+ * @param  {type} predicate         the predicate of the form elem => boolean or (elem, index) => boolean
+ * @return {Array}
+ */
+function SkipWhile (predicate = (elem, index) => true) {
+  __assertFunction(predicate)
 
-  return result
+  return this.Skip(findFirstNonMatchingIndex(this, predicate))
 }
 
 function First (predicate = x => true) {
@@ -115,4 +154,4 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
   return resultOrDefault(this, Single, predicateOrConstructor, constructor)
 }
 
-__export({ Take, TakeWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })
+__export({ Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })

@@ -66,8 +66,8 @@
 - [ ] Shuffle
 - [x] Single
 - [x] SingleOrDefault
-- [ ] Skip
-- [ ] SkipWhile
+- [x] Skip
+- [x] SkipWhile
 - [x] Sum
 - [x] Take
 - [ ] TakeExceptLast

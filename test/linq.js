@@ -108,6 +108,12 @@ describe('linqjs', function () {
   })
 
   describe('Array access', function () {
+    const people = [
+      { name: 'Gandalf', race: 'istari' },
+      { name: 'Thorin', race: 'dwarfs' },
+      { name: 'Frodo', race: 'hobbit' },
+    ]
+
     describe('Take', function () {
         it('should return the first count elements in the array', function () {
           expect([1,2,3,4,5].Take(2)).to.be.deep.equal([1,2])
@@ -123,13 +129,30 @@ describe('linqjs', function () {
         })
     })
 
-    describe('TakeWhile', function () {
-      const people = [
-        { name: 'Gandalf', race: 'istari' },
-        { name: 'Thorin', race: 'dwarfs' },
-        { name: 'Frodo', race: 'hobbit' },
-      ]
+    describe('Skip', function () {
+      it('should skip count elements and return the remaining array', function () {
+        expect(people.Skip(2)).to.be.deep.equal([{ name: 'Frodo', race: 'hobbit' }])
+      })
 
+      it('should return the array itself if count <= 0', function () {
+        expect(people.Skip(0)).to.be.deep.equal(people)
+        expect(people.Skip(-1)).to.be.deep.equal(people)
+      })
+
+      it('should return an empty array if count >= array.length', function () {
+        expect(people.Skip(100)).to.be.deep.equal([])
+      })
+    })
+
+    describe('Skip/Take are complementary', function () {
+      it('arr.Take(n) concatenated with arr.Skip(n) should yield arr itself', function () {
+        let arr = [1,2,3,4,5]
+
+        expect(Array.prototype.concat.apply([], [arr.Take(2), arr.Skip(2)])).to.be.deep.equal(arr)
+      })
+    })
+
+    describe('TakeWhile', function () {
       it('should return all elements until the predicate stops matching', function () {
         expect(people.TakeWhile(p => p.race !== 'hobbit')).to.be.deep.equal(people.Take(2))
         expect([1,2,3,4,5,'foo'].TakeWhile(elem => !isNaN(parseFloat(elem)))).to.be.deep.equal([1,2,3,4,5])
@@ -137,6 +160,17 @@ describe('linqjs', function () {
 
       it('should accept predicates using the index as second parameter', function () {
         expect([1,2,3,4,5].TakeWhile((elem, index) => index < 3)).to.be.deep.equal([1,2,3])
+      })
+    })
+
+    describe('SkipWhile', function () {
+      it('should skip all elements until the predicate stops matching', function () {
+        expect(people.SkipWhile(p => p.race !== 'hobbit')).to.be.deep.equal(people.Skip(2))
+        expect([1,2,3,4,5,'foo'].SkipWhile(elem => !isNaN(parseFloat(elem)))).to.be.deep.equal(['foo'])
+      })
+
+      it('should accept predicates using the index as second parameter', function () {
+        expect([1,2,3,4,5].SkipWhile((elem, index) => index < 3)).to.be.deep.equal([4,5])
       })
     })
 
