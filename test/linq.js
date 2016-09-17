@@ -1,21 +1,20 @@
 'use strict';
 
 const expect = require('chai').expect
-let linqjs = require('../dist/linq')
 
 if (process.env.IS_COVERAGE) {
     describe('Test coverage', function () {
         it('should generate instrumentation', function (done) {
-              require('child_process').exec('$(npm root)/.bin/jscoverage dist coverage/dist', done);
+              require('child_process').exec('$(npm root)/.bin/jscoverage dist coverage/dist', done)
         });
 
         it('should load coverage module', function () {
-            linqjs = require('../coverage/dist/linq.js');
+            require('../coverage/dist/linq.js').install()
         });
     });
+} else {
+  require('../dist/linq').install()
 }
-
-linqjs.install()
 
 describe('linqjs', function () {
   describe('Mathematics', function () {
