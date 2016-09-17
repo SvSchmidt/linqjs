@@ -2,6 +2,16 @@ function Contains (elem) {
   return !!~this.indexOf(elem)
 }
 
+function Take (count = 0) {
+  __assert(isNumeric(count))
+
+  if (count <= 0) {
+    return []
+  }
+
+  return this.slice(0, count)
+}
+
 function First (predicate = x => true) {
   __assertFunction(predicate)
   __assertNotEmpty(this)
@@ -73,4 +83,4 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
   return resultOrDefault(this, Single, predicateOrConstructor, constructor)
 }
 
-__export({ Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })
+__export({ Take, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })

@@ -108,6 +108,21 @@ describe('linqjs', function () {
   })
 
   describe('Array access', function () {
+    describe('Take', function () {
+        it('should return the first count elements in the array', function () {
+          expect([1,2,3,4,5].Take(2)).to.be.deep.equal([1,2])
+        })
+
+        it('should return an empty array if count <= 0', function () {
+          expect([1,2,3,4,5].Take(-1)).to.be.deep.equal([])
+          expect([1,2,3,4,5].Take(0)).to.be.deep.equal([])
+        })
+
+        it('should return the array itself if count >= array.length', function () {
+          expect([1,2,3,4,5].Take(10)).to.be.deep.equal([1,2,3,4,5])
+        })
+    })
+
     describe('First', function () {
       it('should return first element of an array', function () {
         expect([1, 2, 3, 4].First()).to.be.equal(1)

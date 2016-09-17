@@ -68,8 +68,8 @@
 - [x] SingleOrDefault
 - [ ] Skip
 - [ ] SkipWhile
-- [ ] Sum
-- [ ] Take
+- [x] Sum
+- [x] Take
 - [ ] TakeExceptLast
 - [ ] TakeFromLast
 - [ ] TakeWhile
