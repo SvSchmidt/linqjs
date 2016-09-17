@@ -46,6 +46,10 @@ describe('linqjs', function () {
         */
         expect(pets.Min(pet => pet.Age)).to.be.equal(1)
       })
+
+      it('should throw an error if the array is empty', function () {
+        expect(function () { [].Min() }).to.throw(Error)
+      })
     })
 
     describe('Max', function () {
@@ -61,11 +65,29 @@ describe('linqjs', function () {
         */
         expect(pets.Max(pet => pet.Age + pet.Name.length)).to.be.equal(14)
       })
+
+      it('should throw an error if the array is empty', function () {
+        expect(function () { [].Max() }).to.throw(Error)
+      })
     })
 
     describe('Average', function () {
       it('should return the average of the array values', function () {
         expect([1,2,3,4,5].Average()).to.be.equal(3)
+      })
+
+      it('should throw an error if the array is empty', function () {
+        expect(function () { [].Average() }).to.throw(Error)
+      })
+    })
+
+    describe('Sum', function () {
+      it('should return the sum of the array values', function () {
+        expect([1,2,3,4,5].Sum()).to.be.equal(15)
+      })
+
+      it('should throw an error if the array is empty', function () {
+        expect(function () { [].Sum() }).to.throw(Error)
       })
     })
   })
