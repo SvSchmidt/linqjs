@@ -2,6 +2,14 @@ function Contains (elem) {
   return !!~this.indexOf(elem)
 }
 
+
+/**
+ * Take - Returns count elements of the sequence starting from the beginning
+ *
+ * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
+ * @param  {Number} count = 0 number of elements to be returned
+ * @return {Array}
+ */
 function Take (count = 0) {
   __assert(isNumeric(count))
 
@@ -10,6 +18,30 @@ function Take (count = 0) {
   }
 
   return this.slice(0, count)
+}
+
+/**
+ * TakeWhile - Takes elements from the beginning of a sequence until the predicate returns false for an element
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+ * @param  {Function} predicate     the predicate with (elem) => boolean or (elem, index) => boolean
+ * @return {Array}
+ */
+function TakeWhile (predicate = (elem, index) => true) {
+  __assertFunction(predicate)
+
+  let result = []
+  const length = this.length
+
+  for (let i = 0; i < length; i++) {
+    if (predicate(this[i], i)) {
+      result.push(this[i])
+    } else {
+      break
+    }
+  }
+
+  return result
 }
 
 function First (predicate = x => true) {
@@ -83,4 +115,4 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
   return resultOrDefault(this, Single, predicateOrConstructor, constructor)
 }
 
-__export({ Take, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })
+__export({ Take, TakeWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })

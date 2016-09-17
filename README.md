@@ -72,7 +72,7 @@
 - [x] Take
 - [ ] TakeExceptLast
 - [ ] TakeFromLast
-- [ ] TakeWhile
+- [x] TakeWhile
 - [ ] ThenBy
 - [ ] ThenByDescending
 - [ ] ToArray

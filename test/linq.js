@@ -123,6 +123,23 @@ describe('linqjs', function () {
         })
     })
 
+    describe('TakeWhile', function () {
+      const people = [
+        { name: 'Gandalf', race: 'istari' },
+        { name: 'Thorin', race: 'dwarfs' },
+        { name: 'Frodo', race: 'hobbit' },
+      ]
+
+      it('should return all elements until the predicate stops matching', function () {
+        expect(people.TakeWhile(p => p.race !== 'hobbit')).to.be.deep.equal(people.Take(2))
+        expect([1,2,3,4,5,'foo'].TakeWhile(elem => !isNaN(parseFloat(elem)))).to.be.deep.equal([1,2,3,4,5])
+      })
+
+      it('should accept predicates using the index as second parameter', function () {
+        expect([1,2,3,4,5].TakeWhile((elem, index) => index < 3)).to.be.deep.equal([1,2,3])
+      })
+    })
+
     describe('First', function () {
       it('should return first element of an array', function () {
         expect([1, 2, 3, 4].First()).to.be.equal(1)
