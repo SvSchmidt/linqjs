@@ -94,6 +94,10 @@ describe('linqjs', function () {
       it('should return first element matching a predicate', function () {
         expect([10, 20, 30, 40, 50].First(x => x > 20)).to.be.equal(30)
       })
+
+      it('should throw an error if sequence is empty', function () {
+        expect(function () { [].First() }).to.throw(Error)
+      })
     })
 
     describe('Last', function () {
@@ -103,6 +107,10 @@ describe('linqjs', function () {
 
       it('should return last element matching a predicate', function () {
         expect([10, 20, 30, 40, 50].Last(x => x > 20)).to.be.equal(50)
+      })
+
+      it('should throw an error if sequence is empty', function () {
+        expect(function () { [].Last() }).to.throw(Error)
       })
     })
 
@@ -115,6 +123,10 @@ describe('linqjs', function () {
       it('should throw an error if the result contains more than one element', function () {
         expect(function () { [1,2].Single() }).to.throw(Error)
         expect(function () { [1,2,3].Single(x => x > 1) }).to.throw(Error)
+      })
+
+      it('should throw an error if sequence is empty', function () {
+        expect(function () { [].Single() }).to.throw(Error)
       })
     })
   })

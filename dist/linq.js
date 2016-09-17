@@ -63,6 +63,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assert(isArray(param), 'Parameter must be array!');
     }
 
+    function __assertNotEmpty(arr) {
+      __assert(isArray(arr));
+      __assert(!isEmpty(arr), 'Sequence is empty');
+    }
+
     function isES6() {
       // use evaluation to prevent babel to transpile this test into ES5
       return new Function('\n      try {\n        return (() => true)();\n      } catch (err) {\n        return false\n      }\n    ')();
@@ -89,6 +94,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     function isNumeric(n) {
       return !isNaN(parseFloat(n));
+    }
+
+    function isEmpty(arr) {
+      __assertArray(arr);
+
+      return arr.length === 0;
     }
 
     function filterArray(arr) {
@@ -234,6 +245,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       } : arguments[0];
 
       __assertFunction(predicate);
+      __assertNotEmpty(this);
 
       var result = filterArray(this, predicate, 1);
 
@@ -250,6 +262,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       } : arguments[0];
 
       __assertFunction(predicate);
+      __assertNotEmpty(this);
 
       return this.reverse().First(predicate);
     }
@@ -260,6 +273,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       } : arguments[0];
 
       __assertFunction(predicate);
+      __assertNotEmpty(this);
 
       var result = filterArray(this, predicate);
 

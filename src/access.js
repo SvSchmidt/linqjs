@@ -4,6 +4,7 @@ function Contains (elem) {
 
 function First (predicate = x => true) {
   __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   let result = filterArray(this, predicate, 1)
 
@@ -16,12 +17,14 @@ function First (predicate = x => true) {
 
 function Last (predicate = x => true) {
   __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   return this.reverse().First(predicate)
 }
 
 function Single (predicate = x => true) {
   __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   let result = filterArray(this, predicate)
 
