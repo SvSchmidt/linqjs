@@ -319,7 +319,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       } : arguments[0];
       var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
 
-      return resultOrDefault(this.reverse(), Last, predicateOrConstructor, constructor);
+      return resultOrDefault(this, Last, predicateOrConstructor, constructor);
     }
 
     function Single() {

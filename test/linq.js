@@ -101,6 +101,16 @@ describe('linqjs', function () {
     })
 
     describe('FirstOrDefault/LastOrDefault/SingleOrDefault', function () {
+      it('should behave like the original functions when sequence is not empty', function () {
+        expect([1,2,3].FirstOrDefault()).to.be.equal([1,2,3].First())
+        expect([1,2,3].FirstOrDefault(x => x > 1)).to.be.equal([1,2,3].First(x => x > 1))
+
+        expect([1,2,3].LastOrDefault()).to.be.equal([1,2,3].Last())
+        expect([1,2,3].LastOrDefault(x => x > 1)).to.be.equal([1,2,3].Last(x => x > 1))
+
+        expect([1,2,3].SingleOrDefault(x => x > 2)).to.be.equal([1,2,3].Single(x => x > 2))
+      })
+
       it('should return default instead of throwing an error if sequence is empty', function () {
         expect([].FirstOrDefault()).to.be.null
         expect([].FirstOrDefault(Number)).to.be.equal(0)

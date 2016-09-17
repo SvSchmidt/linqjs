@@ -53,7 +53,7 @@ function Last (predicate = x => true) {
 }
 
 function LastOrDefault (predicateOrConstructor = x => true, constructor = Object) {
-  return resultOrDefault(this.reverse(), Last, predicateOrConstructor, constructor)
+  return resultOrDefault(this, Last, predicateOrConstructor, constructor)
 }
 
 function Single (predicate = x => true) {
