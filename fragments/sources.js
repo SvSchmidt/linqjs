@@ -1,4 +1,6 @@
 defineSourceFiles([
+  'src/helpers/assert.js',
+  'src/helpers/is.js',
   'src/helpers.js',
   'src/linq.js',
   'src/math.js',

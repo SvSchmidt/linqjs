@@ -29,6 +29,41 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       factory(window.linqjs = {}); // jshint ignore:line
     }
   })(function (linqjs) {
+    function __assert(condition, msg) {
+      if (!condition) {
+        throw new Error(msg);
+      }
+    }
+
+    function __assertFunction(param) {
+      __assert(isFunction(param), 'Parameter must be function!');
+    }
+
+    function __assertArray(param) {
+      __assert(isArray(param), 'Parameter must be array!');
+    }
+
+    function __assertNotEmpty(arr) {
+      __assert(isArray(arr));
+      __assert(!isEmpty(arr), 'Sequence is empty');
+    }
+    function isArray(obj) {
+      return Object.prototype.toString.call(obj) === '[object Array]';
+    }
+
+    function isFunction(obj) {
+      return typeof obj === 'function';
+    }
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n));
+    }
+
+    function isEmpty(arr) {
+      __assertArray(arr);
+
+      return arr.length === 0;
+    }
     function __assign(target, source) {
       target = Object(target);
 
@@ -49,25 +84,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assign(linqjs, obj);
     }
 
-    function __assert(condition, msg) {
-      if (!condition) {
-        throw new Error(msg);
-      }
-    }
-
-    function __assertFunction(param) {
-      __assert(isFunction(param), 'Parameter must be function!');
-    }
-
-    function __assertArray(param) {
-      __assert(isArray(param), 'Parameter must be array!');
-    }
-
-    function __assertNotEmpty(arr) {
-      __assert(isArray(arr));
-      __assert(!isEmpty(arr), 'Sequence is empty');
-    }
-
     function isES6() {
       // use evaluation to prevent babel to transpile this test into ES5
       return new Function('\n      try {\n        return (() => true)();\n      } catch (err) {\n        return false\n      }\n    ')();
@@ -77,24 +93,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       str = String(str);
 
       return str.charAt(0).toUpperCase() + str.substr(1);
-    }
-
-    function isArray(obj) {
-      return Object.prototype.toString.call(obj) === '[object Array]';
-    }
-
-    function isFunction(obj) {
-      return typeof obj === 'function';
-    }
-
-    function isNumeric(n) {
-      return !isNaN(parseFloat(n));
-    }
-
-    function isEmpty(arr) {
-      __assertArray(arr);
-
-      return arr.length === 0;
     }
 
     function filterArray(arr) {

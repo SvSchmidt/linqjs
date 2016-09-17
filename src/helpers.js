@@ -18,25 +18,6 @@
     __assign(linqjs, obj)
   }
 
-  function __assert (condition, msg) {
-    if (!condition) {
-      throw new Error(msg);
-    }
-  }
-
-  function __assertFunction (param) {
-    __assert(isFunction(param), 'Parameter must be function!')
-  }
-
-  function __assertArray (param) {
-    __assert(isArray(param), 'Parameter must be array!')
-  }
-
-  function __assertNotEmpty (arr) {
-    __assert(isArray(arr))
-    __assert(!isEmpty(arr), 'Sequence is empty')
-  }
-
   function isES6 () {
     // use evaluation to prevent babel to transpile this test into ES5
     return new Function(`
@@ -52,24 +33,6 @@
     str = String(str)
 
     return str.charAt(0).toUpperCase() + str.substr(1)
-  }
-
-  function isArray (obj) {
-    return Object.prototype.toString.call(obj) === '[object Array]'
-  }
-
-  function isFunction (obj) {
-    return typeof obj === 'function'
-  }
-
-  function isNumeric (n) {
-    return !isNaN(parseFloat(n))
-  }
-
-  function isEmpty (arr) {
-    __assertArray(arr)
-
-    return arr.length === 0
   }
 
   function filterArray (arr, predicate = (elem, index) => true, stopAfter = Infinity) {
