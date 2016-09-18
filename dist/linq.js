@@ -235,6 +235,60 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return filterArray(this, predicate);
     }
 
+    /**
+     * Count - Returns the amount of elements matching a predicate or the array length if no parameters given
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+     * @param  {Function} predicate
+     * @return {Number}
+     */
+    function Count() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      return filterArray(this, predicate).length;
+    }
+
+    /**
+     * Any - Returns true if at least one element matches the predicate or if no predicate is given but the sequence contains at least one element
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+     * @param  {Function} predicate
+     * @return {Boolean}
+     */
+    function Any(predicate) {
+      if (!predicate) {
+        return this.length > 0;
+      }
+
+      __assertFunction(predicate);
+      return filterArray(this, predicate, 1).length > 0;
+    }
+
+    /**
+     * All - Returns true if all elements match the predicate
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx
+     * @param  {Function} predicate
+     * @return {Boolean}
+     */
+    function All() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      // All is equal to the question if there's no element which does not match the predicate
+      // 'all fruits are yellow' -> 'there is no fruit which is not yellow'
+      return !this.Any(function (x) {
+        return !predicate(x);
+      });
+    }
+
     function Contains(elem) {
       return !!~this.indexOf(elem);
     }
@@ -750,6 +804,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
   });
 })();
