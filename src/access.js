@@ -3,6 +3,20 @@ function Contains (elem) {
 }
 
 /**
+ * ElementAt - Returns the element at the given index
+ *
+ * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
+ * @param  {Number} index
+ * @return {any}
+ */
+function ElementAt (index) {
+  __assert(index < this.length && index >= 0, 'Array index is out of bounds!')
+  __assert(isNumeric(index), 'Index must be numeric!')
+
+  return this[index]
+}
+
+/**
  * Take - Returns count elements of the sequence starting from the beginning
  *
  * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
@@ -154,4 +168,4 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
   return resultOrDefault(this, Single, predicateOrConstructor, constructor)
 }
 
-__export({ Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })
+__export({ ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })

@@ -114,6 +114,17 @@ describe('linqjs', function () {
       { name: 'Frodo', race: 'hobbit' },
     ]
 
+    describe('ElementAt', function () {
+      it('should return the element at the given index', function () {
+        expect(people.ElementAt(0).name).to.be.equal('Gandalf')
+      })
+
+      it('should throw an error if index < 0 or >= arr.length', function () {
+        expect(function () { people.ElementAt(3) }).to.throw(Error)
+        expect(function () { people.ElementAt(-1) }).to.throw(Error)
+      })
+    })
+
     describe('Take', function () {
         it('should return the first count elements in the array', function () {
           expect([1,2,3,4,5].Take(2)).to.be.deep.equal([1,2])

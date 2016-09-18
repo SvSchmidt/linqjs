@@ -240,6 +240,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
+     * ElementAt - Returns the element at the given index
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
+     * @param  {Number} index
+     * @return {any}
+     */
+    function ElementAt(index) {
+      __assert(index < this.length && index >= 0, 'Array index is out of bounds!');
+      __assert(isNumeric(index), 'Index must be numeric!');
+
+      return this[index];
+    }
+
+    /**
      * Take - Returns count elements of the sequence starting from the beginning
      *
      * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
@@ -736,6 +750,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
   });
 })();
