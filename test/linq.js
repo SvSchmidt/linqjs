@@ -309,7 +309,7 @@ describe('linqjs', function () {
     })
   })
 
-  describe('Concat', function () {
+  describe('Concatenation', function () {
     describe('Concat', function () {
       it('should concatenate two arrays', function () {
         expect([1, 2, 3].Concat([4, 5, 6])).to.be.deep.equal([1, 2, 3, 4, 5, 6])
@@ -339,6 +339,33 @@ describe('linqjs', function () {
         expect(petsA.Union(petsB, (a, b) => a.species === b.species).length).to.be.equal(3) // miez and leo are assumed equal
         expect([1,2,3,4].Union([6, 8, 9], (a, b) => a % 2 === b % 2).length).to.be.equal(2) // [1, 2]
       })
+    })
+  })
+
+  describe('Transformation', function () {
+    it('should aggregate the elements in the array using an aggregator function', function () {
+      const sentence = "the quick brown fox jumps over the lazy dog"
+      const words = sentence.split(' ')
+      const reversed = words.Aggregate((workingSentence, next) => next + " " + workingSentence)
+      expect(reversed).to.be.equal('dog lazy the over jumps fox brown quick the')
+
+      expect([1,2,3,4,5].Aggregate((result, next) => result + next)).to.be.equal(15)
+    })
+
+    it('should accept the starting value as first parameter', function () {
+      const ints = [4, 8, 8, 3, 9, 0, 7, 8, 2]
+      const even = ints.Aggregate(0, (total, next) => next % 2 === 0 ? total + 1 : total)
+      expect(even).to.be.equal(6)
+    })
+
+    it('should accept the starting value as first and a transformator function as third parameter', function () {
+      const fruits = ["apple", "mango", "orange", "passionfruit", "grape"]
+      const longestName = fruits.Aggregate('banana',
+          (longest, next) => next.length > longest.length ? next : longest,
+          // Return the final result as an upper case string.
+          fruit => fruit.toUpperCase())
+
+      expect(longestName).to.be.equal('PASSIONFRUIT')
     })
   })
 })

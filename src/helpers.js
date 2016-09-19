@@ -56,6 +56,14 @@
     return result
   }
 
+  function aggregateArray (arr, seed, accumulator, resultTransformFn) {
+    __assertFunction(accumulator)
+    __assertFunction(resultTransformFn)
+    __assertNotEmpty(arr)
+
+    return resultTransformFn([seed].concat(arr).reduce(accumulator))
+  }
+
   function removeDuplicates (arr, equalityCompareFn = (a, b) => a === b) {
     __assert(isArray(arr), 'arr must be array!')
     __assertFunction(equalityCompareFn)

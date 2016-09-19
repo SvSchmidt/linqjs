@@ -9,4 +9,5 @@ defineSourceFiles([
   'src/access.js',
   'src/heap.js',
   'src/order.js',
+  'src/transformation.js',
 ])

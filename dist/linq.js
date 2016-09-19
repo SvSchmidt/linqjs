@@ -121,6 +121,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return result;
     }
 
+    function aggregateArray(arr, seed, accumulator, resultTransformFn) {
+      __assertFunction(accumulator);
+      __assertFunction(resultTransformFn);
+      __assertNotEmpty(arr);
+
+      return resultTransformFn([seed].concat(arr).reduce(accumulator));
+    }
+
     function removeDuplicates(arr) {
       var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? function (a, b) {
         return a === b;
@@ -803,7 +811,44 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       console.log('Both where equally fast: ' + equallyFast + '/' + total);
     }
 
+    /**
+     * Aggregate - applies a accumulator function to a sequence
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+     * @return {any} the result of the accumulation
+     */ /**
+        * Aggregate - applies a accumulator function to a sequence. Starts with seed.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+        * @param {any} seed The starting value of the accumulation
+        * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+        * @return {any} the result of the accumulation
+        */ /**
+           * Aggregate - applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
+           *
+           * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+           * @param {any} seed The starting value of the accumulation
+           * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+           * @param {Function} resultTransformFn A function to transform the result
+           * @return {any} the result of the accumulation
+           * @
+           */
+    function Aggregate(seedOrAccumulator, accumulator, resultTransformFn) {
+      if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
+        return aggregateArray(this.slice(1, this.length), this[0], seedOrAccumulator, function (elem) {
+          return elem;
+        });
+      } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
+        return aggregateArray(this, seedOrAccumulator, accumulator, function (elem) {
+          return elem;
+        });
+      } else {
+        return aggregateArray(this, seedOrAccumulator, accumulator, resultTransformFn);
+      }
+    }
+
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate });
   });
 })();
