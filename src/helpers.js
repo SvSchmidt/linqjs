@@ -94,9 +94,9 @@
     return /native code/.test(Object(obj).toString()) || !!~nativeConstructors.indexOf(obj)
   }
 
-  function getDefault (constructor = Object) {
-    if (constructor && isNative(constructor) && typeof constructor === 'function') {
-      let defaultValue = constructor()
+  function getDefault (constructorOrValue = Object) {
+    if (constructorOrValue && isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
+      let defaultValue = constructorOrValue()
 
       if (defaultValue instanceof Object || constructor === Date) {
         return null
@@ -105,5 +105,5 @@
       }
     }
 
-    return null;
+    return constructorOrValue
   }

@@ -254,6 +254,21 @@ describe('linqjs', function () {
         expect(function () { [].Single() }).to.throw(Error)
       })
     })
+
+    describe('DefaultIfEmpty', function () {
+      it('should return the default of the provided constructor in a new array if sequence is empty', function () {
+        expect([].DefaultIfEmpty(Boolean)).to.be.deep.equal([false])
+        expect([].DefaultIfEmpty(Object)).to.be.deep.equal([null])
+        expect([].DefaultIfEmpty()).to.be.deep.equal([null])
+      })
+
+      it('should return the specified default in a new array if the sequence is empty', function () {
+        const defaultPet = { Name: "Default Pet", Age: 0 }
+        const pets = []
+        expect(pets.DefaultIfEmpty(defaultPet).length).to.be.equal(1)
+        expect(pets.DefaultIfEmpty(defaultPet)).to.be.deep.equal([defaultPet])
+      })
+    })
   })
 
   describe('Array search', function () {

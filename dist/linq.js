@@ -163,10 +163,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function getDefault() {
-      var constructor = arguments.length <= 0 || arguments[0] === undefined ? Object : arguments[0];
+      var constructorOrValue = arguments.length <= 0 || arguments[0] === undefined ? Object : arguments[0];
 
-      if (constructor && isNative(constructor) && typeof constructor === 'function') {
-        var defaultValue = constructor();
+      if (constructorOrValue && isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
+        var defaultValue = constructorOrValue();
 
         if (defaultValue instanceof Object || constructor === Date) {
           return null;
@@ -175,7 +175,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
       }
 
-      return null;
+      return constructorOrValue;
     }
     function install() {
       __assign(Array.prototype, linqjs);
@@ -514,6 +514,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
+     * DefaultIfEmpty - Returns the array or a new array containing the provided constructors default if empty
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+     * @param {Function} constructor A native constructor to get the default for, e.g. Number
+     * @return {Array} 
+     */ /**
+        * DefaultIfEmpty - Returns the array or a new array containing the provided default value if empty
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+        * @param {any} value The default vlaue
+        * @return {Array}
+        */
+    function DefaultIfEmpty(constructorOrValue) {
+      if (!isEmpty(this)) {
+        return this;
+      }
+
+      return [getDefault(constructorOrValue)];
+    }
+
+    /**
      * Default comparator implementation that uses the "<" operator.
      * Retuns values as specified by the comparator function fir Array.sort().
      * 
@@ -849,6 +870,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate });
   });
 })();

@@ -168,4 +168,25 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
   return resultOrDefault(this, Single, predicateOrConstructor, constructor)
 }
 
-__export({ ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault })
+/**
+ * DefaultIfEmpty - Returns the array or a new array containing the provided constructors default if empty
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+ * @param {Function} constructor A native constructor to get the default for, e.g. Number
+ * @return {Array} 
+ *//**
+ * DefaultIfEmpty - Returns the array or a new array containing the provided default value if empty
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+ * @param {any} value The default vlaue
+ * @return {Array}
+ */
+function DefaultIfEmpty (constructorOrValue) {
+  if (!isEmpty(this)) {
+    return this
+  }
+
+  return [getDefault(constructorOrValue)]
+}
+
+__export({ ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty })
