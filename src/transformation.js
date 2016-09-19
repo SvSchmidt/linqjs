@@ -31,4 +31,22 @@ function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
   }
 }
 
-__export({ Aggregate })
+/**
+ * Distinct - Returns the distinct elemens from a sequence using the default equality compare function
+ *
+ * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+ * @return {Array} 
+ *//**
+ * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
+ *
+ * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+ * @param {Function} equalityCompareFn The function of the form (first, second) => boolean determining if the values are equal
+ * @return {Array}
+ */
+function Distinct (equalityCompareFn = defaultEqualityCompareFn) {
+  __assertFunction(equalityCompareFn)
+
+  return removeDuplicates(this, equalityCompareFn)
+}
+
+__export({ Aggregate, Distinct })

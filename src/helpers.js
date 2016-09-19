@@ -64,7 +64,9 @@
     return resultTransformFn([seed].concat(arr).reduce(accumulator))
   }
 
-  function removeDuplicates (arr, equalityCompareFn = (a, b) => a === b) {
+  const defaultEqualityCompareFn = (a, b) => a === b;
+
+  function removeDuplicates (arr, equalityCompareFn = defaultEqualityCompareFn) {
     __assert(isArray(arr), 'arr must be array!')
     __assertFunction(equalityCompareFn)
 

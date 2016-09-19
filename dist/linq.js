@@ -129,10 +129,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return resultTransformFn([seed].concat(arr).reduce(accumulator));
     }
 
+    var defaultEqualityCompareFn = function defaultEqualityCompareFn(a, b) {
+      return a === b;
+    };
+
     function removeDuplicates(arr) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? function (a, b) {
-        return a === b;
-      } : arguments[1];
+      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
 
       __assert(isArray(arr), 'arr must be array!');
       __assertFunction(equalityCompareFn);
@@ -869,7 +871,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
     }
 
+    /**
+     * Distinct - Returns the distinct elemens from a sequence using the default equality compare function
+     *
+     * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+     * @return {Array} 
+     */ /**
+        * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
+        *
+        * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+        * @param {Function} equalityCompareFn The function of the form (first, second) => boolean determining if the values are equal
+        * @return {Array}
+        */
+    function Distinct() {
+      var equalityCompareFn = arguments.length <= 0 || arguments[0] === undefined ? defaultEqualityCompareFn : arguments[0];
+
+      __assertFunction(equalityCompareFn);
+
+      return removeDuplicates(this, equalityCompareFn);
+    }
+
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate, Distinct: Distinct });
   });
 })();

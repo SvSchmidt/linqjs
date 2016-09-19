@@ -14,8 +14,8 @@
 - [ ] Contains
 - [x] Count
 - [ ] Cycle
-- [ ] DefaultIfEmpty
-- [ ] Distinct
+- [x] DefaultIfEmpty
+- [x] Distinct
 - [ ] Do
 - [x] ElementAt
 - [ ] ElementAtOrDefault
