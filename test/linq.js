@@ -1,15 +1,13 @@
-'use strict';
-
 const expect = require('chai').expect
 
 if (process.env.IS_COVERAGE) {
     describe('Test coverage', function () {
         it('should generate instrumentation', function (done) {
-              require('child_process').exec('$(npm root)/.bin/jscoverage dist coverage/dist', done)
+            require('child_process').exec('$(npm root)/.bin/jscoverage dist coverage/dist', done)
         });
 
         it('should load coverage module', function () {
-            require('../coverage/dist/linq.js').install()
+          require('../coverage/dist/linq.js').install()
         });
     });
 } else {
@@ -450,32 +448,34 @@ describe('linqjs', function () {
     })
 
     describe('Remove', function () {
-      let pets = [
-        { name: 'miez', species: 'cat' },
-        { name: 'wuff', species: 'dog' },
-        { name: 'leo', species: 'cat' },
-        { name: 'flipper', specices: 'dolphin' }
-      ]
+      it('should remove an element from the array modifying the original array', function () {
+        let pets = [
+          { name: 'miez', species: 'cat' },
+          { name: 'wuff', species: 'dog' },
+          { name: 'leo', species: 'cat' },
+          { name: 'flipper', specices: 'dolphin' }
+        ]
 
-      expect(pets.Remove({ name: 'miez', species: 'cat' })).to.be.true
-      expect(pets.length).to.be.equal(3)
+        expect(pets.Remove({ name: 'miez', species: 'cat' })).to.be.true
+        expect(pets.length).to.be.equal(3)
 
-      expect(pets.Remove(4)).to.be.false
-      expect(pets.length).to.be.equal(3)
+        expect(pets.Remove(4)).to.be.false
+        expect(pets.length).to.be.equal(3)
 
-      expect(pets.Remove({ name: 'leo', species: 'cat' })).to.be.true
-      expect(pets.length).to.be.equal(2)
+        expect(pets.Remove({ name: 'leo', species: 'cat' })).to.be.true
+        expect(pets.length).to.be.equal(2)
 
-      expect(pets.Remove({ name: 'wuff', species: 'dog' })).to.be.true
-      expect(pets.length).to.be.equal(1)
+        expect(pets.Remove({ name: 'wuff', species: 'dog' })).to.be.true
+        expect(pets.length).to.be.equal(1)
 
-      expect(pets.Remove({ name: 'wuff', species: 'dog' })).to.be.false
-      expect(pets.length).to.be.equal(1)
+        expect(pets.Remove({ name: 'wuff', species: 'dog' })).to.be.false
+        expect(pets.length).to.be.equal(1)
 
-      expect(pets.Remove({ name: 'flipper', specices: 'dolphin' })).to.be.true
-      expect(pets.length).to.be.equal(0)
+        expect(pets.Remove({ name: 'flipper', specices: 'dolphin' })).to.be.true
+        expect(pets.length).to.be.equal(0)
 
-      expect([].Remove(1)).to.be.false
+        expect([].Remove(1)).to.be.false
+      })
     })
   })
 })
