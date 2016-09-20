@@ -16,13 +16,12 @@ if (process.env.IS_COVERAGE) {
     require('../dist/linq').install()
 }
 
-const Linq = Array.prototype.Linq;
-const LinqCollection = Array.prototype.LinqCollection;
-
 describe('collection.js', function () {
-
     describe('Linq', function () {
         it('should create a new linq collection for enumerables', function () {
+            const Linq = Array.prototype.Linq;
+            const LinqCollection = Array.prototype.LinqCollection;
+    
             expect(Linq([])).to.be.instanceof(LinqCollection);
             expect(Linq([1,2,3,4,5])).to.be.instanceof(LinqCollection);
         
@@ -34,6 +33,9 @@ describe('collection.js', function () {
         })
 
         it('should throw an error for non-enumerables', function () {
+            const Linq = Array.prototype.Linq;
+            const LinqCollection = Array.prototype.LinqCollection;
+    
             expect(function () { Linq({}) }).to.throw(Error);
             expect(function () { Linq(null) }).to.throw(Error);
             expect(function () { Linq(undefined) }).to.throw(Error);
@@ -42,11 +44,17 @@ describe('collection.js', function () {
 
     describe('LinqCollection', function () {
         it('should be iterable', function () {
+            const Linq = Array.prototype.Linq;
+            const LinqCollection = Array.prototype.LinqCollection;
+    
             expect(function () { [...Linq([1,2,3])] }).not.to.throw(Error);
             expect([...Linq([1,2,3])]).to.be.deep.equal([1,2,3]);
         })
 
         it('should not iterate twice', function () {
+            const Linq = Array.prototype.Linq;
+            const LinqCollection = Array.prototype.LinqCollection;
+    
             const collection = Linq([1,2,3]);
         
             expect(function () { [...collection] }).not.to.throw(Error);
@@ -62,6 +70,9 @@ describe('collection.js', function () {
                 [{},{a: 2},{}]
             ];
             it ('should properly generate an array', function () {
+                const Linq = Array.prototype.Linq;
+                const LinqCollection = Array.prototype.LinqCollection;
+            
                 for (var array of arrays) {
                     expect(Linq(array).ToArray()).to.be.deep.equal(array);
                 }

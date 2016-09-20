@@ -19,10 +19,6 @@ if (process.env.IS_COVERAGE) {
 const maxValue  = 1000000;
 const maxRepeat = 10;
 
-const Linq = Array.prototype.Linq;
-const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
-
 function generateRandomNumberObjectList() {
     function getRandomNumber(min, max) {
         min = Math.ceil(min);
@@ -51,6 +47,10 @@ describe('ordered-collection.js', function () {
             [9, 3, ''],
         ];
         it('should generate a comparator that produces the same results as the "<", ">" & "==" operators', function () {
+            const Linq = Array.prototype.Linq;
+            const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+            const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+
             for (var values of tests) {
                 var a = values[0];
                 var b = values[1];
@@ -71,71 +71,122 @@ describe('ordered-collection.js', function () {
     })
 
     describe('OrderedLinqCollection', function () {
-        const comparatorA = GetComparatorFromKeySelector('a');
-        const comparatorB = GetComparatorFromKeySelector('b');
-        const comparatorC = GetComparatorFromKeySelector('c');
-        const comparatorD = GetComparatorFromKeySelector('d');
-        
-        const comparatorFull = function (a, b) {
-            return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
-        };
-
         describe('OrderBy', function () {
-            for (var i; i < maxRepeat; i++) {
-                const list = generateRandomNumberObjectList();
+            it('shoult order the collection properly', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+        
+                const comparatorA = GetComparatorFromKeySelector('a');
+                const comparatorB = GetComparatorFromKeySelector('b');
+                const comparatorC = GetComparatorFromKeySelector('c');
+                const comparatorD = GetComparatorFromKeySelector('d');
+                
+                const comparatorFull = function (a, b) {
+                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
+                };
 
-                var sorted = list.slice(0);
-                sorted.sort(comparatorA);
+                for (var i; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
 
-                expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
-            }
+                    var sorted = list.slice(0);
+                    sorted.sort(comparatorA);
+
+                    expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                }
+            })
         })
 
         describe('OrderBy.ThenBy', function () {
-            for (var i; i < maxRepeat; i++) {
-                const list = generateRandomNumberObjectList();
+            it('should order the collection with respect to subelements properly', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+        
+                const comparatorA = GetComparatorFromKeySelector('a');
+                const comparatorB = GetComparatorFromKeySelector('b');
+                const comparatorC = GetComparatorFromKeySelector('c');
+                const comparatorD = GetComparatorFromKeySelector('d');
+                
+                const comparatorFull = function (a, b) {
+                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
+                };
 
-                var sorted = list.slice(0);
-                sorted.sort(comparatorFull);
+                for (var i; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
 
-                const collection = Linq(list)
-                        .OrderBy(comparatorA)
-                        .ThenBy(comparatorB)
-                        .ThenBy(comparatorC)
-                        .ThenBy(comparatorD);
+                    var sorted = list.slice(0);
+                    sorted.sort(comparatorFull);
 
-                expect(collection.ToArray()).to.be.deep.equal(sorted);
-            }
+                    const collection = Linq(list)
+                            .OrderBy(comparatorA)
+                            .ThenBy(comparatorB)
+                            .ThenBy(comparatorC)
+                            .ThenBy(comparatorD);
+
+                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                }
+            })
         })
 
         describe('OrderByDescending', function () {
-            for (var i; i < maxRepeat; i++) {
-                const list = generateRandomNumberObjectList();
+            it('shoult order the collection properly by descending order', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+        
+                const comparatorA = GetComparatorFromKeySelector('a');
+                const comparatorB = GetComparatorFromKeySelector('b');
+                const comparatorC = GetComparatorFromKeySelector('c');
+                const comparatorD = GetComparatorFromKeySelector('d');
+                
+                const comparatorFull = function (a, b) {
+                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
+                };
 
-                var sorted = list.slice(0);
-                sorted.sort(comparatorA);
-                sorted = sorted.reverse();
+                for (var i; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
 
-                expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
-            }
+                    var sorted = list.slice(0);
+                    sorted.sort(comparatorA);
+                    sorted = sorted.reverse();
+
+                    expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                }
+            })
         })
 
         describe('OrderByDescending.ThenBy', function () {
-            for (var i; i < maxRepeat; i++) {
-                const list = generateRandomNumberObjectList();
+            it('should order the collection with respect to subelements properly by descending order', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+        
+                const comparatorA = GetComparatorFromKeySelector('a');
+                const comparatorB = GetComparatorFromKeySelector('b');
+                const comparatorC = GetComparatorFromKeySelector('c');
+                const comparatorD = GetComparatorFromKeySelector('d');
+                
+                const comparatorFull = function (a, b) {
+                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
+                };
 
-                var sorted = list.slice(0);
-                sorted.sort(comparatorFull);
-                sorted = sorted.reverse();
+                for (var i; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
 
-                const collection = Linq(list)
-                        .OrderBy(comparatorA)
-                        .ThenBy(comparatorB)
-                        .ThenBy(comparatorC)
-                        .ThenBy(comparatorD);
+                    var sorted = list.slice(0);
+                    sorted.sort(comparatorFull);
+                    sorted = sorted.reverse();
 
-                expect(collection.ToArray()).to.be.deep.equal(sorted);
-            }
+                    const collection = Linq(list)
+                            .OrderBy(comparatorA)
+                            .ThenBy(comparatorB)
+                            .ThenBy(comparatorC)
+                            .ThenBy(comparatorD);
+
+                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                }
+            })
         })
     })
 })

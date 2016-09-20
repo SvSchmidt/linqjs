@@ -19,10 +19,6 @@ if (process.env.IS_COVERAGE) {
 const maxValue  = 1000000;
 const maxRepeat = 10;
 
-const MaxHeap = Array.prototype.MaxHeap;
-const MinHeap = Array.prototype.MinHeap;
-const DefaultComparator = Array.prototype.DefaultComparator;
-
 function generateRandomNumberList() {
     function getRandomNumber(min, max) {
         min = Math.ceil(min);
@@ -47,6 +43,10 @@ describe('heap.js', function () {
                 [function (a) {}, function (a,b) {}],
             ];
         it('should produce the same results as the "<", ">" & "==" operators', function () {
+            const MaxHeap = Array.prototype.MaxHeap;
+            const MinHeap = Array.prototype.MinHeap;
+            const DefaultComparator = Array.prototype.DefaultComparator;
+
             for (var values of tests) {
                 var a = values[0];
                 var b = values[1];
@@ -69,6 +69,10 @@ describe('heap.js', function () {
 
     describe('MaxHeap', function () {
         it ('should sort the array', function () {
+            const MaxHeap = Array.prototype.MaxHeap;
+            const MinHeap = Array.prototype.MinHeap;
+            const DefaultComparator = Array.prototype.DefaultComparator;
+        
             for (var i; i < maxRepeat; i++) {
                 const list = generateRandomNumberList();
 
@@ -85,6 +89,10 @@ describe('heap.js', function () {
 
     describe('MinHeap', function () {
         it ('should sort the array in descending order', function () {
+            const MaxHeap = Array.prototype.MaxHeap;
+            const MinHeap = Array.prototype.MinHeap;
+            const DefaultComparator = Array.prototype.DefaultComparator;
+        
             for (var i; i < maxRepeat; i++) {
                 const list = generateRandomNumberList();
 
