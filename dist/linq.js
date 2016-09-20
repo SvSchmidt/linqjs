@@ -190,7 +190,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       if (constructorOrValue && isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         var defaultValue = constructorOrValue();
 
-        if (defaultValue instanceof Object || constructor === Date) {
+        if (defaultValue instanceof Object || constructorOrValue === Date) {
           return null;
         } else {
           return defaultValue;

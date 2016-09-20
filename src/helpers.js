@@ -100,7 +100,7 @@
     if (constructorOrValue && isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
       let defaultValue = constructorOrValue()
 
-      if (defaultValue instanceof Object || constructor === Date) {
+      if (defaultValue instanceof Object || constructorOrValue === Date) {
         return null
       } else {
         return defaultValue
