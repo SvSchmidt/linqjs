@@ -568,7 +568,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      *                  returns  1 if "b" is smaller than "a",
      *                  returns  0 if they are equal.
      */
-    var defaultComparator = function defaultComparator(a, b) {
+    var DefaultComparator = function DefaultComparator(a, b) {
       if (a < b) {
         return -1;
       }
@@ -592,7 +592,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @param {any}              <T>        Heap element type.
        */
       function MinHeap(elements) {
-        var comparator = arguments.length <= 1 || arguments[1] === undefined ? defaultComparator : arguments[1];
+        var comparator = arguments.length <= 1 || arguments[1] === undefined ? DefaultComparator : arguments[1];
 
         __assertArray(elements);
         __assertFunction(comparator);
@@ -726,7 +726,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @param {any}               <T>        Heap element type.
        */
       function MaxHeap(elements) {
-        var comparator = arguments.length <= 1 || arguments[1] === undefined ? defaultComparator : arguments[1];
+        var comparator = arguments.length <= 1 || arguments[1] === undefined ? DefaultComparator : arguments[1];
 
         __assertArray(elements);
         __assertFunction(comparator);
@@ -744,17 +744,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return MaxHeap;
     }();
 
-    /**
-     * Creates an array from the values of the given iterable.
-     * 
-     * @param  {Iterable<T>} iterable Iterable to create an array from.
-     * @param  {any}         <T>      Element type.
-     * 
-     * @return {T[]} Array with elements from the iterator.
-     */
-    function getArrayFromIterable(iterable) {
-      return [].concat(_toConsumableArray(iterable));
-    } // TODO: change implementation to use iterators!
+    // TODO: change implementation to use iterators!
 
     function Order() {
       return this.OrderBy(defaultComparator);
@@ -778,80 +768,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assertFunction(comparator);
       var heap = new MaxHeap(this, comparator);
       return getArrayFromIterable(heap);
-    }
-
-    function getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function getTimestamp() {
-      return new Date().getTime();
-    }
-
-    function HeapSpeedTest() {
-      var aFaster = 0;
-      var bFaster = 0;
-      var equallyFast = 0;
-      for (var test = 1; test <= 100; test++) {
-        var list = [];
-        var length = getRandomInt(10, 1000 * test);
-        var take = getRandomInt(1, 10);
-        for (var i = 0; i < length; i++) {
-          list.push(getRandomInt(-1000000, 1000000));
-        }
-        var listA = list;
-        var listB = list.slice(0);
-        console.log('Test #' + test + ' with ' + length + ' random elements, taking the first ' + take + ':');
-
-        var startA = getTimestamp();
-        var resA = listA.sort(defaultComparator).slice(0, take);
-        var endA = getTimestamp();
-        var timeA = endA - startA;
-        console.log(' -> Array.sort() finished after ' + timeA + ' milliseconds');
-
-        var startB = getTimestamp();
-        var heap = new MinHeap(listB, defaultComparator);
-        var iterator = heap[Symbol.iterator]();
-        var resB = [];
-        for (var _i = 0; _i < take; _i++) {
-          resB.push(iterator.next().value);
-        }
-        var endB = getTimestamp();
-        var timeB = endB - startB;
-        if (timeB > timeA) {
-          console.warn(' -> Heap finished after ' + timeB + ' milliseconds and took ' + (timeB - timeA) + ' milliseconds longer');
-        } else {
-          console.log(' -> Heap finished after ' + timeB + ' milliseconds');
-        }
-
-        var success = true;
-        for (var _i2 = 0; _i2 < length; _i2++) {
-          if (resA[_i2] !== resB[_i2]) {
-            success = false;
-            break;
-          }
-        }
-        if (success) {
-          console.log(' -> Finished successfully.');
-        } else {
-          console.error(' -> Finished with different results!', resA, resB);
-        }
-
-        if (timeA < timeB) {
-          aFaster++;
-        } else if (timeB < timeA) {
-          bFaster++;
-        } else {
-          equallyFast++;
-        }
-      }
-
-      var total = aFaster + bFaster + equallyFast;
-      console.log('Array.sort() was faster: ' + aFaster + '/' + total);
-      console.log('Heap         was faster: ' + bFaster + '/' + total);
-      console.log('Both where equally fast: ' + equallyFast + '/' + total);
     }
 
     /**
@@ -1056,7 +972,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       OrderedLinqCollection.prototype.ThenBy = function ThenBy(additionalComparator) {
         __assertIterationNotStarted(this);
         if (isString(additionalComparator)) {
-          additionalComparator = getComparatorFromKeySelector(additionalComparator);
+          additionalComparator = GetComparatorFromKeySelector(additionalComparator);
         }
         __assertFunction(additionalComparator);
 
@@ -1115,7 +1031,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        */
       LinqCollection.prototype.OrderBy = function OrderBy(comparator) {
         if (isString(comparator)) {
-          comparator = getComparatorFromKeySelector(comparator);
+          comparator = GetComparatorFromKeySelector(comparator);
         }
         __assertFunction(comparator);
         return new OrderedLinqCollection(this, comparator, MinHeap);
@@ -1130,7 +1046,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        */
       LinqCollection.prototype.OrderByDescending = function OrderByDescending(comparator) {
         if (isString(comparator)) {
-          comparator = getComparatorFromKeySelector(comparator);
+          comparator = GetComparatorFromKeySelector(comparator);
         }
         __assertFunction(comparator);
         return new OrderedLinqCollection(this, comparator, MaxHeap);
@@ -1144,19 +1060,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      * @param  {string} selector Javascript code selector string.
      * @return {(any, any) => boolean} Created comparator function.
      */
-    function getComparatorFromKeySelector(selector) {
+    function GetComparatorFromKeySelector(selector) {
       __assertString(selector);
       if (selector === '') {
-        return defaultComparator;
+        return Array.prototype.DefaultComparator;
       }
-      if (!selector.startsWith('[') && !selector.startsWith('.')) {
+      if (!(selector.startsWith('[') || selector.startsWith('.'))) {
         selector = '.' + selector;
       }
       var result = void 0;
-      eval('result = (a, b) => defaultComparator(a' + selector + ', b' + selector + ')');
+      eval('result = function (a, b) { return Array.prototype.DefaultComparator(a' + selector + ', b' + selector + ') }');
       return result;
     }
+
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate, Distinct: Distinct, Linq: Linq });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, Aggregate: Aggregate, Distinct: Distinct, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
   });
 })();

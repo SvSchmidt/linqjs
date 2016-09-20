@@ -10,7 +10,7 @@
  *                  returns  1 if "b" is smaller than "a",
  *                  returns  0 if they are equal.
  */
-let defaultComparator = (a, b) => {
+let DefaultComparator = (a, b) => {
     if (a < b) {
         return -1;
     }
@@ -33,7 +33,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function MinHeap(elements, comparator = defaultComparator) {
+    function MinHeap(elements, comparator = DefaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -165,7 +165,7 @@ let MaxHeap = (function () {
      * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}               <T>        Heap element type.
      */
-    function MaxHeap(elements, comparator = defaultComparator) {
+    function MaxHeap(elements, comparator = DefaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -178,16 +178,6 @@ let MaxHeap = (function () {
     MaxHeap.prototype.constructor = MaxHeap;
 
     return MaxHeap;
-})();
+})()
 
-/**
- * Creates an array from the values of the given iterable.
- * 
- * @param  {Iterable<T>} iterable Iterable to create an array from.
- * @param  {any}         <T>      Element type.
- * 
- * @return {T[]} Array with elements from the iterator.
- */
-function getArrayFromIterable(iterable) {
-    return [...iterable];
-}
+__export({ DefaultComparator, MinHeap, MaxHeap })

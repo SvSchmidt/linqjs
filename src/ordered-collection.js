@@ -35,7 +35,7 @@ let OrderedLinqCollection = (function () {
     OrderedLinqCollection.prototype.ThenBy = function ThenBy(additionalComparator) {
         __assertIterationNotStarted(this);
         if (isString(additionalComparator)) {
-            additionalComparator = getComparatorFromKeySelector(additionalComparator);
+            additionalComparator = GetComparatorFromKeySelector(additionalComparator);
         }
         __assertFunction(additionalComparator);
 
@@ -94,7 +94,7 @@ let OrderedLinqCollection = (function () {
      */
     LinqCollection.prototype.OrderBy = function OrderBy(comparator) {
         if (isString(comparator)) {
-            comparator = getComparatorFromKeySelector(comparator);
+            comparator = GetComparatorFromKeySelector(comparator);
         }
         __assertFunction(comparator);
         return new OrderedLinqCollection(this, comparator, MinHeap);
@@ -109,7 +109,7 @@ let OrderedLinqCollection = (function () {
      */
     LinqCollection.prototype.OrderByDescending = function OrderByDescending(comparator) {
         if (isString(comparator)) {
-            comparator = getComparatorFromKeySelector(comparator);
+            comparator = GetComparatorFromKeySelector(comparator);
         }
         __assertFunction(comparator);
         return new OrderedLinqCollection(this, comparator, MaxHeap);
@@ -123,15 +123,17 @@ let OrderedLinqCollection = (function () {
  * @param  {string} selector Javascript code selector string.
  * @return {(any, any) => boolean} Created comparator function.
  */
-function getComparatorFromKeySelector(selector) {
+function GetComparatorFromKeySelector(selector) {
     __assertString(selector);
     if (selector === '') {
-        return defaultComparator;
+        return Array.prototype.DefaultComparator;
     }
-    if (!selector.startsWith('[') && !selector.startsWith('.')) {
+    if (!(selector.startsWith('[') || selector.startsWith('.'))) {
         selector = `.${selector}`;
     }
     let result;
-    eval(`result = (a, b) => defaultComparator(a${selector}, b${selector})`);
+    eval(`result = function (a, b) { return Array.prototype.DefaultComparator(a${selector}, b${selector}) }`);
     return result;
 }
+
+__export({ GetComparatorFromKeySelector, OrderedLinqCollection })

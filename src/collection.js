@@ -102,4 +102,4 @@ function Linq(iterable) {
     return new LinqCollection(iterable);
 }
 
-__export({ Linq })
+__export({ LinqCollection, Linq })
