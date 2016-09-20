@@ -29,10 +29,17 @@
     `)()
   }
 
-  function capitalize (str) {
-    str = String(str)
-
-    return str.charAt(0).toUpperCase() + str.substr(1)
+  /**
+   * paramOrValue - Helper method to get the passed parameter or a default value if it is undefined
+   *
+   * @param  {any} param The parameter to check
+   * @param  {any} value Value to return when param is undefined
+   * @return {any}
+   */
+  function paramOrValue(param, value) {
+    return typeof param === 'undefined'
+      ? value
+      : param
   }
 
   function filterArray (arr, predicate = (elem, index) => true, stopAfter = Infinity) {
@@ -86,6 +93,26 @@
     }
 
     return result
+  }
+
+  /**
+   * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
+   *
+   * @param  {Array} arr   The array to insert a value into
+   * @param  {any} value   The value to add
+   * @param  {Number} index The index to add the element to, defaults to the end
+   * @return {void}
+   */
+  function insertIntoArray(arr, value, index) {
+    index = paramOrValue(index, arr.length)
+    __assertIndexInRange(arr, index)
+
+    const before = arr.slice(0, index)
+    const after = arr.slice(index)
+
+    while (arr.shift()) {}
+
+    arr.unshift(...Array.prototype.concat.apply([], [before, value, after]))
   }
 
   const nativeConstructors = [

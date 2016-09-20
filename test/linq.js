@@ -410,4 +410,43 @@ describe('linqjs', function () {
       })
     })
   })
+
+  describe('Insert/Remove', function () {
+    describe('Add', function () {
+      it('should return a new array containing the value at the end', function () {
+        let arr = [1,2,3]
+
+        arr.Add(4)
+        expect(arr.length).to.be.equal(4)
+        expect(arr[3]).to.be.equal(4)
+
+        arr.Add(5)
+        expect(arr.length).to.be.equal(5)
+        expect(arr[4]).to.be.equal(5)
+      })
+    })
+
+    describe('Insert', function () {
+      it('should add values to any index of the array', function () {
+        let arr = [1,2,3]
+
+        arr.Insert(4, 0)
+        expect(arr).to.be.deep.equal([4,1,2,3])
+
+        arr.Insert(5, 2)
+        expect(arr).to.be.deep.equal([4,1,5,2,3])
+      })
+
+      it('should throw an error if the index is out of bounds', function () {
+        expect(function () { [].Insert(1, 100) }).to.throw(Error)
+      })
+    })
+
+    describe('Add/Insert', function () {
+      it('should modify the original array and return void', function () {
+        expect([].Add(1)).to.be.undefined
+        expect([].Insert(1, 0)).to.be.undefined
+      })
+    })
+  })
 })

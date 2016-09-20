@@ -60,6 +60,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function __assertString(obj) {
       __assert(isString(obj), 'Parameter must be string!');
     }
+
+    function __assertIndexInRange(arr, index) {
+      __assertArray(arr);
+      __assertAllNumeric(index);
+      __assert(index >= 0 && index <= arr.length, 'array index is out of bounds');
+    }
     function isArray(obj) {
       return Object.prototype.toString.call(obj) === '[object Array]';
     }
@@ -109,10 +115,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return new Function('\n      try {\n        return (() => true)();\n      } catch (err) {\n        return false\n      }\n    ')();
     }
 
-    function capitalize(str) {
-      str = String(str);
-
-      return str.charAt(0).toUpperCase() + str.substr(1);
+    /**
+     * paramOrValue - Helper method to get the passed parameter or a default value if it is undefined
+     *
+     * @param  {any} param The parameter to check
+     * @param  {any} value Value to return when param is undefined
+     * @return {any}
+     */
+    function paramOrValue(param, value) {
+      return typeof param === 'undefined' ? value : param;
     }
 
     function filterArray(arr) {
@@ -175,6 +186,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
 
       return result;
+    }
+
+    /**
+     * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
+     *
+     * @param  {Array} arr   The array to insert a value into
+     * @param  {any} value   The value to add
+     * @param  {Number} index The index to add the element to, defaults to the end
+     * @return {void}
+     */
+    function insertIntoArray(arr, value, index) {
+      index = paramOrValue(index, arr.length);
+      __assertIndexInRange(arr, index);
+
+      var before = arr.slice(0, index);
+      var after = arr.slice(index);
+
+      while (arr.shift()) {}
+
+      arr.unshift.apply(arr, _toConsumableArray(Array.prototype.concat.apply([], [before, value, after])));
     }
 
     var nativeConstructors = [Object, Number, Boolean, String, Symbol];
@@ -827,6 +858,29 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return removeDuplicates(this, equalityCompareFn);
     }
 
+    /**
+     * Add - Adds an element to the end of the array
+     *
+     * @see https://msdn.microsoft.com/de-de/library/3wcytfd1(v=vs.110).aspx
+     * @param  {any}         value The value to add
+     * @return {void}
+     */
+    function Add(value) {
+      return insertIntoArray(this, value);
+    }
+
+    /**
+     * Insert - Adds an element to the specified index of the array
+     *
+     * @see https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx
+     * @param  {any}         value The value to add
+     * @param  {Number}      index The index to add the value to
+     * @return {void}
+     */
+    function Insert(value, index) {
+      return insertIntoArray(this, value, index);
+    }
+
     /*
      * Basic collection for lazy linq operations.
      */
@@ -1074,6 +1128,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, Aggregate: Aggregate, Distinct: Distinct, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, Aggregate: Aggregate, Distinct: Distinct, Add: Add, Insert: Insert, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
   });
 })();

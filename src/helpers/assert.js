@@ -29,3 +29,9 @@
   function __assertString (obj) {
     __assert(isString(obj), 'Parameter must be string!')
   }
+
+  function __assertIndexInRange(arr, index) {
+    __assertArray(arr)
+    __assertAllNumeric(index)
+    __assert(index >= 0 && index <= arr.length, 'array index is out of bounds')
+  }
