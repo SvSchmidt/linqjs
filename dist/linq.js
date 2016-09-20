@@ -747,27 +747,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     // TODO: change implementation to use iterators!
 
     function Order() {
-      return this.OrderBy(defaultComparator);
+      return this.OrderBy(DefaultComparator);
     }
 
     function OrderCompare() {
-      return this.sort(defaultComparator);
+      return this.sort(DefaultComparator);
     }
 
     function OrderBy(comparator) {
       __assertFunction(comparator);
       var heap = new MinHeap(this, comparator);
-      return getArrayFromIterable(heap);
+      return [].concat(_toConsumableArray(heap));
     }
 
     function OrderDescending() {
-      return this.OrderByDescending(defaultComparator);
+      return this.OrderByDescending(DefaultComparator);
     }
 
     function OrderByDescending(comparator) {
       __assertFunction(comparator);
       var heap = new MaxHeap(this, comparator);
-      return getArrayFromIterable(heap);
+      return [].concat(_toConsumableArray(heap));
     }
 
     /**
@@ -843,7 +843,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         this._source = iterable;
         this.__startedIterating = false;
         this.__iterationIndex = 0;
-      };
+      }
 
       /**
        * Hook function that will be called once before iterating.

@@ -14,7 +14,7 @@ let LinqCollection = (function () {
         this._source            = iterable;
         this.__startedIterating = false;
         this.__iterationIndex   = 0;
-    };
+    }
 
     /**
      * Hook function that will be called once before iterating.
