@@ -2,6 +2,7 @@
 
 - [x] Aggregate
 - [x] All
+- [x] Add
 - [ ] Alternate
 - [x] Any
 - [x] Average
@@ -33,7 +34,7 @@
 - [ ] GroupBy
 - [ ] GroupJoin
 - [ ] IndexOf
-- [ ] Insert
+- [x] Insert
 - [ ] Intersect
 - [ ] Join
 - [x] Last
@@ -54,6 +55,7 @@
 - [ ] Range
 - [ ] RangeDown
 - [ ] RangeTo
+- [x] Remove
 - [ ] Repeat
 - [ ] RepeatWithFinalize
 - [ ] Return
