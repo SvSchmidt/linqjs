@@ -4,7 +4,7 @@
     return Array.prototype.concat.apply(this, second)
   }
 
-  function Union (second, equalityCompareFn = (a, b) => a === b) {
+  function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
     return removeDuplicates(this.Concat(second), equalityCompareFn)
   }
 

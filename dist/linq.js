@@ -29,6 +29,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       factory(window.linqjs = {}); // jshint ignore:line
     }
   })(function (linqjs) {
+    function defaultEqualityCompareFn(first, second) {
+      return toJSON(first) === toJSON(second);
+    }
     function __assert(condition, msg) {
       if (!condition) {
         throw new Error(msg);
@@ -90,7 +93,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     function isString(obj) {
       return typeof obj === 'string';
-    }function __assign(target, source) {
+    }function toJSON(obj) {
+      return JSON.stringify(obj);
+    }
+
+    function __assign(target, source) {
       target = Object(target);
 
       if (Object.hasOwnProperty('assign') && typeof Object.assign === 'function') {
@@ -160,10 +167,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return resultTransformFn([seed].concat(arr).reduce(accumulator));
     }
 
-    var defaultEqualityCompareFn = function defaultEqualityCompareFn(a, b) {
-      return a === b;
-    };
-
     function removeDuplicates(arr) {
       var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
 
@@ -189,6 +192,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
+     * emptyArray - Helper function to remove all elements from an array (by modifying the original and not returning a new one)
+     *
+     * @param  {Array} arr The array to remove all elements form
+     * @return {void}
+     */
+    function emptyArray(arr) {
+      __assertArray(arr);
+
+      while (arr.shift()) {}
+    }
+
+    /**
      * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
      *
      * @param  {Array} arr   The array to insert a value into
@@ -203,9 +218,28 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var before = arr.slice(0, index);
       var after = arr.slice(index);
 
-      while (arr.shift()) {}
+      emptyArray(arr);
 
       arr.unshift.apply(arr, _toConsumableArray(Array.prototype.concat.apply([], [before, value, after])));
+    }
+
+    function removeFromArray(arr, value) {
+      __assertArray(arr);
+
+      var elemsBefore = [];
+      var elemFound = false;
+      var current = void 0;
+
+      // remove all elements from the array (shift) and push them into a temporary variable until the desired element was found
+      while ((current = arr.shift()) && !(elemFound = defaultEqualityCompareFn(current, value))) {
+        elemsBefore.push(current);
+      }
+
+      // add the temporary values back to the array (to the front)
+      // -> unshift modifies the original array instead of returning a new one
+      arr.unshift.apply(arr, elemsBefore);
+
+      return elemFound;
     }
 
     var nativeConstructors = [Object, Number, Boolean, String, Symbol];
@@ -279,9 +313,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function Union(second) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? function (a, b) {
-        return a === b;
-      } : arguments[1];
+      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
 
       return removeDuplicates(this.Concat(second), equalityCompareFn);
     }
@@ -881,6 +913,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return insertIntoArray(this, value, index);
     }
 
+    /**
+     * Remove - Removes an element from an array
+     *
+     * @param  {any} value The value to remove
+     * @return {Boolean}       True if the element was removed, false if not (or the element was not found)
+     */
+    function Remove(value) {
+      return removeFromArray(this, value);
+    }
+
     /*
      * Basic collection for lazy linq operations.
      */
@@ -1128,6 +1170,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, Aggregate: Aggregate, Distinct: Distinct, Add: Add, Insert: Insert, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, Aggregate: Aggregate, Distinct: Distinct, Add: Add, Insert: Insert, Remove: Remove, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
   });
 })();

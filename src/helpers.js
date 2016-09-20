@@ -1,3 +1,7 @@
+  function toJSON (obj) {
+    return JSON.stringify(obj)
+  }
+
   function __assign (target, source) {
     target = Object(target);
 
@@ -71,8 +75,6 @@
     return resultTransformFn([seed].concat(arr).reduce(accumulator))
   }
 
-  const defaultEqualityCompareFn = (a, b) => a === b;
-
   function removeDuplicates (arr, equalityCompareFn = defaultEqualityCompareFn) {
     __assert(isArray(arr), 'arr must be array!')
     __assertFunction(equalityCompareFn)
@@ -96,6 +98,18 @@
   }
 
   /**
+   * emptyArray - Helper function to remove all elements from an array (by modifying the original and not returning a new one)
+   *
+   * @param  {Array} arr The array to remove all elements form
+   * @return {void}
+   */
+  function emptyArray (arr) {
+    __assertArray(arr)
+
+    while (arr.shift()) {}
+  }
+
+  /**
    * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
    *
    * @param  {Array} arr   The array to insert a value into
@@ -103,16 +117,35 @@
    * @param  {Number} index The index to add the element to, defaults to the end
    * @return {void}
    */
-  function insertIntoArray(arr, value, index) {
+  function insertIntoArray (arr, value, index) {
     index = paramOrValue(index, arr.length)
     __assertIndexInRange(arr, index)
 
     const before = arr.slice(0, index)
     const after = arr.slice(index)
 
-    while (arr.shift()) {}
+    emptyArray(arr)
 
     arr.unshift(...Array.prototype.concat.apply([], [before, value, after]))
+  }
+
+  function removeFromArray (arr, value) {
+    __assertArray(arr)
+
+    let elemsBefore = []
+    let elemFound = false
+    let current
+
+    // remove all elements from the array (shift) and push them into a temporary variable until the desired element was found
+    while ((current = arr.shift()) && !(elemFound = defaultEqualityCompareFn(current, value))) {
+      elemsBefore.push(current)
+    }
+
+    // add the temporary values back to the array (to the front)
+    // -> unshift modifies the original array instead of returning a new one
+    arr.unshift(...elemsBefore)
+
+    return elemFound
   }
 
   const nativeConstructors = [

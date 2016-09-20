@@ -21,4 +21,14 @@ function Insert (value, index) {
   return insertIntoArray(this, value, index)
 }
 
-__export({ Add, Insert })
+/**
+ * Remove - Removes an element from an array
+ *
+ * @param  {any} value The value to remove
+ * @return {Boolean}       True if the element was removed, false if not (or the element was not found)
+ */
+function Remove (value) {
+  return removeFromArray(this, value)
+}
+
+__export({ Add, Insert, Remove })

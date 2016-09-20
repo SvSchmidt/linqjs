@@ -448,5 +448,34 @@ describe('linqjs', function () {
         expect([].Insert(1, 0)).to.be.undefined
       })
     })
+
+    describe('Remove', function () {
+      let pets = [
+        { name: 'miez', species: 'cat' },
+        { name: 'wuff', species: 'dog' },
+        { name: 'leo', species: 'cat' },
+        { name: 'flipper', specices: 'dolphin' }
+      ]
+
+      expect(pets.Remove({ name: 'miez', species: 'cat' })).to.be.true
+      expect(pets.length).to.be.equal(3)
+
+      expect(pets.Remove(4)).to.be.false
+      expect(pets.length).to.be.equal(3)
+
+      expect(pets.Remove({ name: 'leo', species: 'cat' })).to.be.true
+      expect(pets.length).to.be.equal(2)
+
+      expect(pets.Remove({ name: 'wuff', species: 'dog' })).to.be.true
+      expect(pets.length).to.be.equal(1)
+
+      expect(pets.Remove({ name: 'wuff', species: 'dog' })).to.be.false
+      expect(pets.length).to.be.equal(1)
+
+      expect(pets.Remove({ name: 'flipper', specices: 'dolphin' })).to.be.true
+      expect(pets.length).to.be.equal(0)
+
+      expect([].Remove(1)).to.be.false
+    })
   })
 })
