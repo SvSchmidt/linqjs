@@ -111,7 +111,7 @@ let MinHeap = (function () {
      */
     MinHeap.prototype.getTopElement = function () {
         // special case: only one element left
-        if (this.elements.length == 1) {
+        if (this.elements.length === 1) {
             return this.elements.pop();
         }
 

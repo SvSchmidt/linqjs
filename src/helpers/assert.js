@@ -16,3 +16,16 @@
     __assert(isArray(arr))
     __assert(!isEmpty(arr), 'Sequence is empty')
   }
+
+  function __assertIterable (obj) {
+    __assert(isIterable(obj), 'Parameter must be iterable!')
+  }
+
+  function __assertIterationNotStarted (collection) {
+    let iterationStarted = ('StartedIterating' in collection) && collection.StartedIterating();
+    __assert(!iterationStarted, 'Iteration already started!')
+  }
+
+  function __assertString (obj) {
+    __assert(isString(obj), 'Parameter must be string!')
+  }

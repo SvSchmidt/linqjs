@@ -15,3 +15,11 @@
 
     return arr.length === 0
   }
+
+  function isIterable (obj) {
+    return (Symbol.iterator in obj);
+  }
+
+  function isString (obj) {
+    return typeof obj === 'string';
+  }

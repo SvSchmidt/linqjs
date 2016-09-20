@@ -10,4 +10,7 @@ defineSourceFiles([
   'src/heap.js',
   'src/order.js',
   'src/transformation.js',
+
+  'src/collection.js',
+  'src/ordered-collection.js',
 ])

@@ -47,8 +47,8 @@
 - [x] Min
 - [ ] MinBy
 - [ ] OfType
-- [ ] OrderBy
-- [ ] OrderByDescending
+- [x] OrderBy
+- [x] OrderByDescending
 - [ ] Pairwise
 - [ ] PartitionBy
 - [ ] Range
@@ -73,7 +73,7 @@
 - [ ] TakeExceptLast
 - [ ] TakeFromLast
 - [x] TakeWhile
-- [ ] ThenBy
+- [x] ThenBy
 - [ ] ThenByDescending
 - [ ] ToArray
 - [ ] ToDictionary

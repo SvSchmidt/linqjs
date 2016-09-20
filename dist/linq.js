@@ -47,6 +47,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assert(isArray(arr));
       __assert(!isEmpty(arr), 'Sequence is empty');
     }
+
+    function __assertIterable(obj) {
+      __assert(isIterable(obj), 'Parameter must be iterable!');
+    }
+
+    function __assertIterationNotStarted(collection) {
+      var iterationStarted = 'StartedIterating' in collection && collection.StartedIterating();
+      __assert(!iterationStarted, 'Iteration already started!');
+    }
+
+    function __assertString(obj) {
+      __assert(isString(obj), 'Parameter must be string!');
+    }
     function isArray(obj) {
       return Object.prototype.toString.call(obj) === '[object Array]';
     }
@@ -64,7 +77,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       return arr.length === 0;
     }
-    function __assign(target, source) {
+
+    function isIterable(obj) {
+      return Symbol.iterator in obj;
+    }
+
+    function isString(obj) {
+      return typeof obj === 'string';
+    }function __assign(target, source) {
       target = Object(target);
 
       if (Object.hasOwnProperty('assign') && typeof Object.assign === 'function') {
@@ -651,7 +671,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        */
       MinHeap.prototype.getTopElement = function () {
         // special case: only one element left
-        if (this.elements.length == 1) {
+        if (this.elements.length === 1) {
           return this.elements.pop();
         }
 
@@ -891,7 +911,252 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return removeDuplicates(this, equalityCompareFn);
     }
 
+    /*
+     * Basic collection for lazy linq operations.
+     */
+    var LinqCollection = function () {
+
+      /**
+       * Creates a new LinqCollection from the given iterable.
+       * 
+       * @param {Iterable<T>} iterable Datasource for this collection.
+       * @param {any}         <T>      Element type.
+       */
+      function LinqCollection(iterable) {
+        __assertIterable(iterable);
+        this._source = iterable;
+        this.__startedIterating = false;
+        this.__iterationIndex = 0;
+      };
+
+      /**
+       * Hook function that will be called once before iterating.
+       */
+      LinqCollection.prototype._initialize = function _initialize() {
+        this.__sourceIterator = this._source[Symbol.iterator]();
+      };
+
+      /**
+       * Internal iterator.next() method.
+       * 
+       * @param {any} <T> Element type.
+       * @return {IterationElement<T>} Next element when iterating.
+       */
+      LinqCollection.prototype._next = function _next() {
+        return this.__sourceIterator.next();
+      };
+
+      /**
+       * Internal function that ensures the _initialize() hook is invoked once.
+       * This function also adds the iteration index to the result of _next().
+       * 
+       * @param {any} <T> Element type.
+       * @return {IterationElement<T>} Next element when iterating.
+       */
+      LinqCollection.prototype.__wrappedNext = function __wrappedNext() {
+        if (!this.__startedIterating) {
+          this.__startedIterating = true;
+          this._initialize();
+        }
+        var result = this._next();
+        if (!result.done) {
+          result.index = this.__iterationIndex;
+          this.__iterationIndex++;
+        }
+        return result;
+      };
+
+      /**
+       * Creates an array from this collection.
+       * Iterates once over its elements.
+       * 
+       * @param {any} <T> Element type.
+       * @return {T[]} Array with elements from this collection.
+       */
+      LinqCollection.prototype.ToArray = function toArray() {
+        return [].concat(_toConsumableArray(this));
+      };
+
+      /**
+       * Returns wheather iteration has started or not.
+       * If iteration has not been started yet, _initialize() has not yet been called.
+       *
+       * @return {boolean}
+       */
+      LinqCollection.prototype.StartedIterating = function StartedIterating() {
+        return this.__startedIterating;
+      };
+
+      /**
+       * Provides an iterator for this collection.
+       * 
+       * @param {any} <T> Element type.
+       * @return {Iterator<T>} Iterator for this collection.
+       */
+      LinqCollection.prototype[Symbol.iterator] = function () {
+        var _this = this;
+
+        __assertIterationNotStarted(this);
+        return {
+          next: function next() {
+            return _this.__wrappedNext();
+          }
+        };
+      };
+
+      return LinqCollection;
+    }();
+
+    /**
+     * Creates a LinqCollection from the given iterable.
+     * 
+     * @param {Iterable<T>} iterable Datasource for the collection.
+     * @param {any}         <T>      Element type.
+     * @return {LinqCollection<T>} Created LinqCollection.
+     */
+    function Linq(iterable) {
+      __assertIterable(iterable);
+      return new LinqCollection(iterable);
+    }
+
+    /*
+     * Ordered linq collection.
+     */
+    var OrderedLinqCollection = function () {
+
+      /**
+       * Creates a new ordered linq collection using the given comparator and heap for sorting.
+       * 
+       * @param {Iterable<T>}       iterable        Datasource for this collection.
+       * @param {(T, T) => boolean} comparator      Comparator for sorting.
+       * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
+       * @param {any}               <T>             Element type.
+       */
+      function OrderedLinqCollection(iterable, comparator, heapConstructor) {
+        __assertIterable(iterable);
+        __assertFunction(comparator);
+        __assertFunction(heapConstructor);
+        LinqCollection.apply(this, [iterable]);
+
+        this.__comparator = comparator;
+        this.__heapConstructor = heapConstructor;
+      }
+
+      // inheritance stuff (we don't want to implement stuff twice)
+      OrderedLinqCollection.prototype = Object.create(LinqCollection.prototype);
+      OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
+
+      /**
+       * Specifies further sorting by the given comparator for equal elements.
+       * 
+       * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
+       * @param {any}               <T>                  Element type.
+       * @return {OrderedLinqCollection<T>} Created ordered linq collection.
+       */
+      OrderedLinqCollection.prototype.ThenBy = function ThenBy(additionalComparator) {
+        __assertIterationNotStarted(this);
+        if (isString(additionalComparator)) {
+          additionalComparator = getComparatorFromKeySelector(additionalComparator);
+        }
+        __assertFunction(additionalComparator);
+
+        // build new comparator function when not yet iterated
+        var currentComparator = this.__comparator;
+        this.__comparator = function (a, b) {
+          var res = currentComparator(a, b);
+          if (res !== 0) {
+            return res;
+          }
+          return additionalComparator(a, b);
+        };
+        return this;
+      };
+
+      /**
+       * Builds the heap for sorting.
+       */
+      OrderedLinqCollection.prototype._initialize = function _initialize() {
+
+        // create array for heap
+        var values = [].concat(_toConsumableArray(this._source));
+
+        // create heap instance
+        var heap = Reflect.construct(this.__heapConstructor, [values, this.__comparator]);
+
+        // grab iterator for later use
+        this.__heapIterator = heap[Symbol.iterator]();
+      };
+
+      /**
+       * Returns the result of the heap iterator.
+       * 
+       * @param {any} <T> Element type.
+       * @return {IterationElement<T>} Next element when iterating.
+       */
+      OrderedLinqCollection.prototype._next = function _next() {
+        __assert(!!this.__heapIterator, 'No heap build!');
+        return this.__heapIterator.next();
+      };
+
+      return OrderedLinqCollection;
+    }();
+
+    /*
+     * Extend basis collection with ordering functions.
+     */
+    (function () {
+
+      /**
+       * Orderes this linq collection using the given comparator.
+       * 
+       * @param {(T, T) => boolean} comparator Comparator to be used.
+       * @param {any}               <T>        Element type.
+       * @return {OrderedLinqCollection<T>} Ordered collection.
+       */
+      LinqCollection.prototype.OrderBy = function OrderBy(comparator) {
+        if (isString(comparator)) {
+          comparator = getComparatorFromKeySelector(comparator);
+        }
+        __assertFunction(comparator);
+        return new OrderedLinqCollection(this, comparator, MinHeap);
+      };
+
+      /**
+       * Orderes this linq collection in descending order using the given comparator.
+       * 
+       * @param {(T, T) => boolean} comparator Comparator to be used.
+       * @param {any}               <T>        Element type.
+       * @return {OrderedLinqCollection<T>} Ordered collection.
+       */
+      LinqCollection.prototype.OrderByDescending = function OrderByDescending(comparator) {
+        if (isString(comparator)) {
+          comparator = getComparatorFromKeySelector(comparator);
+        }
+        __assertFunction(comparator);
+        return new OrderedLinqCollection(this, comparator, MaxHeap);
+      };
+    })();
+
+    /**
+     * Creates a comparator function from the given selector string.
+     * The selector string has to be in same format as within javascript code.
+     * 
+     * @param  {string} selector Javascript code selector string.
+     * @return {(any, any) => boolean} Created comparator function.
+     */
+    function getComparatorFromKeySelector(selector) {
+      __assertString(selector);
+      if (selector === '') {
+        return defaultComparator;
+      }
+      if (!selector.startsWith('[') && !selector.startsWith('.')) {
+        selector = '.' + selector;
+      }
+      var result = void 0;
+      eval('result = (a, b) => defaultComparator(a' + selector + ', b' + selector + ')');
+      return result;
+    }
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate, Distinct: Distinct });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, HeapSpeedTest: HeapSpeedTest, Aggregate: Aggregate, Distinct: Distinct, Linq: Linq });
   });
 })();
