@@ -29,9 +29,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       factory(window.linqjs = {}); // jshint ignore:line
     }
   })(function (linqjs) {
+
+    /* src/helpers/defaults.js */
+
     function defaultEqualityCompareFn(first, second) {
       return toJSON(first) === toJSON(second);
     }
+
+    /* src/helpers/assert.js */
+
     function __assert(condition, msg) {
       if (!condition) {
         throw new Error(msg);
@@ -69,6 +75,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assertAllNumeric(index);
       __assert(index >= 0 && index <= arr.length, 'array index is out of bounds');
     }
+
+    /* src/helpers/is.js */
+
     function isArray(obj) {
       return Object.prototype.toString.call(obj) === '[object Array]';
     }
@@ -93,7 +102,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     function isString(obj) {
       return typeof obj === 'string';
-    }function toJSON(obj) {
+    }
+
+    /* src/helpers.js */
+
+    function toJSON(obj) {
       return JSON.stringify(obj);
     }
 
@@ -264,9 +277,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       return constructorOrValue;
     }
+
+    /* src/linq.js */
+
     function install() {
       __assign(Array.prototype, linqjs);
     }
+
+    /* src/math.js */
 
     function __assertAllNumeric(arr) {}
 
@@ -306,6 +324,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return Sum.call(this) / this.length;
     }
 
+    /* src/concatenation.js */
+
     function Concat(second) {
       __assert(isArray(second), 'second must be an array!');
 
@@ -317,6 +337,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       return removeDuplicates(this.Concat(second), equalityCompareFn);
     }
+
+    /* src/search.js */
 
     function Where() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
@@ -381,6 +403,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return !predicate(x);
       });
     }
+
+    /* src/access.js */
 
     function Contains(elem) {
       return !!~this.indexOf(elem);
@@ -619,6 +643,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return [getDefault(constructorOrValue)];
     }
 
+    /* src/heap.js */
+
     /**
      * Default comparator implementation that uses the "<" operator.
      * Retuns values as specified by the comparator function fir Array.sort().
@@ -807,6 +833,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return MaxHeap;
     }();
 
+    /* src/order.js */
+
     // TODO: change implementation to use iterators!
 
     function Order() {
@@ -832,6 +860,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var heap = new MaxHeap(this, comparator);
       return [].concat(_toConsumableArray(heap));
     }
+
+    /* src/transformation.js */
 
     /**
      * Aggregate - applies a accumulator function to a sequence
@@ -890,6 +920,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return removeDuplicates(this, equalityCompareFn);
     }
 
+    /* src/insert-and-remove.js */
+
     /**
      * Add - Adds an element to the end of the array
      *
@@ -922,6 +954,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function Remove(value) {
       return removeFromArray(this, value);
     }
+
+    /* src/collection.js */
 
     /*
      * Basic collection for lazy linq operations.
@@ -1030,6 +1064,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assertIterable(iterable);
       return new LinqCollection(iterable);
     }
+
+    /* src/ordered-collection.js */
 
     /*
      * Ordered linq collection.

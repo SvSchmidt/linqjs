@@ -159,6 +159,7 @@ module.exports = function (grunt) {
     for (let file of sourceFileNames) {
       const [sourceWithoutExports, theExports] = getAndRemoveExports(getSource(file))
 
+      linqjsOutput += `\n\n/* ${file} */\n\n` // add file name as a comment 
       linqjsOutput += sourceWithoutExports
       linqjsExports.push(theExports)
     }
