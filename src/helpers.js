@@ -68,8 +68,8 @@
     __assertFunction(accumulator)
     __assertFunction(resultTransformFn)
     __assertNotEmpty(coll)
-console.log([seed].Concat(coll).ToArray())
-    return resultTransformFn([seed].Concat(coll).ToArray().reduce(accumulator))
+
+    return resultTransformFn([seed].concat(coll).reduce(accumulator))
   }
 
   function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
@@ -105,26 +105,6 @@ console.log([seed].Concat(coll).ToArray())
     __assertArray(arr)
 
     while (arr.shift()) {}
-  }
-
-  /**
-   * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
-   *
-   * @param  {Array} arr   The array to insert a value into
-   * @param  {any} value   The value to add
-   * @param  {Number} index The index to add the element to, defaults to the end
-   * @return {void}
-   */
-  function insertIntoArray (arr, value, index) {
-    index = paramOrValue(index, arr.length)
-    __assertIndexInRange(arr, index)
-
-    const before = arr.slice(0, index)
-    const after = arr.slice(index)
-
-    emptyArray(arr)
-
-    arr.unshift(...Array.prototype.concat.apply([], [before, value, after]))
   }
 
   function removeFromArray (arr, value) {

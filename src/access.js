@@ -19,9 +19,12 @@ function Contains (elem) {
  */
 function ElementAt (index) {
   __assertIndexInRange(this, index)
-  //__assert(isNumeric(index), 'Index must be numeric!')
+  __assert(isNumeric(index), 'Index must be numeric!')
 
-  return this.SkipWhile((elem, i) => i < index).Take(1)[0]
+  const result = this.Skip(index).Take(1)[0]
+  this.reset()
+
+  return result
 }
 
 /**
@@ -67,7 +70,11 @@ function Skip (count = 0) {
     return this
   }
 
-  return this.SkipWhile((elem, index) => index < count)
+  const result = this.SkipWhile((elem, index) => index < count)
+
+  this.reset()
+
+  return result
 }
 
 /**
@@ -137,6 +144,7 @@ function First (predicate = x => true) {
   __assertNotEmpty(this)
 
   const result = this.SkipWhile(elem => !predicate(elem)).Take(1)
+  this.reset()
 
   return result[0]
 }

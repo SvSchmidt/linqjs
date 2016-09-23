@@ -22,13 +22,14 @@
    * @
    */
   function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
-    debugger
+    const values = this.ToArray()
+
     if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
-      return aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, elem => elem)
+      return aggregateCollection(values.slice(1, values.length), values.slice(0, 1)[0], seedOrAccumulator, elem => elem)
     } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
-      return aggregateCollection(this, seedOrAccumulator, accumulator, elem => elem)
+      return aggregateCollection(values, seedOrAccumulator, accumulator, elem => elem)
     } else {
-      return aggregateCollection(this, seedOrAccumulator, accumulator, resultTransformFn)
+      return aggregateCollection(values, seedOrAccumulator, accumulator, resultTransformFn)
     }
   }
 

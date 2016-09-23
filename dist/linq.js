@@ -99,7 +99,7 @@ let DefaultComparator = (a, b) => {
   function __assertIndexInRange(coll, index) {
     __assertCollection(coll)
     __assert(isNumeric(index), 'Index must be number!')
-    __assert(index >= 0 && index <= coll.Count() - 1, 'Index is out of bounds')
+    __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds')
   }
 
 
@@ -214,8 +214,8 @@ let DefaultComparator = (a, b) => {
     __assertFunction(accumulator)
     __assertFunction(resultTransformFn)
     __assertNotEmpty(coll)
-console.log([seed].Concat(coll).ToArray())
-    return resultTransformFn([seed].Concat(coll).ToArray().reduce(accumulator))
+
+    return resultTransformFn([seed].concat(coll).reduce(accumulator))
   }
 
   function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
@@ -251,26 +251,6 @@ console.log([seed].Concat(coll).ToArray())
     __assertArray(arr)
 
     while (arr.shift()) {}
-  }
-
-  /**
-   * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
-   *
-   * @param  {Array} arr   The array to insert a value into
-   * @param  {any} value   The value to add
-   * @param  {Number} index The index to add the element to, defaults to the end
-   * @return {void}
-   */
-  function insertIntoArray (arr, value, index) {
-    index = paramOrValue(index, arr.length)
-    __assertIndexInRange(arr, index)
-
-    const before = arr.slice(0, index)
-    const after = arr.slice(index)
-
-    emptyArray(arr)
-
-    arr.unshift(...Array.prototype.concat.apply([], [before, value, after]))
   }
 
   function removeFromArray (arr, value) {
@@ -550,9 +530,12 @@ function Contains (elem) {
  */
 function ElementAt (index) {
   __assertIndexInRange(this, index)
-  //__assert(isNumeric(index), 'Index must be numeric!')
+  __assert(isNumeric(index), 'Index must be numeric!')
 
-  return this.SkipWhile((elem, i) => i < index).Take(1)[0]
+  const result = this.Skip(index).Take(1)[0]
+  this.reset()
+
+  return result
 }
 
 /**
@@ -598,7 +581,11 @@ function Skip (count = 0) {
     return this
   }
 
-  return this.SkipWhile((elem, index) => index < count)
+  const result = this.SkipWhile((elem, index) => index < count)
+
+  this.reset()
+
+  return result
 }
 
 /**
@@ -668,6 +655,7 @@ function First (predicate = x => true) {
   __assertNotEmpty(this)
 
   const result = this.SkipWhile(elem => !predicate(elem)).Take(1)
+  this.reset()
 
   return result[0]
 }
@@ -965,6 +953,7 @@ function OrderByDescending(comparator) {
 
 
 
+
 /* src/transformation.js */
 
   /**
@@ -991,13 +980,14 @@ function OrderByDescending(comparator) {
    * @
    */
   function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
-    debugger
+    const values = this.ToArray()
+
     if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
-      return aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, elem => elem)
+      return aggregateCollection(values.slice(1, values.length), values.slice(0, 1)[0], seedOrAccumulator, elem => elem)
     } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
-      return aggregateCollection(this, seedOrAccumulator, accumulator, elem => elem)
+      return aggregateCollection(values, seedOrAccumulator, accumulator, elem => elem)
     } else {
-      return aggregateCollection(this, seedOrAccumulator, accumulator, resultTransformFn)
+      return aggregateCollection(values, seedOrAccumulator, accumulator, resultTransformFn)
     }
   }
 
@@ -1044,11 +1034,11 @@ function OrderByDescending(comparator) {
  * @return {void}
  */
 function Add (value) {
-  return insertIntoArray(this, value)
+  this.Insert(value, this.Count())
 }
 
 /**
- * Insert - Adds an element to the specified index of the array
+ * Insert - Adds an element to the specified index of the collection
  *
  * @see https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx
  * @param  {any}         value The value to add
@@ -1056,7 +1046,16 @@ function Add (value) {
  * @return {void}
  */
 function Insert (value, index) {
-  return insertIntoArray(this, value, index)
+  __assert(index >= 0 && index <= this.Count(), 'Index is out of bounds!')
+
+  const oldIter = this.ToArray()
+
+  this.iterable = function * () {
+    yield* oldIter.slice(0, index)
+    yield value
+    yield* oldIter.slice(index, oldIter.length)
+  }
+  this.reset()
 }
 
 /**
@@ -1066,11 +1065,262 @@ function Insert (value, index) {
  * @return {Boolean}       True if the element was removed, false if not (or the element was not found)
  */
 function Remove (value) {
-  return removeFromArray(this, value)
+  let values = this.ToArray()
+  const result = removeFromArray(values, value)
+
+  if (!result) {
+    return false
+  }
+
+  this.iterable = function * () {
+    yield* values
+  }
+  this.reset()
+
+  return true
 }
 
 
+
+
+/* src/collection.js */
+
+/*
+ * Basic collection for lazy linq operations.
+ */
+let LinqCollection = (function () {
+
+    /**
+     * Creates a new LinqCollection from the given iterable.
+     * 
+     * @param {Iterable<T>} iterable Datasource for this collection.
+     * @param {any}         <T>      Element type.
+     */
+    function LinqCollection(iterable) {
+        __assertIterable(iterable);
+        this._source            = iterable;
+        this.__startedIterating = false;
+        this.__iterationIndex   = 0;
+    }
+
+    /**
+     * Hook function that will be called once before iterating.
+     */
+    LinqCollection.prototype._initialize = function _initialize() {
+        this.__sourceIterator = this._source[Symbol.iterator]();
+    };
+
+    /**
+     * Internal iterator.next() method.
+     * 
+     * @param {any} <T> Element type.
+     * @return {IterationElement<T>} Next element when iterating.
+     */
+    LinqCollection.prototype._next = function _next() {
+        return this.__sourceIterator.next();
+    };
+
+    /**
+     * Internal function that ensures the _initialize() hook is invoked once.
+     * This function also adds the iteration index to the result of _next().
+     * 
+     * @param {any} <T> Element type.
+     * @return {IterationElement<T>} Next element when iterating.
+     */
+    LinqCollection.prototype.__wrappedNext = function __wrappedNext() {
+        if (!this.__startedIterating) {
+            this.__startedIterating = true;
+            this._initialize();
+        }
+        let result = this._next();
+        if (!result.done) {
+            result.index = this.__iterationIndex;
+            this.__iterationIndex++;
+        }
+        return result;
+    };
+
+    /**
+     * Creates an array from this collection.
+     * Iterates once over its elements.
+     * 
+     * @param {any} <T> Element type.
+     * @return {T[]} Array with elements from this collection.
+     */
+    LinqCollection.prototype.ToArray = function toArray() {
+        return [...this];
+    };
+
+    /**
+     * Returns wheather iteration has started or not.
+     * If iteration has not been started yet, _initialize() has not yet been called.
+     *
+     * @return {boolean}
+     */
+    LinqCollection.prototype.StartedIterating = function StartedIterating() {
+        return this.__startedIterating;
+    };
+
+    /**
+     * Provides an iterator for this collection.
+     * 
+     * @param {any} <T> Element type.
+     * @return {Iterator<T>} Iterator for this collection.
+     */
+    LinqCollection.prototype[Symbol.iterator] = function () {
+        __assertIterationNotStarted(this);
+        return {
+            next: () => this.__wrappedNext(),
+        };
+    };
+
+    return LinqCollection;
+})();
+
+/**
+ * Creates a LinqCollection from the given iterable.
+ * 
+ * @param {Iterable<T>} iterable Datasource for the collection.
+ * @param {any}         <T>      Element type.
+ * @return {LinqCollection<T>} Created LinqCollection.
+ */
+function Linq(iterable) {
+    __assertIterable(iterable);
+    return new LinqCollection(iterable);
+}
+
+
+
+/* src/ordered-collection.js */
+
+/*
+ * Ordered linq collection.
+ */
+let OrderedLinqCollection = (function () {
+
+    /**
+     * Creates a new ordered linq collection using the given comparator and heap for sorting.
+     *
+     * @param {Iterable<T>}       iterable        Datasource for this collection.
+     * @param {(T, T) => boolean} comparator      Comparator for sorting.
+     * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
+     * @param {any}               <T>             Element type.
+     */
+    function OrderedLinqCollection(iterable, comparator, heapConstructor) {
+        __assertIterable(iterable);
+        __assertFunction(comparator);
+        __assertFunction(heapConstructor);
+        Collection.apply(this, [iterable]);
+
+        this.__comparator      = comparator;
+        this.__heapConstructor = heapConstructor;
+    }
+
+    // inheritance stuff (we don't want to implement stuff twice)
+    OrderedLinqCollection.prototype = Object.create(Collection.prototype);
+    OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
+
+    /**
+     * Specifies further sorting by the given comparator for equal elements.
+     *
+     * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
+     * @param {any}               <T>                  Element type.
+     * @return {OrderedLinqCollection<T>} Created ordered linq collection.
+     */
+    OrderedLinqCollection.prototype.ThenBy = function ThenBy(additionalComparator) {
+        __assertIterationNotStarted(this);
+        if (isString(additionalComparator)) {
+            additionalComparator = GetComparatorFromKeySelector(additionalComparator);
+        }
+        __assertFunction(additionalComparator);
+
+        // build new comparator function when not yet iterated
+        let currentComparator = this.__comparator;
+        this.__comparator = (a, b) => {
+            let res = currentComparator(a, b);
+            if (res !== 0) {
+                return res;
+            }
+            return additionalComparator(a, b);
+        };
+        return this;
+    };
+
+    /**
+     * Returns the result of the heap iterator.
+     *
+     * @param {any} <T> Element type.
+     * @return {IterationElement<T>} Next element when iterating.
+     */
+    OrderedLinqCollection.prototype.next = function next() {
+        //__assert(!!this.__heapIterator, 'No heap build!');
+
+        if (!this.orderStarted) {
+          this.orderStarted = true
+
+          const heap = Reflect.construct(this.__heapConstructor, [this.ToArray(), this.__comparator])
+
+          this.iterator = heap[Symbol.iterator]()
+        }
+
+        return this.iterator.next()
+    };
+
+    return OrderedLinqCollection;
+})();
+
+/**
+ * Creates a comparator function from the given selector string.
+ * The selector string has to be in same format as within javascript code.
+ *
+ * @param  {string} selector Javascript code selector string.
+ * @return {(any, any) => boolean} Created comparator function.
+ */
+function GetComparatorFromKeySelector(selector) {
+    __assertString(selector);
+    if (selector === '') {
+        return Collection.prototype.DefaultComparator;
+    }
+    if (!(selector.startsWith('[') || selector.startsWith('.'))) {
+        selector = `.${selector}`;
+    }
+    let result;
+    eval(`result = function (a, b) { return Collection.prototype.DefaultComparator(a${selector}, b${selector}) }`);
+    return result;
+}
+
+/**
+ * Orderes this linq collection using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               <T>        Element type.
+ * @return {OrderedLinqCollection<T>} Ordered collection.
+ */
+function OrderBy (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
+};
+
+/**
+ * Orderes this linq collection in descending order using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               <T>        Element type.
+ * @return {OrderedLinqCollection<T>} Ordered collection.
+ */
+function OrderByDescending (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
+};
+
+
   /* Export public interface */
-  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, Aggregate, Distinct, Select, Add, Insert, Remove })
+  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, Aggregate, Distinct, Select, Add, Insert, Remove, LinqCollection, Linq, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
 }))
 }())

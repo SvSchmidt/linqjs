@@ -36,5 +36,5 @@
   function __assertIndexInRange(coll, index) {
     __assertCollection(coll)
     __assert(isNumeric(index), 'Index must be number!')
-    __assert(index >= 0 && index <= coll.Count() - 1, 'Index is out of bounds')
+    __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds')
   }

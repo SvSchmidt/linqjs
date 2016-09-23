@@ -47,14 +47,11 @@ describe('ordered-collection.js', function () {
             [9, 3, ''],
         ];
         it('should generate a comparator that produces the same results as the "<", ">" & "==" operators', function () {
-            const Linq = Array.prototype.Linq;
-            const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-            const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+            const Linq = Collection.prototype.Linq;
+            const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+            const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
 
-            for (var values of tests) {
-                var a = values[0];
-                var b = values[1];
-                var selector = values[2];
+            for (let [a, b, selector] of tests) {
                 var comparator = GetComparatorFromKeySelector(selector);
 
                 if (comparator(a, b) < 0) {
@@ -73,15 +70,15 @@ describe('ordered-collection.js', function () {
     describe('OrderedLinqCollection', function () {
         describe('OrderBy', function () {
             it('shoult order the collection properly', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
-        
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
+
                 const comparatorA = GetComparatorFromKeySelector('a');
                 const comparatorB = GetComparatorFromKeySelector('b');
                 const comparatorC = GetComparatorFromKeySelector('c');
                 const comparatorD = GetComparatorFromKeySelector('d');
-                
+
                 const comparatorFull = function (a, b) {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
@@ -99,15 +96,15 @@ describe('ordered-collection.js', function () {
 
         describe('OrderBy.ThenBy', function () {
             it('should order the collection with respect to subelements properly', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
-        
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
+
                 const comparatorA = GetComparatorFromKeySelector('a');
                 const comparatorB = GetComparatorFromKeySelector('b');
                 const comparatorC = GetComparatorFromKeySelector('c');
                 const comparatorD = GetComparatorFromKeySelector('d');
-                
+
                 const comparatorFull = function (a, b) {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
@@ -131,15 +128,15 @@ describe('ordered-collection.js', function () {
 
         describe('OrderByDescending', function () {
             it('shoult order the collection properly by descending order', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
-        
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
+
                 const comparatorA = GetComparatorFromKeySelector('a');
                 const comparatorB = GetComparatorFromKeySelector('b');
                 const comparatorC = GetComparatorFromKeySelector('c');
                 const comparatorD = GetComparatorFromKeySelector('d');
-                
+
                 const comparatorFull = function (a, b) {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
@@ -158,15 +155,15 @@ describe('ordered-collection.js', function () {
 
         describe('OrderByDescending.ThenBy', function () {
             it('should order the collection with respect to subelements properly by descending order', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
-        
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
+
                 const comparatorA = GetComparatorFromKeySelector('a');
                 const comparatorB = GetComparatorFromKeySelector('b');
                 const comparatorC = GetComparatorFromKeySelector('c');
                 const comparatorD = GetComparatorFromKeySelector('d');
-                
+
                 const comparatorFull = function (a, b) {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
