@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         },
         dist: {
           files: {
-              'dist/linq.js': 'tmp/linq.es6.js'
+              'dist/linq.js': 'dist/linq.es6.js'
           }
         },
     },

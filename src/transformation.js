@@ -63,4 +63,58 @@
     return removeDuplicates(this, equalityCompareFn)
   }
 
-  __export({ Aggregate, Distinct, Select })
+  function ToArray () {
+    const result = [...this]
+    this.reset()
+
+    return result
+  }
+
+  /**
+   * ToDictionary - description
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @param  {Function} keySelector                  Function to get the keys from the elements
+   * @param  {Function} elementSelectorOrKeyComparer Function to either get the elements or compare the keys
+   * @param  {Function} keyComparer                  Function to compare the keys
+   * @return {Map}                                   A dictionary (Map)
+   */
+  function ToDictionary (keySelector, elementSelectorOrKeyComparer, keyComparer) {
+    __assertFunction(keySelector)
+
+    if (!elementSelectorOrKeyComparer && !keyComparer) {
+      // ToDictionary(keySelector)
+      return this.ToDictionary(keySelector, elem => elem, defaultEqualityCompareFn)
+    } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 1) {
+      // ToDictionary(keySelector, elementSelector)
+      return this.ToDictionary(keySelector, elementSelectorOrKeyComparer, defaultEqualityCompareFn)
+    } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 2) {
+      // ToDictionary(keySelector, keyComparer)
+      return this.ToDictionary(keySelector, elem => elem, elementSelectorOrKeyComparer)
+    }
+
+    // ToDictionary(keySelector, elementSelector, keyComparer)
+
+    __assertFunction(keyComparer)
+    __assertFunction(elementSelectorOrKeyComparer)
+
+    let usedKeys = []
+    let result = new Map()
+    const input = this.ToArray()
+    const elementSelector = elementSelectorOrKeyComparer
+
+    for (let value of input) {
+      let key = keySelector(value)
+      let elem = elementSelector(value)
+
+      __assert(key != null, 'Key is not allowed to be null!')
+      __assert(!usedKeys.Any(x => keyComparer(x, key)), `Key '${key}' is already in use!`)
+
+      usedKeys.push(key)
+      result.set(key, elem)
+    }
+
+    return result
+  }
+
+  __export({ Aggregate, Distinct, Select, ToArray, ToDictionary })

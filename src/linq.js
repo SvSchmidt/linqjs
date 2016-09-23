@@ -25,6 +25,13 @@ window.Collection = (function () {
       this.started = false
     }
 
+    function ToArray() {
+      const result = [...this]
+      this.reset()
+
+      return result
+    }
+
     return { next, reset }
   }())
 
@@ -55,24 +62,17 @@ window.Collection = (function () {
     }
   }
 
-  Collection.prototype.ToArray = function () {
-    const result = [...this]
-    this.reset()
-
-    return result
-  }
-
   return Collection
 }())
 
 function install () {
   __assign(Collection.prototype, linqjs)
-  
+
   // inheritance stuff (we don't want to implement stuff twice)
   OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
   OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
 
-  const protosToApplyWrappers = [window.Array.prototype]
+  const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
 
   Object.keys(linqjs).forEach(k => {
     for (let proto of protosToApplyWrappers) {

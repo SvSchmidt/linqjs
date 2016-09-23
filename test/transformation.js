@@ -34,23 +34,63 @@ describe('Transformation', function () {
       expect([1,2,3,4,5,6,6,7,1,2].Distinct().ToArray()).to.be.deep.equal([1,2,3,4,5,6,7])
     })
 
-    it('should accept a custom equality compare function and return the distinct valeus', function () {
+    it('should accept a custom equality compare function and return the distinct values', function () {
       const pets = [
         { name: 'miez', species: 'cat' },
         { name: 'wuff', species: 'dog' },
         { name: 'leo', species: 'cat' },
-        { name: 'flipper', specices: 'dolphin' }
+        { name: 'flipper', species: 'dolphin' }
       ]
 
       expect(pets.Distinct((a, b) => a.species === b.species).ToArray()).to.be.deep.equal([
         { name: 'miez', species: 'cat' },
         { name: 'wuff', species: 'dog' },
-        { name: 'flipper', specices: 'dolphin' }
+        { name: 'flipper', species: 'dolphin' }
       ])
 
       expect([1,2,3,4].Distinct((a, b) => a % 2 === b % 2).ToArray()).to.be.deep.equal([1,2])
       expect([].Distinct().ToArray()).to.be.deep.equal([])
       expect([].Distinct((a, b) => a % 2 === b % 2).ToArray()).to.be.deep.equal([])
+    })
+  })
+
+  describe('ToDictionary', function () {
+    const pets = [
+      { name: 'miez', species: 'cat' },
+      { name: 'wuff', species: 'dog' },
+      { name: 'leo', species: 'cat' },
+      { name: 'flipper', species: 'dolphin' }
+    ]
+
+    it('should have the overload ToDictionary(keySelector)', function () {
+      const petDict = pets.ToDictionary(p => p.name)
+      expect(petDict instanceof Map).to.be.true
+      expect(petDict.has('miez')).to.be.true
+      expect(petDict.get('leo')).to.be.deep.equal({ name: 'leo', species: 'cat' })
+    })
+
+    it('should have the overload ToDictionary(keySelector, elementSelector)', function () {
+      const petDict = pets.ToDictionary(p => p.name, p => p.species)
+      expect(petDict instanceof Map).to.be.true
+      expect(petDict.has('miez')).to.be.true
+      expect(petDict.get('leo')).to.be.equal('cat')
+      expect(petDict.get('miez')).to.be.equal('cat')
+    })
+
+    it('should have the overload ToDictionary(keySelector, keyComparer)', function () {
+      // because of a.length === b.length 'cat' equals 'dog' -> error since the key is in use
+      expect(function () { pets.ToDictionary(p => p.species, (a, b) => a.length === b.length) }).to.throw(Error)
+      expect(function () { pets.ToDictionary(p => p.name, (a, b) => a.length === b.length) }).to.throw(Error)
+      expect(function () { pets.Skip(2).ToDictionary(p => p.name, (a, b) => a.length === b.length) }).not.to.throw(Error)
+    })
+
+    it('should have the overload ToDictionary(keySelector, elementSelector, keyComparer)', function () {
+      // because of a.length === b.length 'cat' equals 'dog' -> error since the key is in use
+      expect(function () { pets.ToDictionary(p => p.species, p => p.name, (a, b) => a.length === b.length) }).to.throw(Error)
+      expect(function () { pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length) }).to.throw(Error)
+      expect(pets.Skip(2).ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length).get('leo')).to.be.equal('cat')
+      expect(pets.Skip(2).ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length).get('flipper')).to.be.equal('dolphin')
+      expect(pets.Skip(2).ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length).has('miez')).to.be.false
     })
   })
 })

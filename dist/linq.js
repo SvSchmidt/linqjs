@@ -395,6 +395,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return constructorOrValue;
     }
 
+    function getParameterCount(fn) {
+      __assertFunction(fn);
+
+      return fn.length;
+    }
+
     /* src/linq.js */
 
     var getIterator = symbolOrString('getIterator');
@@ -422,6 +428,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
         function reset() {
           this.started = false;
+        }
+
+        function ToArray() {
+          var result = [].concat(_toConsumableArray(this));
+          this.reset();
+
+          return result;
         }
 
         return { next: next, reset: reset };
@@ -490,13 +503,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
       };
 
-      Collection.prototype.ToArray = function () {
-        var result = [].concat(_toConsumableArray(this));
-        this.reset();
-
-        return result;
-      };
-
       return Collection;
     }();
 
@@ -507,7 +513,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
       OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
 
-      var protosToApplyWrappers = [window.Array.prototype];
+      var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
       Object.keys(linqjs).forEach(function (k) {
         var _iteratorNormalCompletion3 = true;
@@ -1644,6 +1650,91 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return removeDuplicates(this, equalityCompareFn);
     }
 
+    function ToArray() {
+      var result = [].concat(_toConsumableArray(this));
+      this.reset();
+
+      return result;
+    }
+
+    /**
+     * ToDictionary - description
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @param  {Function} keySelector                  Function to get the keys from the elements
+     * @param  {Function} elementSelectorOrKeyComparer Function to either get the elements or compare the keys
+     * @param  {Function} keyComparer                  Function to compare the keys
+     * @return {Map}                                   A dictionary (Map)
+     */
+    function ToDictionary(keySelector, elementSelectorOrKeyComparer, keyComparer) {
+      __assertFunction(keySelector);
+
+      if (!elementSelectorOrKeyComparer && !keyComparer) {
+        // ToDictionary(keySelector)
+        return this.ToDictionary(keySelector, function (elem) {
+          return elem;
+        }, defaultEqualityCompareFn);
+      } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 1) {
+        // ToDictionary(keySelector, elementSelector)
+        return this.ToDictionary(keySelector, elementSelectorOrKeyComparer, defaultEqualityCompareFn);
+      } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 2) {
+        // ToDictionary(keySelector, keyComparer)
+        return this.ToDictionary(keySelector, function (elem) {
+          return elem;
+        }, elementSelectorOrKeyComparer);
+      }
+
+      // ToDictionary(keySelector, elementSelector, keyComparer)
+
+      __assertFunction(keyComparer);
+      __assertFunction(elementSelectorOrKeyComparer);
+
+      var usedKeys = [];
+      var result = new Map();
+      var input = this.ToArray();
+      var elementSelector = elementSelectorOrKeyComparer;
+
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
+
+      try {
+        var _loop = function _loop() {
+          var value = _step11.value;
+
+          var key = keySelector(value);
+          var elem = elementSelector(value);
+
+          __assert(key != null, 'Key is not allowed to be null!');
+          __assert(!usedKeys.Any(function (x) {
+            return keyComparer(x, key);
+          }), 'Key \'' + key + '\' is already in use!');
+
+          usedKeys.push(key);
+          result.set(key, elem);
+        };
+
+        for (var _iterator11 = input[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          _loop();
+        }
+      } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
+          }
+        } finally {
+          if (_didIteratorError11) {
+            throw _iteratorError11;
+          }
+        }
+      }
+
+      return result;
+    }
+
     /* src/insert-and-remove.js */
 
     /**
@@ -1725,6 +1816,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       this.reset();
 
       return true;
+    }
+
+    /* src/order.js */
+
+    // TODO: change implementation to use iterators!
+
+    function Order() {
+      return this.OrderBy(DefaultComparator);
+    }
+
+    function OrderCompare() {
+      return this.sort(DefaultComparator);
+    }
+
+    function OrderBy(comparator) {
+      __assertFunction(comparator);
+      var heap = new MinHeap(this, comparator);
+      return [].concat(_toConsumableArray(heap));
+    }
+
+    function OrderDescending() {
+      return this.OrderByDescending(DefaultComparator);
+    }
+
+    function OrderByDescending(comparator) {
+      __assertFunction(comparator);
+      var heap = new MaxHeap(this, comparator);
+      return [].concat(_toConsumableArray(heap));
     }
 
     /* src/ordered-collection.js */
@@ -1851,6 +1970,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
   });
 })();

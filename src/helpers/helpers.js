@@ -126,3 +126,9 @@
 
     return constructorOrValue
   }
+
+  function getParameterCount (fn) {
+    __assertFunction(fn)
+
+    return fn.length
+  }
