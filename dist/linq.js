@@ -143,7 +143,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return Object.prototype.toString.call(obj) === '[object GeneratorFunction]';
     }
 
-    /* src/helpers.js */
+    /* src/helpers/helpers.js */
 
     function toJSON(obj) {
       return JSON.stringify(obj);
@@ -186,32 +186,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      */
     function paramOrValue(param, value) {
       return typeof param === 'undefined' ? value : param;
-    }
-
-    function filterArray(arr) {
-      var predicate = arguments.length <= 1 || arguments[1] === undefined ? function (elem, index) {
-        return true;
-      } : arguments[1];
-      var stopAfter = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
-
-      __assert(isArray(arr), 'arr must be array!');
-      __assertFunction(predicate);
-      __assert(isNumeric(stopAfter), 'stopAfter must be numeric!');
-
-      var result = [];
-      var length = arr.length;
-
-      for (var i = 0; i < length; i++) {
-        if (predicate(arr[i], i)) {
-          result.push(arr[i]);
-
-          if (result.length >= stopAfter) {
-            break;
-          }
-        }
-      }
-
-      return result;
     }
 
     function aggregateCollection(coll, seed, accumulator, resultTransformFn) {
