@@ -39,8 +39,8 @@ module.exports = function (grunt) {
         src: ['dist/linq.min.js', 'dist/linq.js', 'tmp/linq.js'],
         options: {
             stdout: 'linq.js ES6   :   {{= Number(size(src[2])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
-                    'linq.js       :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
-                    'linq.min.js   :   {{= Number(size(src[0])/1024).toFixed(2) }} kB' + grunt.util.linefeed
+                    'linq.js       :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed /*+
+                    'linq.min.js   :   {{= Number(size(src[0])/1024).toFixed(2) }} kB' + grunt.util.linefeed*/
         }
       }
     },
