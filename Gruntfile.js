@@ -194,7 +194,7 @@ module.exports = function (grunt) {
   })
 
   grunt.registerTask('test', ['mochacli'])
-  grunt.registerTask('package', ['clean:dist',
+  grunt.registerTask('debug', ['clean:dist',
                                 'build:debug',
                                 'babel:dist',
                                 'uglify:dist',
@@ -207,5 +207,5 @@ module.exports = function (grunt) {
                                 'usebanner',
                                 'file_info',
                                 'clean:tmp'])
-  grunt.registerTask('default', ['package', 'test', 'watch'])
+  grunt.registerTask('default', ['debug', 'test', 'watch'])
 };
