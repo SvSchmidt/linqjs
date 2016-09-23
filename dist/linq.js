@@ -667,6 +667,45 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return 0;
     };
 
+    /**
+     * HeapElement class that also provides the element index for sorting.
+     */
+    var HeapElement = function () {
+
+      /**
+       * Creates a new HeapElement.
+       * 
+       * @param {number} index Element index.
+       * @param {T}      value Element value.
+       * @param {any}    <T>   Value type.
+       */
+      function HeapElement(index, value) {
+        this.__index = index;
+        this.__value = value;
+
+        // for faster instance detection
+        this.__isHeapElementInstance = true;
+      }
+
+      /**
+       * Creates or returns a heap element from the given data.
+       * If obj is a HeapElement obj is returned, creates a HeapElement otherwise.
+       * 
+       * @param {number}           index Current element index.
+       * @param {T|HeapElement<T>} obj   Element.
+       * @param {any}              <T>   Value type.
+       * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
+       */
+      HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
+        if (obj === undefined || obj.__isHeapElementInstance) {
+          return obj;
+        }
+        return new HeapElement(index, obj);
+      };
+
+      return HeapElement;
+    }();
+
     /*
      * Partially sorted heap that contains the smallest element within root position.
      */
@@ -686,8 +725,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         __assertArray(elements);
         __assertFunction(comparator);
 
-        this.comparator = comparator;
+        // we do not wrap elements here since the heapify function does that the moment it encounters elements
         this.elements = elements;
+
+        // create comparator that works on heap elements (it also ensures equal elements remain in original order)
+        this.comparator = function (a, b) {
+          var res = comparator(a.__value, b.__value);
+          if (res !== 0) {
+            return res;
+          }
+          return DefaultComparator(a.__index, b.__index);
+        };
 
         // create heap ordering
         createHeap(this.elements, this.comparator);
@@ -706,12 +754,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         var left = right - 1;
         var bestIndex = i;
 
+        // wrap elements the moment we encouter them first
+        elements[bestIndex] = HeapElement.CreateHeapElement(bestIndex, elements[bestIndex]);
+
         // check if the element is currently misplaced
-        if (left < elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
-          bestIndex = left;
+        if (left < elements.length) {
+          elements[left] = HeapElement.CreateHeapElement(left, elements[left]);
+          if (comparator(elements[left], elements[bestIndex]) < 0) {
+            bestIndex = left;
+          }
         }
-        if (right < elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
-          bestIndex = right;
+        if (right < elements.length) {
+          elements[right] = HeapElement.CreateHeapElement(right, elements[right]);
+          if (comparator(elements[right], elements[bestIndex]) < 0) {
+            bestIndex = right;
+          }
         }
 
         // if the element is misplaced, swap elements and continue until we get the right position
@@ -734,6 +791,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @param {any}              <T>        Heap element type.
        */
       function createHeap(elements, comparator) {
+
+        // sepecial case: empty array
+        if (elements.length === 0) {
+
+          // nothing to do here
+          return;
+        }
+
         for (var i = Math.floor(elements.length / 2); i >= 0; i--) {
 
           // do fancy stuff
@@ -759,9 +824,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @return {T} Top element from heap.
        */
       MinHeap.prototype.getTopElement = function () {
+
         // special case: only one element left
         if (this.elements.length === 1) {
-          return this.elements.pop();
+          return this.elements.pop().__value;
         }
 
         var topElement = this.elements[0];
@@ -771,7 +837,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         // do fancy stuff
         heapify(this.elements, this.comparator, 0);
 
-        return topElement;
+        return topElement.__value;
       };
 
       /**
@@ -1019,7 +1085,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * @param {any} <T> Element type.
        * @return {T[]} Array with elements from this collection.
        */
-      LinqCollection.prototype.ToArray = function toArray() {
+      LinqCollection.prototype.ToArray = function ToArray() {
         return [].concat(_toConsumableArray(this));
       };
 

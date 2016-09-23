@@ -16,7 +16,8 @@ if (process.env.IS_COVERAGE) {
     require('../dist/linq').install()
 }
 
-const maxValue  = 1000000;
+const maxValue  = 100000;
+const maxLength = 100;
 const maxRepeat = 10;
 
 function generateRandomNumberObjectList() {
@@ -25,7 +26,7 @@ function generateRandomNumberObjectList() {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min;
     }
-    const length = getRandomNumber(0, maxValue);
+    const length = getRandomNumber(0, maxLength);
     var result = [];
     for (var i = 0; i < length; i++) {
         result.push({
@@ -33,6 +34,7 @@ function generateRandomNumberObjectList() {
             b: getRandomNumber(-1 * maxValue, maxValue),
             c: getRandomNumber(-1 * maxValue, maxValue),
             d: getRandomNumber(-1 * maxValue, maxValue),
+            e: getRandomNumber(-1 * maxValue, maxValue),
         });
     }
     return result;
@@ -72,27 +74,36 @@ describe('ordered-collection.js', function () {
 
     describe('OrderedLinqCollection', function () {
         describe('OrderBy', function () {
-            it('shoult order the collection properly', function () {
+            it('should order the collection properly', function () {
                 const Linq = Array.prototype.Linq;
                 const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
                 const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
-        
-                const comparatorA = GetComparatorFromKeySelector('a');
-                const comparatorB = GetComparatorFromKeySelector('b');
-                const comparatorC = GetComparatorFromKeySelector('c');
-                const comparatorD = GetComparatorFromKeySelector('d');
-                
-                const comparatorFull = function (a, b) {
-                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
-                };
 
-                for (var i; i < maxRepeat; i++) {
+                const comparatorA = GetComparatorFromKeySelector('a');
+
+                for (var i = 0; i < maxRepeat; i++) {
                     const list = generateRandomNumberObjectList();
 
                     var sorted = list.slice(0);
                     sorted.sort(comparatorA);
 
                     expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                }
+            })
+            it('should order the collection properly by the provided key selector', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+
+                const comparatorA = GetComparatorFromKeySelector('a');
+
+                for (var i = 0; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
+
+                    var sorted = list.slice(0);
+                    sorted.sort(comparatorA);
+
+                    expect(Linq(list).OrderBy('a').ToArray()).to.be.deep.equal(sorted);
                 }
             })
         })
@@ -112,7 +123,7 @@ describe('ordered-collection.js', function () {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
 
-                for (var i; i < maxRepeat; i++) {
+                for (var i = 0; i < maxRepeat; i++) {
                     const list = generateRandomNumberObjectList();
 
                     var sorted = list.slice(0);
@@ -127,10 +138,7 @@ describe('ordered-collection.js', function () {
                     expect(collection.ToArray()).to.be.deep.equal(sorted);
                 }
             })
-        })
-
-        describe('OrderByDescending', function () {
-            it('shoult order the collection properly by descending order', function () {
+            it('should order the collection with respect to subelements properly by the provided key selector', function () {
                 const Linq = Array.prototype.Linq;
                 const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
                 const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
@@ -144,14 +152,54 @@ describe('ordered-collection.js', function () {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
 
-                for (var i; i < maxRepeat; i++) {
+                for (var i = 0; i < maxRepeat; i++) {
                     const list = generateRandomNumberObjectList();
 
                     var sorted = list.slice(0);
-                    sorted.sort(comparatorA);
-                    sorted = sorted.reverse();
+                    sorted.sort(comparatorFull);
 
-                    expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                    const collection = Linq(list)
+                            .OrderBy('a')
+                            .ThenBy('b')
+                            .ThenBy('c')
+                            .ThenBy('d');
+
+                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                }
+            })
+        })
+
+        describe('OrderByDescending', function () {
+            it('should order the collection properly by descending order', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+
+                const comparatorA = GetComparatorFromKeySelector('a');
+
+                for (var i = 0; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
+
+                    var sorted = list.slice(0);
+                    sorted.sort((a, b) => -1 * comparatorA(a, b));
+
+                    expect(Linq(list).OrderByDescending(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                }
+            })
+            it('should order the collection properly by descending order by the provided key selector', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+
+                const comparatorA = GetComparatorFromKeySelector('a');
+
+                for (var i = 0; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
+
+                    var sorted = list.slice(0);
+                    sorted.sort((a, b) => -1 * comparatorA(a, b));
+
+                    expect(Linq(list).OrderByDescending('a').ToArray()).to.be.deep.equal(sorted);
                 }
             })
         })
@@ -171,18 +219,46 @@ describe('ordered-collection.js', function () {
                     return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
                 };
 
-                for (var i; i < maxRepeat; i++) {
+                for (var i = 0; i < maxRepeat; i++) {
                     const list = generateRandomNumberObjectList();
 
                     var sorted = list.slice(0);
-                    sorted.sort(comparatorFull);
-                    sorted = sorted.reverse();
+                    sorted.sort((a, b) => -1 * comparatorFull(a, b));
 
                     const collection = Linq(list)
-                            .OrderBy(comparatorA)
+                            .OrderByDescending(comparatorA)
                             .ThenBy(comparatorB)
                             .ThenBy(comparatorC)
                             .ThenBy(comparatorD);
+
+                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                }
+            })
+            it('should order the collection with respect to subelements properly by descending order and the provided key selector', function () {
+                const Linq = Array.prototype.Linq;
+                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+        
+                const comparatorA = GetComparatorFromKeySelector('a');
+                const comparatorB = GetComparatorFromKeySelector('b');
+                const comparatorC = GetComparatorFromKeySelector('c');
+                const comparatorD = GetComparatorFromKeySelector('d');
+                
+                const comparatorFull = function (a, b) {
+                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
+                };
+
+                for (var i = 0; i < maxRepeat; i++) {
+                    const list = generateRandomNumberObjectList();
+
+                    var sorted = list.slice(0);
+                    sorted.sort((a, b) => -1 * comparatorFull(a, b));
+
+                    const collection = Linq(list)
+                            .OrderByDescending('a')
+                            .ThenBy('b')
+                            .ThenBy('c')
+                            .ThenBy('d');
 
                     expect(collection.ToArray()).to.be.deep.equal(sorted);
                 }

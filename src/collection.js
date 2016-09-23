@@ -60,7 +60,7 @@ let LinqCollection = (function () {
      * @param {any} <T> Element type.
      * @return {T[]} Array with elements from this collection.
      */
-    LinqCollection.prototype.ToArray = function toArray() {
+    LinqCollection.prototype.ToArray = function ToArray() {
         return [...this];
     };
 
