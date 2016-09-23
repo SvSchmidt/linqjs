@@ -1,15 +1,3 @@
-function Contains (elem) {
-  for (let val of this) {
-    if (defaultEqualityCompareFn(elem, val)) {
-      return true
-    }
-  }
-
-  this.reset()
-
-  return false
-}
-
 /**
  * ElementAt - Returns the element at the given index
  *

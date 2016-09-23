@@ -619,6 +619,39 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* src/search.js */
 
+    function Contains(elem) {
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = this[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var val = _step4.value;
+
+          if (defaultEqualityCompareFn(elem, val)) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      this.reset();
+
+      return false;
+    }
+
     function Where() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
         return true;
@@ -629,26 +662,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _self = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee5() {
-        var index, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, val;
+        var index, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, val;
 
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 index = 0;
-                _iteratorNormalCompletion4 = true;
-                _didIteratorError4 = false;
-                _iteratorError4 = undefined;
+                _iteratorNormalCompletion5 = true;
+                _didIteratorError5 = false;
+                _iteratorError5 = undefined;
                 _context5.prev = 4;
-                _iterator4 = _self[Symbol.iterator]();
+                _iterator5 = _self[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
+                if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
                   _context5.next = 15;
                   break;
                 }
 
-                val = _step4.value;
+                val = _step5.value;
 
                 if (!predicate(val, index)) {
                   _context5.next = 11;
@@ -663,7 +696,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 index++;
 
               case 12:
-                _iteratorNormalCompletion4 = true;
+                _iteratorNormalCompletion5 = true;
                 _context5.next = 6;
                 break;
 
@@ -674,26 +707,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 17:
                 _context5.prev = 17;
                 _context5.t0 = _context5['catch'](4);
-                _didIteratorError4 = true;
-                _iteratorError4 = _context5.t0;
+                _didIteratorError5 = true;
+                _iteratorError5 = _context5.t0;
 
               case 21:
                 _context5.prev = 21;
                 _context5.prev = 22;
 
-                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                  _iterator4.return();
+                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                  _iterator5.return();
                 }
 
               case 24:
                 _context5.prev = 24;
 
-                if (!_didIteratorError4) {
+                if (!_didIteratorError5) {
                   _context5.next = 27;
                   break;
                 }
 
-                throw _iteratorError4;
+                throw _iteratorError5;
 
               case 27:
                 return _context5.finish(24);
@@ -767,39 +800,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* src/access.js */
-
-    function Contains(elem) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
-
-      try {
-        for (var _iterator5 = this[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var val = _step5.value;
-
-          if (defaultEqualityCompareFn(elem, val)) {
-            return true;
-          }
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
-      }
-
-      this.reset();
-
-      return false;
-    }
 
     /**
      * ElementAt - Returns the element at the given index

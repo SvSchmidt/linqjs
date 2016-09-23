@@ -1,3 +1,15 @@
+function Contains (elem) {
+  for (let val of this) {
+    if (defaultEqualityCompareFn(elem, val)) {
+      return true
+    }
+  }
+
+  this.reset()
+
+  return false
+}
+
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
