@@ -1,5 +1,11 @@
 function Contains (elem) {
-  return !!~this.indexOf(elem)
+  for (let val of this) {
+    if (defaultEqualityCompareFn(elem, val)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 /**
@@ -10,10 +16,10 @@ function Contains (elem) {
  * @return {any}
  */
 function ElementAt (index) {
-  __assert(index < this.length && index >= 0, 'Array index is out of bounds!')
-  __assert(isNumeric(index), 'Index must be numeric!')
+  __assertIndexInRange(this, index)
+  //__assert(isNumeric(index), 'Index must be numeric!')
 
-  return this[index]
+  return this.SkipWhile((elem, i) => i < index).Take(1)[0]
 }
 
 /**
@@ -30,28 +36,19 @@ function Take (count = 0) {
     return []
   }
 
-  return this.slice(0, count)
-}
+  let result = []
 
-/**
- * findFirstNonMatchingIndex - Returns the first index of the array which does not match the predicate
- *
- * @param  {Array} arr
- * @param  {Function} predicate
- * @return {Number}
- */
-function findFirstNonMatchingIndex (arr, predicate) {
-  __assertArray(arr)
+  for (let val of this) {
+    result.push(val)
 
-  const length = arr.length
-
-  for (let i = 0; i < length; i++) {
-    if (!predicate(arr[i], i)) {
-      return i
+    if (result.length === count) {
+      break
     }
   }
 
-  return arr.length - 1
+  this.reset()
+
+  return result
 }
 
 /**
@@ -68,7 +65,7 @@ function Skip (count = 0) {
     return this
   }
 
-  return this.slice(count, this.length)
+  return this.SkipWhile((elem, index) => index < count)
 }
 
 /**
@@ -81,7 +78,17 @@ function Skip (count = 0) {
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  return this.Take(findFirstNonMatchingIndex(this, predicate))
+  const _self = this
+
+  return new Collection(function * () {
+    let index = 0
+
+    for (let val of _self) {
+      if (!predicate(val, index)) continue
+
+      yield val
+    }
+  }()).ToArray()
 }
 
 /**
@@ -94,14 +101,25 @@ function TakeWhile (predicate = (elem, index) => true) {
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  return this.Skip(findFirstNonMatchingIndex(this, predicate))
+  const _self = this
+
+  return new Collection(function * () {
+    let index = 0
+
+    for (let val of _self) {
+      if (predicate(val, index++)) continue
+
+      yield val
+    }
+  }())
 }
 
 function First (predicate = x => true) {
-  __assertFunction(predicate)
-  __assertNotEmpty(this)
+  //__assertFunction(predicate)
+  //__assertNotEmpty(this)
 
-  let result = filterArray(this, predicate, 1)
+  const result = this.SkipWhile(elem => !predicate(elem)).Take(1)
+  this.reset()
 
   if (result[0]) {
     return result[0]
@@ -110,8 +128,8 @@ function First (predicate = x => true) {
   return null;
 }
 
-function resultOrDefault(arr, originalFn, predicateOrConstructor = x => true, constructor = Object) {
-  __assertArray(arr)
+function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {
+  //__assertArray(arr)
 
   let predicate
 
@@ -125,12 +143,10 @@ function resultOrDefault(arr, originalFn, predicateOrConstructor = x => true, co
   __assertFunction(predicate)
   __assert(isNative(constructor), 'constructor must be native constructor, e.g. Number!')
 
-  if (!isEmpty(arr)) {
-    let result = originalFn.call(arr, predicate)
+  let result = originalFn.call(collection, predicate)
 
-    if (result) {
-      return result;
-    }
+  if (result) {
+    return result
   }
 
   return getDefault(constructor)
@@ -141,10 +157,10 @@ function FirstOrDefault (predicateOrConstructor = x => true, constructor = Objec
 }
 
 function Last (predicate = x => true) {
-  __assertFunction(predicate)
-  __assertNotEmpty(this)
+  //__assertFunction(predicate)
+  //__assertNotEmpty(this)
 
-  return this.reverse().First(predicate)
+  return new Collection(this.ToArray().reverse()).First(predicate)
 }
 
 function LastOrDefault (predicateOrConstructor = x => true, constructor = Object) {
@@ -152,16 +168,24 @@ function LastOrDefault (predicateOrConstructor = x => true, constructor = Object
 }
 
 function Single (predicate = x => true) {
-  __assertFunction(predicate)
-  __assertNotEmpty(this)
+  //__assertFunction(predicate)
+  //__assertNotEmpty(this)
 
-  let result = filterArray(this, predicate)
+  let index = 0
+  let result
 
-  if (result.length === 1) {
-    return result[0]
+  for (let val of this) {
+    if (index++ && predicate(val)) {
+      result = val
+      break
+    }
   }
 
-  throw new Error('Sequence contains more than one element')
+  if (this.First(elem => predicate(elem) && !defaultEqualityCompareFn(elem, result))) {
+    throw new Error('Sequence contains more than one element')
+  }
+
+  return result
 }
 
 function SingleOrDefault (predicateOrConstructor = x => true, constructor = Object) {
@@ -173,7 +197,7 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
  * @param {Function} constructor A native constructor to get the default for, e.g. Number
- * @return {Array} 
+ * @return {Array}
  *//**
  * DefaultIfEmpty - Returns the array or a new array containing the provided default value if empty
  *

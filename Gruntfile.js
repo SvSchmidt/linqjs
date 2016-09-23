@@ -83,7 +83,7 @@ module.exports = function (grunt) {
     concat: {
       all: {
         src: 'fragments/sources.js',
-        target: 'tmp/linq.js'
+        target: 'dist/linq.js'
       }
     }
   });
@@ -159,7 +159,7 @@ module.exports = function (grunt) {
     for (let file of sourceFileNames) {
       const [sourceWithoutExports, theExports] = getAndRemoveExports(getSource(file))
 
-      linqjsOutput += `\n\n/* ${file} */\n\n` // add file name as a comment 
+      linqjsOutput += `\n\n/* ${file} */\n\n` // add file name as a comment
       linqjsOutput += sourceWithoutExports
       linqjsExports.push(theExports)
     }
@@ -190,9 +190,9 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['mochacli'])
   grunt.registerTask('build', ['clean:dist',
                                 'concat:all',
-                                'jshint:after_concat',
-                                'babel:dist',
-                                'uglify:dist',
+                                //'jshint:after_concat',
+                                //'babel:dist',
+                                //'uglify:dist',
                                 'usebanner',
                                 'file_info'])
   grunt.registerTask('dist', ['build', 'clean:tmp'])

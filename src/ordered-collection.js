@@ -5,7 +5,7 @@ let OrderedLinqCollection = (function () {
 
     /**
      * Creates a new ordered linq collection using the given comparator and heap for sorting.
-     * 
+     *
      * @param {Iterable<T>}       iterable        Datasource for this collection.
      * @param {(T, T) => boolean} comparator      Comparator for sorting.
      * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
@@ -15,7 +15,7 @@ let OrderedLinqCollection = (function () {
         __assertIterable(iterable);
         __assertFunction(comparator);
         __assertFunction(heapConstructor);
-        LinqCollection.apply(this, [iterable]);
+        Collection.apply(this, [iterable]);
 
         this.__comparator      = comparator;
         this.__heapConstructor = heapConstructor;
@@ -27,7 +27,7 @@ let OrderedLinqCollection = (function () {
 
     /**
      * Specifies further sorting by the given comparator for equal elements.
-     * 
+     *
      * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
      * @param {any}               <T>                  Element type.
      * @return {OrderedLinqCollection<T>} Created ordered linq collection.
@@ -57,7 +57,7 @@ let OrderedLinqCollection = (function () {
     OrderedLinqCollection.prototype._initialize = function _initialize() {
 
         // create array for heap
-        let values = [...this._source];
+        let values = [...this];
 
         // create heap instance
         let heap = Reflect.construct(this.__heapConstructor, [values, this.__comparator]);
@@ -68,7 +68,7 @@ let OrderedLinqCollection = (function () {
 
     /**
      * Returns the result of the heap iterator.
-     * 
+     *
      * @param {any} <T> Element type.
      * @return {IterationElement<T>} Next element when iterating.
      */
@@ -87,7 +87,7 @@ let OrderedLinqCollection = (function () {
 
     /**
      * Orderes this linq collection using the given comparator.
-     * 
+     *
      * @param {(T, T) => boolean} comparator Comparator to be used.
      * @param {any}               <T>        Element type.
      * @return {OrderedLinqCollection<T>} Ordered collection.
@@ -102,7 +102,7 @@ let OrderedLinqCollection = (function () {
 
     /**
      * Orderes this linq collection in descending order using the given comparator.
-     * 
+     *
      * @param {(T, T) => boolean} comparator Comparator to be used.
      * @param {any}               <T>        Element type.
      * @return {OrderedLinqCollection<T>} Ordered collection.
@@ -119,7 +119,7 @@ let OrderedLinqCollection = (function () {
 /**
  * Creates a comparator function from the given selector string.
  * The selector string has to be in same format as within javascript code.
- * 
+ *
  * @param  {string} selector Javascript code selector string.
  * @return {(any, any) => boolean} Created comparator function.
  */

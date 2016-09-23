@@ -67,34 +67,33 @@
     return result
   }
 
-  function aggregateArray (arr, seed, accumulator, resultTransformFn) {
+  function aggregateCollection (coll, seed, accumulator, resultTransformFn) {
     __assertFunction(accumulator)
     __assertFunction(resultTransformFn)
-    __assertNotEmpty(arr)
+    __assertNotEmpty(coll)
 
-    return resultTransformFn([seed].concat(arr).reduce(accumulator))
+    return resultTransformFn([seed].concat(coll.ToArray()).reduce(accumulator))
   }
 
-  function removeDuplicates (arr, equalityCompareFn = defaultEqualityCompareFn) {
-    __assert(isArray(arr), 'arr must be array!')
+  function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
+    __assertIterable(coll)
     __assertFunction(equalityCompareFn)
 
-    const result = []
-    const length = arr.length
+    const previous = []
 
-    outer: for (let i = 0; i < length; i++) {
-      let current = arr[i]
-
-      inner: for (let j = 0; j < result.length; j++) {
-        if (equalityCompareFn(current, result[j])) {
-          continue outer;
+    return new Collection(function * () {
+      outer: for (let val of coll) {
+        inner: for (let prev of previous) {
+          if (equalityCompareFn(val, prev)) {
+            continue outer;
+          }
         }
+
+        previous.push(val)
+
+        yield val
       }
-
-      result.push(current)
-    }
-
-    return result
+    }())
   }
 
   /**

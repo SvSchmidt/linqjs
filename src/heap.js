@@ -1,25 +1,3 @@
-/**
- * Default comparator implementation that uses the "<" operator.
- * Retuns values as specified by the comparator function fir Array.sort().
- * 
- * @param  {T}  a   Element "a" to be compared.
- * @param  {T}  b   Element "b" to be compared.
- * @param {any} <T> Element type.
- *
- * @return {number} Returns -1 if "a" is smaller than "b",
- *                  returns  1 if "b" is smaller than "a",
- *                  returns  0 if they are equal.
- */
-let DefaultComparator = (a, b) => {
-    if (a < b) {
-        return -1;
-    }
-    if (b < a) {
-        return 1;
-    }
-    return 0;
-};
-
 /*
  * Partially sorted heap that contains the smallest element within root position.
  */
@@ -27,7 +5,7 @@ let MinHeap = (function () {
 
     /**
      * Creates the heap from the array of elements with the given comparator function.
-     * 
+     *
      * @param {T[]}              elements   Array with elements to create the heap from.
      *                                      Will be modified in place for heap logic.
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
@@ -46,7 +24,7 @@ let MinHeap = (function () {
 
     /**
      * Places the element at the given position into the correct position within the heap.
-     * 
+     *
      * @param {T}                elements   Array with elements used for the heap.
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {number}           i          Index of the element that will be placed to the correct position.
@@ -78,7 +56,7 @@ let MinHeap = (function () {
 
     /**
      * Creates a heap from the given array using the given comparator.
-     * 
+     *
      * @param {T[]}              elements   Array with elements used for the heap.
      *                                      Will be modified in place for heap logic.
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
@@ -94,7 +72,7 @@ let MinHeap = (function () {
 
     /**
      * Checks if the heap contains at least one element.
-     * 
+     *
      * @return {boolean} If the heap contains elements or not.
      */
     MinHeap.prototype.hasTopElement = function () {
@@ -104,9 +82,9 @@ let MinHeap = (function () {
     /**
      * Gets and removes the top element from the heap.
      * This method performs a bit of reordering to keep heap properties.
-     * 
+     *
      * @param {any} <T> Heap element type.
-     * 
+     *
      * @return {T} Top element from heap.
      */
     MinHeap.prototype.getTopElement = function () {
@@ -121,13 +99,13 @@ let MinHeap = (function () {
 
         // do fancy stuff
         heapify(this.elements, this.comparator, 0);
-    
+
         return topElement;
     };
 
     /**
      * Creates an iterator for this heap instance.
-     * 
+     *
      * @return {Iterator} Iterator for the heap.
      */
     MinHeap.prototype[Symbol.iterator] = function () {
@@ -156,10 +134,10 @@ let MinHeap = (function () {
  * Partially sorted heap that contains the largest element within root position.
  */
 let MaxHeap = (function () {
-    
+
     /**
      * Creates the heap from the array of elements with the given comparator function.
-     * 
+     *
      * @param {T[]}               elements   Array with elements to create the heap from.
      *                                       Will be modified in place for heap logic.
      * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
