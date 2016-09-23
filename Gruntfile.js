@@ -80,10 +80,15 @@ module.exports = function (grunt) {
       after_concat: ['tmp/linq.js'],
       dist: ['dist/linq.js']
     },
-    concat: {
-      all: {
+    build: {
+      debug: {
         src: 'fragments/sources.js',
-        target: 'tmp/linq.es6.js'
+        target: 'tmp/linq.es6.js',
+        debug: true,
+      },
+      dist: {
+        src: 'fragments/sources.js',
+        target: 'tmp/linq.es6.js',
       }
     }
   });
@@ -127,7 +132,7 @@ module.exports = function (grunt) {
     return `  /* Export public interface */\n  __export({ ${result} })\n`
   }
 
-  function concat ({ src, target }) {
+  function build ({ src, target, debug = false } = {}) {
     let sourceFileNames;
     global.defineSourceFiles = sources => sourceFileNames = sources;
 
@@ -143,7 +148,7 @@ module.exports = function (grunt) {
     const DEBUG = true // Todo: Pass as parameter
 
     let pre = getSource('fragments/pre.js')
-    pre += `  const DEBUG = ${DEBUG};\n\n`;
+    pre += `  const DEBUG = ${debug};\n\n`;
     let moduleLoaderPre = getSource('fragments/module-loader-pre.js')
 
     let moduleLoaderPost = getSource('fragments/module-loader-post.js')
@@ -179,22 +184,28 @@ module.exports = function (grunt) {
     grunt.file.write(`./${target}`, output)
 
     grunt.log.ok(`\n${sourceFileNames.join(', ')} ==> ${target}`)
+    grunt.log.ok(`\nDefined DEBUG constant: DEBUG=${debug}`)
 
     return !this.errorCount;
   }
 
-  grunt.registerMultiTask('concat', 'Concat files', function () {
-    concat(this.data)
+  grunt.registerMultiTask('build', 'Concat files', function () {
+    build(this.data)
   })
 
   grunt.registerTask('test', ['mochacli'])
-  grunt.registerTask('build', ['clean:dist',
-                                'concat:all',
-                                //'jshint:after_concat',
+  grunt.registerTask('package', ['clean:dist',
+                                'build:debug',
                                 'babel:dist',
                                 'uglify:dist',
                                 'usebanner',
                                 'file_info'])
-  grunt.registerTask('dist', ['build', 'clean:tmp'])
-  grunt.registerTask('default', ['build', 'test', 'watch'])
+  grunt.registerTask('dist',   ['clean:dist',
+                                'build:dist',
+                                'babel:dist',
+                                'uglify:dist',
+                                'usebanner',
+                                'file_info',
+                                'clean:tmp'])
+  grunt.registerTask('default', ['package', 'test', 'watch'])
 };
