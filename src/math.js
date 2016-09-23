@@ -2,14 +2,14 @@
     __assertFunction(mapFn)
     __assertNotEmpty(this)
 
-    return Math.min.apply(null, this.ToArray().map(mapFn))
+    return Math.min.apply(null, this.Select(mapFn).ToArray())
   }
 
   function Max (mapFn = x => x) {
     __assertFunction(mapFn)
     __assertNotEmpty(this)
 
-    return Math.max.apply(null, this.ToArray().map(mapFn))
+    return Math.max.apply(null, this.Select(mapFn).ToArray())
   }
 
   function Sum() {
@@ -21,11 +21,7 @@
   function Average () {
     __assertNotEmpty(this)
 
-    let sum = this.Sum()
-    this.reset()
-    let count = this.Count()
-
-    return sum / count
+    return this.Sum() / this.Count()
   }
 
   __export({ Min, Max, Average, Sum })

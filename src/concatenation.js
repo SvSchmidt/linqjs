@@ -16,7 +16,7 @@
   function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
     __assertIterable(second)
 
-    return this.Concat(second).Distinct()
+    return this.Concat(second).Distinct(equalityCompareFn)
   }
 
   __export({ Concat, Union })

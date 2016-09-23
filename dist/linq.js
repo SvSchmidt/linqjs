@@ -4,26 +4,29 @@
  * License: MIT (http://www.opensource.org/licenses/mit-license.php)
  */
 (function () {
-    'use strict';
+  'use strict';
 
-    // this || (0, eval)('this') is a robust way for getting a reference
-    // to the global object
-    const window = this || (0, eval)('this'); // jshint ignore:line
-  (function (factory) {
-    try {
-      if (typeof define === 'function' && define.amd) {
-        // AMD asynchronous module definition (e.g. requirejs)
-        define(['require', 'exports'], factory)
-      } else if (exports && module && module.exports) {
-        // CommonJS/Node.js where module.exports is for nodejs
-        factory(exports || module.exports)
-      }
-    } catch (err) {
-      // no module loader (simple <script>-tag) -> assign Maybe directly to the global object
-      // -> (0, eval)('this') is a robust way for getting a reference to the global object
-      factory(window.linqjs = {}) // jshint ignore:line
+  // this || (0, eval)('this') is a robust way for getting a reference
+  // to the global object
+  const window = this || (0, eval)('this'); // jshint ignore:line
+  const DEBUG = true;
+
+(function (factory) {
+  try {
+    if (typeof define === 'function' && define.amd) {
+      // AMD asynchronous module definition (e.g. requirejs)
+      define(['require', 'exports'], factory)
+    } else if (exports && module && module.exports) {
+      // CommonJS/Node.js where module.exports is for nodejs
+      factory(exports || module.exports)
     }
-  }(function (linqjs) {
+  } catch (err) {
+    // no module loader (simple <script>-tag) -> assign Maybe directly to the global object
+    // -> (0, eval)('this') is a robust way for getting a reference to the global object
+    factory(window.linqjs = {}) // jshint ignore:line
+  }
+}(function (linqjs) {
+
 
 /* src/helpers/defaults.js */
 
@@ -115,9 +118,11 @@ let DefaultComparator = (a, b) => {
   }
 
   function isEmpty (coll) {
-    __assertCollection(coll)
+    if (isCollection(coll)) {
+      return isEmpty(coll.Take(1))
+    }
 
-    return !coll.First()
+    return coll.length === 0
   }
 
   function isIterable (obj) {
@@ -130,6 +135,10 @@ let DefaultComparator = (a, b) => {
 
   function isCollection (obj) {
     return obj instanceof Collection
+  }
+
+  function isGenerator (obj) {
+    return Object.prototype.toString.call(obj) === '[object GeneratorFunction]'
   }
 
 
@@ -159,15 +168,12 @@ let DefaultComparator = (a, b) => {
     __assign(linqjs, obj)
   }
 
-  function isES6 () {
-    // use evaluation to prevent babel to transpile this test into ES5
-    return new Function(`
-      try {
-        return (() => true)();
-      } catch (err) {
-        return false
-      }
-    `)()
+  function symbolOrString (str) {
+    if (DEBUG) {
+      return str
+    } else {
+      return Symbol(str)
+    }
   }
 
   /**
@@ -208,8 +214,8 @@ let DefaultComparator = (a, b) => {
     __assertFunction(accumulator)
     __assertFunction(resultTransformFn)
     __assertNotEmpty(coll)
-
-    return resultTransformFn([seed].concat(coll.ToArray()).reduce(accumulator))
+console.log([seed].Concat(coll).ToArray())
+    return resultTransformFn([seed].Concat(coll).ToArray().reduce(accumulator))
   }
 
   function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
@@ -219,6 +225,8 @@ let DefaultComparator = (a, b) => {
     const previous = []
 
     return new Collection(function * () {
+      coll.reset()
+
       outer: for (let val of coll) {
         inner: for (let prev of previous) {
           if (equalityCompareFn(val, prev)) {
@@ -310,10 +318,12 @@ let DefaultComparator = (a, b) => {
 /* src/linq.js */
 
 window.Collection = (function () {
-  function Collection (iterable) {
-    __assertIterable(iterable)
+  const getIterator = symbolOrString('getIterator')
 
-    this.iterable = iterable
+  function Collection (iterableOrGenerator) {
+    __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
+
+    this.iterable = iterableOrGenerator
   }
 
   Collection.from = function (iterable) {
@@ -324,12 +334,7 @@ window.Collection = (function () {
     function next () {
       if (!this.started) {
         this.started = true
-        const _self = this
-
-        this.iterator = function * () {
-          yield* _self.iterable
-          _self.reset()
-        }()
+        this.iterator = this[getIterator]()
       }
 
       return this.iterator.next()
@@ -357,8 +362,23 @@ window.Collection = (function () {
     }
   }
 
+  Collection.prototype[getIterator] = function () {
+    const iter = this.iterable
+
+    if (isGenerator(iter)) {
+      return iter()
+    } else {
+      return function * () {
+        yield* iter
+      }()
+    }
+  }
+
   Collection.prototype.ToArray = function () {
-    return [...this]
+    const result = [...this]
+    this.reset()
+
+    return result
   }
 
   return Collection
@@ -387,14 +407,14 @@ function install () {
     __assertFunction(mapFn)
     __assertNotEmpty(this)
 
-    return Math.min.apply(null, this.ToArray().map(mapFn))
+    return Math.min.apply(null, this.Select(mapFn).ToArray())
   }
 
   function Max (mapFn = x => x) {
     __assertFunction(mapFn)
     __assertNotEmpty(this)
 
-    return Math.max.apply(null, this.ToArray().map(mapFn))
+    return Math.max.apply(null, this.Select(mapFn).ToArray())
   }
 
   function Sum() {
@@ -406,11 +426,7 @@ function install () {
   function Average () {
     __assertNotEmpty(this)
 
-    let sum = this.Sum()
-    this.reset()
-    let count = this.Count()
-
-    return sum / count
+    return this.Sum() / this.Count()
   }
 
 
@@ -436,7 +452,7 @@ function install () {
   function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
     __assertIterable(second)
 
-    return this.Concat(second).Distinct()
+    return this.Concat(second).Distinct(equalityCompareFn)
   }
 
 
@@ -481,8 +497,13 @@ function Count (predicate = elem => true) {
  * @return {Boolean}
  */
 function Any (predicate) {
+  if (isEmpty(this)) {
+    return false
+  }
+
   if (!predicate) {
-    return !!this.First()
+    // since we checked before that the sequence is not empty
+    return true
   }
 
   return this.Count(predicate) > 0
@@ -514,6 +535,8 @@ function Contains (elem) {
       return true
     }
   }
+
+  this.reset()
 
   return false
 }
@@ -590,15 +613,23 @@ function TakeWhile (predicate = (elem, index) => true) {
 
   const _self = this
 
-  return new Collection(function * () {
+  const result = new Collection(function * () {
     let index = 0
+    let endTake = false
 
     for (let val of _self) {
-      if (!predicate(val, index)) continue
+      if (!endTake && predicate(val, index++)) {
+        yield val
+        continue
+      }
 
-      yield val
+      endTake = true
     }
-  }()).ToArray()
+  }).ToArray()
+
+  this.reset()
+
+  return result
 }
 
 /**
@@ -613,29 +644,32 @@ function SkipWhile (predicate = (elem, index) => true) {
 
   const _self = this
 
-  return new Collection(function * () {
+  const result = new Collection(function * () {
     let index = 0
+    let endSkip = false
 
     for (let val of _self) {
-      if (predicate(val, index++)) continue
+      if (!endSkip && predicate(val, index++)) {
+        continue
+      }
 
+      endSkip = true
       yield val
     }
-  }())
+  })
+
+  this.reset()
+
+  return result
 }
 
 function First (predicate = x => true) {
-  //__assertFunction(predicate)
-  //__assertNotEmpty(this)
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   const result = this.SkipWhile(elem => !predicate(elem)).Take(1)
-  this.reset()
 
-  if (result[0]) {
-    return result[0]
-  }
-
-  return null;
+  return result[0]
 }
 
 function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {
@@ -653,13 +687,19 @@ function resultOrDefault(collection, originalFn, predicateOrConstructor = x => t
   __assertFunction(predicate)
   __assert(isNative(constructor), 'constructor must be native constructor, e.g. Number!')
 
+  const defaultVal = getDefault(constructor)
+
+  if (isEmpty(collection)) {
+    return defaultVal
+  }
+
   let result = originalFn.call(collection, predicate)
 
   if (result) {
     return result
   }
 
-  return getDefault(constructor)
+  return defaultVal
 }
 
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {
@@ -678,18 +718,22 @@ function LastOrDefault (predicateOrConstructor = x => true, constructor = Object
 }
 
 function Single (predicate = x => true) {
-  //__assertFunction(predicate)
-  //__assertNotEmpty(this)
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   let index = 0
   let result
 
   for (let val of this) {
-    if (index++ && predicate(val)) {
+    if (predicate(val)) {
       result = val
       break
     }
+
+    index++
   }
+
+  this.reset()
 
   if (this.First(elem => predicate(elem) && !defaultEqualityCompareFn(elem, result))) {
     throw new Error('Sequence contains more than one element')
@@ -947,8 +991,9 @@ function OrderByDescending(comparator) {
    * @
    */
   function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
+    debugger
     if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
-      return aggregateCollection(this.slice(1, this.length), this[0], seedOrAccumulator, elem => elem)
+      return aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, elem => elem)
     } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
       return aggregateCollection(this, seedOrAccumulator, accumulator, elem => elem)
     } else {
@@ -960,10 +1005,12 @@ function OrderByDescending(comparator) {
     const _self = this
 
     return new Collection(function * () {
+      _self.reset()
+
       for (let val of _self) {
         yield mapFn(val)
       }
-    }())
+    })
   }
 
   /**
@@ -1026,4 +1073,4 @@ function Remove (value) {
   /* Export public interface */
   __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, Aggregate, Distinct, Select, Add, Insert, Remove })
 }))
-  }())
+}())

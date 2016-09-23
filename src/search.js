@@ -35,8 +35,13 @@ function Count (predicate = elem => true) {
  * @return {Boolean}
  */
 function Any (predicate) {
+  if (isEmpty(this)) {
+    return false
+  }
+
   if (!predicate) {
-    return !!this.First()
+    // since we checked before that the sequence is not empty
+    return true
   }
 
   return this.Count(predicate) > 0

@@ -22,8 +22,9 @@
    * @
    */
   function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
+    debugger
     if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
-      return aggregateCollection(this.slice(1, this.length), this[0], seedOrAccumulator, elem => elem)
+      return aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, elem => elem)
     } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
       return aggregateCollection(this, seedOrAccumulator, accumulator, elem => elem)
     } else {
@@ -35,10 +36,12 @@
     const _self = this
 
     return new Collection(function * () {
+      _self.reset()
+
       for (let val of _self) {
         yield mapFn(val)
       }
-    }())
+    })
   }
 
   /**

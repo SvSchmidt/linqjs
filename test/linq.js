@@ -140,16 +140,16 @@ describe('linqjs', function () {
 
     describe('Skip', function () {
       it('should skip count elements and return the remaining array', function () {
-        expect(people.Skip(2)).to.be.deep.equal([{ name: 'Frodo', race: 'hobbit' }])
+        expect(people.Skip(2).ToArray()).to.be.deep.equal([{ name: 'Frodo', race: 'hobbit' }])
       })
 
       it('should return the array itself if count <= 0', function () {
-        expect(people.Skip(0)).to.be.deep.equal(people)
-        expect(people.Skip(-1)).to.be.deep.equal(people)
+        expect(people.Skip(0).ToArray()).to.be.deep.equal(people)
+        expect(people.Skip(-1).ToArray()).to.be.deep.equal(people)
       })
 
       it('should return an empty array if count >= array.length', function () {
-        expect(people.Skip(100)).to.be.deep.equal([])
+        expect(people.Skip(100).ToArray()).to.be.deep.equal([])
       })
     })
 
@@ -157,7 +157,7 @@ describe('linqjs', function () {
       it('arr.Take(n) concatenated with arr.Skip(n) should yield arr itself', function () {
         let arr = [1,2,3,4,5]
 
-        expect(Array.prototype.concat.apply([], [arr.Take(2), arr.Skip(2)])).to.be.deep.equal(arr)
+        expect(arr.Take(2).Concat(arr.Skip(2)).ToArray()).to.be.deep.equal(arr)
       })
     })
 
@@ -174,12 +174,12 @@ describe('linqjs', function () {
 
     describe('SkipWhile', function () {
       it('should skip all elements until the predicate stops matching', function () {
-        expect(people.SkipWhile(p => p.race !== 'hobbit')).to.be.deep.equal(people.Skip(2))
-        expect([1,2,3,4,5,'foo'].SkipWhile(elem => !isNaN(parseFloat(elem)))).to.be.deep.equal(['foo'])
+        expect(people.SkipWhile(p => p.race !== 'hobbit').ToArray()).to.be.deep.equal(people.Skip(2).ToArray())
+        expect([1,2,3,4,5,'foo'].SkipWhile(elem => !isNaN(parseFloat(elem))).ToArray()).to.be.deep.equal(['foo'])
       })
 
       it('should accept predicates using the index as second parameter', function () {
-        expect([1,2,3,4,5].SkipWhile((elem, index) => index < 3)).to.be.deep.equal([4,5])
+        expect([1,2,3,4,5].SkipWhile((elem, index) => index < 3).ToArray()).to.be.deep.equal([4,5])
       })
     })
 
@@ -280,11 +280,11 @@ describe('linqjs', function () {
 
     describe('Where', function () {
       it('should return a new sequence containing the elements matching the predicate', function () {
-        expect([1,2,3].Where(x => x > 1)).to.be.deep.equal([2,3])
+        expect([1,2,3].Where(x => x > 1).ToArray()).to.be.deep.equal([2,3])
       })
 
       it('should accept index-based predicate', function () {
-        expect([1,2,3,4,5].Where((elem, index) => index > 1)).to.be.deep.equal([3,4,5])
+        expect([1,2,3,4,5].Where((elem, index) => index > 1).ToArray()).to.be.deep.equal([3,4,5])
       })
     })
 
@@ -325,17 +325,17 @@ describe('linqjs', function () {
   describe('Concatenation', function () {
     describe('Concat', function () {
       it('should concatenate two arrays', function () {
-        expect([1, 2, 3].Concat([4, 5, 6])).to.be.deep.equal([1, 2, 3, 4, 5, 6])
+        expect([1, 2, 3].Concat([4, 5, 6]).ToArray()).to.be.deep.equal([1, 2, 3, 4, 5, 6])
       })
 
       it('should keep duplicates', function () {
-        expect([1, 2, 3].Concat([2, 3, 4])).to.be.deep.equal([1, 2, 3, 2, 3, 4])
+        expect([1, 2, 3].Concat([2, 3, 4]).ToArray()).to.be.deep.equal([1, 2, 3, 2, 3, 4])
       })
     })
 
     describe('Union', function () {
       it('should concatenate and remove duplicates', function () {
-        expect([1, 2, 3].Union([2, 3, 4])).to.be.deep.equal([1, 2, 3, 4])
+        expect([1, 2, 3].Union([2, 3, 4]).ToArray()).to.be.deep.equal([1, 2, 3, 4])
       })
 
       it('should accept a function to define which entries are equal', function () {
@@ -349,8 +349,8 @@ describe('linqjs', function () {
           { name: 'flipper', specices: 'dolphin' }
         ];
 
-        expect(petsA.Union(petsB, (a, b) => a.species === b.species).length).to.be.equal(3) // miez and leo are assumed equal
-        expect([1,2,3,4].Union([6, 8, 9], (a, b) => a % 2 === b % 2).length).to.be.equal(2) // [1, 2]
+        expect(petsA.Union(petsB, (a, b) => a.species === b.species).Count()).to.be.equal(3) // miez and leo are assumed equal
+        expect([1,2,3,4].Union([6, 8, 9], (a, b) => a % 2 === b % 2).Count()).to.be.equal(2) // [1, 2]
       })
     })
   })
@@ -385,7 +385,7 @@ describe('linqjs', function () {
 
     describe('Distinct', function () {
       it('should return the distinct values of an array using the default equality comparer', function () {
-        expect([1,2,3,4,5,6,6,7,1,2].Distinct()).to.be.deep.equal([1,2,3,4,5,6,7])
+        expect([1,2,3,4,5,6,6,7,1,2].Distinct().ToArray()).to.be.deep.equal([1,2,3,4,5,6,7])
       })
 
       it('should accept a custom equality compare function and return the distinct valeus', function () {
@@ -396,15 +396,15 @@ describe('linqjs', function () {
           { name: 'flipper', specices: 'dolphin' }
         ]
 
-        expect(pets.Distinct((a, b) => a.species === b.species)).to.be.deep.equal([
+        expect(pets.Distinct((a, b) => a.species === b.species).ToArray()).to.be.deep.equal([
           { name: 'miez', species: 'cat' },
           { name: 'wuff', species: 'dog' },
           { name: 'flipper', specices: 'dolphin' }
         ])
 
-        expect([1,2,3,4].Distinct((a, b) => a % 2 === b % 2)).to.be.deep.equal([1,2])
-        expect([].Distinct()).to.be.deep.equal([])
-        expect([].Distinct((a, b) => a % 2 === b % 2)).to.be.deep.equal([])
+        expect([1,2,3,4].Distinct((a, b) => a % 2 === b % 2).ToArray()).to.be.deep.equal([1,2])
+        expect([].Distinct().ToArray()).to.be.deep.equal([])
+        expect([].Distinct((a, b) => a % 2 === b % 2).ToArray()).to.be.deep.equal([])
       })
     })
   })

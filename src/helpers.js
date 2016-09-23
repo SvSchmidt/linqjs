@@ -22,15 +22,12 @@
     __assign(linqjs, obj)
   }
 
-  function isES6 () {
-    // use evaluation to prevent babel to transpile this test into ES5
-    return new Function(`
-      try {
-        return (() => true)();
-      } catch (err) {
-        return false
-      }
-    `)()
+  function symbolOrString (str) {
+    if (DEBUG) {
+      return str
+    } else {
+      return Symbol(str)
+    }
   }
 
   /**
@@ -71,8 +68,8 @@
     __assertFunction(accumulator)
     __assertFunction(resultTransformFn)
     __assertNotEmpty(coll)
-
-    return resultTransformFn([seed].concat(coll.ToArray()).reduce(accumulator))
+console.log([seed].Concat(coll).ToArray())
+    return resultTransformFn([seed].Concat(coll).ToArray().reduce(accumulator))
   }
 
   function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
@@ -82,6 +79,8 @@
     const previous = []
 
     return new Collection(function * () {
+      coll.reset()
+
       outer: for (let val of coll) {
         inner: for (let prev of previous) {
           if (equalityCompareFn(val, prev)) {

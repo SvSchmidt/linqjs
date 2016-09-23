@@ -11,9 +11,11 @@
   }
 
   function isEmpty (coll) {
-    __assertCollection(coll)
+    if (isCollection(coll)) {
+      return isEmpty(coll.Take(1))
+    }
 
-    return !coll.First()
+    return coll.length === 0
   }
 
   function isIterable (obj) {
@@ -26,4 +28,8 @@
 
   function isCollection (obj) {
     return obj instanceof Collection
+  }
+
+  function isGenerator (obj) {
+    return Object.prototype.toString.call(obj) === '[object GeneratorFunction]'
   }

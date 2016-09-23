@@ -1,8 +1,10 @@
 window.Collection = (function () {
-  function Collection (iterable) {
-    __assertIterable(iterable)
+  const getIterator = symbolOrString('getIterator')
 
-    this.iterable = iterable
+  function Collection (iterableOrGenerator) {
+    __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
+
+    this.iterable = iterableOrGenerator
   }
 
   Collection.from = function (iterable) {
@@ -13,12 +15,7 @@ window.Collection = (function () {
     function next () {
       if (!this.started) {
         this.started = true
-        const _self = this
-
-        this.iterator = function * () {
-          yield* _self.iterable
-          _self.reset()
-        }()
+        this.iterator = this[getIterator]()
       }
 
       return this.iterator.next()
@@ -46,8 +43,23 @@ window.Collection = (function () {
     }
   }
 
+  Collection.prototype[getIterator] = function () {
+    const iter = this.iterable
+
+    if (isGenerator(iter)) {
+      return iter()
+    } else {
+      return function * () {
+        yield* iter
+      }()
+    }
+  }
+
   Collection.prototype.ToArray = function () {
-    return [...this]
+    const result = [...this]
+    this.reset()
+
+    return result
   }
 
   return Collection

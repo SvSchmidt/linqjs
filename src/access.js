@@ -5,6 +5,8 @@ function Contains (elem) {
     }
   }
 
+  this.reset()
+
   return false
 }
 
@@ -80,15 +82,23 @@ function TakeWhile (predicate = (elem, index) => true) {
 
   const _self = this
 
-  return new Collection(function * () {
+  const result = new Collection(function * () {
     let index = 0
+    let endTake = false
 
     for (let val of _self) {
-      if (!predicate(val, index)) continue
+      if (!endTake && predicate(val, index++)) {
+        yield val
+        continue
+      }
 
-      yield val
+      endTake = true
     }
-  }()).ToArray()
+  }).ToArray()
+
+  this.reset()
+
+  return result
 }
 
 /**
@@ -103,29 +113,32 @@ function SkipWhile (predicate = (elem, index) => true) {
 
   const _self = this
 
-  return new Collection(function * () {
+  const result = new Collection(function * () {
     let index = 0
+    let endSkip = false
 
     for (let val of _self) {
-      if (predicate(val, index++)) continue
+      if (!endSkip && predicate(val, index++)) {
+        continue
+      }
 
+      endSkip = true
       yield val
     }
-  }())
+  })
+
+  this.reset()
+
+  return result
 }
 
 function First (predicate = x => true) {
-  //__assertFunction(predicate)
-  //__assertNotEmpty(this)
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   const result = this.SkipWhile(elem => !predicate(elem)).Take(1)
-  this.reset()
 
-  if (result[0]) {
-    return result[0]
-  }
-
-  return null;
+  return result[0]
 }
 
 function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {
@@ -143,13 +156,19 @@ function resultOrDefault(collection, originalFn, predicateOrConstructor = x => t
   __assertFunction(predicate)
   __assert(isNative(constructor), 'constructor must be native constructor, e.g. Number!')
 
+  const defaultVal = getDefault(constructor)
+
+  if (isEmpty(collection)) {
+    return defaultVal
+  }
+
   let result = originalFn.call(collection, predicate)
 
   if (result) {
     return result
   }
 
-  return getDefault(constructor)
+  return defaultVal
 }
 
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {
@@ -168,18 +187,22 @@ function LastOrDefault (predicateOrConstructor = x => true, constructor = Object
 }
 
 function Single (predicate = x => true) {
-  //__assertFunction(predicate)
-  //__assertNotEmpty(this)
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
 
   let index = 0
   let result
 
   for (let val of this) {
-    if (index++ && predicate(val)) {
+    if (predicate(val)) {
       result = val
       break
     }
+
+    index++
   }
+
+  this.reset()
 
   if (this.First(elem => predicate(elem) && !defaultEqualityCompareFn(elem, result))) {
     throw new Error('Sequence contains more than one element')
