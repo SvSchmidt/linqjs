@@ -1,7 +1,19 @@
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  return filterArray(this, predicate)
+  const _self = this
+
+  return new Collection(function * () {
+    let index = 0
+
+    for (let val of _self) {
+      if (predicate(val, index)) {
+        yield val
+      }
+
+      index++
+    }
+  }())
 }
 
 /**
@@ -12,9 +24,7 @@ function Where (predicate = (elem, index) => true) {
  * @return {Number}
  */
 function Count (predicate = elem => true) {
-  __assertFunction(predicate)
-
-  return filterArray(this, predicate).length
+  return this.Where(predicate).ToArray().length
 }
 
 /**
@@ -25,12 +35,16 @@ function Count (predicate = elem => true) {
  * @return {Boolean}
  */
 function Any (predicate) {
-  if (!predicate) {
-    return this.length > 0
+  if (isEmpty(this)) {
+    return false
   }
 
-  __assertFunction(predicate)
-  return filterArray(this, predicate, 1).length > 0
+  if (!predicate) {
+    // since we checked before that the sequence is not empty
+    return true
+  }
+
+  return this.Count(predicate) > 0
 }
 
 /**

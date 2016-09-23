@@ -10,16 +10,26 @@
     return !isNaN(parseFloat(n))
   }
 
-  function isEmpty (arr) {
-    __assertArray(arr)
+  function isEmpty (coll) {
+    if (isCollection(coll)) {
+      return isEmpty(coll.Take(1))
+    }
 
-    return arr.length === 0
+    return coll.length === 0
   }
 
   function isIterable (obj) {
-    return (Symbol.iterator in obj);
+    return (Symbol.iterator in obj)
   }
 
   function isString (obj) {
     return typeof obj === 'string';
+  }
+
+  function isCollection (obj) {
+    return obj instanceof Collection
+  }
+
+  function isGenerator (obj) {
+    return Object.prototype.toString.call(obj) === '[object GeneratorFunction]'
   }

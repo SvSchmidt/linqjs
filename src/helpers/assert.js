@@ -12,13 +12,16 @@
     __assert(isArray(param), 'Parameter must be array!')
   }
 
-  function __assertNotEmpty (arr) {
-    __assert(isArray(arr))
-    __assert(!isEmpty(arr), 'Sequence is empty')
+  function __assertNotEmpty (coll) {
+    __assert(!isEmpty(coll), 'Sequence is empty')
   }
 
   function __assertIterable (obj) {
     __assert(isIterable(obj), 'Parameter must be iterable!')
+  }
+
+  function __assertCollection (obj) {
+    __assert(isCollection(obj), 'Pa>rameter must be collection!')
   }
 
   function __assertIterationNotStarted (collection) {
@@ -30,8 +33,8 @@
     __assert(isString(obj), 'Parameter must be string!')
   }
 
-  function __assertIndexInRange(arr, index) {
-    __assertArray(arr)
-    __assertAllNumeric(index)
-    __assert(index >= 0 && index <= arr.length, 'array index is out of bounds')
+  function __assertIndexInRange(coll, index) {
+    __assertCollection(coll)
+    __assert(isNumeric(index), 'Index must be number!')
+    __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds')
   }

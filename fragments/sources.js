@@ -11,7 +11,5 @@ defineSourceFiles([
   'src/heap.js',
   'src/transformation.js',
   'src/insert-and-remove.js',
-
-  'src/collection.js',
   'src/ordered-collection.js',
 ])

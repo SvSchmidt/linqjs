@@ -1,31 +1,27 @@
-  function __assertAllNumeric (arr) {
-
-  }
-
   function Min (mapFn = x => x) {
     __assertFunction(mapFn)
     __assertNotEmpty(this)
 
-    return Math.min.apply(null, this.map(mapFn))
+    return Math.min.apply(null, this.Select(mapFn).ToArray())
   }
 
   function Max (mapFn = x => x) {
     __assertFunction(mapFn)
     __assertNotEmpty(this)
 
-    return Math.max.apply(null, this.map(mapFn))
+    return Math.max.apply(null, this.Select(mapFn).ToArray())
   }
 
   function Sum() {
     __assertNotEmpty(this)
 
-    return this.reduce((prev, curr) => prev + curr)
+    return this.Aggregate(0, (prev, curr) => prev + curr)
   }
 
   function Average () {
     __assertNotEmpty(this)
 
-    return Sum.call(this) / this.length
+    return this.Sum() / this.Count()
   }
 
   __export({ Min, Max, Average, Sum })

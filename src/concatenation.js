@@ -1,11 +1,22 @@
   function Concat (second) {
-    __assert(isArray(second), 'second must be an array!')
+    __assertIterable(second)
 
-    return Array.prototype.concat.apply(this, second)
+    const _self = this
+
+    if (!isCollection(second)) {
+      second = new Collection(second)
+    }
+
+    return new Collection(function * () {
+      yield* _self
+      yield* second
+    }())
   }
 
   function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
-    return removeDuplicates(this.Concat(second), equalityCompareFn)
+    __assertIterable(second)
+
+    return this.Concat(second).Distinct(equalityCompareFn)
   }
 
   __export({ Concat, Union })

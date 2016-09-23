@@ -5,7 +5,7 @@ let OrderedLinqCollection = (function () {
 
     /**
      * Creates a new ordered linq collection using the given comparator and heap for sorting.
-     * 
+     *
      * @param {Iterable<T>}       iterable        Datasource for this collection.
      * @param {(T, T) => boolean} comparator      Comparator for sorting.
      * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
@@ -15,19 +15,15 @@ let OrderedLinqCollection = (function () {
         __assertIterable(iterable);
         __assertFunction(comparator);
         __assertFunction(heapConstructor);
-        LinqCollection.apply(this, [iterable]);
+        Collection.apply(this, [iterable]);
 
         this.__comparator      = comparator;
         this.__heapConstructor = heapConstructor;
     }
 
-    // inheritance stuff (we don't want to implement stuff twice)
-    OrderedLinqCollection.prototype = Object.create(LinqCollection.prototype);
-    OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
-
     /**
      * Specifies further sorting by the given comparator for equal elements.
-     * 
+     *
      * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
      * @param {any}               <T>                  Element type.
      * @return {OrderedLinqCollection<T>} Created ordered linq collection.
@@ -51,89 +47,65 @@ let OrderedLinqCollection = (function () {
         return this;
     };
 
-    /**
-     * Builds the heap for sorting.
-     */
-    OrderedLinqCollection.prototype._initialize = function _initialize() {
+    OrderedLinqCollection.prototype[getIterator] = function () {
+      const _self = this
 
-        // create array for heap
-        let values = [...this._source];
-
-        // create heap instance
-        let heap = Reflect.construct(this.__heapConstructor, [values, this.__comparator]);
-
-        // grab iterator for later use
-        this.__heapIterator = heap[Symbol.iterator]();
-    };
-
-    /**
-     * Returns the result of the heap iterator.
-     * 
-     * @param {any} <T> Element type.
-     * @return {IterationElement<T>} Next element when iterating.
-     */
-    OrderedLinqCollection.prototype._next = function _next() {
-        __assert(!!this.__heapIterator, 'No heap build!');
-        return this.__heapIterator.next();
-    };
+      return function * () {
+        yield* Reflect.construct(_self.__heapConstructor, [[..._self.iterable], _self.__comparator])
+      }()
+    }
 
     return OrderedLinqCollection;
-})();
-
-/*
- * Extend basis collection with ordering functions.
- */
-(function () {
-
-    /**
-     * Orderes this linq collection using the given comparator.
-     * 
-     * @param {(T, T) => boolean} comparator Comparator to be used.
-     * @param {any}               <T>        Element type.
-     * @return {OrderedLinqCollection<T>} Ordered collection.
-     */
-    LinqCollection.prototype.OrderBy = function OrderBy(comparator) {
-        if (isString(comparator)) {
-            comparator = GetComparatorFromKeySelector(comparator);
-        }
-        __assertFunction(comparator);
-        return new OrderedLinqCollection(this, comparator, MinHeap);
-    };
-
-    /**
-     * Orderes this linq collection in descending order using the given comparator.
-     * 
-     * @param {(T, T) => boolean} comparator Comparator to be used.
-     * @param {any}               <T>        Element type.
-     * @return {OrderedLinqCollection<T>} Ordered collection.
-     */
-    LinqCollection.prototype.OrderByDescending = function OrderByDescending(comparator) {
-        if (isString(comparator)) {
-            comparator = GetComparatorFromKeySelector(comparator);
-        }
-        __assertFunction(comparator);
-        return new OrderedLinqCollection(this, comparator, MaxHeap);
-    };
 })();
 
 /**
  * Creates a comparator function from the given selector string.
  * The selector string has to be in same format as within javascript code.
- * 
+ *
  * @param  {string} selector Javascript code selector string.
  * @return {(any, any) => boolean} Created comparator function.
  */
 function GetComparatorFromKeySelector(selector) {
     __assertString(selector);
     if (selector === '') {
-        return Array.prototype.DefaultComparator;
+        return Collection.prototype.DefaultComparator;
     }
     if (!(selector.startsWith('[') || selector.startsWith('.'))) {
         selector = `.${selector}`;
     }
     let result;
-    eval(`result = function (a, b) { return Array.prototype.DefaultComparator(a${selector}, b${selector}) }`);
+    eval(`result = function (a, b) { return Collection.prototype.DefaultComparator(a${selector}, b${selector}) }`);
     return result;
 }
 
-__export({ GetComparatorFromKeySelector, OrderedLinqCollection })
+/**
+ * Orderes this linq collection using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               <T>        Element type.
+ * @return {OrderedLinqCollection<T>} Ordered collection.
+ */
+function OrderBy (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
+};
+
+/**
+ * Orderes this linq collection in descending order using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               <T>        Element type.
+ * @return {OrderedLinqCollection<T>} Ordered collection.
+ */
+function OrderByDescending (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
+};
+
+__export({ GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })

@@ -53,7 +53,7 @@ module.exports = function (grunt) {
     },
     watch: {
         src: {
-          files: ['Gruntfile.js', 'test/*.js', 'src/*.js', 'fragments/*.js', '.jshintrc'],
+          files: ['Gruntfile.js', 'test/**/*.js', 'src/**/*.js', 'fragments/**/*.js', '.jshintrc'],
           tasks: ['default'],
           options: {
             spawn: false,
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
     concat: {
       all: {
         src: 'fragments/sources.js',
-        target: 'tmp/linq.js'
+        target: 'dist/linq.js'
       }
     }
   });
@@ -140,14 +140,14 @@ module.exports = function (grunt) {
     /*
     Combine pre and post source code (iife, module loading etc.)
     */
-    let pre = getCombinedSources([
-      'fragments/pre.js',
-      'fragments/module-loader-pre.js',
-    ])
-    let post = getCombinedSources([
-      'fragments/module-loader-post.js',
-      'fragments/post.js',
-    ])
+    const DEBUG = true // Todo: Pass as parameter
+
+    let pre = getSource('fragments/pre.js')
+    pre += `  const DEBUG = ${DEBUG};\n\n`;
+    let moduleLoaderPre = getSource('fragments/module-loader-pre.js')
+
+    let moduleLoaderPost = getSource('fragments/module-loader-post.js')
+    let post = getSource('fragments/post.js')
 
     /*
     Handle each source file and extract their exports (defined by __export()) and remove the __export-call
@@ -159,7 +159,7 @@ module.exports = function (grunt) {
     for (let file of sourceFileNames) {
       const [sourceWithoutExports, theExports] = getAndRemoveExports(getSource(file))
 
-      linqjsOutput += `\n\n/* ${file} */\n\n` // add file name as a comment 
+      linqjsOutput += `\n\n/* ${file} */\n\n` // add file name as a comment
       linqjsOutput += sourceWithoutExports
       linqjsExports.push(theExports)
     }
@@ -170,7 +170,7 @@ module.exports = function (grunt) {
     /*
     combine the sources in the appropriate order and process the final source code (e.g. normalizing line breaks)
     */
-    let combinedSources = String.prototype.concat.apply('', [pre, linqjsOutput, linqJsExports, post])
+    let combinedSources = String.prototype.concat.apply('', [pre, moduleLoaderPre, linqjsOutput, linqJsExports, moduleLoaderPost, post])
     let output = normalizeLineBreaks(combinedSources)
 
     /*
@@ -190,9 +190,9 @@ module.exports = function (grunt) {
   grunt.registerTask('test', ['mochacli'])
   grunt.registerTask('build', ['clean:dist',
                                 'concat:all',
-                                'jshint:after_concat',
-                                'babel:dist',
-                                'uglify:dist',
+                                //'jshint:after_concat',
+                                //'babel:dist',
+                                //'uglify:dist',
                                 'usebanner',
                                 'file_info'])
   grunt.registerTask('dist', ['build', 'clean:tmp'])

@@ -22,15 +22,12 @@
     __assign(linqjs, obj)
   }
 
-  function isES6 () {
-    // use evaluation to prevent babel to transpile this test into ES5
-    return new Function(`
-      try {
-        return (() => true)();
-      } catch (err) {
-        return false
-      }
-    `)()
+  function symbolOrString (str) {
+    if (DEBUG) {
+      return str
+    } else {
+      return Symbol(str)
+    }
   }
 
   /**
@@ -67,34 +64,35 @@
     return result
   }
 
-  function aggregateArray (arr, seed, accumulator, resultTransformFn) {
+  function aggregateCollection (coll, seed, accumulator, resultTransformFn) {
     __assertFunction(accumulator)
     __assertFunction(resultTransformFn)
-    __assertNotEmpty(arr)
+    __assertNotEmpty(coll)
 
-    return resultTransformFn([seed].concat(arr).reduce(accumulator))
+    return resultTransformFn([seed].concat(coll).reduce(accumulator))
   }
 
-  function removeDuplicates (arr, equalityCompareFn = defaultEqualityCompareFn) {
-    __assert(isArray(arr), 'arr must be array!')
+  function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
+    __assertIterable(coll)
     __assertFunction(equalityCompareFn)
 
-    const result = []
-    const length = arr.length
+    const previous = []
 
-    outer: for (let i = 0; i < length; i++) {
-      let current = arr[i]
+    return new Collection(function * () {
+      coll.reset()
 
-      inner: for (let j = 0; j < result.length; j++) {
-        if (equalityCompareFn(current, result[j])) {
-          continue outer;
+      outer: for (let val of coll) {
+        inner: for (let prev of previous) {
+          if (equalityCompareFn(val, prev)) {
+            continue outer;
+          }
         }
+
+        previous.push(val)
+
+        yield val
       }
-
-      result.push(current)
-    }
-
-    return result
+    }())
   }
 
   /**
@@ -107,26 +105,6 @@
     __assertArray(arr)
 
     while (arr.shift()) {}
-  }
-
-  /**
-   * insertIntoArray - Insert a value into an array at the specified index, defaults to the end
-   *
-   * @param  {Array} arr   The array to insert a value into
-   * @param  {any} value   The value to add
-   * @param  {Number} index The index to add the element to, defaults to the end
-   * @return {void}
-   */
-  function insertIntoArray (arr, value, index) {
-    index = paramOrValue(index, arr.length)
-    __assertIndexInRange(arr, index)
-
-    const before = arr.slice(0, index)
-    const after = arr.slice(index)
-
-    emptyArray(arr)
-
-    arr.unshift(...Array.prototype.concat.apply([], [before, value, after]))
   }
 
   function removeFromArray (arr, value) {
