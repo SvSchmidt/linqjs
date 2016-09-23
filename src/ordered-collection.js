@@ -21,10 +21,6 @@ let OrderedLinqCollection = (function () {
         this.__heapConstructor = heapConstructor;
     }
 
-    // inheritance stuff (we don't want to implement stuff twice)
-    OrderedLinqCollection.prototype = Object.create(Collection.prototype);
-    OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
-
     /**
      * Specifies further sorting by the given comparator for equal elements.
      *
@@ -51,25 +47,13 @@ let OrderedLinqCollection = (function () {
         return this;
     };
 
-    /**
-     * Returns the result of the heap iterator.
-     *
-     * @param {any} <T> Element type.
-     * @return {IterationElement<T>} Next element when iterating.
-     */
-    OrderedLinqCollection.prototype.next = function next() {
-        //__assert(!!this.__heapIterator, 'No heap build!');
+    OrderedLinqCollection.prototype[getIterator] = function () {
+      const _self = this
 
-        if (!this.orderStarted) {
-          this.orderStarted = true
-
-          const heap = Reflect.construct(this.__heapConstructor, [this.ToArray(), this.__comparator])
-
-          this.iterator = heap[Symbol.iterator]()
-        }
-
-        return this.iterator.next()
-    };
+      return function * () {
+        yield* Reflect.construct(_self.__heapConstructor, [[..._self.iterable], _self.__comparator])
+      }()
+    }
 
     return OrderedLinqCollection;
 })();

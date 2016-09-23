@@ -1,6 +1,6 @@
-window.Collection = (function () {
-  const getIterator = symbolOrString('getIterator')
+const getIterator = symbolOrString('getIterator')
 
+window.Collection = (function () {
   function Collection (iterableOrGenerator) {
     __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
 
@@ -67,6 +67,10 @@ window.Collection = (function () {
 
 function install () {
   __assign(Collection.prototype, linqjs)
+  
+  // inheritance stuff (we don't want to implement stuff twice)
+  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
+  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
 
   const protosToApplyWrappers = [window.Array.prototype]
 
