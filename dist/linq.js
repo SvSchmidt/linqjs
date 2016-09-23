@@ -899,34 +899,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return MaxHeap;
     }();
 
-    /* src/order.js */
-
-    // TODO: change implementation to use iterators!
-
-    function Order() {
-      return this.OrderBy(DefaultComparator);
-    }
-
-    function OrderCompare() {
-      return this.sort(DefaultComparator);
-    }
-
-    function OrderBy(comparator) {
-      __assertFunction(comparator);
-      var heap = new MinHeap(this, comparator);
-      return [].concat(_toConsumableArray(heap));
-    }
-
-    function OrderDescending() {
-      return this.OrderByDescending(DefaultComparator);
-    }
-
-    function OrderByDescending(comparator) {
-      __assertFunction(comparator);
-      var heap = new MaxHeap(this, comparator);
-      return [].concat(_toConsumableArray(heap));
-    }
-
     /* src/transformation.js */
 
     /**
@@ -1272,6 +1244,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Order: Order, OrderCompare: OrderCompare, OrderBy: OrderBy, OrderDescending: OrderDescending, OrderByDescending: OrderByDescending, Aggregate: Aggregate, Distinct: Distinct, Add: Add, Insert: Insert, Remove: Remove, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
+    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Aggregate: Aggregate, Distinct: Distinct, Add: Add, Insert: Insert, Remove: Remove, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
   });
 })();
