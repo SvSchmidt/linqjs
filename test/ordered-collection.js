@@ -143,14 +143,14 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorA);
 
-                    expect(Linq(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
                 }
             })
 
             it('should order the collection properly by the provided key selector', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
 
                 const comparatorA = GetComparatorFromKeySelector('a');
 
@@ -160,7 +160,7 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorA);
 
-                    expect(Linq(list).OrderBy('a').ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderBy('a').ToArray()).to.be.deep.equal(sorted);
                 }
             })
         })
@@ -186,7 +186,7 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorFull);
 
-                    const collection = Linq(list)
+                    const collection = Collection.from(list)
                             .OrderBy(comparatorA)
                             .ThenBy(comparatorB)
                             .ThenBy(comparatorC)
@@ -218,7 +218,7 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorFull);
 
-                    const collection = Linq(list)
+                    const collection = Collection.from(list)
                             .OrderBy('a')
                             .ThenBy('b')
                             .ThenBy('c')
@@ -231,9 +231,9 @@ describe('ordered-collection.js', function () {
 
         describe('OrderByDescending', function () {
             it('should order the collection properly by descending order', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
 
                 const comparatorA = GetComparatorFromKeySelector('a');
 
@@ -243,13 +243,13 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort((a, b) => -1 * comparatorA(a, b));
 
-                    expect(Linq(list).OrderByDescending(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderByDescending(comparatorA).ToArray()).to.be.deep.equal(sorted);
                 }
             })
             it('should order the collection properly by descending order by the provided key selector', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
 
                 const comparatorA = GetComparatorFromKeySelector('a');
 
@@ -259,7 +259,7 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort((a, b) => -1 * comparatorA(a, b));
 
-                    expect(Linq(list).OrderByDescending('a').ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderByDescending('a').ToArray()).to.be.deep.equal(sorted);
                 }
             })
         })
@@ -285,7 +285,7 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort((a, b) => -1 * comparatorFull(a, b));
 
-                    const collection = Linq(list)
+                    const collection = Collection.from(list)
                             .OrderByDescending(comparatorA)
                             .ThenBy(comparatorB)
                             .ThenBy(comparatorC)
@@ -295,9 +295,9 @@ describe('ordered-collection.js', function () {
                 }
             })
             it('should order the collection with respect to subelements properly by descending order and the provided key selector', function () {
-                const Linq = Array.prototype.Linq;
-                const GetComparatorFromKeySelector = Array.prototype.GetComparatorFromKeySelector;
-                const OrderedLinqCollection = Array.prototype.OrderedLinqCollection;
+                const Linq = Collection.prototype.Linq;
+                const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
+                const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
 
                 const comparatorA = GetComparatorFromKeySelector('a');
                 const comparatorB = GetComparatorFromKeySelector('b');
@@ -314,7 +314,7 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort((a, b) => -1 * comparatorFull(a, b));
 
-                    const collection = Linq(list)
+                    const collection = Collection.from(list)
                             .OrderByDescending('a')
                             .ThenBy('b')
                             .ThenBy('c')

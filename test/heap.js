@@ -84,9 +84,9 @@ describe('heap.js', function () {
             }
         });
         it ('should order "equal" elements by original index', function () {
-            const MaxHeap = Array.prototype.MaxHeap;
-            const MinHeap = Array.prototype.MinHeap;
-            const DefaultComparator = Array.prototype.DefaultComparator;
+            const MaxHeap = Collection.prototype.MaxHeap;
+            const MinHeap = Collection.prototype.MinHeap;
+            const DefaultComparator = Collection.prototype.DefaultComparator;
 
             const testComparator = (a, b) => DefaultComparator(a.a, b.a);
             const tests = [
@@ -104,16 +104,16 @@ describe('heap.js', function () {
             }
         });
         it ('should return the empty array', function () {
-            const MaxHeap = Array.prototype.MaxHeap;
-            const MinHeap = Array.prototype.MinHeap;
-            const DefaultComparator = Array.prototype.DefaultComparator;
+            const MaxHeap = Collection.prototype.MaxHeap;
+            const MinHeap = Collection.prototype.MinHeap;
+            const DefaultComparator = Collection.prototype.DefaultComparator;
 
             expect([...(new MaxHeap([], DefaultComparator))]).to.be.deep.equal([]);
         });
         it ('should return the array with one element', function () {
-            const MaxHeap = Array.prototype.MaxHeap;
-            const MinHeap = Array.prototype.MinHeap;
-            const DefaultComparator = Array.prototype.DefaultComparator;
+            const MaxHeap = Collection.prototype.MaxHeap;
+            const MinHeap = Collection.prototype.MinHeap;
+            const DefaultComparator = Collection.prototype.DefaultComparator;
 
             expect([...(new MaxHeap([42], DefaultComparator))]).to.be.deep.equal([42]);
         });
@@ -135,9 +135,9 @@ describe('heap.js', function () {
             }
         });
         it ('should order "equal" elements by original index', function () {
-            const MaxHeap = Array.prototype.MaxHeap;
-            const MinHeap = Array.prototype.MinHeap;
-            const DefaultComparator = Array.prototype.DefaultComparator;
+            const MaxHeap = Collection.prototype.MaxHeap;
+            const MinHeap = Collection.prototype.MinHeap;
+            const DefaultComparator = Collection.prototype.DefaultComparator;
 
             const testComparator = (a, b) => DefaultComparator(a.a, b.a);
             const tests = [
@@ -155,16 +155,16 @@ describe('heap.js', function () {
             }
         });
         it ('should return the empty array', function () {
-            const MaxHeap = Array.prototype.MaxHeap;
-            const MinHeap = Array.prototype.MinHeap;
-            const DefaultComparator = Array.prototype.DefaultComparator;
+            const MaxHeap = Collection.prototype.MaxHeap;
+            const MinHeap = Collection.prototype.MinHeap;
+            const DefaultComparator = Collection.prototype.DefaultComparator;
 
             expect([...(new MinHeap([], DefaultComparator))]).to.be.deep.equal([]);
         });
         it ('should return the array with one element', function () {
-            const MaxHeap = Array.prototype.MaxHeap;
-            const MinHeap = Array.prototype.MinHeap;
-            const DefaultComparator = Array.prototype.DefaultComparator;
+            const MaxHeap = Collection.prototype.MaxHeap;
+            const MinHeap = Collection.prototype.MinHeap;
+            const DefaultComparator = Collection.prototype.DefaultComparator;
 
             expect([...(new MinHeap([42], DefaultComparator))]).to.be.deep.equal([42]);
         });

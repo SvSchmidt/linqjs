@@ -37,8 +37,6 @@ let HeapElement = (function () {
     return HeapElement;
 })();
 
-=======
->>>>>>> iterator-collection
 /*
  * Partially sorted heap that contains the smallest element within root position.
  */
@@ -167,13 +165,8 @@ let MinHeap = (function () {
 
         // do fancy stuff
         heapify(this.elements, this.comparator, 0);
-<<<<<<< HEAD
 
         return topElement.__value;
-=======
-
-        return topElement;
->>>>>>> iterator-collection
     };
 
     /**

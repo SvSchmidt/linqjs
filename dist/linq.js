@@ -764,6 +764,45 @@ function DefaultIfEmpty (constructorOrValue) {
 
 /* src/heap.js */
 
+/**
+ * HeapElement class that also provides the element index for sorting.
+ */
+let HeapElement = (function () {
+
+    /**
+     * Creates a new HeapElement.
+     *
+     * @param {number} index Element index.
+     * @param {T}      value Element value.
+     * @param {any}    <T>   Value type.
+     */
+    function HeapElement(index, value) {
+        this.__index = index;
+        this.__value = value;
+
+        // for faster instance detection
+        this.__isHeapElementInstance = true;
+    }
+
+    /**
+     * Creates or returns a heap element from the given data.
+     * If obj is a HeapElement obj is returned, creates a HeapElement otherwise.
+     *
+     * @param {number}           index Current element index.
+     * @param {T|HeapElement<T>} obj   Element.
+     * @param {any}              <T>   Value type.
+     * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
+     */
+    HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
+        if (obj === undefined || obj.__isHeapElementInstance) {
+            return obj;
+        }
+        return new HeapElement(index, obj);
+    };
+
+    return HeapElement;
+})();
+
 /*
  * Partially sorted heap that contains the smallest element within root position.
  */
@@ -772,88 +811,25 @@ let MinHeap = (function () {
     /**
      * Creates the heap from the array of elements with the given comparator function.
      *
-<<<<<<< HEAD
-     * @return {number} Returns -1 if "a" is smaller than "b",
-     *                  returns  1 if "b" is smaller than "a",
-     *                  returns  0 if they are equal.
-     */
-    var DefaultComparator = function DefaultComparator(a, b) {
-      if (a < b) {
-        return -1;
-      }
-      if (b < a) {
-        return 1;
-      }
-      return 0;
-    };
-
-    /**
-     * HeapElement class that also provides the element index for sorting.
-     */
-    var HeapElement = function () {
-
-      /**
-       * Creates a new HeapElement.
-       * 
-       * @param {number} index Element index.
-       * @param {T}      value Element value.
-       * @param {any}    <T>   Value type.
-       */
-      function HeapElement(index, value) {
-        this.__index = index;
-        this.__value = value;
-
-        // for faster instance detection
-        this.__isHeapElementInstance = true;
-      }
-
-      /**
-       * Creates or returns a heap element from the given data.
-       * If obj is a HeapElement obj is returned, creates a HeapElement otherwise.
-       * 
-       * @param {number}           index Current element index.
-       * @param {T|HeapElement<T>} obj   Element.
-       * @param {any}              <T>   Value type.
-       * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
-       */
-      HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
-        if (obj === undefined || obj.__isHeapElementInstance) {
-          return obj;
-        }
-        return new HeapElement(index, obj);
-      };
-
-      return HeapElement;
-    }();
-
-    /*
-     * Partially sorted heap that contains the smallest element within root position.
-=======
      * @param {T[]}              elements   Array with elements to create the heap from.
      *                                      Will be modified in place for heap logic.
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
->>>>>>> iterator-collection
      */
     function MinHeap(elements, comparator = DefaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
-<<<<<<< HEAD
         // we do not wrap elements here since the heapify function does that the moment it encounters elements
         this.elements = elements;
-=======
-        this.comparator = comparator;
-        this.elements   = elements;
->>>>>>> iterator-collection
 
         // create comparator that works on heap elements (it also ensures equal elements remain in original order)
-        this.comparator = function (a, b) {
-          var res = comparator(a.__value, b.__value);
-          if (res !== 0) {
-            return res;
-          }
-          return DefaultComparator(a.__index, b.__index);
+        this.comparator = (a, b) => {
+            let res = comparator(a.__value, b.__value);
+            if (res !== 0) {
+                return res;
+            }
+            return DefaultComparator(a.__index, b.__index);
         };
 
         // create heap ordering
@@ -877,25 +853,17 @@ let MinHeap = (function () {
         elements[bestIndex] = HeapElement.CreateHeapElement(bestIndex, elements[bestIndex]);
 
         // check if the element is currently misplaced
-<<<<<<< HEAD
         if (left < elements.length) {
-          elements[left] = HeapElement.CreateHeapElement(left, elements[left]);
-          if (comparator(elements[left], elements[bestIndex]) < 0) {
-            bestIndex = left;
-          }
+            elements[left] = HeapElement.CreateHeapElement(left, elements[left]);
+            if (comparator(elements[left], elements[bestIndex]) < 0) {
+                bestIndex = left;
+            }
         }
         if (right < elements.length) {
-          elements[right] = HeapElement.CreateHeapElement(right, elements[right]);
-          if (comparator(elements[right], elements[bestIndex]) < 0) {
-            bestIndex = right;
-          }
-=======
-        if (left < elements.length && comparator(elements[left], elements[bestIndex]) < 0) {
-            bestIndex = left;
-        }
-        if (right < elements.length && comparator(elements[right], elements[bestIndex]) < 0) {
-            bestIndex = right;
->>>>>>> iterator-collection
+            elements[right] = HeapElement.CreateHeapElement(right, elements[right]);
+            if (comparator(elements[right], elements[bestIndex]) < 0) {
+                bestIndex = right;
+            }
         }
 
         // if the element is misplaced, swap elements and continue until we get the right position
@@ -909,29 +877,6 @@ let MinHeap = (function () {
         }
     }
 
-<<<<<<< HEAD
-      /**
-       * Creates a heap from the given array using the given comparator.
-       * 
-       * @param {T[]}              elements   Array with elements used for the heap.
-       *                                      Will be modified in place for heap logic.
-       * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
-       * @param {any}              <T>        Heap element type.
-       */
-      function createHeap(elements, comparator) {
-
-        // sepecial case: empty array
-        if (elements.length === 0) {
-
-          // nothing to do here
-          return;
-        }
-
-        for (var i = Math.floor(elements.length / 2); i >= 0; i--) {
-
-          // do fancy stuff
-          heapify(elements, comparator, i);
-=======
     /**
      * Creates a heap from the given array using the given comparator.
      *
@@ -941,11 +886,18 @@ let MinHeap = (function () {
      * @param {any}              <T>        Heap element type.
      */
     function createHeap(elements, comparator) {
+
+        // sepecial case: empty array
+        if (elements.length === 0) {
+
+            // nothing to do here
+            return;
+        }
+
         for (let i = Math.floor(elements.length / 2); i >= 0; i--) {
 
             // do fancy stuff
             heapify(elements, comparator, i);
->>>>>>> iterator-collection
         }
     }
 
@@ -956,23 +908,6 @@ let MinHeap = (function () {
      */
     MinHeap.prototype.hasTopElement = function () {
         return this.elements.length > 0;
-<<<<<<< HEAD
-      };
-
-      /**
-       * Gets and removes the top element from the heap.
-       * This method performs a bit of reordering to keep heap properties.
-       * 
-       * @param {any} <T> Heap element type.
-       * 
-       * @return {T} Top element from heap.
-       */
-      MinHeap.prototype.getTopElement = function () {
-
-        // special case: only one element left
-        if (this.elements.length === 1) {
-          return this.elements.pop().__value;
-=======
     };
 
     /**
@@ -984,10 +919,10 @@ let MinHeap = (function () {
      * @return {T} Top element from heap.
      */
     MinHeap.prototype.getTopElement = function () {
+
         // special case: only one element left
         if (this.elements.length === 1) {
-            return this.elements.pop();
->>>>>>> iterator-collection
+            return this.elements.pop().__value;
         }
 
         let topElement = this.elements[0];
@@ -997,13 +932,8 @@ let MinHeap = (function () {
         // do fancy stuff
         heapify(this.elements, this.comparator, 0);
 
-<<<<<<< HEAD
         return topElement.__value;
-      };
-=======
-        return topElement;
     };
->>>>>>> iterator-collection
 
     /**
      * Creates an iterator for this heap instance.
@@ -1059,41 +989,6 @@ let MaxHeap = (function () {
 
     return MaxHeap;
 })()
-
-<<<<<<< HEAD
-    /* src/transformation.js */
-=======
-
-
-
-/* src/order.js */
-
-// TODO: change implementation to use iterators!
-
-function Order() {
-    return this.OrderBy(DefaultComparator);
-}
-
-function OrderCompare() {
-    return this.sort(DefaultComparator);
-}
-
-function OrderBy(comparator) {
-    __assertFunction(comparator);
-    let heap = new MinHeap(this, comparator);
-    return [...heap];
-}
->>>>>>> iterator-collection
-
-function OrderDescending() {
-    return this.OrderByDescending(DefaultComparator);
-}
-
-function OrderByDescending(comparator) {
-    __assertFunction(comparator);
-    let heap = new MaxHeap(this, comparator);
-    return [...heap];
-}
 
 
 
@@ -1212,74 +1107,6 @@ function Remove (value) {
   let values = this.ToArray()
   const result = removeFromArray(values, value)
 
-<<<<<<< HEAD
-      /**
-       * Hook function that will be called once before iterating.
-       */
-      LinqCollection.prototype._initialize = function _initialize() {
-        this.__sourceIterator = this._source[Symbol.iterator]();
-      };
-
-      /**
-       * Internal iterator.next() method.
-       * 
-       * @param {any} <T> Element type.
-       * @return {IterationElement<T>} Next element when iterating.
-       */
-      LinqCollection.prototype._next = function _next() {
-        return this.__sourceIterator.next();
-      };
-
-      /**
-       * Internal function that ensures the _initialize() hook is invoked once.
-       * This function also adds the iteration index to the result of _next().
-       * 
-       * @param {any} <T> Element type.
-       * @return {IterationElement<T>} Next element when iterating.
-       */
-      LinqCollection.prototype.__wrappedNext = function __wrappedNext() {
-        if (!this.__startedIterating) {
-          this.__startedIterating = true;
-          this._initialize();
-        }
-        var result = this._next();
-        if (!result.done) {
-          result.index = this.__iterationIndex;
-          this.__iterationIndex++;
-        }
-        return result;
-      };
-
-      /**
-       * Creates an array from this collection.
-       * Iterates once over its elements.
-       * 
-       * @param {any} <T> Element type.
-       * @return {T[]} Array with elements from this collection.
-       */
-      LinqCollection.prototype.ToArray = function ToArray() {
-        return [].concat(_toConsumableArray(this));
-      };
-
-      /**
-       * Returns wheather iteration has started or not.
-       * If iteration has not been started yet, _initialize() has not yet been called.
-       *
-       * @return {boolean}
-       */
-      LinqCollection.prototype.StartedIterating = function StartedIterating() {
-        return this.__startedIterating;
-      };
-
-      /**
-       * Provides an iterator for this collection.
-       * 
-       * @param {any} <T> Element type.
-       * @return {Iterator<T>} Iterator for this collection.
-       */
-      LinqCollection.prototype[Symbol.iterator] = function () {
-        var _this = this;
-=======
   if (!result) {
     return false
   }
@@ -1291,7 +1118,6 @@ function Remove (value) {
 
   return true
 }
->>>>>>> iterator-collection
 
 
 
@@ -1355,13 +1181,7 @@ let OrderedLinqCollection = (function () {
       }()
     }
 
-<<<<<<< HEAD
-    /* Export public interface */
-    __export({ install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty, DefaultComparator: DefaultComparator, MinHeap: MinHeap, MaxHeap: MaxHeap, Aggregate: Aggregate, Distinct: Distinct, Add: Add, Insert: Insert, Remove: Remove, LinqCollection: LinqCollection, Linq: Linq, GetComparatorFromKeySelector: GetComparatorFromKeySelector, OrderedLinqCollection: OrderedLinqCollection });
-  });
-=======
     return OrderedLinqCollection;
->>>>>>> iterator-collection
 })();
 
 /**
@@ -1416,6 +1236,6 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, Aggregate, Distinct, Select, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
 }))
 }())
