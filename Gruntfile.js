@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         },
         dist: {
           files: {
-              'dist/linq.js': 'dist/linq.js'
+              'dist/linq.js': 'tmp/linq.es6.js'
           }
         },
     },
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     },
     file_info: {
       dist: {
-        src: ['dist/linq.min.js', 'dist/linq.js', 'tmp/linq.js'],
+        src: ['dist/linq.min.js', 'dist/linq.js', 'tmp/linq.es6.js'],
         options: {
             stdout: 'linq.js ES6   :   {{= Number(size(src[2])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
                     'linq.js       :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed /*+
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
     concat: {
       all: {
         src: 'fragments/sources.js',
-        target: 'dist/linq.js'
+        target: 'tmp/linq.es6.js'
       }
     }
   });
