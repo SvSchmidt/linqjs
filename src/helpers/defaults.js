@@ -14,7 +14,7 @@ function defaultEqualityCompareFn (first, second) {
  *                  returns  1 if "b" is smaller than "a",
  *                  returns  0 if they are equal.
  */
-let DefaultComparator = (a, b) => {
+function DefaultComparator (a, b) {
     if (a < b) {
         return -1;
     }

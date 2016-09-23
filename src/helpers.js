@@ -8,11 +8,11 @@
     if (Object.hasOwnProperty('assign') && typeof Object.assign === 'function') {
       Object.assign(target, source)
     } else {
-      for (let key in source) {
+      Object.keys(source).forEach(function (k) {
         if (Object.prototype.hasOwnProperty.call(source, key)) {
           target[key] = source[key]
         }
-      }
+      })
     }
 
     return target

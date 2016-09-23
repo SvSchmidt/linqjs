@@ -25,8 +25,7 @@
   }
 
   function __assertIterationNotStarted (collection) {
-    let iterationStarted = ('StartedIterating' in collection) && collection.StartedIterating();
-    __assert(!iterationStarted, 'Iteration already started!')
+    __assert(!(collection.hasOwnProperty('StartedIterating') && collection.StartedIterating()), 'Iteration already started!')
   }
 
   function __assertString (obj) {

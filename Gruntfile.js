@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         },
         dist: {
           files: {
-              'dist/linq.js': 'tmp/linq.js'
+              'dist/linq.js': 'dist/linq.js'
           }
         },
     },
@@ -47,7 +47,7 @@ module.exports = function (grunt) {
     mochacli: {
         options: {
             reporter: 'nyan',
-            bail: true
+            bail: true,
         },
         dist: ['test/*.js']
     },
@@ -191,8 +191,8 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['clean:dist',
                                 'concat:all',
                                 //'jshint:after_concat',
-                                //'babel:dist',
-                                //'uglify:dist',
+                                'babel:dist',
+                                'uglify:dist',
                                 'usebanner',
                                 'file_info'])
   grunt.registerTask('dist', ['build', 'clean:tmp'])
