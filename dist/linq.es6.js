@@ -1098,6 +1098,25 @@ let MaxHeap = (function () {
     return result
   }
 
+  /*
+GroupBy(keySelector)
+
+GroupBy(keySelector, keyComparer)
+GroupBy(keySelector, elementSelector)
+GroupBy(keySelector, resultTransformFn)
+
+GroupBy(keySelector, resultTransformFn, keyComparer)
+GroupBy(keySelector, elementSelector, keyComparer)
+GroupBy(keySelector, elementSelector, resultTransformFn)
+
+GroupBy(keySelector, elementSelector, resultTransformFn, keyComparer)
+  */
+  function GroupBy (keySelector, keyComparerOrResultTransformFnOrElementSelector, keyComparerOrResultTransformFn, keyComparer) {
+    __assertFunction(keySelector)
+
+
+  }
+
 
 
 

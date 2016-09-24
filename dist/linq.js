@@ -1735,6 +1735,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return result;
     }
 
+    /*
+    GroupBy(keySelector)
+    GroupBy(keySelector, keyComparer)
+    GroupBy(keySelector, elementSelector)
+    GroupBy(keySelector, resultTransformFn)
+    GroupBy(keySelector, resultTransformFn, keyComparer)
+    GroupBy(keySelector, elementSelector, keyComparer)
+    GroupBy(keySelector, elementSelector, resultTransformFn)
+    GroupBy(keySelector, elementSelector, resultTransformFn, keyComparer)
+    */
+    function GroupBy(keySelector, keyComparerOrResultTransformFnOrElementSelector, keyComparerOrResultTransformFn, keyComparer) {
+      __assertFunction(keySelector);
+    }
+
     /* src/insert-and-remove.js */
 
     /**
