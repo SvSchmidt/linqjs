@@ -1,16 +1,3 @@
 require("babel-core/register")
 require("babel-polyfill")
-
-if (process.env.IS_COVERAGE) {
-    describe('Test coverage', function () {
-        it('should generate instrumentation', function (done) {
-            require('child_process').exec('$(npm root)/.bin/jscoverage dist/linq.js coverage/dist/linq.js', done)
-        });
-
-        it('should load coverage module', function () {
-          require('../coverage/dist/linq.js').install()
-        });
-    });
-} else {
-  require('../dist/linq').install()
-}
+require('../dist/linq').install()

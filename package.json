@@ -4,7 +4,7 @@
   "description": "linq-style queries as known by C# for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && IS_COVERAGE=1 node_modules/.bin/mocha --ui bdd --reporter mocha-lcov-reporter ./test | ./node_modules/.bin/coveralls",
+    "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha --reporter mocha-lcov-reporter && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
     "build": "grunt"
   },
   "author": "Sven Schmidt",
@@ -21,7 +21,7 @@
     }
   ],
   "devDependencies": {
-    "babel-cli": "^6.11.4",
+    "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-uglify": "^1.0.2",
@@ -30,6 +30,7 @@
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-es2016": "^6.11.3",
     "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.14.0",
     "babelify": "^7.3.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.12",
@@ -43,6 +44,8 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-file-info": "^1.0.12",
     "grunt-mocha-cli": "^2.1.0",
+    "isparta": "^4.0.0",
+    "istanbul": "^0.4.4",
     "jscoverage": "^0.6.0",
     "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.0.2",
