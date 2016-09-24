@@ -840,6 +840,107 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }));
 
       this.reset();
+      second.reset && second.reset();
+
+      return result;
+    }
+
+    /**
+     * Zip - Applies a function to the elements of two sequences, producing a sequence of the results
+     *
+     * @param  {Iterable} second
+     * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
+     * @return {collection}
+     */
+    function Zip(second, resultSelectorFn) {
+      __assertIterable(second);
+      __assertFunction(resultSelectorFn);
+
+      var first = this;
+      var secondIter = second[Symbol.iterator]();
+
+      var result = new Collection(regeneratorRuntime.mark(function _callee7() {
+        var _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, firstVal, secondNext;
+
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _iteratorNormalCompletion7 = true;
+                _didIteratorError7 = false;
+                _iteratorError7 = undefined;
+                _context7.prev = 3;
+                _iterator7 = first[Symbol.iterator]();
+
+              case 5:
+                if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
+                  _context7.next = 15;
+                  break;
+                }
+
+                firstVal = _step7.value;
+                secondNext = secondIter.next();
+
+                if (!secondNext.done) {
+                  _context7.next = 10;
+                  break;
+                }
+
+                return _context7.abrupt('break', 15);
+
+              case 10:
+                _context7.next = 12;
+                return resultSelectorFn(firstVal, secondNext.value);
+
+              case 12:
+                _iteratorNormalCompletion7 = true;
+                _context7.next = 5;
+                break;
+
+              case 15:
+                _context7.next = 21;
+                break;
+
+              case 17:
+                _context7.prev = 17;
+                _context7.t0 = _context7['catch'](3);
+                _didIteratorError7 = true;
+                _iteratorError7 = _context7.t0;
+
+              case 21:
+                _context7.prev = 21;
+                _context7.prev = 22;
+
+                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                  _iterator7.return();
+                }
+
+              case 24:
+                _context7.prev = 24;
+
+                if (!_didIteratorError7) {
+                  _context7.next = 27;
+                  break;
+                }
+
+                throw _iteratorError7;
+
+              case 27:
+                return _context7.finish(24);
+
+              case 28:
+                return _context7.finish(21);
+
+              case 29:
+              case 'end':
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this, [[3, 17, 21, 29], [22,, 24, 28]]);
+      }));
+
+      first.reset();
+      second.reset && second.reset();
 
       return result;
     }
@@ -847,29 +948,29 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     /* src/search.js */
 
     function Contains(elem) {
-      var _iteratorNormalCompletion7 = true;
-      var _didIteratorError7 = false;
-      var _iteratorError7 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator7 = this[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var val = _step7.value;
+        for (var _iterator8 = this[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var val = _step8.value;
 
           if (defaultEqualityCompareFn(elem, val)) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return) {
-            _iterator7.return();
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
           }
         } finally {
-          if (_didIteratorError7) {
-            throw _iteratorError7;
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -888,34 +989,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      return new Collection(regeneratorRuntime.mark(function _callee7() {
-        var index, _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8, val;
+      return new Collection(regeneratorRuntime.mark(function _callee8() {
+        var index, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, val;
 
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 index = 0;
-                _iteratorNormalCompletion8 = true;
-                _didIteratorError8 = false;
-                _iteratorError8 = undefined;
-                _context7.prev = 4;
-                _iterator8 = _self[Symbol.iterator]();
+                _iteratorNormalCompletion9 = true;
+                _didIteratorError9 = false;
+                _iteratorError9 = undefined;
+                _context8.prev = 4;
+                _iterator9 = _self[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done) {
-                  _context7.next = 15;
+                if (_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done) {
+                  _context8.next = 15;
                   break;
                 }
 
-                val = _step8.value;
+                val = _step9.value;
 
                 if (!predicate(val, index)) {
-                  _context7.next = 11;
+                  _context8.next = 11;
                   break;
                 }
 
-                _context7.next = 11;
+                _context8.next = 11;
                 return val;
 
               case 11:
@@ -923,50 +1024,50 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 index++;
 
               case 12:
-                _iteratorNormalCompletion8 = true;
-                _context7.next = 6;
+                _iteratorNormalCompletion9 = true;
+                _context8.next = 6;
                 break;
 
               case 15:
-                _context7.next = 21;
+                _context8.next = 21;
                 break;
 
               case 17:
-                _context7.prev = 17;
-                _context7.t0 = _context7['catch'](4);
-                _didIteratorError8 = true;
-                _iteratorError8 = _context7.t0;
+                _context8.prev = 17;
+                _context8.t0 = _context8['catch'](4);
+                _didIteratorError9 = true;
+                _iteratorError9 = _context8.t0;
 
               case 21:
-                _context7.prev = 21;
-                _context7.prev = 22;
+                _context8.prev = 21;
+                _context8.prev = 22;
 
-                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                  _iterator8.return();
+                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                  _iterator9.return();
                 }
 
               case 24:
-                _context7.prev = 24;
+                _context8.prev = 24;
 
-                if (!_didIteratorError8) {
-                  _context7.next = 27;
+                if (!_didIteratorError9) {
+                  _context8.next = 27;
                   break;
                 }
 
-                throw _iteratorError8;
+                throw _iteratorError9;
 
               case 27:
-                return _context7.finish(24);
+                return _context8.finish(24);
 
               case 28:
-                return _context7.finish(21);
+                return _context8.finish(21);
 
               case 29:
               case 'end':
-                return _context7.stop();
+                return _context8.stop();
             }
           }
-        }, _callee7, this, [[4, 17, 21, 29], [22,, 24, 28]]);
+        }, _callee8, this, [[4, 17, 21, 29], [22,, 24, 28]]);
       })());
     }
 
@@ -1063,13 +1164,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var result = [];
 
-      var _iteratorNormalCompletion9 = true;
-      var _didIteratorError9 = false;
-      var _iteratorError9 = undefined;
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
       try {
-        for (var _iterator9 = this[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-          var val = _step9.value;
+        for (var _iterator10 = this[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var val = _step10.value;
 
           result.push(val);
 
@@ -1078,16 +1179,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }
       } catch (err) {
-        _didIteratorError9 = true;
-        _iteratorError9 = err;
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion9 && _iterator9.return) {
-            _iterator9.return();
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
           }
         } finally {
-          if (_didIteratorError9) {
-            throw _iteratorError9;
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
@@ -1138,121 +1239,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      var result = new Collection(regeneratorRuntime.mark(function _callee8() {
-        var index, endTake, _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, val;
-
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                index = 0;
-                endTake = false;
-                _iteratorNormalCompletion10 = true;
-                _didIteratorError10 = false;
-                _iteratorError10 = undefined;
-                _context8.prev = 5;
-                _iterator10 = _self[Symbol.iterator]();
-
-              case 7:
-                if (_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done) {
-                  _context8.next = 17;
-                  break;
-                }
-
-                val = _step10.value;
-
-                if (!(!endTake && predicate(val, index++))) {
-                  _context8.next = 13;
-                  break;
-                }
-
-                _context8.next = 12;
-                return val;
-
-              case 12:
-                return _context8.abrupt('continue', 14);
-
-              case 13:
-
-                endTake = true;
-
-              case 14:
-                _iteratorNormalCompletion10 = true;
-                _context8.next = 7;
-                break;
-
-              case 17:
-                _context8.next = 23;
-                break;
-
-              case 19:
-                _context8.prev = 19;
-                _context8.t0 = _context8['catch'](5);
-                _didIteratorError10 = true;
-                _iteratorError10 = _context8.t0;
-
-              case 23:
-                _context8.prev = 23;
-                _context8.prev = 24;
-
-                if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                  _iterator10.return();
-                }
-
-              case 26:
-                _context8.prev = 26;
-
-                if (!_didIteratorError10) {
-                  _context8.next = 29;
-                  break;
-                }
-
-                throw _iteratorError10;
-
-              case 29:
-                return _context8.finish(26);
-
-              case 30:
-                return _context8.finish(23);
-
-              case 31:
-              case 'end':
-                return _context8.stop();
-            }
-          }
-        }, _callee8, this, [[5, 19, 23, 31], [24,, 26, 30]]);
-      })).ToArray();
-
-      this.reset();
-
-      return result;
-    }
-
-    /**
-     * SkipWhile - Skips elements in the array until the predicate yields false and returns the remaining elements
-     *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
-     * @param  {type} predicate         the predicate of the form elem => boolean or (elem, index) => boolean
-     * @return {Array}
-     */
-    function SkipWhile() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
-        return true;
-      } : arguments[0];
-
-      __assertFunction(predicate);
-
-      var _self = this;
-
       var result = new Collection(regeneratorRuntime.mark(function _callee9() {
-        var index, endSkip, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, val;
+        var index, endTake, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, val;
 
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
                 index = 0;
-                endSkip = false;
+                endTake = false;
                 _iteratorNormalCompletion11 = true;
                 _didIteratorError11 = false;
                 _iteratorError11 = undefined;
@@ -1267,18 +1262,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
                 val = _step11.value;
 
-                if (!(!endSkip && predicate(val, index++))) {
-                  _context9.next = 11;
+                if (!(!endTake && predicate(val, index++))) {
+                  _context9.next = 13;
                   break;
                 }
 
+                _context9.next = 12;
+                return val;
+
+              case 12:
                 return _context9.abrupt('continue', 14);
 
-              case 11:
+              case 13:
 
-                endSkip = true;
-                _context9.next = 14;
-                return val;
+                endTake = true;
 
               case 14:
                 _iteratorNormalCompletion11 = true;
@@ -1325,6 +1322,110 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           }
         }, _callee9, this, [[5, 19, 23, 31], [24,, 26, 30]]);
+      })).ToArray();
+
+      this.reset();
+
+      return result;
+    }
+
+    /**
+     * SkipWhile - Skips elements in the array until the predicate yields false and returns the remaining elements
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+     * @param  {type} predicate         the predicate of the form elem => boolean or (elem, index) => boolean
+     * @return {Array}
+     */
+    function SkipWhile() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+
+      var _self = this;
+
+      var result = new Collection(regeneratorRuntime.mark(function _callee10() {
+        var index, endSkip, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, val;
+
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                index = 0;
+                endSkip = false;
+                _iteratorNormalCompletion12 = true;
+                _didIteratorError12 = false;
+                _iteratorError12 = undefined;
+                _context10.prev = 5;
+                _iterator12 = _self[Symbol.iterator]();
+
+              case 7:
+                if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
+                  _context10.next = 17;
+                  break;
+                }
+
+                val = _step12.value;
+
+                if (!(!endSkip && predicate(val, index++))) {
+                  _context10.next = 11;
+                  break;
+                }
+
+                return _context10.abrupt('continue', 14);
+
+              case 11:
+
+                endSkip = true;
+                _context10.next = 14;
+                return val;
+
+              case 14:
+                _iteratorNormalCompletion12 = true;
+                _context10.next = 7;
+                break;
+
+              case 17:
+                _context10.next = 23;
+                break;
+
+              case 19:
+                _context10.prev = 19;
+                _context10.t0 = _context10['catch'](5);
+                _didIteratorError12 = true;
+                _iteratorError12 = _context10.t0;
+
+              case 23:
+                _context10.prev = 23;
+                _context10.prev = 24;
+
+                if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                  _iterator12.return();
+                }
+
+              case 26:
+                _context10.prev = 26;
+
+                if (!_didIteratorError12) {
+                  _context10.next = 29;
+                  break;
+                }
+
+                throw _iteratorError12;
+
+              case 29:
+                return _context10.finish(26);
+
+              case 30:
+                return _context10.finish(23);
+
+              case 31:
+              case 'end':
+                return _context10.stop();
+            }
+          }
+        }, _callee10, this, [[5, 19, 23, 31], [24,, 26, 30]]);
       }));
 
       this.reset();
@@ -1425,13 +1526,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var index = 0;
       var result = void 0;
 
-      var _iteratorNormalCompletion12 = true;
-      var _didIteratorError12 = false;
-      var _iteratorError12 = undefined;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
       try {
-        for (var _iterator12 = this[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-          var val = _step12.value;
+        for (var _iterator13 = this[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var val = _step13.value;
 
           if (predicate(val)) {
             result = val;
@@ -1441,16 +1542,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           index++;
         }
       } catch (err) {
-        _didIteratorError12 = true;
-        _iteratorError12 = err;
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion12 && _iterator12.return) {
-            _iterator12.return();
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
           }
         } finally {
-          if (_didIteratorError12) {
-            throw _iteratorError12;
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
       }
@@ -1778,76 +1879,76 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      return new Collection(regeneratorRuntime.mark(function _callee10() {
-        var _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, val;
+      return new Collection(regeneratorRuntime.mark(function _callee11() {
+        var _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, val;
 
-        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+        return regeneratorRuntime.wrap(function _callee11$(_context11) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context11.prev = _context11.next) {
               case 0:
                 _self.reset();
 
-                _iteratorNormalCompletion13 = true;
-                _didIteratorError13 = false;
-                _iteratorError13 = undefined;
-                _context10.prev = 4;
-                _iterator13 = _self[Symbol.iterator]();
+                _iteratorNormalCompletion14 = true;
+                _didIteratorError14 = false;
+                _iteratorError14 = undefined;
+                _context11.prev = 4;
+                _iterator14 = _self[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
-                  _context10.next = 13;
+                if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
+                  _context11.next = 13;
                   break;
                 }
 
-                val = _step13.value;
-                _context10.next = 10;
+                val = _step14.value;
+                _context11.next = 10;
                 return mapFn(val);
 
               case 10:
-                _iteratorNormalCompletion13 = true;
-                _context10.next = 6;
+                _iteratorNormalCompletion14 = true;
+                _context11.next = 6;
                 break;
 
               case 13:
-                _context10.next = 19;
+                _context11.next = 19;
                 break;
 
               case 15:
-                _context10.prev = 15;
-                _context10.t0 = _context10['catch'](4);
-                _didIteratorError13 = true;
-                _iteratorError13 = _context10.t0;
+                _context11.prev = 15;
+                _context11.t0 = _context11['catch'](4);
+                _didIteratorError14 = true;
+                _iteratorError14 = _context11.t0;
 
               case 19:
-                _context10.prev = 19;
-                _context10.prev = 20;
+                _context11.prev = 19;
+                _context11.prev = 20;
 
-                if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                  _iterator13.return();
+                if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                  _iterator14.return();
                 }
 
               case 22:
-                _context10.prev = 22;
+                _context11.prev = 22;
 
-                if (!_didIteratorError13) {
-                  _context10.next = 25;
+                if (!_didIteratorError14) {
+                  _context11.next = 25;
                   break;
                 }
 
-                throw _iteratorError13;
+                throw _iteratorError14;
 
               case 25:
-                return _context10.finish(22);
+                return _context11.finish(22);
 
               case 26:
-                return _context10.finish(19);
+                return _context11.finish(19);
 
               case 27:
               case 'end':
-                return _context10.stop();
+                return _context11.stop();
             }
           }
-        }, _callee10, this, [[4, 15, 19, 27], [20,, 22, 26]]);
+        }, _callee11, this, [[4, 15, 19, 27], [20,, 22, 26]]);
       }));
     }
 
@@ -1915,13 +2016,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var input = this.ToArray();
       var elementSelector = elementSelectorOrKeyComparer;
 
-      var _iteratorNormalCompletion14 = true;
-      var _didIteratorError14 = false;
-      var _iteratorError14 = undefined;
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
 
       try {
         var _loop = function _loop() {
-          var value = _step14.value;
+          var value = _step15.value;
 
           var key = keySelector(value);
           var elem = elementSelector(value);
@@ -1935,20 +2036,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           result.set(key, elem);
         };
 
-        for (var _iterator14 = input[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+        for (var _iterator15 = input[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
           _loop();
         }
       } catch (err) {
-        _didIteratorError14 = true;
-        _iteratorError14 = err;
+        _didIteratorError15 = true;
+        _iteratorError15 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion14 && _iterator14.return) {
-            _iterator14.return();
+          if (!_iteratorNormalCompletion15 && _iterator15.return) {
+            _iterator15.return();
           }
         } finally {
-          if (_didIteratorError14) {
-            throw _iteratorError14;
+          if (_didIteratorError15) {
+            throw _iteratorError15;
           }
         }
       }
@@ -1996,26 +2097,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var oldIter = this.ToArray();
 
-      this.iterable = regeneratorRuntime.mark(function _callee11() {
-        return regeneratorRuntime.wrap(function _callee11$(_context11) {
+      this.iterable = regeneratorRuntime.mark(function _callee12() {
+        return regeneratorRuntime.wrap(function _callee12$(_context12) {
           while (1) {
-            switch (_context11.prev = _context11.next) {
+            switch (_context12.prev = _context12.next) {
               case 0:
-                return _context11.delegateYield(oldIter.slice(0, index), 't0', 1);
+                return _context12.delegateYield(oldIter.slice(0, index), 't0', 1);
 
               case 1:
-                _context11.next = 3;
+                _context12.next = 3;
                 return value;
 
               case 3:
-                return _context11.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
+                return _context12.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
 
               case 4:
               case 'end':
-                return _context11.stop();
+                return _context12.stop();
             }
           }
-        }, _callee11, this);
+        }, _callee12, this);
       });
       this.reset();
     }
@@ -2034,19 +2135,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return false;
       }
 
-      this.iterable = regeneratorRuntime.mark(function _callee12() {
-        return regeneratorRuntime.wrap(function _callee12$(_context12) {
+      this.iterable = regeneratorRuntime.mark(function _callee13() {
+        return regeneratorRuntime.wrap(function _callee13$(_context13) {
           while (1) {
-            switch (_context12.prev = _context12.next) {
+            switch (_context13.prev = _context13.next) {
               case 0:
-                return _context12.delegateYield(values, 't0', 1);
+                return _context13.delegateYield(values, 't0', 1);
 
               case 1:
               case 'end':
-                return _context12.stop();
+                return _context13.stop();
             }
           }
-        }, _callee12, this);
+        }, _callee13, this);
       });
       this.reset();
 
@@ -2135,19 +2236,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       OrderedLinqCollection.prototype[getIterator] = function () {
         var _self = this;
 
-        return regeneratorRuntime.mark(function _callee13() {
-          return regeneratorRuntime.wrap(function _callee13$(_context13) {
+        return regeneratorRuntime.mark(function _callee14() {
+          return regeneratorRuntime.wrap(function _callee14$(_context14) {
             while (1) {
-              switch (_context13.prev = _context13.next) {
+              switch (_context14.prev = _context14.next) {
                 case 0:
-                  return _context13.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
+                  return _context14.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
 
                 case 1:
                 case 'end':
-                  return _context13.stop();
+                  return _context14.stop();
               }
             }
-          }, _callee13, this);
+          }, _callee14, this);
         })();
       };
 
@@ -2205,6 +2306,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
   });
 })();

@@ -101,4 +101,20 @@ describe('Concatenation', function () {
       expect(onlyInFirstSet.ToArray()).to.be.deep.equal([2.0, 2.1, 2.3, 2.4, 2.5])
     })
   })
+
+  describe('Zip', function () {
+    it('should apply a function to the elements of two sequences and return a common result', function () {
+      const numbers = [ 1, 2, 3, 4 ]
+      const words = [ "one", "two", "three" ]
+
+      const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
+      const expectedResult = [ '1 one', '2 two', '3 three' ]
+
+      let i = 0
+      for (let val of numbersAndWords.ToArray()) {
+        expect(val).to.be.equal(expectedResult[i])
+        i++
+      }
+    })
+  })
 })

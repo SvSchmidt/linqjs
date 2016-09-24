@@ -456,6 +456,39 @@ function install () {
     })
 
     this.reset()
+    second.reset && second.reset()
+
+    return result
+  }
+
+  /**
+   * Zip - Applies a function to the elements of two sequences, producing a sequence of the results
+   *
+   * @param  {Iterable} second
+   * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
+   * @return {collection}
+   */
+  function Zip (second, resultSelectorFn) {
+    __assertIterable(second)
+    __assertFunction(resultSelectorFn)
+
+    const first = this
+    const secondIter = second[Symbol.iterator]()
+
+    const result = new Collection(function * () {
+      for (const firstVal of first) {
+        const secondNext = secondIter.next()
+
+        if (secondNext.done) {
+          break
+        }
+
+        yield resultSelectorFn(firstVal, secondNext.value)
+      }
+    })
+
+    first.reset()
+    second.reset && second.reset()
 
     return result
   }
@@ -1361,6 +1394,6 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Join, Except, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
 }))
 }())
