@@ -10,7 +10,7 @@
     return new Collection(function * () {
       yield* _self
       yield* second
-    }())
+    })
   }
 
   function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
