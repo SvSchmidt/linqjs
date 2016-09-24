@@ -60,4 +60,29 @@
     return result
   }
 
-  __export({ Concat, Union, Join })
+  /**
+   * Except - Returns the element of the sequence that do not appear in second
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
+   * @param  {Iterable} second
+   * @return {Collection}        new Collection with the values of first without the ones in second
+   */
+  function Except (second) {
+    __assertIterable(second)
+
+    const first = this
+
+    const result = new Collection(function * () {
+      for (let val of first) {
+        if (!second.Contains(val)) {
+          yield val
+        }
+      }
+    })
+
+    this.reset()
+
+    return result
+  }
+
+  __export({ Concat, Union, Join, Except })

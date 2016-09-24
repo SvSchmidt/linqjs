@@ -90,4 +90,15 @@ describe('Concatenation', function () {
       }
     })
   })
+
+  describe('Except', function () {
+    it('should return the elements of first sequence that do not appear in second', function () {
+      const numbers1 = [ 2.0, 2.1, 2.2, 2.3, 2.4, 2.5 ]
+      const numbers2 = [ 2.2 ]
+
+      const onlyInFirstSet = numbers1.Except(numbers2);
+
+      expect(onlyInFirstSet.ToArray()).to.be.deep.equal([2.0, 2.1, 2.3, 2.4, 2.5])
+    })
+  })
 })

@@ -435,6 +435,31 @@ function install () {
     return result
   }
 
+  /**
+   * Except - Returns the element of the sequence that do not appear in second
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
+   * @param  {Iterable} second
+   * @return {Collection}        new Collection with the values of first without the ones in second
+   */
+  function Except (second) {
+    __assertIterable(second)
+
+    const first = this
+
+    const result = new Collection(function * () {
+      for (let val of first) {
+        if (!second.Contains(val)) {
+          yield val
+        }
+      }
+    })
+
+    this.reset()
+
+    return result
+  }
+
 
 
 
@@ -1336,6 +1361,6 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Join, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Join, Except, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
 }))
 }())
