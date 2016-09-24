@@ -4,7 +4,7 @@
 
   function __assign (target, source) {
     Object.assign(Object(target), source)
-    
+
     return target
   }
 
@@ -63,19 +63,7 @@
       }
     }())
   }
-
-  /**
-   * emptyArray - Helper function to remove all elements from an array (by modifying the original and not returning a new one)
-   *
-   * @param  {Array} arr The array to remove all elements form
-   * @return {void}
-   */
-  function emptyArray (arr) {
-    __assertArray(arr)
-
-    while (arr.shift()) {}
-  }
-
+  
   function removeFromArray (arr, value) {
     __assertArray(arr)
 

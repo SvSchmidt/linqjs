@@ -331,18 +331,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       })());
     }
 
-    /**
-     * emptyArray - Helper function to remove all elements from an array (by modifying the original and not returning a new one)
-     *
-     * @param  {Array} arr The array to remove all elements form
-     * @return {void}
-     */
-    function emptyArray(arr) {
-      __assertArray(arr);
-
-      while (arr.shift()) {}
-    }
-
     function removeFromArray(arr, value) {
       __assertArray(arr);
 
