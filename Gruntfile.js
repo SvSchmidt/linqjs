@@ -90,6 +90,13 @@ module.exports = function (grunt) {
         src: '<%= build.debug.src %>',
         target: '<%= build.debug.target %>',
       }
+    },
+    exec: {
+      coverage: {
+        command: './node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --reporter min --recursive',
+        stdout: true,
+        stderr: false
+      },
     }
   });
 
@@ -191,7 +198,7 @@ module.exports = function (grunt) {
     build(this.data)
   })
 
-  grunt.registerTask('test', ['mochacli'])
+  grunt.registerTask('test', ['exec:coverage', 'mochacli'])
   grunt.registerTask('debug', ['clean:dist',
                                 'build:debug',
                                 'babel:dist',

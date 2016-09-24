@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --reporter min --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
+    "coverage": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --reporter nyan --recursive",
     "build": "grunt"
   },
   "author": "Sven Schmidt",
@@ -42,6 +43,7 @@
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^1.0.1",
     "grunt-file-info": "^1.0.12",
     "grunt-mocha-cli": "^2.1.0",
     "isparta": "4.0.0",

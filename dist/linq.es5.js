@@ -150,17 +150,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function __assign(target, source) {
-      target = Object(target);
-
-      if (Object.hasOwnProperty('assign') && typeof Object.assign === 'function') {
-        Object.assign(target, source);
-      } else {
-        Object.keys(source).forEach(function (k) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        });
-      }
+      Object.assign(Object(target), source);
 
       return target;
     }
