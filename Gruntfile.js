@@ -23,20 +23,20 @@ module.exports = function (grunt) {
         },
         dist: {
           files: {
-              'dist/linq.js': 'dist/linq.es6.js'
+              'dist/linq.es5.js': 'dist/linq.js'
           }
         },
     },
     uglify: {
         dist: {
             files: {
-              'dist/linq.min.js': ['dist/linq.js']
+              'dist/linq.min.js': ['dist/linq.es5.js']
             }
         }
     },
     file_info: {
       dist: {
-        src: ['dist/linq.min.js', 'dist/linq.js', 'dist/linq.es6.js'],
+        src: ['dist/linq.min.js', 'dist/linq.es5.js', 'dist/linq.js'],
         options: {
             stdout: 'linq.js ES6   :   {{= Number(size(src[2])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
                     'linq.js ES5   :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
@@ -83,12 +83,12 @@ module.exports = function (grunt) {
     build: {
       debug: {
         src: 'fragments/sources.js',
-        target: 'dist/linq.es6.js',
+        target: 'dist/linq.js',
         debug: true,
       },
       dist: {
         src: 'fragments/sources.js',
-        target: 'dist/linq.es6.js',
+        target: 'dist/linq.js',
       }
     }
   });
