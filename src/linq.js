@@ -25,13 +25,6 @@ window.Collection = (function () {
       this.started = false
     }
 
-    function ToArray() {
-      const result = [...this]
-      this.reset()
-
-      return result
-    }
-
     return { next, reset }
   }())
 

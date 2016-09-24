@@ -16,7 +16,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // to the global object
 
   var window = this || (0, eval)('this'); // jshint ignore:line
-  var DEBUG = false;
+  var DEBUG = true;
 
   (function (factory) {
     try {
@@ -430,13 +430,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.started = false;
         }
 
-        function ToArray() {
-          var result = [].concat(_toConsumableArray(this));
-          this.reset();
-
-          return result;
-        }
-
         return { next: next, reset: reset };
       }();
 
@@ -612,7 +605,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           }
         }, _callee4, this);
-      })());
+      }));
     }
 
     function Union(second) {

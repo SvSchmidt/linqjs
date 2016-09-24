@@ -9,7 +9,7 @@
   // this || (0, eval)('this') is a robust way for getting a reference
   // to the global object
   const window = this || (0, eval)('this'); // jshint ignore:line
-  const DEBUG = false;
+  const DEBUG = true;
 
 (function (factory) {
   try {
@@ -308,13 +308,6 @@ window.Collection = (function () {
       this.started = false
     }
 
-    function ToArray() {
-      const result = [...this]
-      this.reset()
-
-      return result
-    }
-
     return { next, reset }
   }())
 
@@ -414,7 +407,7 @@ function install () {
     return new Collection(function * () {
       yield* _self
       yield* second
-    }())
+    })
   }
 
   function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
