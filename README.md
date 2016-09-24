@@ -21,7 +21,7 @@
 - [x] ElementAt
 - [ ] ElementAtOrDefault
 - [ ] Empty
-- [ ] Except
+- [x] Except
 - [ ] Finally
 - [x] First
 - [x] FirstOrDefault
@@ -36,7 +36,7 @@
 - [ ] IndexOf
 - [x] Insert
 - [ ] Intersect
-- [ ] Join
+- [x] Join
 - [x] Last
 - [ ] LastIndexOf
 - [x] LastOrDefault
@@ -65,7 +65,7 @@
 - [ ] SelectMany
 - [ ] SequenceEqual
 - [ ] Share
-- [ ] Shuffle
+- [x] Shuffle
 - [x] Single
 - [x] SingleOrDefault
 - [x] Skip
@@ -91,4 +91,4 @@
 - [x] Where
 - [ ] Write
 - [ ] WriteLine
-- [ ] Zip
+- [x] Zip
