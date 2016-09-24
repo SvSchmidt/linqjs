@@ -87,8 +87,8 @@ module.exports = function (grunt) {
         debug: true,
       },
       dist: {
-        src: 'fragments/sources.js',
-        target: 'dist/linq.js',
+        src: '<%= build.debug.src %>',
+        target: '<%= build.debug.target %>',
       }
     }
   });
@@ -145,10 +145,8 @@ module.exports = function (grunt) {
     /*
     Combine pre and post source code (iife, module loading etc.)
     */
-    const DEBUG = true // Todo: Pass as parameter
-
     let pre = getSource('fragments/pre.js')
-    pre += `  const DEBUG = ${debug};\n\n`;
+    pre += `  const DEBUG = ${debug};\n\n`; // add DEBUG constant to output
     let moduleLoaderPre = getSource('fragments/module-loader-pre.js')
 
     let moduleLoaderPost = getSource('fragments/module-loader-post.js')
