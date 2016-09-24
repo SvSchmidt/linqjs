@@ -12,7 +12,7 @@
 - [ ] Catch
 - [ ] Choice
 - [x] Concat
-- [ ] Contains
+- [x] Contains
 - [x] Count
 - [ ] Cycle
 - [x] DefaultIfEmpty
@@ -61,7 +61,7 @@
 - [ ] Return
 - [ ] Reverse
 - [ ] Scan
-- [ ] Select
+- [x] Select
 - [ ] SelectMany
 - [ ] SequenceEqual
 - [ ] Share
@@ -77,8 +77,8 @@
 - [x] TakeWhile
 - [x] ThenBy
 - [ ] ThenByDescending
-- [ ] ToArray
-- [ ] ToDictionary
+- [x] ToArray
+- [x] ToDictionary
 - [ ] ToInfinity
 - [ ] ToJSON
 - [ ] ToLookup
