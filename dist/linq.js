@@ -41,10 +41,6 @@ Collection = (function () {
     this.iterable = iterableOrGenerator
   }
 
-  Collection.from = function (iterable) {
-    return new Collection(iterable)
-  }
-
   Collection.prototype = (function () {
     function next () {
       if (!this.started) {
@@ -91,6 +87,28 @@ Collection = (function () {
 
   return Collection
 }())
+
+
+/* src/collection-static.js */
+
+function from (iterable) {
+  return new Collection(iterable)
+}
+
+function Range (start, count) {
+  __assertNumberBetween(count, 0, Infinity)
+
+  return new Collection(function * () {
+    let i = start
+    while (i != count + start) {
+      yield i++
+    }
+  })
+}
+
+const collectionStatics = { from, Range }
+
+__assign(Collection, collectionStatics)
 
 
 /* src/helpers/defaults.js */
@@ -158,6 +176,15 @@ function DefaultComparator (a, b) {
 
   function __assertString (obj) {
     __assert(isString(obj), 'Parameter must be string!')
+  }
+
+  function __assertNumeric (obj) {
+    __assert(isNumeric(obj), 'Parameter must be numeric!')
+  }
+
+  function __assertNumberBetween(num, min, max = Infinity) {
+    __assertNumeric(num)
+    __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`)
   }
 
   function __assertIndexInRange(coll, index) {

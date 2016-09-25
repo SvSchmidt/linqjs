@@ -49,10 +49,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         this.iterable = iterableOrGenerator;
       }
 
-      Collection.from = function (iterable) {
-        return new Collection(iterable);
-      };
-
       Collection.prototype = function () {
         function next() {
           if (!this.started) {
@@ -136,6 +132,49 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return Collection;
     }();
 
+    /* src/collection-static.js */
+
+    function from(iterable) {
+      return new Collection(iterable);
+    }
+
+    function Range(start, count) {
+      __assertNumberBetween(count, 0, Infinity);
+
+      return new Collection(regeneratorRuntime.mark(function _callee3() {
+        var i;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                i = start;
+
+              case 1:
+                if (!(i != count + start)) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                _context3.next = 4;
+                return i++;
+
+              case 4:
+                _context3.next = 1;
+                break;
+
+              case 6:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+    }
+
+    var collectionStatics = { from: from, Range: Range };
+
+    __assign(Collection, collectionStatics);
+
     /* src/helpers/defaults.js */
 
     function defaultEqualityCompareFn(first, second) {
@@ -198,6 +237,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     function __assertString(obj) {
       __assert(isString(obj), 'Parameter must be string!');
+    }
+
+    function __assertNumeric(obj) {
+      __assert(isNumeric(obj), 'Parameter must be numeric!');
+    }
+
+    function __assertNumberBetween(num, min) {
+      var max = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
+
+      __assertNumeric(num);
+      __assert(num >= min && num <= max, 'Number must be between ' + min + ' and ' + max + '!');
     }
 
     function __assertIndexInRange(coll, index) {
@@ -295,24 +345,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var previous = [];
 
-      return new Collection(regeneratorRuntime.mark(function _callee3() {
+      return new Collection(regeneratorRuntime.mark(function _callee4() {
         var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, val, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, prev;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 coll.reset();
 
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context3.prev = 4;
+                _context4.prev = 4;
                 _iterator = coll[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context3.next = 40;
+                  _context4.next = 40;
                   break;
                 }
 
@@ -320,115 +370,115 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
                 _iteratorError2 = undefined;
-                _context3.prev = 11;
+                _context4.prev = 11;
                 _iterator2 = previous[Symbol.iterator]();
 
               case 13:
                 if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-                  _context3.next = 20;
+                  _context4.next = 20;
                   break;
                 }
 
                 prev = _step2.value;
 
                 if (!equalityCompareFn(val, prev)) {
-                  _context3.next = 17;
+                  _context4.next = 17;
                   break;
                 }
 
-                return _context3.abrupt('continue', 37);
+                return _context4.abrupt('continue', 37);
 
               case 17:
                 _iteratorNormalCompletion2 = true;
-                _context3.next = 13;
+                _context4.next = 13;
                 break;
 
               case 20:
-                _context3.next = 26;
+                _context4.next = 26;
                 break;
 
               case 22:
-                _context3.prev = 22;
-                _context3.t0 = _context3['catch'](11);
+                _context4.prev = 22;
+                _context4.t0 = _context4['catch'](11);
                 _didIteratorError2 = true;
-                _iteratorError2 = _context3.t0;
+                _iteratorError2 = _context4.t0;
 
               case 26:
-                _context3.prev = 26;
-                _context3.prev = 27;
+                _context4.prev = 26;
+                _context4.prev = 27;
 
                 if (!_iteratorNormalCompletion2 && _iterator2.return) {
                   _iterator2.return();
                 }
 
               case 29:
-                _context3.prev = 29;
+                _context4.prev = 29;
 
                 if (!_didIteratorError2) {
-                  _context3.next = 32;
+                  _context4.next = 32;
                   break;
                 }
 
                 throw _iteratorError2;
 
               case 32:
-                return _context3.finish(29);
+                return _context4.finish(29);
 
               case 33:
-                return _context3.finish(26);
+                return _context4.finish(26);
 
               case 34:
 
                 previous.push(val);
 
-                _context3.next = 37;
+                _context4.next = 37;
                 return val;
 
               case 37:
                 _iteratorNormalCompletion = true;
-                _context3.next = 6;
+                _context4.next = 6;
                 break;
 
               case 40:
-                _context3.next = 46;
+                _context4.next = 46;
                 break;
 
               case 42:
-                _context3.prev = 42;
-                _context3.t1 = _context3['catch'](4);
+                _context4.prev = 42;
+                _context4.t1 = _context4['catch'](4);
                 _didIteratorError = true;
-                _iteratorError = _context3.t1;
+                _iteratorError = _context4.t1;
 
               case 46:
-                _context3.prev = 46;
-                _context3.prev = 47;
+                _context4.prev = 46;
+                _context4.prev = 47;
 
                 if (!_iteratorNormalCompletion && _iterator.return) {
                   _iterator.return();
                 }
 
               case 49:
-                _context3.prev = 49;
+                _context4.prev = 49;
 
                 if (!_didIteratorError) {
-                  _context3.next = 52;
+                  _context4.next = 52;
                   break;
                 }
 
                 throw _iteratorError;
 
               case 52:
-                return _context3.finish(49);
+                return _context4.finish(49);
 
               case 53:
-                return _context3.finish(46);
+                return _context4.finish(46);
 
               case 54:
               case 'end':
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this, [[4, 42, 46, 54], [11, 22, 26, 34], [27,, 29, 33], [47,, 49, 53]]);
+        }, _callee4, this, [[4, 42, 46, 54], [11, 22, 26, 34], [27,, 29, 33], [47,, 49, 53]]);
       })());
     }
 
@@ -573,22 +623,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         second = new Collection(second);
       }
 
-      return new Collection(regeneratorRuntime.mark(function _callee4() {
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      return new Collection(regeneratorRuntime.mark(function _callee5() {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                return _context4.delegateYield(_self, 't0', 1);
+                return _context5.delegateYield(_self, 't0', 1);
 
               case 1:
-                return _context4.delegateYield(second, 't1', 2);
+                return _context5.delegateYield(second, 't1', 2);
 
               case 2:
               case 'end':
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
     }
 
@@ -621,22 +671,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var first = this;
 
-      var result = Collection.from(regeneratorRuntime.mark(function _callee5() {
+      var result = Collection.from(regeneratorRuntime.mark(function _callee6() {
         var _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, firstValue, firstKey, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, secondValue, secondKey;
 
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 _iteratorNormalCompletion4 = true;
                 _didIteratorError4 = false;
                 _iteratorError4 = undefined;
-                _context5.prev = 3;
+                _context6.prev = 3;
                 _iterator4 = first[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
-                  _context5.next = 39;
+                  _context6.next = 39;
                   break;
                 }
 
@@ -645,12 +695,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 _iteratorNormalCompletion5 = true;
                 _didIteratorError5 = false;
                 _iteratorError5 = undefined;
-                _context5.prev = 11;
+                _context6.prev = 11;
                 _iterator5 = second[Symbol.iterator]();
 
               case 13:
                 if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
-                  _context5.next = 22;
+                  _context6.next = 22;
                   break;
                 }
 
@@ -658,97 +708,97 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 secondKey = secondKeySelector(secondValue);
 
                 if (!keyEqualityCompareFn(firstKey, secondKey)) {
-                  _context5.next = 19;
+                  _context6.next = 19;
                   break;
                 }
 
-                _context5.next = 19;
+                _context6.next = 19;
                 return resultSelectorFn(firstValue, secondValue);
 
               case 19:
                 _iteratorNormalCompletion5 = true;
-                _context5.next = 13;
+                _context6.next = 13;
                 break;
 
               case 22:
-                _context5.next = 28;
+                _context6.next = 28;
                 break;
 
               case 24:
-                _context5.prev = 24;
-                _context5.t0 = _context5['catch'](11);
+                _context6.prev = 24;
+                _context6.t0 = _context6['catch'](11);
                 _didIteratorError5 = true;
-                _iteratorError5 = _context5.t0;
+                _iteratorError5 = _context6.t0;
 
               case 28:
-                _context5.prev = 28;
-                _context5.prev = 29;
+                _context6.prev = 28;
+                _context6.prev = 29;
 
                 if (!_iteratorNormalCompletion5 && _iterator5.return) {
                   _iterator5.return();
                 }
 
               case 31:
-                _context5.prev = 31;
+                _context6.prev = 31;
 
                 if (!_didIteratorError5) {
-                  _context5.next = 34;
+                  _context6.next = 34;
                   break;
                 }
 
                 throw _iteratorError5;
 
               case 34:
-                return _context5.finish(31);
+                return _context6.finish(31);
 
               case 35:
-                return _context5.finish(28);
+                return _context6.finish(28);
 
               case 36:
                 _iteratorNormalCompletion4 = true;
-                _context5.next = 5;
+                _context6.next = 5;
                 break;
 
               case 39:
-                _context5.next = 45;
+                _context6.next = 45;
                 break;
 
               case 41:
-                _context5.prev = 41;
-                _context5.t1 = _context5['catch'](3);
+                _context6.prev = 41;
+                _context6.t1 = _context6['catch'](3);
                 _didIteratorError4 = true;
-                _iteratorError4 = _context5.t1;
+                _iteratorError4 = _context6.t1;
 
               case 45:
-                _context5.prev = 45;
-                _context5.prev = 46;
+                _context6.prev = 45;
+                _context6.prev = 46;
 
                 if (!_iteratorNormalCompletion4 && _iterator4.return) {
                   _iterator4.return();
                 }
 
               case 48:
-                _context5.prev = 48;
+                _context6.prev = 48;
 
                 if (!_didIteratorError4) {
-                  _context5.next = 51;
+                  _context6.next = 51;
                   break;
                 }
 
                 throw _iteratorError4;
 
               case 51:
-                return _context5.finish(48);
+                return _context6.finish(48);
 
               case 52:
-                return _context5.finish(45);
+                return _context6.finish(45);
 
               case 53:
               case 'end':
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this, [[3, 41, 45, 53], [11, 24, 28, 36], [29,, 31, 35], [46,, 48, 52]]);
+        }, _callee6, this, [[3, 41, 45, 53], [11, 24, 28, 36], [29,, 31, 35], [46,, 48, 52]]);
       }));
 
       this.reset();
@@ -769,80 +819,80 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var first = this;
 
-      var result = new Collection(regeneratorRuntime.mark(function _callee6() {
+      var result = new Collection(regeneratorRuntime.mark(function _callee7() {
         var _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, val;
 
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 _iteratorNormalCompletion6 = true;
                 _didIteratorError6 = false;
                 _iteratorError6 = undefined;
-                _context6.prev = 3;
+                _context7.prev = 3;
                 _iterator6 = first[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
-                  _context6.next = 13;
+                  _context7.next = 13;
                   break;
                 }
 
                 val = _step6.value;
 
                 if (second.Contains(val)) {
-                  _context6.next = 10;
+                  _context7.next = 10;
                   break;
                 }
 
-                _context6.next = 10;
+                _context7.next = 10;
                 return val;
 
               case 10:
                 _iteratorNormalCompletion6 = true;
-                _context6.next = 5;
+                _context7.next = 5;
                 break;
 
               case 13:
-                _context6.next = 19;
+                _context7.next = 19;
                 break;
 
               case 15:
-                _context6.prev = 15;
-                _context6.t0 = _context6['catch'](3);
+                _context7.prev = 15;
+                _context7.t0 = _context7['catch'](3);
                 _didIteratorError6 = true;
-                _iteratorError6 = _context6.t0;
+                _iteratorError6 = _context7.t0;
 
               case 19:
-                _context6.prev = 19;
-                _context6.prev = 20;
+                _context7.prev = 19;
+                _context7.prev = 20;
 
                 if (!_iteratorNormalCompletion6 && _iterator6.return) {
                   _iterator6.return();
                 }
 
               case 22:
-                _context6.prev = 22;
+                _context7.prev = 22;
 
                 if (!_didIteratorError6) {
-                  _context6.next = 25;
+                  _context7.next = 25;
                   break;
                 }
 
                 throw _iteratorError6;
 
               case 25:
-                return _context6.finish(22);
+                return _context7.finish(22);
 
               case 26:
-                return _context6.finish(19);
+                return _context7.finish(19);
 
               case 27:
               case 'end':
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+        }, _callee7, this, [[3, 15, 19, 27], [20,, 22, 26]]);
       }));
 
       this.reset();
@@ -865,22 +915,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var first = this;
       var secondIter = second[Symbol.iterator]();
 
-      var result = new Collection(regeneratorRuntime.mark(function _callee7() {
+      var result = new Collection(regeneratorRuntime.mark(function _callee8() {
         var _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, firstVal, secondNext;
 
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 _iteratorNormalCompletion7 = true;
                 _didIteratorError7 = false;
                 _iteratorError7 = undefined;
-                _context7.prev = 3;
+                _context8.prev = 3;
                 _iterator7 = first[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
-                  _context7.next = 15;
+                  _context8.next = 15;
                   break;
                 }
 
@@ -888,61 +938,61 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 secondNext = secondIter.next();
 
                 if (!secondNext.done) {
-                  _context7.next = 10;
+                  _context8.next = 10;
                   break;
                 }
 
-                return _context7.abrupt('break', 15);
+                return _context8.abrupt('break', 15);
 
               case 10:
-                _context7.next = 12;
+                _context8.next = 12;
                 return resultSelectorFn(firstVal, secondNext.value);
 
               case 12:
                 _iteratorNormalCompletion7 = true;
-                _context7.next = 5;
+                _context8.next = 5;
                 break;
 
               case 15:
-                _context7.next = 21;
+                _context8.next = 21;
                 break;
 
               case 17:
-                _context7.prev = 17;
-                _context7.t0 = _context7['catch'](3);
+                _context8.prev = 17;
+                _context8.t0 = _context8['catch'](3);
                 _didIteratorError7 = true;
-                _iteratorError7 = _context7.t0;
+                _iteratorError7 = _context8.t0;
 
               case 21:
-                _context7.prev = 21;
-                _context7.prev = 22;
+                _context8.prev = 21;
+                _context8.prev = 22;
 
                 if (!_iteratorNormalCompletion7 && _iterator7.return) {
                   _iterator7.return();
                 }
 
               case 24:
-                _context7.prev = 24;
+                _context8.prev = 24;
 
                 if (!_didIteratorError7) {
-                  _context7.next = 27;
+                  _context8.next = 27;
                   break;
                 }
 
                 throw _iteratorError7;
 
               case 27:
-                return _context7.finish(24);
+                return _context8.finish(24);
 
               case 28:
-                return _context7.finish(21);
+                return _context8.finish(21);
 
               case 29:
               case 'end':
-                return _context7.stop();
+                return _context8.stop();
             }
           }
-        }, _callee7, this, [[3, 17, 21, 29], [22,, 24, 28]]);
+        }, _callee8, this, [[3, 17, 21, 29], [22,, 24, 28]]);
       }));
 
       first.reset();
@@ -995,34 +1045,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      return new Collection(regeneratorRuntime.mark(function _callee8() {
+      return new Collection(regeneratorRuntime.mark(function _callee9() {
         var index, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, val;
 
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
                 index = 0;
                 _iteratorNormalCompletion9 = true;
                 _didIteratorError9 = false;
                 _iteratorError9 = undefined;
-                _context8.prev = 4;
+                _context9.prev = 4;
                 _iterator9 = _self[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done) {
-                  _context8.next = 15;
+                  _context9.next = 15;
                   break;
                 }
 
                 val = _step9.value;
 
                 if (!predicate(val, index)) {
-                  _context8.next = 11;
+                  _context9.next = 11;
                   break;
                 }
 
-                _context8.next = 11;
+                _context9.next = 11;
                 return val;
 
               case 11:
@@ -1031,49 +1081,49 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
               case 12:
                 _iteratorNormalCompletion9 = true;
-                _context8.next = 6;
+                _context9.next = 6;
                 break;
 
               case 15:
-                _context8.next = 21;
+                _context9.next = 21;
                 break;
 
               case 17:
-                _context8.prev = 17;
-                _context8.t0 = _context8['catch'](4);
+                _context9.prev = 17;
+                _context9.t0 = _context9['catch'](4);
                 _didIteratorError9 = true;
-                _iteratorError9 = _context8.t0;
+                _iteratorError9 = _context9.t0;
 
               case 21:
-                _context8.prev = 21;
-                _context8.prev = 22;
+                _context9.prev = 21;
+                _context9.prev = 22;
 
                 if (!_iteratorNormalCompletion9 && _iterator9.return) {
                   _iterator9.return();
                 }
 
               case 24:
-                _context8.prev = 24;
+                _context9.prev = 24;
 
                 if (!_didIteratorError9) {
-                  _context8.next = 27;
+                  _context9.next = 27;
                   break;
                 }
 
                 throw _iteratorError9;
 
               case 27:
-                return _context8.finish(24);
+                return _context9.finish(24);
 
               case 28:
-                return _context8.finish(21);
+                return _context9.finish(21);
 
               case 29:
               case 'end':
-                return _context8.stop();
+                return _context9.stop();
             }
           }
-        }, _callee8, this, [[4, 17, 21, 29], [22,, 24, 28]]);
+        }, _callee9, this, [[4, 17, 21, 29], [22,, 24, 28]]);
       })());
     }
 
@@ -1245,39 +1295,39 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      var result = new Collection(regeneratorRuntime.mark(function _callee9() {
+      var result = new Collection(regeneratorRuntime.mark(function _callee10() {
         var index, endTake, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, val;
 
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
           while (1) {
-            switch (_context9.prev = _context9.next) {
+            switch (_context10.prev = _context10.next) {
               case 0:
                 index = 0;
                 endTake = false;
                 _iteratorNormalCompletion11 = true;
                 _didIteratorError11 = false;
                 _iteratorError11 = undefined;
-                _context9.prev = 5;
+                _context10.prev = 5;
                 _iterator11 = _self[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
-                  _context9.next = 17;
+                  _context10.next = 17;
                   break;
                 }
 
                 val = _step11.value;
 
                 if (!(!endTake && predicate(val, index++))) {
-                  _context9.next = 13;
+                  _context10.next = 13;
                   break;
                 }
 
-                _context9.next = 12;
+                _context10.next = 12;
                 return val;
 
               case 12:
-                return _context9.abrupt('continue', 14);
+                return _context10.abrupt('continue', 14);
 
               case 13:
 
@@ -1285,49 +1335,49 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
               case 14:
                 _iteratorNormalCompletion11 = true;
-                _context9.next = 7;
+                _context10.next = 7;
                 break;
 
               case 17:
-                _context9.next = 23;
+                _context10.next = 23;
                 break;
 
               case 19:
-                _context9.prev = 19;
-                _context9.t0 = _context9['catch'](5);
+                _context10.prev = 19;
+                _context10.t0 = _context10['catch'](5);
                 _didIteratorError11 = true;
-                _iteratorError11 = _context9.t0;
+                _iteratorError11 = _context10.t0;
 
               case 23:
-                _context9.prev = 23;
-                _context9.prev = 24;
+                _context10.prev = 23;
+                _context10.prev = 24;
 
                 if (!_iteratorNormalCompletion11 && _iterator11.return) {
                   _iterator11.return();
                 }
 
               case 26:
-                _context9.prev = 26;
+                _context10.prev = 26;
 
                 if (!_didIteratorError11) {
-                  _context9.next = 29;
+                  _context10.next = 29;
                   break;
                 }
 
                 throw _iteratorError11;
 
               case 29:
-                return _context9.finish(26);
+                return _context10.finish(26);
 
               case 30:
-                return _context9.finish(23);
+                return _context10.finish(23);
 
               case 31:
               case 'end':
-                return _context9.stop();
+                return _context10.stop();
             }
           }
-        }, _callee9, this, [[5, 19, 23, 31], [24,, 26, 30]]);
+        }, _callee10, this, [[5, 19, 23, 31], [24,, 26, 30]]);
       })).ToArray();
 
       this.reset();
@@ -1351,87 +1401,87 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      var result = new Collection(regeneratorRuntime.mark(function _callee10() {
+      var result = new Collection(regeneratorRuntime.mark(function _callee11() {
         var index, endSkip, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, val;
 
-        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+        return regeneratorRuntime.wrap(function _callee11$(_context11) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context11.prev = _context11.next) {
               case 0:
                 index = 0;
                 endSkip = false;
                 _iteratorNormalCompletion12 = true;
                 _didIteratorError12 = false;
                 _iteratorError12 = undefined;
-                _context10.prev = 5;
+                _context11.prev = 5;
                 _iterator12 = _self[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
-                  _context10.next = 17;
+                  _context11.next = 17;
                   break;
                 }
 
                 val = _step12.value;
 
                 if (!(!endSkip && predicate(val, index++))) {
-                  _context10.next = 11;
+                  _context11.next = 11;
                   break;
                 }
 
-                return _context10.abrupt('continue', 14);
+                return _context11.abrupt('continue', 14);
 
               case 11:
 
                 endSkip = true;
-                _context10.next = 14;
+                _context11.next = 14;
                 return val;
 
               case 14:
                 _iteratorNormalCompletion12 = true;
-                _context10.next = 7;
+                _context11.next = 7;
                 break;
 
               case 17:
-                _context10.next = 23;
+                _context11.next = 23;
                 break;
 
               case 19:
-                _context10.prev = 19;
-                _context10.t0 = _context10['catch'](5);
+                _context11.prev = 19;
+                _context11.t0 = _context11['catch'](5);
                 _didIteratorError12 = true;
-                _iteratorError12 = _context10.t0;
+                _iteratorError12 = _context11.t0;
 
               case 23:
-                _context10.prev = 23;
-                _context10.prev = 24;
+                _context11.prev = 23;
+                _context11.prev = 24;
 
                 if (!_iteratorNormalCompletion12 && _iterator12.return) {
                   _iterator12.return();
                 }
 
               case 26:
-                _context10.prev = 26;
+                _context11.prev = 26;
 
                 if (!_didIteratorError12) {
-                  _context10.next = 29;
+                  _context11.next = 29;
                   break;
                 }
 
                 throw _iteratorError12;
 
               case 29:
-                return _context10.finish(26);
+                return _context11.finish(26);
 
               case 30:
-                return _context10.finish(23);
+                return _context11.finish(23);
 
               case 31:
               case 'end':
-                return _context10.stop();
+                return _context11.stop();
             }
           }
-        }, _callee10, this, [[5, 19, 23, 31], [24,, 26, 30]]);
+        }, _callee11, this, [[5, 19, 23, 31], [24,, 26, 30]]);
       }));
 
       this.reset();
@@ -1885,76 +1935,76 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var _self = this;
 
-      return new Collection(regeneratorRuntime.mark(function _callee11() {
+      return new Collection(regeneratorRuntime.mark(function _callee12() {
         var _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, val;
 
-        return regeneratorRuntime.wrap(function _callee11$(_context11) {
+        return regeneratorRuntime.wrap(function _callee12$(_context12) {
           while (1) {
-            switch (_context11.prev = _context11.next) {
+            switch (_context12.prev = _context12.next) {
               case 0:
                 _self.reset();
 
                 _iteratorNormalCompletion14 = true;
                 _didIteratorError14 = false;
                 _iteratorError14 = undefined;
-                _context11.prev = 4;
+                _context12.prev = 4;
                 _iterator14 = _self[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
-                  _context11.next = 13;
+                  _context12.next = 13;
                   break;
                 }
 
                 val = _step14.value;
-                _context11.next = 10;
+                _context12.next = 10;
                 return mapFn(val);
 
               case 10:
                 _iteratorNormalCompletion14 = true;
-                _context11.next = 6;
+                _context12.next = 6;
                 break;
 
               case 13:
-                _context11.next = 19;
+                _context12.next = 19;
                 break;
 
               case 15:
-                _context11.prev = 15;
-                _context11.t0 = _context11['catch'](4);
+                _context12.prev = 15;
+                _context12.t0 = _context12['catch'](4);
                 _didIteratorError14 = true;
-                _iteratorError14 = _context11.t0;
+                _iteratorError14 = _context12.t0;
 
               case 19:
-                _context11.prev = 19;
-                _context11.prev = 20;
+                _context12.prev = 19;
+                _context12.prev = 20;
 
                 if (!_iteratorNormalCompletion14 && _iterator14.return) {
                   _iterator14.return();
                 }
 
               case 22:
-                _context11.prev = 22;
+                _context12.prev = 22;
 
                 if (!_didIteratorError14) {
-                  _context11.next = 25;
+                  _context12.next = 25;
                   break;
                 }
 
                 throw _iteratorError14;
 
               case 25:
-                return _context11.finish(22);
+                return _context12.finish(22);
 
               case 26:
-                return _context11.finish(19);
+                return _context12.finish(19);
 
               case 27:
               case 'end':
-                return _context11.stop();
+                return _context12.stop();
             }
           }
-        }, _callee11, this, [[4, 15, 19, 27], [20,, 22, 26]]);
+        }, _callee12, this, [[4, 15, 19, 27], [20,, 22, 26]]);
       }));
     }
 
@@ -2103,26 +2153,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var oldIter = this.ToArray();
 
-      this.iterable = regeneratorRuntime.mark(function _callee12() {
-        return regeneratorRuntime.wrap(function _callee12$(_context12) {
+      this.iterable = regeneratorRuntime.mark(function _callee13() {
+        return regeneratorRuntime.wrap(function _callee13$(_context13) {
           while (1) {
-            switch (_context12.prev = _context12.next) {
+            switch (_context13.prev = _context13.next) {
               case 0:
-                return _context12.delegateYield(oldIter.slice(0, index), 't0', 1);
+                return _context13.delegateYield(oldIter.slice(0, index), 't0', 1);
 
               case 1:
-                _context12.next = 3;
+                _context13.next = 3;
                 return value;
 
               case 3:
-                return _context12.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
+                return _context13.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
 
               case 4:
               case 'end':
-                return _context12.stop();
+                return _context13.stop();
             }
           }
-        }, _callee12, this);
+        }, _callee13, this);
       });
       this.reset();
     }
@@ -2141,19 +2191,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return false;
       }
 
-      this.iterable = regeneratorRuntime.mark(function _callee13() {
-        return regeneratorRuntime.wrap(function _callee13$(_context13) {
+      this.iterable = regeneratorRuntime.mark(function _callee14() {
+        return regeneratorRuntime.wrap(function _callee14$(_context14) {
           while (1) {
-            switch (_context13.prev = _context13.next) {
+            switch (_context14.prev = _context14.next) {
               case 0:
-                return _context13.delegateYield(values, 't0', 1);
+                return _context14.delegateYield(values, 't0', 1);
 
               case 1:
               case 'end':
-                return _context13.stop();
+                return _context14.stop();
             }
           }
-        }, _callee13, this);
+        }, _callee14, this);
       });
       this.reset();
 
@@ -2242,19 +2292,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       OrderedLinqCollection.prototype[getIterator] = function () {
         var _self = this;
 
-        return regeneratorRuntime.mark(function _callee14() {
-          return regeneratorRuntime.wrap(function _callee14$(_context14) {
+        return regeneratorRuntime.mark(function _callee15() {
+          return regeneratorRuntime.wrap(function _callee15$(_context15) {
             while (1) {
-              switch (_context14.prev = _context14.next) {
+              switch (_context15.prev = _context15.next) {
                 case 0:
-                  return _context14.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
+                  return _context15.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
 
                 case 1:
                 case 'end':
-                  return _context14.stop();
+                  return _context15.stop();
               }
             }
-          }, _callee14, this);
+          }, _callee15, this);
         })();
       };
 

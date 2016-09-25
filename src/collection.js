@@ -7,10 +7,6 @@ Collection = (function () {
     this.iterable = iterableOrGenerator
   }
 
-  Collection.from = function (iterable) {
-    return new Collection(iterable)
-  }
-
   Collection.prototype = (function () {
     function next () {
       if (!this.started) {
