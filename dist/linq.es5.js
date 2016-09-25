@@ -1045,9 +1045,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       __assertFunction(predicate);
 
-      var _self = this;
+      var iter = this;
 
-      return new Collection(regeneratorRuntime.mark(function _callee9() {
+      var result = new Collection(regeneratorRuntime.mark(function _callee9() {
         var index, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, val;
 
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
@@ -1059,7 +1059,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 _didIteratorError9 = false;
                 _iteratorError9 = undefined;
                 _context9.prev = 4;
-                _iterator9 = _self[Symbol.iterator]();
+                _iterator9 = iter[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done) {
@@ -1126,7 +1126,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           }
         }, _callee9, this, [[4, 17, 21, 29], [22,, 24, 28]]);
-      })());
+      }));
+
+      this.reset();
+
+      return result;
     }
 
     /**

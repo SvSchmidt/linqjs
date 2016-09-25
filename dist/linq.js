@@ -548,19 +548,23 @@ function Contains (elem) {
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const _self = this
+  const iter = this
 
-  return new Collection(function * () {
+  const result = new Collection(function * () {
     let index = 0
 
-    for (let val of _self) {
+    for (let val of iter) {
       if (predicate(val, index)) {
         yield val
       }
 
       index++
     }
-  }())
+  })
+
+  this.reset()
+
+  return result
 }
 
 /**
