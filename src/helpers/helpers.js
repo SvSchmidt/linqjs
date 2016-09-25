@@ -48,9 +48,9 @@
     const previous = []
 
     return new Collection(function * () {
-      coll.reset()
+      const iter = coll[getIterator]()
 
-      outer: for (let val of coll) {
+      outer: for (let val of iter) {
         inner: for (let prev of previous) {
           if (equalityCompareFn(val, prev)) {
             continue outer;
@@ -61,7 +61,7 @@
 
         yield val
       }
-    }())
+    })
   }
 
   function removeFromArray (arr, value) {

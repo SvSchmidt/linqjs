@@ -285,9 +285,9 @@ function DefaultComparator (a, b) {
     const previous = []
 
     return new Collection(function * () {
-      coll.reset()
+      const iter = coll[getIterator]()
 
-      outer: for (let val of coll) {
+      outer: for (let val of iter) {
         inner: for (let prev of previous) {
           if (equalityCompareFn(val, prev)) {
             continue outer;
@@ -298,7 +298,7 @@ function DefaultComparator (a, b) {
 
         yield val
       }
-    }())
+    })
   }
 
   function removeFromArray (arr, value) {
@@ -407,15 +407,15 @@ linqjs.install = function () {
   function Concat (second) {
     __assertIterable(second)
 
-    const _self = this
+    const firstIter = this
 
     if (!isCollection(second)) {
       second = new Collection(second)
     }
 
     return new Collection(function * () {
-      yield* _self
-      yield* second
+      yield* firstIter
+      yield* second[getIterator]()
     })
   }
 
@@ -627,7 +627,6 @@ function All (predicate = elem => true) {
  */
 function ElementAt (index) {
   __assertIndexInRange(this, index)
-  __assert(isNumeric(index), 'Index must be numeric!')
 
   const result = this.Skip(index).Take(1)[0]
   this.reset()
@@ -726,13 +725,13 @@ function TakeWhile (predicate = (elem, index) => true) {
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const _self = this
+  const iter = this
 
   const result = new Collection(function * () {
     let index = 0
     let endSkip = false
 
-    for (let val of _self) {
+    for (let val of iter) {
       if (!endSkip && predicate(val, index++)) {
         continue
       }
@@ -778,11 +777,7 @@ function resultOrDefault(collection, originalFn, predicateOrConstructor = x => t
     return defaultVal
   }
 
-  let result = originalFn.call(collection, predicate)
-
-  if (result) {
-    return result
-  }
+  return originalFn.call(collection, predicate)
 }
 
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {

@@ -1,15 +1,15 @@
   function Concat (second) {
     __assertIterable(second)
 
-    const _self = this
+    const firstIter = this
 
     if (!isCollection(second)) {
       second = new Collection(second)
     }
 
     return new Collection(function * () {
-      yield* _self
-      yield* second
+      yield* firstIter
+      yield* second[getIterator]()
     })
   }
 

@@ -346,19 +346,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var previous = [];
 
       return new Collection(regeneratorRuntime.mark(function _callee4() {
-        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, val, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, prev;
+        var iter, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, val, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, prev;
 
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                coll.reset();
-
+                iter = coll[getIterator]();
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
                 _context4.prev = 4;
-                _iterator = coll[Symbol.iterator]();
+                _iterator = iter[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -479,7 +478,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           }
         }, _callee4, this, [[4, 42, 46, 54], [11, 22, 26, 34], [27,, 29, 33], [47,, 49, 53]]);
-      })());
+      }));
     }
 
     function removeFromArray(arr, value) {
@@ -617,7 +616,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function Concat(second) {
       __assertIterable(second);
 
-      var _self = this;
+      var firstIter = this;
 
       if (!isCollection(second)) {
         second = new Collection(second);
@@ -628,10 +627,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                return _context5.delegateYield(_self, 't0', 1);
+                return _context5.delegateYield(firstIter, 't0', 1);
 
               case 1:
-                return _context5.delegateYield(second, 't1', 2);
+                return _context5.delegateYield(second[getIterator](), 't1', 2);
 
               case 2:
               case 'end':
@@ -1200,7 +1199,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      */
     function ElementAt(index) {
       __assertIndexInRange(this, index);
-      __assert(isNumeric(index), 'Index must be numeric!');
 
       var result = this.Skip(index).Take(1)[0];
       this.reset();
@@ -1405,7 +1403,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       __assertFunction(predicate);
 
-      var _self = this;
+      var iter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee11() {
         var index, endSkip, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, val;
@@ -1420,7 +1418,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 _didIteratorError12 = false;
                 _iteratorError12 = undefined;
                 _context11.prev = 5;
-                _iterator12 = _self[Symbol.iterator]();
+                _iterator12 = iter[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
@@ -1539,11 +1537,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return defaultVal;
       }
 
-      var result = originalFn.call(collection, predicate);
-
-      if (result) {
-        return result;
-      }
+      return originalFn.call(collection, predicate);
     }
 
     function FirstOrDefault() {
