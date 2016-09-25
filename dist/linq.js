@@ -32,8 +32,6 @@
 
 /* src/collection.js */
 
-const getIterator = symbolOrString('getIterator')
-
 Collection = (function () {
   function Collection (iterableOrGenerator) {
     __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
@@ -45,7 +43,7 @@ Collection = (function () {
     function next () {
       if (!this.started) {
         this.started = true
-        this.iterator = this[getIterator]()
+        this.iterator = this.getIterator()
       }
 
       return this.iterator.next()
@@ -55,7 +53,19 @@ Collection = (function () {
       this.started = false
     }
 
-    return { next, reset }
+    function getIterator () {
+      const iter = this.iterable
+
+      if (isGenerator(iter)) {
+        return iter()
+      } else {
+        return function * () {
+          yield* iter
+        }()
+      }
+    }
+
+    return { next, reset, getIterator }
   }())
 
   Collection.prototype[Symbol.iterator] = function * () {
@@ -70,18 +80,6 @@ Collection = (function () {
       }
 
       yield current.value
-    }
-  }
-
-  Collection.prototype[getIterator] = function () {
-    const iter = this.iterable
-
-    if (isGenerator(iter)) {
-      return iter()
-    } else {
-      return function * () {
-        yield* iter
-      }()
     }
   }
 
@@ -249,14 +247,6 @@ function DefaultComparator (a, b) {
     __assign(linqjsExports, obj)
   }
 
-  function symbolOrString (str) {
-    if (DEBUG) {
-      return str
-    } else {
-      return Symbol(str)
-    }
-  }
-
   /**
    * paramOrValue - Helper method to get the passed parameter or a default value if it is undefined
    *
@@ -285,7 +275,7 @@ function DefaultComparator (a, b) {
     const previous = []
 
     return new Collection(function * () {
-      const iter = coll[getIterator]()
+      const iter = coll.getIterator()
 
       outer: for (let val of iter) {
         inner: for (let prev of previous) {
@@ -415,7 +405,7 @@ linqjs.install = function () {
 
     return new Collection(function * () {
       yield* firstIter
-      yield* second[getIterator]()
+      yield* second.getIterator()
     })
   }
 
@@ -447,7 +437,7 @@ linqjs.install = function () {
     const firstIter = this
 
     const result = new Collection(function * () {
-      const secondIter = second[getIterator]()
+      const secondIter = second.getIterator()
 
       for (let firstValue of firstIter) {
         const firstKey = firstKeySelector(firstValue)
@@ -507,7 +497,7 @@ linqjs.install = function () {
     const firstIter = this
 
     const result = new Collection(function * () {
-      const secondIter = second[getIterator]()
+      const secondIter = second.getIterator()
 
       for (const firstVal of firstIter) {
         const secondNext = secondIter.next()
@@ -1363,7 +1353,7 @@ let OrderedLinqCollection = (function () {
         return this;
     };
 
-    OrderedLinqCollection.prototype[getIterator] = function () {
+    OrderedLinqCollection.prototype.getIterator = function () {
       const _self = this
 
       return function * () {

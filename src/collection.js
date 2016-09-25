@@ -1,5 +1,3 @@
-const getIterator = symbolOrString('getIterator')
-
 Collection = (function () {
   function Collection (iterableOrGenerator) {
     __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
@@ -11,7 +9,7 @@ Collection = (function () {
     function next () {
       if (!this.started) {
         this.started = true
-        this.iterator = this[getIterator]()
+        this.iterator = this.getIterator()
       }
 
       return this.iterator.next()
@@ -21,7 +19,19 @@ Collection = (function () {
       this.started = false
     }
 
-    return { next, reset }
+    function getIterator () {
+      const iter = this.iterable
+
+      if (isGenerator(iter)) {
+        return iter()
+      } else {
+        return function * () {
+          yield* iter
+        }()
+      }
+    }
+
+    return { next, reset, getIterator }
   }())
 
   Collection.prototype[Symbol.iterator] = function * () {
@@ -36,18 +46,6 @@ Collection = (function () {
       }
 
       yield current.value
-    }
-  }
-
-  Collection.prototype[getIterator] = function () {
-    const iter = this.iterable
-
-    if (isGenerator(iter)) {
-      return iter()
-    } else {
-      return function * () {
-        yield* iter
-      }()
     }
   }
 

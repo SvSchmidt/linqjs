@@ -40,8 +40,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* src/collection.js */
 
-    var getIterator = symbolOrString('getIterator');
-
     Collection = function () {
       function Collection(iterableOrGenerator) {
         __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
@@ -53,7 +51,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         function next() {
           if (!this.started) {
             this.started = true;
-            this.iterator = this[getIterator]();
+            this.iterator = this.getIterator();
           }
 
           return this.iterator.next();
@@ -63,71 +61,71 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.started = false;
         }
 
-        return { next: next, reset: reset };
+        function getIterator() {
+          var iter = this.iterable;
+
+          if (isGenerator(iter)) {
+            return iter();
+          } else {
+            return regeneratorRuntime.mark(function _callee() {
+              return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      return _context.delegateYield(iter, 't0', 1);
+
+                    case 1:
+                    case 'end':
+                      return _context.stop();
+                  }
+                }
+              }, _callee, this);
+            })();
+          }
+        }
+
+        return { next: next, reset: reset, getIterator: getIterator };
       }();
 
-      Collection.prototype[Symbol.iterator] = regeneratorRuntime.mark(function _callee() {
+      Collection.prototype[Symbol.iterator] = regeneratorRuntime.mark(function _callee2() {
         var current;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 current = void 0;
 
               case 1:
                 if (!true) {
-                  _context.next = 10;
+                  _context2.next = 10;
                   break;
                 }
 
                 current = this.next();
 
                 if (!current.done) {
-                  _context.next = 6;
+                  _context2.next = 6;
                   break;
                 }
 
                 this.reset();
-                return _context.abrupt('break', 10);
+                return _context2.abrupt('break', 10);
 
               case 6:
-                _context.next = 8;
+                _context2.next = 8;
                 return current.value;
 
               case 8:
-                _context.next = 1;
+                _context2.next = 1;
                 break;
 
               case 10:
               case 'end':
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, this);
+        }, _callee2, this);
       });
-
-      Collection.prototype[getIterator] = function () {
-        var iter = this.iterable;
-
-        if (isGenerator(iter)) {
-          return iter();
-        } else {
-          return regeneratorRuntime.mark(function _callee2() {
-            return regeneratorRuntime.wrap(function _callee2$(_context2) {
-              while (1) {
-                switch (_context2.prev = _context2.next) {
-                  case 0:
-                    return _context2.delegateYield(iter, 't0', 1);
-
-                  case 1:
-                  case 'end':
-                    return _context2.stop();
-                }
-              }
-            }, _callee2, this);
-          })();
-        }
-      };
 
       return Collection;
     }();
@@ -310,14 +308,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       __assign(linqjsExports, obj);
     }
 
-    function symbolOrString(str) {
-      if (DEBUG) {
-        return str;
-      } else {
-        return Symbol(str);
-      }
-    }
-
     /**
      * paramOrValue - Helper method to get the passed parameter or a default value if it is undefined
      *
@@ -352,7 +342,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                iter = coll[getIterator]();
+                iter = coll.getIterator();
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
@@ -630,7 +620,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return _context5.delegateYield(firstIter, 't0', 1);
 
               case 1:
-                return _context5.delegateYield(second[getIterator](), 't1', 2);
+                return _context5.delegateYield(second.getIterator(), 't1', 2);
 
               case 2:
               case 'end':
@@ -677,7 +667,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                secondIter = second[getIterator]();
+                secondIter = second.getIterator();
                 _iteratorNormalCompletion4 = true;
                 _didIteratorError4 = false;
                 _iteratorError4 = undefined;
@@ -920,7 +910,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                secondIter = second[getIterator]();
+                secondIter = second.getIterator();
                 _iteratorNormalCompletion7 = true;
                 _didIteratorError7 = false;
                 _iteratorError7 = undefined;
@@ -2287,7 +2277,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return this;
       };
 
-      OrderedLinqCollection.prototype[getIterator] = function () {
+      OrderedLinqCollection.prototype.getIterator = function () {
         var _self = this;
 
         return regeneratorRuntime.mark(function _callee15() {

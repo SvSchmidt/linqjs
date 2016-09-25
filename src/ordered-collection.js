@@ -47,7 +47,7 @@ let OrderedLinqCollection = (function () {
         return this;
     };
 
-    OrderedLinqCollection.prototype[getIterator] = function () {
+    OrderedLinqCollection.prototype.getIterator = function () {
       const _self = this
 
       return function * () {

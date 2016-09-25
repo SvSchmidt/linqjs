@@ -9,7 +9,7 @@
 
     return new Collection(function * () {
       yield* firstIter
-      yield* second[getIterator]()
+      yield* second.getIterator()
     })
   }
 
@@ -41,7 +41,7 @@
     const firstIter = this
 
     const result = new Collection(function * () {
-      const secondIter = second[getIterator]()
+      const secondIter = second.getIterator()
 
       for (let firstValue of firstIter) {
         const firstKey = firstKeySelector(firstValue)
@@ -101,7 +101,7 @@
     const firstIter = this
 
     const result = new Collection(function * () {
-      const secondIter = second[getIterator]()
+      const secondIter = second.getIterator()
 
       for (const firstVal of firstIter) {
         const secondNext = secondIter.next()

@@ -12,14 +12,6 @@
     __assign(linqjsExports, obj)
   }
 
-  function symbolOrString (str) {
-    if (DEBUG) {
-      return str
-    } else {
-      return Symbol(str)
-    }
-  }
-
   /**
    * paramOrValue - Helper method to get the passed parameter or a default value if it is undefined
    *
@@ -48,7 +40,7 @@
     const previous = []
 
     return new Collection(function * () {
-      const iter = coll[getIterator]()
+      const iter = coll.getIterator()
 
       outer: for (let val of iter) {
         inner: for (let prev of previous) {
