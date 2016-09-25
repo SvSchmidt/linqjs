@@ -13,44 +13,44 @@ describe('access', function () {
       expect(people.ElementAt(0).name).to.be.equal('Gandalf')
     })
 
-    it('should throw an error if index < 0 or >= arr.length', function () {
+    it('should throw an error if index is out of bounds', function () {
       expect(function () { people.ElementAt(3) }).to.throw(Error)
       expect(function () { people.ElementAt(-1) }).to.throw(Error)
     })
   })
 
   describe('Take', function () {
-      it('should return the first count elements in the array', function () {
+      it('should return the first count elements in the sequence', function () {
         expect([1,2,3,4,5].Take(2)).to.be.deep.equal([1,2])
       })
 
-      it('should return an empty array if count <= 0', function () {
+      it('should return an empty sequence if count <= 0', function () {
         expect([1,2,3,4,5].Take(-1)).to.be.deep.equal([])
         expect([1,2,3,4,5].Take(0)).to.be.deep.equal([])
       })
 
-      it('should return the array itself if count >= array.length', function () {
+      it('should return the sequence itself if count >= sequence.length', function () {
         expect([1,2,3,4,5].Take(10)).to.be.deep.equal([1,2,3,4,5])
       })
   })
 
   describe('Skip', function () {
-    it('should skip count elements and return the remaining array', function () {
+    it('should skip count elements and return the remaining sequence', function () {
       expect(people.Skip(2).ToArray()).to.be.deep.equal([{ name: 'Frodo', race: 'hobbit' }])
     })
 
-    it('should return the array itself if count <= 0', function () {
+    it('should return the sequence itself if count <= 0', function () {
       expect(people.Skip(0).ToArray()).to.be.deep.equal(people)
       expect(people.Skip(-1).ToArray()).to.be.deep.equal(people)
     })
 
-    it('should return an empty array if count >= array.length', function () {
+    it('should return an empty sequence if count >= sequence length', function () {
       expect(people.Skip(100).ToArray()).to.be.deep.equal([])
     })
   })
 
   describe('Skip/Take are complementary', function () {
-    it('arr.Take(n) concatenated with arr.Skip(n) should yield arr itself', function () {
+    it('Take(n) concatenated with Skip(n) should yield the sequence itself', function () {
       let arr = [1,2,3,4,5]
 
       expect(arr.Take(2).Concat(arr.Skip(2)).ToArray()).to.be.deep.equal(arr)
@@ -80,7 +80,7 @@ describe('access', function () {
   })
 
   describe('First', function () {
-    it('should return first element of an array', function () {
+    it('should return first element of an sequence', function () {
       expect([1, 2, 3, 4].First()).to.be.equal(1)
     })
 
@@ -120,7 +120,7 @@ describe('access', function () {
   })
 
   describe('Last', function () {
-    it('should return last element of an array', function () {
+    it('should return last element of an sequence', function () {
       expect([1,2,3,4].Last()).to.be.equal(4)
     })
 
@@ -150,17 +150,21 @@ describe('access', function () {
   })
 
   describe('DefaultIfEmpty', function () {
-    it('should return the default of the provided constructor in a new array if sequence is empty', function () {
+    it('should return the default of the provided constructor in a new sequence if sequence is empty', function () {
       expect([].DefaultIfEmpty(Boolean)).to.be.deep.equal([false])
       expect([].DefaultIfEmpty(Object)).to.be.deep.equal([null])
       expect([].DefaultIfEmpty()).to.be.deep.equal([null])
     })
 
-    it('should return the specified default in a new array if the sequence is empty', function () {
+    it('should return the specified default in a new sequence if the sequence is empty', function () {
       const defaultPet = { Name: "Default Pet", Age: 0 }
       const pets = []
       expect(pets.DefaultIfEmpty(defaultPet).length).to.be.equal(1)
       expect(pets.DefaultIfEmpty(defaultPet)).to.be.deep.equal([defaultPet])
+    })
+
+    it('should return the sequence itself if it is not empty', function () {
+      expect([1,2,3,4].DefaultIfEmpty(Number).ToArray()).to.be.deep.equal([1,2,3,4])
     })
   })
 })
