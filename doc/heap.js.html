@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: heap.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: heap.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * HeapElement class that also provides the element index for sorting.
+ */
+let HeapElement = (function () {
+
+    /**
+     * Creates a new HeapElement.
+     *
+     * @param {number} index Element index.
+     * @param {T}      value Element value.
+     * @param {any}    &lt;T>   Value type.
+     */
+    function HeapElement(index, value) {
+        this.__index = index;
+        this.__value = value;
+
+        // for faster instance detection
+        this.__isHeapElementInstance = true;
+    }
+
+    /**
+     * Creates or returns a heap element from the given data.
+     * If obj is a HeapElement obj is returned, creates a HeapElement otherwise.
+     *
+     * @param {number}           index Current element index.
+     * @param {T|HeapElement&lt;T>} obj   Element.
+     * @param {any}              &lt;T>   Value type.
+     * @return {HeapElement&lt;T>} Created heap element or obj if it already is a heap object.
+     */
+    HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
+        if (obj === undefined || obj.__isHeapElementInstance) {
+            return obj;
+        }
+        return new HeapElement(index, obj);
+    };
+
+    return HeapElement;
+})();
+
+/*
+ * Partially sorted heap that contains the smallest element within root position.
+ */
+let MinHeap = (function () {
+
+    /**
+     * Creates the heap from the array of elements with the given comparator function.
+     *
+     * @param {T[]}              elements   Array with elements to create the heap from.
+     *                                      Will be modified in place for heap logic.
+     * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
+     * @param {any}              &lt;T>        Heap element type.
+     */
+    function MinHeap(elements, comparator = DefaultComparator) {
+        __assertArray(elements);
+        __assertFunction(comparator);
+
+        // we do not wrap elements here since the heapify function does that the moment it encounters elements
+        this.elements = elements;
+
+        // create comparator that works on heap elements (it also ensures equal elements remain in original order)
+        this.comparator = (a, b) => {
+            let res = comparator(a.__value, b.__value);
+            if (res !== 0) {
+                return res;
+            }
+            return DefaultComparator(a.__index, b.__index);
+        };
+
+        // create heap ordering
+        createHeap(this.elements, this.comparator);
+    }
+
+    /**
+     * Places the element at the given position into the correct position within the heap.
+     *
+     * @param {T}                elements   Array with elements used for the heap.
+     * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
+     * @param {number}           i          Index of the element that will be placed to the correct position.
+     * @param {any}              &lt;T>        Heap element type.
+     */
+    function heapify(elements, comparator, i) {
+        let right     = 2 * (i + 1);
+        let left      = right - 1;
+        let bestIndex = i;
+
+        // wrap elements the moment we encouter them first
+        elements[bestIndex] = HeapElement.CreateHeapElement(bestIndex, elements[bestIndex]);
+
+        // check if the element is currently misplaced
+        if (left &lt; elements.length) {
+            elements[left] = HeapElement.CreateHeapElement(left, elements[left]);
+            if (comparator(elements[left], elements[bestIndex]) &lt; 0) {
+                bestIndex = left;
+            }
+        }
+        if (right &lt; elements.length) {
+            elements[right] = HeapElement.CreateHeapElement(right, elements[right]);
+            if (comparator(elements[right], elements[bestIndex]) &lt; 0) {
+                bestIndex = right;
+            }
+        }
+
+        // if the element is misplaced, swap elements and continue until we get the right position
+        if (bestIndex !== i) {
+            let tmp = elements[i];
+            elements[i] = elements[bestIndex];
+            elements[bestIndex] = tmp;
+
+            // let misplaced elements "bubble up" to get heap properties
+            heapify(elements, comparator, bestIndex);
+        }
+    }
+
+    /**
+     * Creates a heap from the given array using the given comparator.
+     *
+     * @param {T[]}              elements   Array with elements used for the heap.
+     *                                      Will be modified in place for heap logic.
+     * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
+     * @param {any}              &lt;T>        Heap element type.
+     */
+    function createHeap(elements, comparator) {
+
+        // sepecial case: empty array
+        if (elements.length === 0) {
+
+            // nothing to do here
+            return;
+        }
+
+        for (let i = Math.floor(elements.length / 2); i >= 0; i--) {
+
+            // do fancy stuff
+            heapify(elements, comparator, i);
+        }
+    }
+
+    /**
+     * Checks if the heap contains at least one element.
+     *
+     * @return {boolean} If the heap contains elements or not.
+     */
+    MinHeap.prototype.hasTopElement = function () {
+        return this.elements.length > 0;
+    };
+
+    /**
+     * Gets and removes the top element from the heap.
+     * This method performs a bit of reordering to keep heap properties.
+     *
+     * @param {any} &lt;T> Heap element type.
+     *
+     * @return {T} Top element from heap.
+     */
+    MinHeap.prototype.getTopElement = function () {
+
+        // special case: only one element left
+        if (this.elements.length === 1) {
+            return this.elements.pop().__value;
+        }
+
+        let topElement = this.elements[0];
+        let tmp = this.elements.pop();
+        this.elements[0] = tmp;
+
+        // do fancy stuff
+        heapify(this.elements, this.comparator, 0);
+
+        return topElement.__value;
+    };
+
+    /**
+     * Creates an iterator for this heap instance.
+     *
+     * @return {Iterator} Iterator for the heap.
+     */
+    MinHeap.prototype[Symbol.iterator] = function () {
+
+        // keep matching heap instance
+        let heap = this;
+        return {
+            next: function () {
+                if (heap.hasTopElement()) {
+                    return {
+                        done:  false,
+                        value: heap.getTopElement()
+                    };
+                }
+                return {
+                    done: true
+                };
+            }
+        }
+    };
+
+    return MinHeap;
+})();
+
+/*
+ * Partially sorted heap that contains the largest element within root position.
+ */
+let MaxHeap = (function () {
+
+    /**
+     * Creates the heap from the array of elements with the given comparator function.
+     *
+     * @param {T[]}               elements   Array with elements to create the heap from.
+     *                                       Will be modified in place for heap logic.
+     * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
+     * @param {any}               &lt;T>        Heap element type.
+     */
+    function MaxHeap(elements, comparator = DefaultComparator) {
+        __assertArray(elements);
+        __assertFunction(comparator);
+
+        // simply negate the result of the comparator function so we get reverse ordering within the heap
+        MinHeap.apply(this, [elements, function (a, b) { return -1 * comparator(a, b); }]);
+    }
+
+    // inheritance stuff (we don't want to implement stuff twice)
+    MaxHeap.prototype = Object.create(MinHeap.prototype);
+    MaxHeap.prototype.constructor = MaxHeap;
+
+    return MaxHeap;
+})()
+
+__export({ DefaultComparator, MinHeap, MaxHeap })
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#DefaultIfEmpty">DefaultIfEmpty</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#ElementAt">ElementAt</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#Skip">Skip</a></li><li><a href="global.html#SkipWhile">SkipWhile</a></li><li><a href="global.html#Take">Take</a></li><li><a href="global.html#TakeWhile">TakeWhile</a></li><li><a href="global.html#ToDictionary">ToDictionary</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Sun Sep 25 2016 19:31:21 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

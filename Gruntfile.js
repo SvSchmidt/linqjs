@@ -97,6 +97,14 @@ module.exports = function (grunt) {
         stdout: true,
         stderr: false
       },
+    },
+    jsdoc : {
+        dist : {
+            src: ['src/*.js', 'test/*.js'],
+            options: {
+                destination: 'doc'
+            }
+        }
     }
   });
 
@@ -212,5 +220,6 @@ module.exports = function (grunt) {
                                 'usebanner',
                                 'file_info',
                                 'clean:tmp'])
+  grunt.registerTask('doc', ['jsdoc'])
   grunt.registerTask('default', ['debug', 'test', 'watch'])
 };

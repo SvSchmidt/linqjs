@@ -16,7 +16,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // to the global object
 
   var window = this || (0, eval)('this'); // jshint ignore:line
-  var DEBUG = true;
+  var DEBUG = false;
 
   (function (factory) {
     try {
@@ -1138,12 +1138,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * Any - Returns true if at least one element matches the predicate or if no predicate is given but the sequence contains at least one element
+     * Any - Returns true if the sequence contains elements, false if not
      *
      * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
-     * @param  {Function} predicate
      * @return {Boolean}
-     */
+     */ /**
+        * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
+        *
+        * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+        * @param  {Function} predicate A predicate function to test elements against: elem => boolean
+        * @return {Boolean}
+        */
     function Any(predicate) {
       if (isEmpty(this)) {
         return false;

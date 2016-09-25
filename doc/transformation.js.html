@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: transformation.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: transformation.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>  /**
+   * Aggregate - applies a accumulator function to a sequence
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+   * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+   * @return {any} the result of the accumulation
+   *//**
+   * Aggregate - applies a accumulator function to a sequence. Starts with seed.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+   * @param {any} seed The starting value of the accumulation
+   * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+   * @return {any} the result of the accumulation
+   *//**
+   * Aggregate - applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+   * @param {any} seed The starting value of the accumulation
+   * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+   * @param {Function} resultTransformFn A function to transform the result
+   * @return {any} the result of the accumulation
+   * @
+   */
+  function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
+    const values = this.ToArray()
+
+    if (typeof seedOrAccumulator === 'function' &amp;&amp; !accumulator &amp;&amp; !resultTransformFn) {
+      return aggregateCollection(values.slice(1, values.length), values.slice(0, 1)[0], seedOrAccumulator, elem => elem)
+    } else if (typeof seedOrAccumulator !== 'function' &amp;&amp; typeof accumulator === 'function' &amp;&amp; !resultTransformFn) {
+      return aggregateCollection(values, seedOrAccumulator, accumulator, elem => elem)
+    } else {
+      return aggregateCollection(values, seedOrAccumulator, accumulator, resultTransformFn)
+    }
+  }
+
+  function Select (mapFn = x => x) {
+    const _self = this
+
+    return new Collection(function * () {
+      _self.reset()
+
+      for (let val of _self) {
+        yield mapFn(val)
+      }
+    })
+  }
+
+  /**
+   * Distinct - Returns the distinct elemens from a sequence using the default equality compare function
+   *
+   * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+   * @return {Array}
+   *//**
+   * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
+   *
+   * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+   * @param {Function} equalityCompareFn The function of the form (first, second) => boolean determining if the values are equal
+   * @return {Array}
+   */
+  function Distinct (equalityCompareFn = defaultEqualityCompareFn) {
+    __assertFunction(equalityCompareFn)
+
+    return removeDuplicates(this, equalityCompareFn)
+  }
+
+  function ToArray () {
+    const result = [...this]
+    this.reset()
+
+    return result
+  }
+
+  /**
+   * ToDictionary - description
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @param  {Function} keySelector                  Function to get the keys from the elements
+   * @param  {Function} elementSelectorOrKeyComparer Function to either get the elements or compare the keys
+   * @param  {Function} keyComparer                  Function to compare the keys
+   * @return {Map}                                   A dictionary (Map)
+   */
+  function ToDictionary (keySelector, elementSelectorOrKeyComparer, keyComparer) {
+    __assertFunction(keySelector)
+
+    if (!elementSelectorOrKeyComparer &amp;&amp; !keyComparer) {
+      // ToDictionary(keySelector)
+      return this.ToDictionary(keySelector, elem => elem, defaultEqualityCompareFn)
+    } else if (!keyComparer &amp;&amp; getParameterCount(elementSelectorOrKeyComparer) === 1) {
+      // ToDictionary(keySelector, elementSelector)
+      return this.ToDictionary(keySelector, elementSelectorOrKeyComparer, defaultEqualityCompareFn)
+    } else if (!keyComparer &amp;&amp; getParameterCount(elementSelectorOrKeyComparer) === 2) {
+      // ToDictionary(keySelector, keyComparer)
+      return this.ToDictionary(keySelector, elem => elem, elementSelectorOrKeyComparer)
+    }
+
+    // ToDictionary(keySelector, elementSelector, keyComparer)
+
+    __assertFunction(keyComparer)
+    __assertFunction(elementSelectorOrKeyComparer)
+
+    let usedKeys = []
+    let result = new Map()
+    const input = this.ToArray()
+    const elementSelector = elementSelectorOrKeyComparer
+
+    for (let value of input) {
+      let key = keySelector(value)
+      let elem = elementSelector(value)
+
+      __assert(key != null, 'Key is not allowed to be null!')
+      __assert(!usedKeys.Any(x => keyComparer(x, key)), `Key '${key}' is already in use!`)
+
+      usedKeys.push(key)
+      result.set(key, elem)
+    }
+
+    return result
+  }
+
+  /*
+GroupBy(keySelector)
+
+GroupBy(keySelector, keyComparer)
+GroupBy(keySelector, elementSelector)
+GroupBy(keySelector, resultTransformFn)
+
+GroupBy(keySelector, resultTransformFn, keyComparer)
+GroupBy(keySelector, elementSelector, keyComparer)
+GroupBy(keySelector, elementSelector, resultTransformFn)
+
+GroupBy(keySelector, elementSelector, resultTransformFn, keyComparer)
+  */
+  function GroupBy (keySelector, keyComparerOrResultTransformFnOrElementSelector, keyComparerOrResultTransformFn, keyComparer) {
+    __assertFunction(keySelector)
+
+
+  }
+
+  __export({ Aggregate, Distinct, Select, ToArray, ToDictionary })
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#DefaultIfEmpty">DefaultIfEmpty</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#ElementAt">ElementAt</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#Skip">Skip</a></li><li><a href="global.html#SkipWhile">SkipWhile</a></li><li><a href="global.html#Take">Take</a></li><li><a href="global.html#TakeWhile">TakeWhile</a></li><li><a href="global.html#ToDictionary">ToDictionary</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Sun Sep 25 2016 19:31:21 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

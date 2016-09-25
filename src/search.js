@@ -46,13 +46,18 @@ function Count (predicate = elem => true) {
   return this.Where(predicate).ToArray().length
 }
 
-/**
- * Any - Returns true if at least one element matches the predicate or if no predicate is given but the sequence contains at least one element
- *
- * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
- * @param  {Function} predicate
- * @return {Boolean}
- */
+ /**
+  * Any - Returns true if the sequence contains at least one element, false if it is empty
+  *
+  * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+  * @return {Boolean}
+  *//**
+  * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
+  *
+  * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+  * @param  {Function} predicate A predicate function to test elements against: elem => boolean
+  * @return {Boolean}
+  */
 function Any (predicate) {
   if (isEmpty(this)) {
     return false

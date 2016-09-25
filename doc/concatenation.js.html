@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: concatenation.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: concatenation.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>  function Concat (second) {
+    __assertIterable(second)
+
+    const firstIter = this
+
+    if (!isCollection(second)) {
+      second = new Collection(second)
+    }
+
+    return new Collection(function * () {
+      yield* firstIter
+      yield* second.getIterator()
+    })
+  }
+
+  function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
+    __assertIterable(second)
+
+    return this.Concat(second).Distinct(equalityCompareFn)
+  }
+
+  /**
+   * Join - Correlates the elements of two sequences based on matching keys
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
+   * @param  {iterable} second               The second sequence to join with the first one
+   * @param  {Function} firstKeySelector     A selector fn to extract the key from the first sequence
+   * @param  {Function} secondKeySelector    A selector fn to extract the key from the second sequence
+   * @param  {Function} resultSelectorFn     A fn to transform the pairings into the result
+   * @param  {Function} keyEqualityCompareFn Optional fn to compare the keys
+   * @return {Collection}                      A new collection of the resulting pairs
+   */
+  function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, keyEqualityCompareFn) {
+    __assertIterable(second)
+    __assertFunction(firstKeySelector)
+    __assertFunction(secondKeySelector)
+    __assertFunction(resultSelectorFn)
+    keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
+    __assertFunction(keyEqualityCompareFn)
+
+    const firstIter = this
+
+    const result = new Collection(function * () {
+      const secondIter = second.getIterator()
+
+      for (let firstValue of firstIter) {
+        const firstKey = firstKeySelector(firstValue)
+
+        for (let secondValue of secondIter) {
+          const secondKey = secondKeySelector(secondValue)
+
+          if (keyEqualityCompareFn(firstKey, secondKey)) {
+            yield resultSelectorFn(firstValue, secondValue)
+          }
+        }
+      }
+    })
+
+    this.reset()
+
+    return result
+  }
+
+  /**
+   * Except - Returns the element of the sequence that do not appear in second
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
+   * @param  {Iterable} second
+   * @return {Collection}        new Collection with the values of first without the ones in second
+   */
+  function Except (second) {
+    __assertIterable(second)
+
+    const firstIter = this
+
+    const result = new Collection(function * () {
+      for (let val of firstIter) {
+        if (!second.Contains(val)) {
+          yield val
+        }
+      }
+    })
+
+    this.reset()
+    second.reset &amp;&amp; second.reset()
+
+    return result
+  }
+
+  /**
+   * Zip - Applies a function to the elements of two sequences, producing a sequence of the results
+   *
+   * @param  {Iterable} second
+   * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
+   * @return {collection}
+   */
+  function Zip (second, resultSelectorFn) {
+    __assertIterable(second)
+    __assertFunction(resultSelectorFn)
+
+    const firstIter = this
+
+    const result = new Collection(function * () {
+      const secondIter = second.getIterator()
+
+      for (const firstVal of firstIter) {
+        const secondNext = secondIter.next()
+
+        if (secondNext.done) {
+          break
+        }
+
+        yield resultSelectorFn(firstVal, secondNext.value)
+      }
+    })
+
+    this.reset()
+
+    return result
+  }
+
+  __export({ Concat, Union, Join, Except, Zip })
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#DefaultIfEmpty">DefaultIfEmpty</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#ElementAt">ElementAt</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#Skip">Skip</a></li><li><a href="global.html#SkipWhile">SkipWhile</a></li><li><a href="global.html#Take">Take</a></li><li><a href="global.html#TakeWhile">TakeWhile</a></li><li><a href="global.html#ToDictionary">ToDictionary</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Sun Sep 25 2016 19:31:21 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

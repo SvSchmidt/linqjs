@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ordered-collection.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ordered-collection.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * Ordered linq collection.
+ */
+let OrderedLinqCollection = (function () {
+
+    /**
+     * Creates a new ordered linq collection using the given comparator and heap for sorting.
+     *
+     * @param {Iterable&lt;T>}       iterable        Datasource for this collection.
+     * @param {(T, T) => boolean} comparator      Comparator for sorting.
+     * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
+     * @param {any}               &lt;T>             Element type.
+     */
+    function OrderedLinqCollection(iterable, comparator, heapConstructor) {
+        __assertIterable(iterable);
+        __assertFunction(comparator);
+        __assertFunction(heapConstructor);
+        Collection.apply(this, [iterable]);
+
+        this.__comparator      = comparator;
+        this.__heapConstructor = heapConstructor;
+    }
+
+    /**
+     * Specifies further sorting by the given comparator for equal elements.
+     *
+     * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
+     * @param {any}               &lt;T>                  Element type.
+     * @return {OrderedLinqCollection&lt;T>} Created ordered linq collection.
+     */
+    OrderedLinqCollection.prototype.ThenBy = function ThenBy(additionalComparator) {
+        __assertIterationNotStarted(this);
+        if (isString(additionalComparator)) {
+            additionalComparator = GetComparatorFromKeySelector(additionalComparator);
+        }
+        __assertFunction(additionalComparator);
+
+        // build new comparator function when not yet iterated
+        let currentComparator = this.__comparator;
+        this.__comparator = (a, b) => {
+            let res = currentComparator(a, b);
+            if (res !== 0) {
+                return res;
+            }
+            return additionalComparator(a, b);
+        };
+        return this;
+    };
+
+    OrderedLinqCollection.prototype.getIterator = function () {
+      const _self = this
+
+      return function * () {
+        yield* Reflect.construct(_self.__heapConstructor, [[..._self.iterable], _self.__comparator])
+      }()
+    }
+
+    return OrderedLinqCollection;
+})();
+
+/**
+ * Creates a comparator function from the given selector string.
+ * The selector string has to be in same format as within javascript code.
+ *
+ * @param  {string} selector Javascript code selector string.
+ * @return {(any, any) => boolean} Created comparator function.
+ */
+function GetComparatorFromKeySelector(selector) {
+    __assertString(selector);
+    if (selector === '') {
+        return Collection.prototype.DefaultComparator;
+    }
+    if (!(selector.startsWith('[') || selector.startsWith('.'))) {
+        selector = `.${selector}`;
+    }
+    let result;
+    eval(`result = function (a, b) { return Collection.prototype.DefaultComparator(a${selector}, b${selector}) }`);
+    return result;
+}
+
+/**
+ * Orderes this linq collection using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               &lt;T>        Element type.
+ * @return {OrderedLinqCollection&lt;T>} Ordered collection.
+ */
+function OrderBy (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
+};
+
+/**
+ * Orderes this linq collection in descending order using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               &lt;T>        Element type.
+ * @return {OrderedLinqCollection&lt;T>} Ordered collection.
+ */
+function OrderByDescending (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
+};
+
+__export({ GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#DefaultIfEmpty">DefaultIfEmpty</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#ElementAt">ElementAt</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#Skip">Skip</a></li><li><a href="global.html#SkipWhile">SkipWhile</a></li><li><a href="global.html#Take">Take</a></li><li><a href="global.html#TakeWhile">TakeWhile</a></li><li><a href="global.html#ToDictionary">ToDictionary</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Sun Sep 25 2016 19:31:21 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
