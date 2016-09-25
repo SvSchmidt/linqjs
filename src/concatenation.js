@@ -38,13 +38,15 @@
     keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
     __assertFunction(keyEqualityCompareFn)
 
-    const first = this
+    const firstIter = this
 
-    const result = Collection.from(function * () {
-      for (let firstValue of first) {
+    const result = new Collection(function * () {
+      const secondIter = second[getIterator]()
+
+      for (let firstValue of firstIter) {
         const firstKey = firstKeySelector(firstValue)
 
-        for (let secondValue of second) {
+        for (let secondValue of secondIter) {
           const secondKey = secondKeySelector(secondValue)
 
           if (keyEqualityCompareFn(firstKey, secondKey)) {
@@ -55,7 +57,6 @@
     })
 
     this.reset()
-    second.reset && second.reset()
 
     return result
   }
@@ -70,10 +71,10 @@
   function Except (second) {
     __assertIterable(second)
 
-    const first = this
+    const firstIter = this
 
     const result = new Collection(function * () {
-      for (let val of first) {
+      for (let val of firstIter) {
         if (!second.Contains(val)) {
           yield val
         }
@@ -97,11 +98,12 @@
     __assertIterable(second)
     __assertFunction(resultSelectorFn)
 
-    const first = this
-    const secondIter = second[Symbol.iterator]()
+    const firstIter = this
 
     const result = new Collection(function * () {
-      for (const firstVal of first) {
+      const secondIter = second[getIterator]()
+
+      for (const firstVal of firstIter) {
         const secondNext = secondIter.next()
 
         if (secondNext.done) {
@@ -112,8 +114,7 @@
       }
     })
 
-    first.reset()
-    second.reset && second.reset()
+    this.reset()
 
     return result
   }
