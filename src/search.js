@@ -1,13 +1,16 @@
 function Contains (elem) {
+  let result = false
+
   for (let val of this) {
     if (defaultEqualityCompareFn(elem, val)) {
-      return true
+      result = true
+      break
     }
   }
 
   this.reset()
 
-  return false
+  return result
 }
 
 function Where (predicate = (elem, index) => true) {

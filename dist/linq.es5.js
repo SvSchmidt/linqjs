@@ -1004,6 +1004,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     /* src/search.js */
 
     function Contains(elem) {
+      var result = false;
+
       var _iteratorNormalCompletion8 = true;
       var _didIteratorError8 = false;
       var _iteratorError8 = undefined;
@@ -1013,7 +1015,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var val = _step8.value;
 
           if (defaultEqualityCompareFn(elem, val)) {
-            return true;
+            result = true;
+            break;
           }
         }
       } catch (err) {
@@ -1033,7 +1036,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       this.reset();
 
-      return false;
+      return result;
     }
 
     function Where() {
