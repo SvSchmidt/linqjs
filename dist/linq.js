@@ -9,7 +9,7 @@
   // this || (0, eval)('this') is a robust way for getting a reference
   // to the global object
   const window = this || (0, eval)('this'); // jshint ignore:line
-  const DEBUG = false;
+  const DEBUG = true;
 
 (function (factory) {
   try {
@@ -569,7 +569,7 @@ function Count (predicate = elem => true) {
 }
 
  /**
-  * Any - Returns true if the sequence contains elements, false if not
+  * Any - Returns true if the sequence contains at least one element, false if it is empty
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
   * @return {Boolean}
@@ -1276,37 +1276,6 @@ function Remove (value) {
 
 
 
-/* src/order.js */
-
-// TODO: change implementation to use iterators!
-
-function Order() {
-    return this.OrderBy(DefaultComparator);
-}
-
-function OrderCompare() {
-    return this.sort(DefaultComparator);
-}
-
-function OrderBy(comparator) {
-    __assertFunction(comparator);
-    let heap = new MinHeap(this, comparator);
-    return [...heap];
-}
-
-function OrderDescending() {
-    return this.OrderByDescending(DefaultComparator);
-}
-
-function OrderByDescending(comparator) {
-    __assertFunction(comparator);
-    let heap = new MaxHeap(this, comparator);
-    return [...heap];
-}
-
-
-
-
 /* src/ordered-collection.js */
 
 /*
@@ -1421,6 +1390,6 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
 }))
 }())

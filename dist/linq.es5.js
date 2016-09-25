@@ -16,7 +16,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // to the global object
 
   var window = this || (0, eval)('this'); // jshint ignore:line
-  var DEBUG = false;
+  var DEBUG = true;
 
   (function (factory) {
     try {
@@ -1138,7 +1138,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * Any - Returns true if the sequence contains elements, false if not
+     * Any - Returns true if the sequence contains at least one element, false if it is empty
      *
      * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
      * @return {Boolean}
@@ -2203,34 +2203,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return true;
     }
 
-    /* src/order.js */
-
-    // TODO: change implementation to use iterators!
-
-    function Order() {
-      return this.OrderBy(DefaultComparator);
-    }
-
-    function OrderCompare() {
-      return this.sort(DefaultComparator);
-    }
-
-    function OrderBy(comparator) {
-      __assertFunction(comparator);
-      var heap = new MinHeap(this, comparator);
-      return [].concat(_toConsumableArray(heap));
-    }
-
-    function OrderDescending() {
-      return this.OrderByDescending(DefaultComparator);
-    }
-
-    function OrderByDescending(comparator) {
-      __assertFunction(comparator);
-      var heap = new MaxHeap(this, comparator);
-      return [].concat(_toConsumableArray(heap));
-    }
-
     /* src/ordered-collection.js */
 
     /*
@@ -2355,6 +2327,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
   });
 })();
