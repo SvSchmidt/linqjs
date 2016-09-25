@@ -13,3 +13,5 @@
     factory(window.linqjs = {}) // jshint ignore:line
   }
 }(function (linqjs) {
+  let linqjsExports = {}
+  let Collection

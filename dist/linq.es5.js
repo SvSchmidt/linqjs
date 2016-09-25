@@ -35,6 +35,107 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   })(function (linqjs) {
     var _export;
 
+    var linqjsExports = {};
+    var Collection = void 0;
+
+    /* src/collection.js */
+
+    var getIterator = symbolOrString('getIterator');
+
+    Collection = function () {
+      function Collection(iterableOrGenerator) {
+        __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
+
+        this.iterable = iterableOrGenerator;
+      }
+
+      Collection.from = function (iterable) {
+        return new Collection(iterable);
+      };
+
+      Collection.prototype = function () {
+        function next() {
+          if (!this.started) {
+            this.started = true;
+            this.iterator = this[getIterator]();
+          }
+
+          return this.iterator.next();
+        }
+
+        function reset() {
+          this.started = false;
+        }
+
+        return { next: next, reset: reset };
+      }();
+
+      Collection.prototype[Symbol.iterator] = regeneratorRuntime.mark(function _callee() {
+        var current;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                current = void 0;
+
+              case 1:
+                if (!true) {
+                  _context.next = 10;
+                  break;
+                }
+
+                current = this.next();
+
+                if (!current.done) {
+                  _context.next = 6;
+                  break;
+                }
+
+                this.reset();
+                return _context.abrupt('break', 10);
+
+              case 6:
+                _context.next = 8;
+                return current.value;
+
+              case 8:
+                _context.next = 1;
+                break;
+
+              case 10:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      });
+
+      Collection.prototype[getIterator] = function () {
+        var iter = this.iterable;
+
+        if (isGenerator(iter)) {
+          return iter();
+        } else {
+          return regeneratorRuntime.mark(function _callee2() {
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+              while (1) {
+                switch (_context2.prev = _context2.next) {
+                  case 0:
+                    return _context2.delegateYield(iter, 't0', 1);
+
+                  case 1:
+                  case 'end':
+                    return _context2.stop();
+                }
+              }
+            }, _callee2, this);
+          })();
+        }
+      };
+
+      return Collection;
+    }();
+
     /* src/helpers/defaults.js */
 
     function defaultEqualityCompareFn(first, second) {
@@ -156,7 +257,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function __export(obj) {
-      __assign(linqjs, obj);
+      __assign(linqjsExports, obj);
     }
 
     function symbolOrString(str) {
@@ -194,24 +295,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var previous = [];
 
-      return new Collection(regeneratorRuntime.mark(function _callee() {
+      return new Collection(regeneratorRuntime.mark(function _callee3() {
         var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, val, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, prev;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 coll.reset();
 
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 4;
+                _context3.prev = 4;
                 _iterator = coll[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 40;
+                  _context3.next = 40;
                   break;
                 }
 
@@ -219,115 +320,115 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
                 _iteratorError2 = undefined;
-                _context.prev = 11;
+                _context3.prev = 11;
                 _iterator2 = previous[Symbol.iterator]();
 
               case 13:
                 if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-                  _context.next = 20;
+                  _context3.next = 20;
                   break;
                 }
 
                 prev = _step2.value;
 
                 if (!equalityCompareFn(val, prev)) {
-                  _context.next = 17;
+                  _context3.next = 17;
                   break;
                 }
 
-                return _context.abrupt('continue', 37);
+                return _context3.abrupt('continue', 37);
 
               case 17:
                 _iteratorNormalCompletion2 = true;
-                _context.next = 13;
+                _context3.next = 13;
                 break;
 
               case 20:
-                _context.next = 26;
+                _context3.next = 26;
                 break;
 
               case 22:
-                _context.prev = 22;
-                _context.t0 = _context['catch'](11);
+                _context3.prev = 22;
+                _context3.t0 = _context3['catch'](11);
                 _didIteratorError2 = true;
-                _iteratorError2 = _context.t0;
+                _iteratorError2 = _context3.t0;
 
               case 26:
-                _context.prev = 26;
-                _context.prev = 27;
+                _context3.prev = 26;
+                _context3.prev = 27;
 
                 if (!_iteratorNormalCompletion2 && _iterator2.return) {
                   _iterator2.return();
                 }
 
               case 29:
-                _context.prev = 29;
+                _context3.prev = 29;
 
                 if (!_didIteratorError2) {
-                  _context.next = 32;
+                  _context3.next = 32;
                   break;
                 }
 
                 throw _iteratorError2;
 
               case 32:
-                return _context.finish(29);
+                return _context3.finish(29);
 
               case 33:
-                return _context.finish(26);
+                return _context3.finish(26);
 
               case 34:
 
                 previous.push(val);
 
-                _context.next = 37;
+                _context3.next = 37;
                 return val;
 
               case 37:
                 _iteratorNormalCompletion = true;
-                _context.next = 6;
+                _context3.next = 6;
                 break;
 
               case 40:
-                _context.next = 46;
+                _context3.next = 46;
                 break;
 
               case 42:
-                _context.prev = 42;
-                _context.t1 = _context['catch'](4);
+                _context3.prev = 42;
+                _context3.t1 = _context3['catch'](4);
                 _didIteratorError = true;
-                _iteratorError = _context.t1;
+                _iteratorError = _context3.t1;
 
               case 46:
-                _context.prev = 46;
-                _context.prev = 47;
+                _context3.prev = 46;
+                _context3.prev = 47;
 
                 if (!_iteratorNormalCompletion && _iterator.return) {
                   _iterator.return();
                 }
 
               case 49:
-                _context.prev = 49;
+                _context3.prev = 49;
 
                 if (!_didIteratorError) {
-                  _context.next = 52;
+                  _context3.next = 52;
                   break;
                 }
 
                 throw _iteratorError;
 
               case 52:
-                return _context.finish(49);
+                return _context3.finish(49);
 
               case 53:
-                return _context.finish(46);
+                return _context3.finish(46);
 
               case 54:
               case 'end':
-                return _context.stop();
+                return _context3.stop();
             }
           }
-        }, _callee, this, [[4, 42, 46, 54], [11, 22, 26, 34], [27,, 29, 33], [47,, 49, 53]]);
+        }, _callee3, this, [[4, 42, 46, 54], [11, 22, 26, 34], [27,, 29, 33], [47,, 49, 53]]);
       })());
     }
 
@@ -381,104 +482,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* src/linq.js */
 
-    var getIterator = symbolOrString('getIterator');
-
-    window.Collection = function () {
-      function Collection(iterableOrGenerator) {
-        __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
-
-        this.iterable = iterableOrGenerator;
-      }
-
-      Collection.from = function (iterable) {
-        return new Collection(iterable);
-      };
-
-      Collection.prototype = function () {
-        function next() {
-          if (!this.started) {
-            this.started = true;
-            this.iterator = this[getIterator]();
-          }
-
-          return this.iterator.next();
-        }
-
-        function reset() {
-          this.started = false;
-        }
-
-        return { next: next, reset: reset };
-      }();
-
-      Collection.prototype[Symbol.iterator] = regeneratorRuntime.mark(function _callee2() {
-        var current;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                current = void 0;
-
-              case 1:
-                if (!true) {
-                  _context2.next = 10;
-                  break;
-                }
-
-                current = this.next();
-
-                if (!current.done) {
-                  _context2.next = 6;
-                  break;
-                }
-
-                this.reset();
-                return _context2.abrupt('break', 10);
-
-              case 6:
-                _context2.next = 8;
-                return current.value;
-
-              case 8:
-                _context2.next = 1;
-                break;
-
-              case 10:
-              case 'end':
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      });
-
-      Collection.prototype[getIterator] = function () {
-        var iter = this.iterable;
-
-        if (isGenerator(iter)) {
-          return iter();
-        } else {
-          return regeneratorRuntime.mark(function _callee3() {
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
-              while (1) {
-                switch (_context3.prev = _context3.next) {
-                  case 0:
-                    return _context3.delegateYield(iter, 't0', 1);
-
-                  case 1:
-                  case 'end':
-                    return _context3.stop();
-                }
-              }
-            }, _callee3, this);
-          })();
-        }
-      };
-
-      return Collection;
-    }();
-
-    function install() {
-      __assign(Collection.prototype, linqjs);
+    linqjs.install = function () {
+      window.Collection = Collection;
+      __assign(Collection.prototype, linqjsExports);
 
       // inheritance stuff (we don't want to implement stuff twice)
       OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
@@ -486,7 +492,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
-      Object.keys(linqjs).forEach(function (k) {
+      Object.keys(Collection.prototype).forEach(function (k) {
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
         var _iteratorError3 = undefined;
@@ -516,7 +522,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }
       });
-    }
+    };
 
     /* src/math.js */
 
@@ -2306,6 +2312,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, install: install, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
   });
 })();

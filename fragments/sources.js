@@ -1,4 +1,5 @@
 defineSourceFiles([
+  'src/collection.js',
   'src/helpers/defaults.js',
   'src/helpers/assert.js',
   'src/helpers/is.js',

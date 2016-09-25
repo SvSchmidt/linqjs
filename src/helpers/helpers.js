@@ -9,7 +9,7 @@
   }
 
   function __export (obj) {
-    __assign(linqjs, obj)
+    __assign(linqjsExports, obj)
   }
 
   function symbolOrString (str) {
@@ -63,7 +63,7 @@
       }
     }())
   }
-  
+
   function removeFromArray (arr, value) {
     __assertArray(arr)
 

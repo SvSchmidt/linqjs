@@ -26,6 +26,71 @@
     factory(window.linqjs = {}) // jshint ignore:line
   }
 }(function (linqjs) {
+  let linqjsExports = {}
+  let Collection
+
+
+/* src/collection.js */
+
+const getIterator = symbolOrString('getIterator')
+
+Collection = (function () {
+  function Collection (iterableOrGenerator) {
+    __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
+
+    this.iterable = iterableOrGenerator
+  }
+
+  Collection.from = function (iterable) {
+    return new Collection(iterable)
+  }
+
+  Collection.prototype = (function () {
+    function next () {
+      if (!this.started) {
+        this.started = true
+        this.iterator = this[getIterator]()
+      }
+
+      return this.iterator.next()
+    }
+
+    function reset () {
+      this.started = false
+    }
+
+    return { next, reset }
+  }())
+
+  Collection.prototype[Symbol.iterator] = function * () {
+    let current
+
+    while (true) {
+      current = this.next()
+
+      if (current.done) {
+        this.reset()
+        break
+      }
+
+      yield current.value
+    }
+  }
+
+  Collection.prototype[getIterator] = function () {
+    const iter = this.iterable
+
+    if (isGenerator(iter)) {
+      return iter()
+    } else {
+      return function * () {
+        yield* iter
+      }()
+    }
+  }
+
+  return Collection
+}())
 
 
 /* src/helpers/defaults.js */
@@ -154,7 +219,7 @@ function DefaultComparator (a, b) {
   }
 
   function __export (obj) {
-    __assign(linqjs, obj)
+    __assign(linqjsExports, obj)
   }
 
   function symbolOrString (str) {
@@ -208,7 +273,7 @@ function DefaultComparator (a, b) {
       }
     }())
   }
-  
+
   function removeFromArray (arr, value) {
     __assertArray(arr)
 
@@ -259,68 +324,9 @@ function DefaultComparator (a, b) {
 
 /* src/linq.js */
 
-const getIterator = symbolOrString('getIterator')
-
-window.Collection = (function () {
-  function Collection (iterableOrGenerator) {
-    __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
-
-    this.iterable = iterableOrGenerator
-  }
-
-  Collection.from = function (iterable) {
-    return new Collection(iterable)
-  }
-
-  Collection.prototype = (function () {
-    function next () {
-      if (!this.started) {
-        this.started = true
-        this.iterator = this[getIterator]()
-      }
-
-      return this.iterator.next()
-    }
-
-    function reset () {
-      this.started = false
-    }
-
-    return { next, reset }
-  }())
-
-  Collection.prototype[Symbol.iterator] = function * () {
-    let current
-
-    while (true) {
-      current = this.next()
-
-      if (current.done) {
-        this.reset()
-        break
-      }
-
-      yield current.value
-    }
-  }
-
-  Collection.prototype[getIterator] = function () {
-    const iter = this.iterable
-
-    if (isGenerator(iter)) {
-      return iter()
-    } else {
-      return function * () {
-        yield* iter
-      }()
-    }
-  }
-
-  return Collection
-}())
-
-function install () {
-  __assign(Collection.prototype, linqjs)
+linqjs.install = function () {
+  window.Collection = Collection
+  __assign(Collection.prototype, linqjsExports)
 
   // inheritance stuff (we don't want to implement stuff twice)
   OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
@@ -328,7 +334,7 @@ function install () {
 
   const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
 
-  Object.keys(linqjs).forEach(k => {
+  Object.keys(Collection.prototype).forEach(k => {
     for (let proto of protosToApplyWrappers) {
       proto[k] = function (...args) {
         return new Collection(this)[k](...args)
@@ -336,8 +342,6 @@ function install () {
     }
   })
 }
-
-
 
 
 /* src/math.js */
@@ -1394,6 +1398,6 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, install, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
 }))
 }())
