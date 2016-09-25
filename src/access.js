@@ -163,8 +163,6 @@ function resultOrDefault(collection, originalFn, predicateOrConstructor = x => t
   if (result) {
     return result
   }
-
-  return defaultVal
 }
 
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {
