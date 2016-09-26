@@ -206,7 +206,8 @@ module.exports = function (grunt) {
     build(this.data)
   })
 
-  grunt.registerTask('test', ['exec:coverage', 'mochacli'])
+  grunt.registerTask('test', ['mochacli'])
+  grunt.registerTask('coverage', ['exec:coverage'])
   grunt.registerTask('debug', ['clean:dist',
                                 'build:debug',
                                 'babel:dist',

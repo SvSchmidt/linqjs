@@ -11,42 +11,40 @@
 function ElementAt (index) {
   __assertIndexInRange(this, index)
 
-  const result = this.Skip(index).Take(1)[0]
+  const result = this.Skip(index).Take(1).ToArray()[0]
   this.reset()
 
   return result
 }
 
 /**
- * Take - Returns count elements of the sequence starting from the beginning as an array
+ * Take - Returns count elements of the sequence starting from the beginning as a new Collection
  *
  * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
  * @method
  * @memberof Collection
  * @instance
  * @param  {Number} count = 0 number of elements to be returned
- * @return {Array}
+ * @return {Collection}
  */
 function Take (count = 0) {
   __assert(isNumeric(count), 'First parameter must be numeric!')
 
   if (count <= 0) {
-    return []
+    return Collection.Empty
   }
 
-  let result = []
+  const iter = this.getIterator()
+  return new Collection(function * () {
+    let i = 0
+    for (let val of iter) {
+      yield val
 
-  for (let val of this) {
-    result.push(val)
-
-    if (result.length === count) {
-      break
+      if (++i === count) {
+        break
+      }
     }
-  }
-
-  this.reset()
-
-  return result
+  })
 }
 
 /**
@@ -81,12 +79,12 @@ function Skip (count = 0) {
  * @memberof Collection
  * @instance
  * @param  {Function} predicate The predicate of the form elem => boolean or (elem, index) => boolean
- * @return {Array}
+ * @return {Collection}
  */
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this
+  const iter = this.getIterator()
 
   const result = new Collection(function * () {
     let index = 0
@@ -100,7 +98,7 @@ function TakeWhile (predicate = (elem, index) => true) {
 
       endTake = true
     }
-  }).ToArray()
+  })
 
   this.reset()
 
@@ -120,9 +118,9 @@ function TakeWhile (predicate = (elem, index) => true) {
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this
+  const iter = this.getIterator()
 
-  const result = new Collection(function * () {
+  return new Collection(function * () {
     let index = 0
     let endSkip = false
 
@@ -135,20 +133,16 @@ function SkipWhile (predicate = (elem, index) => true) {
       yield val
     }
   })
-
-  this.reset()
-
-  return result
 }
 
 function First (predicate = x => true) {
   __assertFunction(predicate)
   __assertNotEmpty(this)
 
-  const result = this.SkipWhile(elem => !predicate(elem)).Take(1)
+  const result = this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0]
   this.reset()
 
-  return result[0]
+  return result
 }
 
 function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {

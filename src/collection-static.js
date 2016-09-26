@@ -29,6 +29,10 @@ function Range (start, count) {
   })
 }
 
-const collectionStatics = { from, Range }
+Object.defineProperty(Collection, 'Empty', {
+  get: function () { return Collection.from([]) }
+})
 
-__assign(Collection, collectionStatics)
+const collectionStaticMethods = { from, Range }
+
+__assign(Collection, collectionStaticMethods)

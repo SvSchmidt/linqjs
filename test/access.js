@@ -20,17 +20,17 @@ describe('access', function () {
   })
 
   describe('Take', function () {
-      it('should return the first count elements in the sequence', function () {
-        expect([1,2,3,4,5].Take(2)).to.be.deep.equal([1,2])
+      it('should return the first count elements in the sequence as a new sequence', function () {
+        expect([1,2,3,4,5].Take(2).ToArray()).to.be.deep.equal([1,2])
       })
 
       it('should return an empty sequence if count <= 0', function () {
-        expect([1,2,3,4,5].Take(-1)).to.be.deep.equal([])
-        expect([1,2,3,4,5].Take(0)).to.be.deep.equal([])
+        expect([1,2,3,4,5].Take(-1).ToArray()).to.be.deep.equal([])
+        expect([1,2,3,4,5].Take(0).ToArray()).to.be.deep.equal([])
       })
 
       it('should return the sequence itself if count >= sequence.length', function () {
-        expect([1,2,3,4,5].Take(10)).to.be.deep.equal([1,2,3,4,5])
+        expect([1,2,3,4,5].Take(10).ToArray()).to.be.deep.equal([1,2,3,4,5])
       })
   })
 
@@ -59,12 +59,12 @@ describe('access', function () {
 
   describe('TakeWhile', function () {
     it('should return all elements until the predicate stops matching', function () {
-      expect(people.TakeWhile(p => p.race !== 'hobbit')).to.be.deep.equal(people.Take(2))
-      expect([1,2,3,4,5,'foo'].TakeWhile(elem => !isNaN(parseFloat(elem)))).to.be.deep.equal([1,2,3,4,5])
+      expect(people.TakeWhile(p => p.race !== 'hobbit').ToArray()).to.be.deep.equal(people.Take(2).ToArray())
+      expect([1,2,3,4,5,'foo'].TakeWhile(elem => !isNaN(parseFloat(elem))).ToArray()).to.be.deep.equal([1,2,3,4,5])
     })
 
     it('should accept predicates using the index as second parameter', function () {
-      expect([1,2,3,4,5].TakeWhile((elem, index) => index < 3)).to.be.deep.equal([1,2,3])
+      expect([1,2,3,4,5].TakeWhile((elem, index) => index < 3).ToArray()).to.be.deep.equal([1,2,3])
     })
   })
 

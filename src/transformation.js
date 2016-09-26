@@ -64,10 +64,7 @@
   }
 
   function ToArray () {
-    const result = [...this]
-    this.reset()
-
-    return result
+    return [...this.getIterator()]
   }
 
   /**
