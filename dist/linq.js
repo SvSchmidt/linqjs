@@ -1380,6 +1380,25 @@ function GetComparatorFromKeySelector(selector) {
     return result;
 }
 
+
+
+
+/* src/order.js */
+
+// TODO: change implementation to use iterators!
+
+function Order() {
+  return this.OrderBy(DefaultComparator);
+}
+
+function OrderCompare() {
+  return this.sort(DefaultComparator);
+}
+
+function OrderDescending() {
+  return this.OrderByDescending(DefaultComparator);
+}
+
 /**
  * Orderes this linq collection using the given comparator.
  *
@@ -1412,7 +1431,7 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

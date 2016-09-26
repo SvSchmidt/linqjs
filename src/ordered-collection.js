@@ -78,34 +78,4 @@ function GetComparatorFromKeySelector(selector) {
     return result;
 }
 
-/**
- * Orderes this linq collection using the given comparator.
- *
- * @param {(T, T) => boolean} comparator Comparator to be used.
- * @param {any}               <T>        Element type.
- * @return {OrderedLinqCollection<T>} Ordered collection.
- */
-function OrderBy (comparator) {
-    if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-    }
-    __assertFunction(comparator);
-    return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
-};
-
-/**
- * Orderes this linq collection in descending order using the given comparator.
- *
- * @param {(T, T) => boolean} comparator Comparator to be used.
- * @param {any}               <T>        Element type.
- * @return {OrderedLinqCollection<T>} Ordered collection.
- */
-function OrderByDescending (comparator) {
-    if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-    }
-    __assertFunction(comparator);
-    return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
-};
-
-__export({ GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
+__export({ GetComparatorFromKeySelector, OrderedLinqCollection })
