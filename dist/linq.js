@@ -638,14 +638,14 @@ function ElementAt (index) {
 }
 
 /**
- * Take - Returns count elements of the sequence starting from the beginning as an array
+ * Take - Returns count elements of the sequence starting from the beginning as a new Collection
  *
  * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
  * @method
  * @memberof Collection
  * @instance
  * @param  {Number} count = 0 number of elements to be returned
- * @return {Array}
+ * @return {Collection}
  */
 function Take (count = 0) {
   __assert(isNumeric(count), 'First parameter must be numeric!')
@@ -811,7 +811,7 @@ function Single (predicate = x => true) {
   let index = 0
   let result
 
-  for (let val of this) {
+  for (let val of this.getIterator()) {
     if (predicate(val)) {
       result = val
       break
@@ -819,8 +819,6 @@ function Single (predicate = x => true) {
 
     index++
   }
-
-  this.reset()
 
   if (this.First(elem => predicate(elem) && !defaultEqualityCompareFn(elem, result))) {
     throw new Error('Sequence contains more than one element')

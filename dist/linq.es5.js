@@ -1192,14 +1192,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * Take - Returns count elements of the sequence starting from the beginning as an array
+     * Take - Returns count elements of the sequence starting from the beginning as a new Collection
      *
      * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
      * @method
      * @memberof Collection
      * @instance
      * @param  {Number} count = 0 number of elements to be returned
-     * @return {Array}
+     * @return {Collection}
      */
     function Take() {
       var count = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
@@ -1623,7 +1623,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator12 = this[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+        for (var _iterator12 = this.getIterator()[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
           var val = _step12.value;
 
           if (predicate(val)) {
@@ -1647,8 +1647,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }
       }
-
-      this.reset();
 
       if (this.First(function (elem) {
         return predicate(elem) && !defaultEqualityCompareFn(elem, result);

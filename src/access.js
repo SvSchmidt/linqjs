@@ -191,7 +191,7 @@ function Single (predicate = x => true) {
   let index = 0
   let result
 
-  for (let val of this) {
+  for (let val of this.getIterator()) {
     if (predicate(val)) {
       result = val
       break
@@ -199,8 +199,6 @@ function Single (predicate = x => true) {
 
     index++
   }
-
-  this.reset()
 
   if (this.First(elem => predicate(elem) && !defaultEqualityCompareFn(elem, result))) {
     throw new Error('Sequence contains more than one element')
