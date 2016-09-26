@@ -71,16 +71,25 @@ function Skip (count = 0) {
   return result
 }
 
-/**
- * TakeWhile - Takes elements from the beginning of a sequence until the predicate yields false for an element
+ /**
+ * TakeWhile - Takes elements from the beginning of a sequence while the predicate yields true
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
  * @method
  * @memberof Collection
  * @instance
- * @param  {Function} predicate The predicate of the form elem => boolean or (elem, index) => boolean
+ * @param  {Function} predicate The predicate of the form elem => boolean
  * @return {Collection}
- */
+  *//**
+  * TakeWhile - Takes elements from the beginning of a sequence while the predicate yields true. The index of the element can be used in the logic of the predicate function.
+  *
+  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @param  {Function} predicate The predicate of the form (elem, index) => boolean
+  * @return {Collection}
+  */
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
@@ -106,15 +115,47 @@ function TakeWhile (predicate = (elem, index) => true) {
 }
 
 /**
- * SkipWhile - Skips elements in the sequence until the predicate yields false and returns the remaining sequence
+* TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. TakeUntil behaves like calling TakeWhile with a negated predicate.
+*
+* @method
+* @memberof Collection
+* @instance
+* @param  {Function} predicate The predicate of the form elem => boolean
+* @return {Collection}
+ *//**
+ * TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. The index of the element can be used in the logic of the predicate function.
+ * TakeUntil behaves like calling TakeWhile with a negated predicate.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate The predicate of the form (elem, index) => boolean
+ * @return {Collection}
+ */
+function TakeUntil (predicate = (elem, index) => false) {
+  return this.TakeWhile((elem, index) => !predicate(elem, index))
+}
+
+ /**
+ * SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
  * @method
  * @memberof Collection
  * @instance
- * @param  {type} predicate The predicate of the form elem => boolean or (elem, index) => boolean
+ * @param  {type} predicate The predicate of the form elem => boolean
  * @return {Collection}
- */
+  *//**
+  * SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence. The index of the element
+  * can be used in the logic of the predicate function.
+  *
+  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @param  {type} predicate The predicate of the form (elem, index) => boolean
+  * @return {Collection}
+  */
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
@@ -133,6 +174,28 @@ function SkipWhile (predicate = (elem, index) => true) {
       yield val
     }
   })
+}
+
+/**
+* SkipUntil - Skips elements from the beginning of a sequence until the predicate yields true. SkipUntil behaves like calling SkipWhile with a negated predicate.
+*
+* @method
+* @memberof Collection
+* @instance
+* @param  {Function} predicate The predicate of the form elem => boolean
+* @return {Collection}
+ *//**
+ * SkipUntil - Takes elements from the beginning of a sequence until the predicate yields true. The index of the element can be used in the logic of the predicate function.
+ * SkipUntil behaves like calling SkipWhile with a negated predicate.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate The predicate of the form (elem, index) => boolean
+ * @return {Collection}
+ */
+function SkipUntil (predicate = (elem, index) => false) {
+  return this.SkipWhile((elem, index) => !predicate(elem, index))
 }
 
 function First (predicate = x => true) {
@@ -238,4 +301,4 @@ function DefaultIfEmpty (constructorOrValue) {
   return [getDefault(constructorOrValue)]
 }
 
-__export({ ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty })
+__export({ ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty })

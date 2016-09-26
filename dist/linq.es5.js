@@ -1141,6 +1141,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         * @method
         * @memberof Collection
         * @instance
+        * @param {Boolean} condition A condition to get checked before filtering the sequence
         * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
         * @return {Collection} The filtered collection or the original sequence if condition was falsy
         */
@@ -1363,15 +1364,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * TakeWhile - Takes elements from the beginning of a sequence until the predicate yields false for an element
-     *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param  {Function} predicate The predicate of the form elem => boolean or (elem, index) => boolean
-     * @return {Collection}
-     */
+    * TakeWhile - Takes elements from the beginning of a sequence while the predicate yields true
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @param  {Function} predicate The predicate of the form elem => boolean
+    * @return {Collection}
+     */ /**
+        * TakeWhile - Takes elements from the beginning of a sequence while the predicate yields true. The index of the element can be used in the logic of the predicate function.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param  {Function} predicate The predicate of the form (elem, index) => boolean
+        * @return {Collection}
+        */
     function TakeWhile() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
         return true;
@@ -1472,15 +1482,53 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * SkipWhile - Skips elements in the sequence until the predicate yields false and returns the remaining sequence
-     *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param  {type} predicate The predicate of the form elem => boolean or (elem, index) => boolean
-     * @return {Collection}
-     */
+    * TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. TakeUntil behaves like calling TakeWhile with a negated predicate.
+    *
+    * @method
+    * @memberof Collection
+    * @instance
+    * @param  {Function} predicate The predicate of the form elem => boolean
+    * @return {Collection}
+     */ /**
+        * TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. The index of the element can be used in the logic of the predicate function.
+        * TakeUntil behaves like calling TakeWhile with a negated predicate.
+        *
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param  {Function} predicate The predicate of the form (elem, index) => boolean
+        * @return {Collection}
+        */
+    function TakeUntil() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+        return false;
+      } : arguments[0];
+
+      return this.TakeWhile(function (elem, index) {
+        return !predicate(elem, index);
+      });
+    }
+
+    /**
+    * SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @param  {type} predicate The predicate of the form elem => boolean
+    * @return {Collection}
+     */ /**
+        * SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence. The index of the element
+        * can be used in the logic of the predicate function.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param  {type} predicate The predicate of the form (elem, index) => boolean
+        * @return {Collection}
+        */
     function SkipWhile() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
         return true;
@@ -1572,6 +1620,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }, _callee12, this, [[5, 19, 23, 31], [24,, 26, 30]]);
       }));
+    }
+
+    /**
+    * SkipUntil - Skips elements from the beginning of a sequence until the predicate yields true. SkipUntil behaves like calling SkipWhile with a negated predicate.
+    *
+    * @method
+    * @memberof Collection
+    * @instance
+    * @param  {Function} predicate The predicate of the form elem => boolean
+    * @return {Collection}
+     */ /**
+        * SkipUntil - Takes elements from the beginning of a sequence until the predicate yields true. The index of the element can be used in the logic of the predicate function.
+        * SkipUntil behaves like calling SkipWhile with a negated predicate.
+        *
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param  {Function} predicate The predicate of the form (elem, index) => boolean
+        * @return {Collection}
+        */
+    function SkipUntil() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+        return false;
+      } : arguments[0];
+
+      return this.SkipWhile(function (elem, index) {
+        return !predicate(elem, index);
+      });
     }
 
     function First() {
@@ -2430,7 +2506,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderCompare', OrderCompare), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);

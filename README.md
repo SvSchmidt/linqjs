@@ -71,11 +71,13 @@
 - [x] SingleOrDefault
 - [x] Skip
 - [x] SkipWhile
+- [x] SkipUntil*
 - [x] Sum
 - [x] Take
 - [ ] TakeExceptLast
 - [ ] TakeFromLast
 - [x] TakeWhile
+- [x] TakeUntil
 - [x] ThenBy
 - [ ] ThenByDescending
 - [x] ToArray

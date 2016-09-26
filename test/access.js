@@ -58,7 +58,7 @@ describe('access', function () {
   })
 
   describe('TakeWhile', function () {
-    it('should return all elements until the predicate stops matching', function () {
+    it('should return all elements while the predicate mathces', function () {
       expect(people.TakeWhile(p => p.race !== 'hobbit').ToArray()).to.be.deep.equal(people.Take(2).ToArray())
       expect([1,2,3,4,5,'foo'].TakeWhile(elem => !isNaN(parseFloat(elem))).ToArray()).to.be.deep.equal([1,2,3,4,5])
     })
@@ -69,13 +69,33 @@ describe('access', function () {
   })
 
   describe('SkipWhile', function () {
-    it('should skip all elements until the predicate stops matching', function () {
+    it('should skip all elements while the predicate matches', function () {
       expect(people.SkipWhile(p => p.race !== 'hobbit').ToArray()).to.be.deep.equal(people.Skip(2).ToArray())
       expect([1,2,3,4,5,'foo'].SkipWhile(elem => !isNaN(parseFloat(elem))).ToArray()).to.be.deep.equal(['foo'])
     })
 
     it('should accept predicates using the index as second parameter', function () {
       expect([1,2,3,4,5].SkipWhile((elem, index) => index < 3).ToArray()).to.be.deep.equal([4,5])
+    })
+  })
+
+  describe('TakeUntil', function () {
+    it('should take elements until the predicate yields false', function () {
+      expect([1,2,3,4,5].TakeUntil(x => x === 3).ToArray()).to.be.deep.equal([1,2])
+    })
+
+    it('should accept the index in the predicate', function () {
+      expect([1,2,3,4,5].TakeUntil((x, i) => i > 2).ToArray()).to.be.deep.equal([1,2,3])
+    })
+  })
+
+  describe('SkipUntil', function () {
+    it('should skip elements until the predicate yields false', function () {
+      expect([1,2,3,4,5].SkipUntil(x => x === 3).ToArray()).to.be.deep.equal([3,4,5])
+    })
+
+    it('should accept the index in the predicate', function () {
+      expect([1,2,3,4,5].SkipUntil((x, i) => i > 2).ToArray()).to.be.deep.equal([4,5])
     })
   })
 
