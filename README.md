@@ -12,6 +12,7 @@
 - [ ] Catch
 - [ ] Choice
 - [x] Concat
+- [x] ConditionalWhere*
 - [x] Contains
 - [x] Count
 - [ ] Cycle
@@ -92,3 +93,5 @@
 - [ ] Write
 - [ ] WriteLine
 - [x] Zip
+
+* Not an original method of Linq but pretty awesome though

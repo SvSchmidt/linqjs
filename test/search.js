@@ -25,13 +25,26 @@ describe('Search', function () {
     })
   })
 
-  describe('Where', function () {
+  describe('Where(predicate)', function () {
     it('should return a new sequence containing the elements matching the predicate', function () {
       expect([1,2,3].Where(x => x > 1).ToArray()).to.be.deep.equal([2,3])
     })
 
     it('should accept index-based predicate', function () {
       expect([1,2,3,4,5].Where((elem, index) => index > 1).ToArray()).to.be.deep.equal([3,4,5])
+    })
+  })
+
+  describe('ConditionalWhere(condition, predicate)', function () {
+    const arr = [1,2,3,4,5]
+
+    it('should behave like Where if the condition is true', function () {
+      expect(arr.ConditionalWhere(true, x => x > 1).ToArray()).to.be.deep.equal(arr.Where(x => x > 1).ToArray())
+      expect(arr.ConditionalWhere(true, (x, i) => i > 1).ToArray()).to.be.deep.equal(arr.Where((x, i) => i > 1).ToArray())
+    })
+
+    it('should return the original sequence (without filtering) if the condition is falsy (e.g. gets ignored)', function () {
+      expect(arr.ConditionalWhere(false, x => x > 1).ToArray()).to.be.deep.equal(arr.ToArray())
     })
   })
 

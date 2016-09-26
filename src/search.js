@@ -13,10 +13,29 @@ function Contains (elem) {
   return result
 }
 
+ /**
+ * Where - Filters a sequence based on a predicate function
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
+ * @return {Collection} The filtered collection
+  *//**
+  * Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
+  *
+  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+  * @return {Collection} The filtered collection
+  */
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this
+  const iter = this.getIterator()
 
   const result = new Collection(function * () {
     let index = 0
@@ -30,9 +49,34 @@ function Where (predicate = (elem, index) => true) {
     }
   })
 
-  this.reset()
-
   return result
+}
+
+/**
+* ConditionalWhere - Filters a sequence based on a predicate function if the condition is true.
+*
+* @method
+* @memberof Collection
+* @instance
+* @param {Boolean} condition A condition to get checked before filtering the sequence
+* @param  {Function} predicate A function of the form elem => boolean to filter the sequence
+* @return {Collection} The filtered collection or the original sequence if condition was falsy
+ *//**
+ * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Boolean} condition A condition to get checked before filtering the sequence
+ * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+ * @return {Collection} The filtered collection or the original sequence if condition was falsy
+ */
+function ConditionalWhere(condition, predicate) {
+  if (condition) {
+    return this.Where(predicate)
+  } else {
+    return this
+  }
 }
 
 /**
@@ -86,4 +130,4 @@ function All (predicate = elem => true) {
   return !this.Any(x => !predicate(x))
 }
 
-__export({ Where, Count, Any, All })
+__export({ Where, ConditionalWhere, Count, Any, All })

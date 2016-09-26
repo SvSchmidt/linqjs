@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: collection-static.js</title>
+    <title>JSDoc: Source: order.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: collection-static.js</h1>
+    <h1 class="page-title">Source: order.js</h1>
 
     
 
@@ -26,44 +26,51 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Same as new Collection()
- * @function from
- * @memberof Collection
- * @static
- * @return {Collection}
- */
-function from (iterable) {
-  return new Collection(iterable)
+            <pre class="prettyprint source linenums"><code>// TODO: change implementation to use iterators!
+
+function Order() {
+  return this.OrderBy(DefaultComparator);
+}
+
+function OrderCompare() {
+  return this.sort(DefaultComparator);
+}
+
+function OrderDescending() {
+  return this.OrderByDescending(DefaultComparator);
 }
 
 /**
- * Creates a sequence of count values starting with start including
- * @function Range
- * @memberof Collection
- * @static
- * @param  {Number} start The value to start with, e.g. 1
- * @param  {Number} count The amount of numbers to generate from start
- * @return {Collection}       A new collection with the number range
+ * Orderes this linq collection using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               &lt;T>        Element type.
+ * @return {OrderedLinqCollection&lt;T>} Ordered collection.
  */
-function Range (start, count) {
-  __assertNumberBetween(count, 0, Infinity)
-
-  return new Collection(function * () {
-    let i = start
-    while (i != count + start) {
-      yield i++
+function OrderBy (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
     }
-  })
-}
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
+};
 
-Object.defineProperty(Collection, 'Empty', {
-  get: function () { return Collection.from([]) }
-})
+/**
+ * Orderes this linq collection in descending order using the given comparator.
+ *
+ * @param {(T, T) => boolean} comparator Comparator to be used.
+ * @param {any}               &lt;T>        Element type.
+ * @return {OrderedLinqCollection&lt;T>} Ordered collection.
+ */
+function OrderByDescending (comparator) {
+    if (isString(comparator)) {
+        comparator = GetComparatorFromKeySelector(comparator);
+    }
+    __assertFunction(comparator);
+    return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
+};
 
-const collectionStaticMethods = { from, Range }
-
-__assign(Collection, collectionStaticMethods)
+__export({ Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending })
 </code></pre>
         </article>
     </section>

@@ -31,3 +31,16 @@ describe('Collection static methods', function () {
     })
   })
 })
+
+describe('Collection static properties', function () {
+  describe('Collection.Empty', function () {
+    it('should be an empty Collection', function () {
+      expect(Collection.Empty.ToArray()).to.be.deep.equal([])
+    })
+
+    it('should have no setter and therefore prohibit overwriting its value', function () {
+      Collection.Empty = null
+      expect(Collection.Empty).not.to.be.null
+    })
+  })
+})
