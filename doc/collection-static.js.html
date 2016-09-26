@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: collection-static.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,52 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: collection-static.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Same as new Collection()
+ * @function from
+ * @memberof Collection
+ * @static
+ * @return {Collection}
+ */
+function from (iterable) {
+  return new Collection(iterable)
+}
 
+/**
+ * Creates a sequence of count values starting with start including
+ * @function Range
+ * @memberof Collection
+ * @static
+ * @param  {Number} start The value to start with, e.g. 1
+ * @param  {Number} count The amount of numbers to generate from start
+ * @return {Collection}       A new collection with the number range
+ */
+function Range (start, count) {
+  __assertNumberBetween(count, 0, Infinity)
 
-    <h3> </h3>
+  return new Collection(function * () {
+    let i = start
+    while (i != count + start) {
+      yield i++
+    }
+  })
+}
 
+const collectionStatics = { from, Range }
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+__assign(Collection, collectionStatics)
+</code></pre>
+        </article>
+    </section>
 
 
 

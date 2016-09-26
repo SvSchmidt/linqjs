@@ -33,6 +33,12 @@
 /* src/collection.js */
 
 Collection = (function () {
+  /**
+   * Collection - Represents a collection of iterable values
+   *
+   * @class
+   * @param  {Iterable} iterable A iterable to create a collection of, e.g. an array
+   */
   function Collection (iterableOrGenerator) {
     __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
 
