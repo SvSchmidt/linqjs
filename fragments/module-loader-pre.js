@@ -1,17 +1,18 @@
-(function (factory) {
+(function (Collection) {
   try {
     if (typeof define === 'function' && define.amd) {
       // AMD asynchronous module definition (e.g. requirejs)
-      define(['require', 'exports'], factory)
+      define(['require', 'exports'], function () { return Collection })
     } else if (exports && module && module.exports) {
       // CommonJS/Node.js where module.exports is for nodejs
-      factory(exports || module.exports)
+      exports = module.exports = Collection
     }
   } catch (err) {
     // no module loader (simple <script>-tag) -> assign Maybe directly to the global object
-    // -> (0, eval)('this') is a robust way for getting a reference to the global object
-    factory(window.linqjs = {}) // jshint ignore:line
+    window.Collection = Collection
   }
-}(function (linqjs) {
+}(function () {
+  // We will apply any public methods to linqjsExports and apply them to the Collection.prototype later
   let linqjsExports = {}
+  // Collection is the object we're gonna 'build' and return later
   let Collection

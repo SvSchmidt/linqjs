@@ -1,4 +1,4 @@
-require('./base')
+const Collection = require('../dist/linq')
 const expect = require('chai').expect
 
 describe('Collection static methods', function () {

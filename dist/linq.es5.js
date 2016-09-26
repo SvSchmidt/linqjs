@@ -18,35 +18,38 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   var window = this || (0, eval)('this'); // jshint ignore:line
   var DEBUG = true;
 
-  (function (factory) {
+  (function (Collection) {
     try {
       if (typeof define === 'function' && define.amd) {
         // AMD asynchronous module definition (e.g. requirejs)
-        define(['require', 'exports'], factory);
+        define(['require', 'exports'], function () {
+          return Collection;
+        });
       } else if (exports && module && module.exports) {
         // CommonJS/Node.js where module.exports is for nodejs
-        factory(exports || module.exports);
+        exports = module.exports = Collection;
       }
     } catch (err) {
       // no module loader (simple <script>-tag) -> assign Maybe directly to the global object
-      // -> (0, eval)('this') is a robust way for getting a reference to the global object
-      factory(window.linqjs = {}); // jshint ignore:line
+      window.Collection = Collection;
     }
-  })(function (linqjs) {
+  })(function () {
     var _export;
 
+    // We will apply any public methods to linqjsExports and apply them to the Collection.prototype later
     var linqjsExports = {};
+    // Collection is the object we're gonna 'build' and return later
     var Collection = void 0;
 
     /* src/collection.js */
 
+    /**
+     * Collection - Represents a collection of iterable values
+     *
+     * @class
+     * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
+     */
     Collection = function () {
-      /**
-       * Collection - Represents a collection of iterable values
-       *
-       * @class
-       * @param  {Iterable} iterable A iterable to create a collection of, e.g. an array
-       */
       function Collection(iterableOrGenerator) {
         __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
 
@@ -138,10 +141,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* src/collection-static.js */
 
+    /**
+     * Same as new Collection()
+     * @function from
+     * @memberof Collection
+     * @static
+     * @return {Collection}
+     */
     function from(iterable) {
       return new Collection(iterable);
     }
 
+    /**
+     * Creates a sequence of count values starting with start including
+     * @function Range
+     * @memberof Collection
+     * @static
+     * @param  {Number} start The value to start with, e.g. 1
+     * @param  {Number} count The amount of numbers to generate from start
+     * @return {Collection}       A new collection with the number range
+     */
     function Range(start, count) {
       __assertNumberBetween(count, 0, Infinity);
 
@@ -525,50 +544,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return fn.length;
     }
 
-    /* src/linq.js */
-
-    linqjs.install = function () {
-      window.Collection = Collection;
-      __assign(Collection.prototype, linqjsExports);
-
-      // inheritance stuff (we don't want to implement stuff twice)
-      OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
-      OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
-
-      var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
-
-      Object.keys(Collection.prototype).forEach(function (k) {
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
-
-        try {
-          for (var _iterator3 = protosToApplyWrappers[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var proto = _step3.value;
-
-            proto[k] = function () {
-              var _ref;
-
-              return (_ref = new Collection(this))[k].apply(_ref, arguments);
-            };
-          }
-        } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
-            }
-          } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
-            }
-          }
-        }
-      });
-    };
-
     /* src/math.js */
 
     function Min() {
@@ -667,40 +642,40 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var firstIter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee6() {
-        var secondIter, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, firstValue, firstKey, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, secondValue, secondKey;
+        var secondIter, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, firstValue, firstKey, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, secondValue, secondKey;
 
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
                 secondIter = second.getIterator();
-                _iteratorNormalCompletion4 = true;
-                _didIteratorError4 = false;
-                _iteratorError4 = undefined;
+                _iteratorNormalCompletion3 = true;
+                _didIteratorError3 = false;
+                _iteratorError3 = undefined;
                 _context6.prev = 4;
-                _iterator4 = firstIter[Symbol.iterator]();
+                _iterator3 = firstIter[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
+                if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
                   _context6.next = 40;
                   break;
                 }
 
-                firstValue = _step4.value;
+                firstValue = _step3.value;
                 firstKey = firstKeySelector(firstValue);
-                _iteratorNormalCompletion5 = true;
-                _didIteratorError5 = false;
-                _iteratorError5 = undefined;
+                _iteratorNormalCompletion4 = true;
+                _didIteratorError4 = false;
+                _iteratorError4 = undefined;
                 _context6.prev = 12;
-                _iterator5 = secondIter[Symbol.iterator]();
+                _iterator4 = secondIter[Symbol.iterator]();
 
               case 14:
-                if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
+                if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
                   _context6.next = 23;
                   break;
                 }
 
-                secondValue = _step5.value;
+                secondValue = _step4.value;
                 secondKey = secondKeySelector(secondValue);
 
                 if (!keyEqualityCompareFn(firstKey, secondKey)) {
@@ -712,7 +687,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return resultSelectorFn(firstValue, secondValue);
 
               case 20:
-                _iteratorNormalCompletion5 = true;
+                _iteratorNormalCompletion4 = true;
                 _context6.next = 14;
                 break;
 
@@ -723,26 +698,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 25:
                 _context6.prev = 25;
                 _context6.t0 = _context6['catch'](12);
-                _didIteratorError5 = true;
-                _iteratorError5 = _context6.t0;
+                _didIteratorError4 = true;
+                _iteratorError4 = _context6.t0;
 
               case 29:
                 _context6.prev = 29;
                 _context6.prev = 30;
 
-                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                  _iterator5.return();
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                  _iterator4.return();
                 }
 
               case 32:
                 _context6.prev = 32;
 
-                if (!_didIteratorError5) {
+                if (!_didIteratorError4) {
                   _context6.next = 35;
                   break;
                 }
 
-                throw _iteratorError5;
+                throw _iteratorError4;
 
               case 35:
                 return _context6.finish(32);
@@ -751,7 +726,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return _context6.finish(29);
 
               case 37:
-                _iteratorNormalCompletion4 = true;
+                _iteratorNormalCompletion3 = true;
                 _context6.next = 6;
                 break;
 
@@ -762,26 +737,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 42:
                 _context6.prev = 42;
                 _context6.t1 = _context6['catch'](4);
-                _didIteratorError4 = true;
-                _iteratorError4 = _context6.t1;
+                _didIteratorError3 = true;
+                _iteratorError3 = _context6.t1;
 
               case 46:
                 _context6.prev = 46;
                 _context6.prev = 47;
 
-                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                  _iterator4.return();
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
                 }
 
               case 49:
                 _context6.prev = 49;
 
-                if (!_didIteratorError4) {
+                if (!_didIteratorError3) {
                   _context6.next = 52;
                   break;
                 }
 
-                throw _iteratorError4;
+                throw _iteratorError3;
 
               case 52:
                 return _context6.finish(49);
@@ -815,25 +790,25 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var firstIter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee7() {
-        var _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, val;
+        var _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, val;
 
         return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                _iteratorNormalCompletion6 = true;
-                _didIteratorError6 = false;
-                _iteratorError6 = undefined;
+                _iteratorNormalCompletion5 = true;
+                _didIteratorError5 = false;
+                _iteratorError5 = undefined;
                 _context7.prev = 3;
-                _iterator6 = firstIter[Symbol.iterator]();
+                _iterator5 = firstIter[Symbol.iterator]();
 
               case 5:
-                if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
+                if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
                   _context7.next = 13;
                   break;
                 }
 
-                val = _step6.value;
+                val = _step5.value;
 
                 if (second.Contains(val)) {
                   _context7.next = 10;
@@ -844,7 +819,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return val;
 
               case 10:
-                _iteratorNormalCompletion6 = true;
+                _iteratorNormalCompletion5 = true;
                 _context7.next = 5;
                 break;
 
@@ -855,26 +830,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 15:
                 _context7.prev = 15;
                 _context7.t0 = _context7['catch'](3);
-                _didIteratorError6 = true;
-                _iteratorError6 = _context7.t0;
+                _didIteratorError5 = true;
+                _iteratorError5 = _context7.t0;
 
               case 19:
                 _context7.prev = 19;
                 _context7.prev = 20;
 
-                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                  _iterator6.return();
+                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                  _iterator5.return();
                 }
 
               case 22:
                 _context7.prev = 22;
 
-                if (!_didIteratorError6) {
+                if (!_didIteratorError5) {
                   _context7.next = 25;
                   break;
                 }
 
-                throw _iteratorError6;
+                throw _iteratorError5;
 
               case 25:
                 return _context7.finish(22);
@@ -910,26 +885,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var firstIter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee8() {
-        var secondIter, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _iterator7, _step7, firstVal, secondNext;
+        var secondIter, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, firstVal, secondNext;
 
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
                 secondIter = second.getIterator();
-                _iteratorNormalCompletion7 = true;
-                _didIteratorError7 = false;
-                _iteratorError7 = undefined;
+                _iteratorNormalCompletion6 = true;
+                _didIteratorError6 = false;
+                _iteratorError6 = undefined;
                 _context8.prev = 4;
-                _iterator7 = firstIter[Symbol.iterator]();
+                _iterator6 = firstIter[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
+                if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
                   _context8.next = 16;
                   break;
                 }
 
-                firstVal = _step7.value;
+                firstVal = _step6.value;
                 secondNext = secondIter.next();
 
                 if (!secondNext.done) {
@@ -944,7 +919,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return resultSelectorFn(firstVal, secondNext.value);
 
               case 13:
-                _iteratorNormalCompletion7 = true;
+                _iteratorNormalCompletion6 = true;
                 _context8.next = 6;
                 break;
 
@@ -955,26 +930,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 18:
                 _context8.prev = 18;
                 _context8.t0 = _context8['catch'](4);
-                _didIteratorError7 = true;
-                _iteratorError7 = _context8.t0;
+                _didIteratorError6 = true;
+                _iteratorError6 = _context8.t0;
 
               case 22:
                 _context8.prev = 22;
                 _context8.prev = 23;
 
-                if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                  _iterator7.return();
+                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                  _iterator6.return();
                 }
 
               case 25:
                 _context8.prev = 25;
 
-                if (!_didIteratorError7) {
+                if (!_didIteratorError6) {
                   _context8.next = 28;
                   break;
                 }
 
-                throw _iteratorError7;
+                throw _iteratorError6;
 
               case 28:
                 return _context8.finish(25);
@@ -1000,13 +975,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function Contains(elem) {
       var result = false;
 
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator8 = this[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var val = _step8.value;
+        for (var _iterator7 = this[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var val = _step7.value;
 
           if (defaultEqualityCompareFn(elem, val)) {
             result = true;
@@ -1014,16 +989,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }
       } catch (err) {
-        _didIteratorError8 = true;
-        _iteratorError8 = err;
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
           }
         } finally {
-          if (_didIteratorError8) {
-            throw _iteratorError8;
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
@@ -1043,26 +1018,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var iter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee9() {
-        var index, _iteratorNormalCompletion9, _didIteratorError9, _iteratorError9, _iterator9, _step9, val;
+        var index, _iteratorNormalCompletion8, _didIteratorError8, _iteratorError8, _iterator8, _step8, val;
 
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
                 index = 0;
-                _iteratorNormalCompletion9 = true;
-                _didIteratorError9 = false;
-                _iteratorError9 = undefined;
+                _iteratorNormalCompletion8 = true;
+                _didIteratorError8 = false;
+                _iteratorError8 = undefined;
                 _context9.prev = 4;
-                _iterator9 = iter[Symbol.iterator]();
+                _iterator8 = iter[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done) {
+                if (_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done) {
                   _context9.next = 15;
                   break;
                 }
 
-                val = _step9.value;
+                val = _step8.value;
 
                 if (!predicate(val, index)) {
                   _context9.next = 11;
@@ -1077,7 +1052,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 index++;
 
               case 12:
-                _iteratorNormalCompletion9 = true;
+                _iteratorNormalCompletion8 = true;
                 _context9.next = 6;
                 break;
 
@@ -1088,26 +1063,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 17:
                 _context9.prev = 17;
                 _context9.t0 = _context9['catch'](4);
-                _didIteratorError9 = true;
-                _iteratorError9 = _context9.t0;
+                _didIteratorError8 = true;
+                _iteratorError8 = _context9.t0;
 
               case 21:
                 _context9.prev = 21;
                 _context9.prev = 22;
 
-                if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                  _iterator9.return();
+                if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                  _iterator8.return();
                 }
 
               case 24:
                 _context9.prev = 24;
 
-                if (!_didIteratorError9) {
+                if (!_didIteratorError8) {
                   _context9.next = 27;
                   break;
                 }
 
-                throw _iteratorError9;
+                throw _iteratorError8;
 
               case 27:
                 return _context9.finish(24);
@@ -1195,6 +1170,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      * ElementAt - Returns the element at the given index
      *
      * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
      * @param  {Number} index
      * @return {any}
      */
@@ -1208,9 +1186,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * Take - Returns count elements of the sequence starting from the beginning
+     * Take - Returns count elements of the sequence starting from the beginning as an array
      *
      * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
      * @param  {Number} count = 0 number of elements to be returned
      * @return {Array}
      */
@@ -1225,13 +1206,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var result = [];
 
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
       try {
-        for (var _iterator10 = this[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var val = _step10.value;
+        for (var _iterator9 = this[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var val = _step9.value;
 
           result.push(val);
 
@@ -1240,16 +1221,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }
       } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion10 && _iterator10.return) {
-            _iterator10.return();
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
           }
         } finally {
-          if (_didIteratorError10) {
-            throw _iteratorError10;
+          if (_didIteratorError9) {
+            throw _iteratorError9;
           }
         }
       }
@@ -1260,11 +1241,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * Skip - Skips count elements of the sequence and returns the remaining ones
+     * Skip - Skips count elements of the sequence and returns the remaining sequence
      *
      * @see https://msdn.microsoft.com/de-de/library/bb358985(v=vs.110).aspx
-     * @param  {Nu,ber count = 0 amount of elements to skip
-     * @return {Array}
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param  {Number} count=0 amount of elements to skip
+     * @return {Collection}
      */
     function Skip() {
       var count = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
@@ -1288,7 +1272,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      * TakeWhile - Takes elements from the beginning of a sequence until the predicate yields false for an element
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
-     * @param  {Function} predicate     the predicate of the form elem => boolean or (elem, index) => boolean
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param  {Function} predicate The predicate of the form elem => boolean or (elem, index) => boolean
      * @return {Array}
      */
     function TakeWhile() {
@@ -1298,10 +1285,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       __assertFunction(predicate);
 
-      var _self = this;
+      var iter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee10() {
-        var index, endTake, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, val;
+        var index, endTake, _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, val;
 
         return regeneratorRuntime.wrap(function _callee10$(_context10) {
           while (1) {
@@ -1309,19 +1296,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 0:
                 index = 0;
                 endTake = false;
-                _iteratorNormalCompletion11 = true;
-                _didIteratorError11 = false;
-                _iteratorError11 = undefined;
+                _iteratorNormalCompletion10 = true;
+                _didIteratorError10 = false;
+                _iteratorError10 = undefined;
                 _context10.prev = 5;
-                _iterator11 = _self[Symbol.iterator]();
+                _iterator10 = iter[Symbol.iterator]();
 
               case 7:
-                if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
+                if (_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done) {
                   _context10.next = 17;
                   break;
                 }
 
-                val = _step11.value;
+                val = _step10.value;
 
                 if (!(!endTake && predicate(val, index++))) {
                   _context10.next = 13;
@@ -1339,7 +1326,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 endTake = true;
 
               case 14:
-                _iteratorNormalCompletion11 = true;
+                _iteratorNormalCompletion10 = true;
                 _context10.next = 7;
                 break;
 
@@ -1350,26 +1337,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 19:
                 _context10.prev = 19;
                 _context10.t0 = _context10['catch'](5);
-                _didIteratorError11 = true;
-                _iteratorError11 = _context10.t0;
+                _didIteratorError10 = true;
+                _iteratorError10 = _context10.t0;
 
               case 23:
                 _context10.prev = 23;
                 _context10.prev = 24;
 
-                if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                  _iterator11.return();
+                if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                  _iterator10.return();
                 }
 
               case 26:
                 _context10.prev = 26;
 
-                if (!_didIteratorError11) {
+                if (!_didIteratorError10) {
                   _context10.next = 29;
                   break;
                 }
 
-                throw _iteratorError11;
+                throw _iteratorError10;
 
               case 29:
                 return _context10.finish(26);
@@ -1391,11 +1378,14 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * SkipWhile - Skips elements in the array until the predicate yields false and returns the remaining elements
+     * SkipWhile - Skips elements in the sequence until the predicate yields false and returns the remaining sequence
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
-     * @param  {type} predicate         the predicate of the form elem => boolean or (elem, index) => boolean
-     * @return {Array}
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param  {type} predicate The predicate of the form elem => boolean or (elem, index) => boolean
+     * @return {Collection}
      */
     function SkipWhile() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
@@ -1407,7 +1397,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var iter = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee11() {
-        var index, endSkip, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, val;
+        var index, endSkip, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, val;
 
         return regeneratorRuntime.wrap(function _callee11$(_context11) {
           while (1) {
@@ -1415,19 +1405,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 0:
                 index = 0;
                 endSkip = false;
-                _iteratorNormalCompletion12 = true;
-                _didIteratorError12 = false;
-                _iteratorError12 = undefined;
+                _iteratorNormalCompletion11 = true;
+                _didIteratorError11 = false;
+                _iteratorError11 = undefined;
                 _context11.prev = 5;
-                _iterator12 = iter[Symbol.iterator]();
+                _iterator11 = iter[Symbol.iterator]();
 
               case 7:
-                if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
+                if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
                   _context11.next = 17;
                   break;
                 }
 
-                val = _step12.value;
+                val = _step11.value;
 
                 if (!(!endSkip && predicate(val, index++))) {
                   _context11.next = 11;
@@ -1443,7 +1433,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 return val;
 
               case 14:
-                _iteratorNormalCompletion12 = true;
+                _iteratorNormalCompletion11 = true;
                 _context11.next = 7;
                 break;
 
@@ -1454,26 +1444,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 19:
                 _context11.prev = 19;
                 _context11.t0 = _context11['catch'](5);
-                _didIteratorError12 = true;
-                _iteratorError12 = _context11.t0;
+                _didIteratorError11 = true;
+                _iteratorError11 = _context11.t0;
 
               case 23:
                 _context11.prev = 23;
                 _context11.prev = 24;
 
-                if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                  _iterator12.return();
+                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                  _iterator11.return();
                 }
 
               case 26:
                 _context11.prev = 26;
 
-                if (!_didIteratorError12) {
+                if (!_didIteratorError11) {
                   _context11.next = 29;
                   break;
                 }
 
-                throw _iteratorError12;
+                throw _iteratorError11;
 
               case 29:
                 return _context11.finish(26);
@@ -1581,13 +1571,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var index = 0;
       var result = void 0;
 
-      var _iteratorNormalCompletion13 = true;
-      var _didIteratorError13 = false;
-      var _iteratorError13 = undefined;
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator13 = this[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-          var val = _step13.value;
+        for (var _iterator12 = this[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var val = _step12.value;
 
           if (predicate(val)) {
             result = val;
@@ -1597,16 +1587,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           index++;
         }
       } catch (err) {
-        _didIteratorError13 = true;
-        _iteratorError13 = err;
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion13 && _iterator13.return) {
-            _iterator13.return();
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
           }
         } finally {
-          if (_didIteratorError13) {
-            throw _iteratorError13;
+          if (_didIteratorError12) {
+            throw _iteratorError12;
           }
         }
       }
@@ -1632,17 +1622,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     /**
-     * DefaultIfEmpty - Returns the array or a new array containing the provided constructors default if empty
+     * DefaultIfEmpty - Returns a new sequence containing the provided constructors default if the sequence is empty or the sequence itself if not
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
      * @param {Function} constructor A native constructor to get the default for, e.g. Number
-     * @return {Array}
+     * @return {Collection}
      */ /**
-        * DefaultIfEmpty - Returns the array or a new array containing the provided default value if empty
+        * DefaultIfEmpty - Returns the sequence or a new sequence containing the provided default value if it is empty
         *
         * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
         * @param {any} value The default vlaue
-        * @return {Array}
+        * @return {Collection}
         */
     function DefaultIfEmpty(constructorOrValue) {
       if (!isEmpty(this)) {
@@ -1935,7 +1931,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _self = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee12() {
-        var _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, val;
+        var _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, val;
 
         return regeneratorRuntime.wrap(function _callee12$(_context12) {
           while (1) {
@@ -1943,24 +1939,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 0:
                 _self.reset();
 
-                _iteratorNormalCompletion14 = true;
-                _didIteratorError14 = false;
-                _iteratorError14 = undefined;
+                _iteratorNormalCompletion13 = true;
+                _didIteratorError13 = false;
+                _iteratorError13 = undefined;
                 _context12.prev = 4;
-                _iterator14 = _self[Symbol.iterator]();
+                _iterator13 = _self[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
+                if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
                   _context12.next = 13;
                   break;
                 }
 
-                val = _step14.value;
+                val = _step13.value;
                 _context12.next = 10;
                 return mapFn(val);
 
               case 10:
-                _iteratorNormalCompletion14 = true;
+                _iteratorNormalCompletion13 = true;
                 _context12.next = 6;
                 break;
 
@@ -1971,26 +1967,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               case 15:
                 _context12.prev = 15;
                 _context12.t0 = _context12['catch'](4);
-                _didIteratorError14 = true;
-                _iteratorError14 = _context12.t0;
+                _didIteratorError13 = true;
+                _iteratorError13 = _context12.t0;
 
               case 19:
                 _context12.prev = 19;
                 _context12.prev = 20;
 
-                if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                  _iterator14.return();
+                if (!_iteratorNormalCompletion13 && _iterator13.return) {
+                  _iterator13.return();
                 }
 
               case 22:
                 _context12.prev = 22;
 
-                if (!_didIteratorError14) {
+                if (!_didIteratorError13) {
                   _context12.next = 25;
                   break;
                 }
 
-                throw _iteratorError14;
+                throw _iteratorError13;
 
               case 25:
                 return _context12.finish(22);
@@ -2071,13 +2067,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var input = this.ToArray();
       var elementSelector = elementSelectorOrKeyComparer;
 
-      var _iteratorNormalCompletion15 = true;
-      var _didIteratorError15 = false;
-      var _iteratorError15 = undefined;
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
       try {
         var _loop = function _loop() {
-          var value = _step15.value;
+          var value = _step14.value;
 
           var key = keySelector(value);
           var elem = elementSelector(value);
@@ -2091,20 +2087,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           result.set(key, elem);
         };
 
-        for (var _iterator15 = input[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+        for (var _iterator14 = input[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
           _loop();
         }
       } catch (err) {
-        _didIteratorError15 = true;
-        _iteratorError15 = err;
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion15 && _iterator15.return) {
-            _iterator15.return();
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
           }
         } finally {
-          if (_didIteratorError15) {
-            throw _iteratorError15;
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
@@ -2334,5 +2330,49 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* Export public interface */
     __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, Skip: Skip, SkipWhile: SkipWhile, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
-  });
+    // Install linqjs
+    // [1] Assign exports to the prototype of Collection
+    __assign(Collection.prototype, linqjsExports);
+
+    // [2] Let OrderedCollection inherit from Collection (we don't want to implement stuff twice)
+    OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
+    OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
+
+    // [3] Apply wrapper functions to selected prototypes which are iterable (Array, Set, Map etc.)
+    var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
+
+    Object.keys(Collection.prototype).forEach(function (k) {
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
+
+      try {
+        for (var _iterator15 = protosToApplyWrappers[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var proto = _step15.value;
+
+          proto[k] = function () {
+            var _ref;
+
+            return (_ref = new Collection(this))[k].apply(_ref, arguments);
+          };
+        }
+      } catch (err) {
+        _didIteratorError15 = true;
+        _iteratorError15 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion15 && _iterator15.return) {
+            _iterator15.return();
+          }
+        } finally {
+          if (_didIteratorError15) {
+            throw _iteratorError15;
+          }
+        }
+      }
+    });
+
+    // [4] Return final Collection class
+    return Collection;
+  }());
 })();

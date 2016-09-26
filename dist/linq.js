@@ -11,34 +11,35 @@
   const window = this || (0, eval)('this'); // jshint ignore:line
   const DEBUG = true;
 
-(function (factory) {
+(function (Collection) {
   try {
     if (typeof define === 'function' && define.amd) {
       // AMD asynchronous module definition (e.g. requirejs)
-      define(['require', 'exports'], factory)
+      define(['require', 'exports'], function () { return Collection })
     } else if (exports && module && module.exports) {
       // CommonJS/Node.js where module.exports is for nodejs
-      factory(exports || module.exports)
+      exports = module.exports = Collection
     }
   } catch (err) {
     // no module loader (simple <script>-tag) -> assign Maybe directly to the global object
-    // -> (0, eval)('this') is a robust way for getting a reference to the global object
-    factory(window.linqjs = {}) // jshint ignore:line
+    window.Collection = Collection
   }
-}(function (linqjs) {
+}(function () {
+  // We will apply any public methods to linqjsExports and apply them to the Collection.prototype later
   let linqjsExports = {}
+  // Collection is the object we're gonna 'build' and return later
   let Collection
 
 
 /* src/collection.js */
 
+/**
+ * Collection - Represents a collection of iterable values
+ *
+ * @class
+ * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
+ */
 Collection = (function () {
-  /**
-   * Collection - Represents a collection of iterable values
-   *
-   * @class
-   * @param  {Iterable} iterable A iterable to create a collection of, e.g. an array
-   */
   function Collection (iterableOrGenerator) {
     __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
 
@@ -95,10 +96,26 @@ Collection = (function () {
 
 /* src/collection-static.js */
 
+/**
+ * Same as new Collection()
+ * @function from
+ * @memberof Collection
+ * @static
+ * @return {Collection}
+ */
 function from (iterable) {
   return new Collection(iterable)
 }
 
+/**
+ * Creates a sequence of count values starting with start including
+ * @function Range
+ * @memberof Collection
+ * @static
+ * @param  {Number} start The value to start with, e.g. 1
+ * @param  {Number} count The amount of numbers to generate from start
+ * @return {Collection}       A new collection with the number range
+ */
 function Range (start, count) {
   __assertNumberBetween(count, 0, Infinity)
 
@@ -343,28 +360,6 @@ function DefaultComparator (a, b) {
 
     return fn.length
   }
-
-
-/* src/linq.js */
-
-linqjs.install = function () {
-  window.Collection = Collection
-  __assign(Collection.prototype, linqjsExports)
-
-  // inheritance stuff (we don't want to implement stuff twice)
-  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
-  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
-
-  const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
-
-  Object.keys(Collection.prototype).forEach(k => {
-    for (let proto of protosToApplyWrappers) {
-      proto[k] = function (...args) {
-        return new Collection(this)[k](...args)
-      }
-    }
-  })
-}
 
 
 /* src/math.js */
@@ -623,6 +618,9 @@ function All (predicate = elem => true) {
  * ElementAt - Returns the element at the given index
  *
  * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
  * @param  {Number} index
  * @return {any}
  */
@@ -636,9 +634,12 @@ function ElementAt (index) {
 }
 
 /**
- * Take - Returns count elements of the sequence starting from the beginning
+ * Take - Returns count elements of the sequence starting from the beginning as an array
  *
  * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
  * @param  {Number} count = 0 number of elements to be returned
  * @return {Array}
  */
@@ -665,11 +666,14 @@ function Take (count = 0) {
 }
 
 /**
- * Skip - Skips count elements of the sequence and returns the remaining ones
+ * Skip - Skips count elements of the sequence and returns the remaining sequence
  *
  * @see https://msdn.microsoft.com/de-de/library/bb358985(v=vs.110).aspx
- * @param  {Nu,ber count = 0 amount of elements to skip
- * @return {Array}
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Number} count=0 amount of elements to skip
+ * @return {Collection}
  */
 function Skip (count = 0) {
   __assert(isNumeric(count), 'First parameter must be numeric!')
@@ -689,19 +693,22 @@ function Skip (count = 0) {
  * TakeWhile - Takes elements from the beginning of a sequence until the predicate yields false for an element
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
- * @param  {Function} predicate     the predicate of the form elem => boolean or (elem, index) => boolean
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate The predicate of the form elem => boolean or (elem, index) => boolean
  * @return {Array}
  */
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const _self = this
+  const iter = this
 
   const result = new Collection(function * () {
     let index = 0
     let endTake = false
 
-    for (let val of _self) {
+    for (let val of iter) {
       if (!endTake && predicate(val, index++)) {
         yield val
         continue
@@ -717,11 +724,14 @@ function TakeWhile (predicate = (elem, index) => true) {
 }
 
 /**
- * SkipWhile - Skips elements in the array until the predicate yields false and returns the remaining elements
+ * SkipWhile - Skips elements in the sequence until the predicate yields false and returns the remaining sequence
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
- * @param  {type} predicate         the predicate of the form elem => boolean or (elem, index) => boolean
- * @return {Array}
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {type} predicate The predicate of the form elem => boolean or (elem, index) => boolean
+ * @return {Collection}
  */
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
@@ -826,17 +836,23 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
 }
 
 /**
- * DefaultIfEmpty - Returns the array or a new array containing the provided constructors default if empty
+ * DefaultIfEmpty - Returns a new sequence containing the provided constructors default if the sequence is empty or the sequence itself if not
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
  * @param {Function} constructor A native constructor to get the default for, e.g. Number
- * @return {Array}
+ * @return {Collection}
  *//**
- * DefaultIfEmpty - Returns the array or a new array containing the provided default value if empty
+ * DefaultIfEmpty - Returns the sequence or a new sequence containing the provided default value if it is empty
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
  * @param {any} value The default vlaue
- * @return {Array}
+ * @return {Collection}
  */
 function DefaultIfEmpty (constructorOrValue) {
   if (!isEmpty(this)) {
@@ -1397,5 +1413,26 @@ function OrderByDescending (comparator) {
 
   /* Export public interface */
   __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, Count, Any, All, ElementAt, Take, TakeWhile, Skip, SkipWhile, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, OrderBy, OrderByDescending })
-}))
+  // Install linqjs
+  // [1] Assign exports to the prototype of Collection
+  __assign(Collection.prototype, linqjsExports)
+
+  // [2] Let OrderedCollection inherit from Collection (we don't want to implement stuff twice)
+  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
+  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
+
+  // [3] Apply wrapper functions to selected prototypes which are iterable (Array, Set, Map etc.)
+  const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
+
+  Object.keys(Collection.prototype).forEach(k => {
+    for (let proto of protosToApplyWrappers) {
+      proto[k] = function (...args) {
+        return new Collection(this)[k](...args)
+      }
+    }
+  })
+
+  // [4] Return final Collection class
+  return Collection
+}()))
 }())
