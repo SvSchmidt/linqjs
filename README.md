@@ -21,7 +21,7 @@
 - [ ] Do
 - [x] ElementAt
 - [ ] ElementAtOrDefault
-- [ ] Empty
+- [x] Empty
 - [x] Except
 - [ ] Finally
 - [x] First
@@ -53,7 +53,7 @@
 - [x] OrderByDescending
 - [ ] Pairwise
 - [ ] PartitionBy
-- [ ] Range
+- [x] Range
 - [ ] RangeDown
 - [ ] RangeTo
 - [x] Remove
