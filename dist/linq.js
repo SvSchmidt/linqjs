@@ -1511,7 +1511,7 @@ function OrderBy (comparator) {
         comparator = GetComparatorFromKeySelector(comparator);
     }
     __assertFunction(comparator);
-    return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
+    return new OrderedLinqCollection(this, comparator, MinHeap);
 };
 
 /**
@@ -1526,7 +1526,7 @@ function OrderByDescending (comparator) {
         comparator = GetComparatorFromKeySelector(comparator);
     }
     __assertFunction(comparator);
-    return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
+    return new OrderedLinqCollection(this, comparator, MaxHeap);
 };
 
 

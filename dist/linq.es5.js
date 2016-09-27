@@ -2487,7 +2487,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         comparator = GetComparatorFromKeySelector(comparator);
       }
       __assertFunction(comparator);
-      return new OrderedLinqCollection(this.ToArray(), comparator, MinHeap);
+      return new OrderedLinqCollection(this, comparator, MinHeap);
     };
 
     /**
@@ -2502,7 +2502,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         comparator = GetComparatorFromKeySelector(comparator);
       }
       __assertFunction(comparator);
-      return new OrderedLinqCollection(this.ToArray(), comparator, MaxHeap);
+      return new OrderedLinqCollection(this, comparator, MaxHeap);
     };
 
     /* Export public interface */
