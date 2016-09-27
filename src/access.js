@@ -198,16 +198,6 @@ function SkipUntil (predicate = (elem, index) => false) {
   return this.SkipWhile((elem, index) => !predicate(elem, index))
 }
 
-function First (predicate = x => true) {
-  __assertFunction(predicate)
-  __assertNotEmpty(this)
-
-  const result = this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0]
-  this.reset()
-
-  return result
-}
-
 function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {
   //__assertArray(arr)
 
@@ -232,15 +222,25 @@ function resultOrDefault(collection, originalFn, predicateOrConstructor = x => t
   return originalFn.call(collection, predicate)
 }
 
+function First (predicate = x => true) {
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
+
+  const result = this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0]
+  this.reset()
+
+  return result
+}
+
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {
   return resultOrDefault(this, First, predicateOrConstructor, constructor)
 }
 
 function Last (predicate = x => true) {
-  //__assertFunction(predicate)
-  //__assertNotEmpty(this)
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
 
-  return new Collection(this.ToArray().reverse()).First(predicate)
+  return this.Reverse().First(predicate)
 }
 
 function LastOrDefault (predicateOrConstructor = x => true, constructor = Object) {

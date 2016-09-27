@@ -867,16 +867,6 @@ function SkipUntil (predicate = (elem, index) => false) {
   return this.SkipWhile((elem, index) => !predicate(elem, index))
 }
 
-function First (predicate = x => true) {
-  __assertFunction(predicate)
-  __assertNotEmpty(this)
-
-  const result = this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0]
-  this.reset()
-
-  return result
-}
-
 function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {
   //__assertArray(arr)
 
@@ -901,15 +891,25 @@ function resultOrDefault(collection, originalFn, predicateOrConstructor = x => t
   return originalFn.call(collection, predicate)
 }
 
+function First (predicate = x => true) {
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
+
+  const result = this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0]
+  this.reset()
+
+  return result
+}
+
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {
   return resultOrDefault(this, First, predicateOrConstructor, constructor)
 }
 
 function Last (predicate = x => true) {
-  //__assertFunction(predicate)
-  //__assertNotEmpty(this)
+  __assertFunction(predicate)
+  __assertNotEmpty(this)
 
-  return new Collection(this.ToArray().reverse()).First(predicate)
+  return this.Reverse().First(predicate)
 }
 
 function LastOrDefault (predicateOrConstructor = x => true, constructor = Object) {
@@ -1322,6 +1322,26 @@ let MaxHeap = (function () {
     return result
   }
 
+  /**
+   * Reverse - Returns a new sequence with the elements of the original one in reverse order
+   * This method should be considered inperformant since the collection must get enumerated once
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb358497(v=vs.110).aspx
+   * @method
+   * @instance
+   * @memberof Collection
+   * @return {Collection}
+   */
+  function Reverse () {
+    const arr = this.ToArray()
+
+    return new Collection(function * () {
+      for (let i = arr.length - 1; i >= 0; i--) {
+        yield arr[i]
+      }
+    })
+  }
+
   /*
 GroupBy(keySelector)
 
@@ -1532,7 +1552,7 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

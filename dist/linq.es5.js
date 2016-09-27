@@ -1665,22 +1665,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       });
     }
 
-    function First() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
-        return true;
-      } : arguments[0];
-
-      __assertFunction(predicate);
-      __assertNotEmpty(this);
-
-      var result = this.SkipWhile(function (elem) {
-        return !predicate(elem);
-      }).Take(1).ToArray()[0];
-      this.reset();
-
-      return result;
-    }
-
     function resultOrDefault(collection, originalFn) {
       var predicateOrConstructor = arguments.length <= 2 || arguments[2] === undefined ? function (x) {
         return true;
@@ -1712,6 +1696,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return originalFn.call(collection, predicate);
     }
 
+    function First() {
+      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return true;
+      } : arguments[0];
+
+      __assertFunction(predicate);
+      __assertNotEmpty(this);
+
+      var result = this.SkipWhile(function (elem) {
+        return !predicate(elem);
+      }).Take(1).ToArray()[0];
+      this.reset();
+
+      return result;
+    }
+
     function FirstOrDefault() {
       var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
         return true;
@@ -1726,10 +1726,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return true;
       } : arguments[0];
 
-      //__assertFunction(predicate)
-      //__assertNotEmpty(this)
+      __assertFunction(predicate);
+      __assertNotEmpty(this);
 
-      return new Collection(this.ToArray().reverse()).First(predicate);
+      return this.Reverse().First(predicate);
     }
 
     function LastOrDefault() {
@@ -2284,6 +2284,50 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return result;
     }
 
+    /**
+     * Reverse - Returns a new sequence with the elements of the original one in reverse order
+     * This method should be considered inperformant since the collection must get enumerated once
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb358497(v=vs.110).aspx
+     * @method
+     * @instance
+     * @memberof Collection
+     * @return {Collection}
+     */
+    function Reverse() {
+      var arr = this.ToArray();
+
+      return new Collection(regeneratorRuntime.mark(function _callee15() {
+        var i;
+        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+          while (1) {
+            switch (_context15.prev = _context15.next) {
+              case 0:
+                i = arr.length - 1;
+
+              case 1:
+                if (!(i >= 0)) {
+                  _context15.next = 7;
+                  break;
+                }
+
+                _context15.next = 4;
+                return arr[i];
+
+              case 4:
+                i--;
+                _context15.next = 1;
+                break;
+
+              case 7:
+              case 'end':
+                return _context15.stop();
+            }
+          }
+        }, _callee15, this);
+      }));
+    }
+
     /*
     GroupBy(keySelector)
     GroupBy(keySelector, keyComparer)
@@ -2324,26 +2368,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var oldIter = this.ToArray();
 
-      this.iterable = regeneratorRuntime.mark(function _callee15() {
-        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+      this.iterable = regeneratorRuntime.mark(function _callee16() {
+        return regeneratorRuntime.wrap(function _callee16$(_context16) {
           while (1) {
-            switch (_context15.prev = _context15.next) {
+            switch (_context16.prev = _context16.next) {
               case 0:
-                return _context15.delegateYield(oldIter.slice(0, index), 't0', 1);
+                return _context16.delegateYield(oldIter.slice(0, index), 't0', 1);
 
               case 1:
-                _context15.next = 3;
+                _context16.next = 3;
                 return value;
 
               case 3:
-                return _context15.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
+                return _context16.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
 
               case 4:
               case 'end':
-                return _context15.stop();
+                return _context16.stop();
             }
           }
-        }, _callee15, this);
+        }, _callee16, this);
       });
       this.reset();
     }
@@ -2362,19 +2406,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return false;
       }
 
-      this.iterable = regeneratorRuntime.mark(function _callee16() {
-        return regeneratorRuntime.wrap(function _callee16$(_context16) {
+      this.iterable = regeneratorRuntime.mark(function _callee17() {
+        return regeneratorRuntime.wrap(function _callee17$(_context17) {
           while (1) {
-            switch (_context16.prev = _context16.next) {
+            switch (_context17.prev = _context17.next) {
               case 0:
-                return _context16.delegateYield(values, 't0', 1);
+                return _context17.delegateYield(values, 't0', 1);
 
               case 1:
               case 'end':
-                return _context16.stop();
+                return _context17.stop();
             }
           }
-        }, _callee16, this);
+        }, _callee17, this);
       });
       this.reset();
 
@@ -2435,19 +2479,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       OrderedLinqCollection.prototype.getIterator = function () {
         var _self = this;
 
-        return regeneratorRuntime.mark(function _callee17() {
-          return regeneratorRuntime.wrap(function _callee17$(_context17) {
+        return regeneratorRuntime.mark(function _callee18() {
+          return regeneratorRuntime.wrap(function _callee18$(_context18) {
             while (1) {
-              switch (_context17.prev = _context17.next) {
+              switch (_context18.prev = _context18.next) {
                 case 0:
-                  return _context17.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
+                  return _context18.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
 
                 case 1:
                 case 'end':
-                  return _context17.stop();
+                  return _context18.stop();
               }
             }
-          }, _callee17, this);
+          }, _callee18, this);
         })();
       };
 
@@ -2517,7 +2561,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);

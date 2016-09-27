@@ -114,6 +114,26 @@
     return result
   }
 
+  /**
+   * Reverse - Returns a new sequence with the elements of the original one in reverse order
+   * This method should be considered inperformant since the collection must get enumerated once
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb358497(v=vs.110).aspx
+   * @method
+   * @instance
+   * @memberof Collection
+   * @return {Collection}
+   */
+  function Reverse () {
+    const arr = this.ToArray()
+
+    return new Collection(function * () {
+      for (let i = arr.length - 1; i >= 0; i--) {
+        yield arr[i]
+      }
+    })
+  }
+
   /*
 GroupBy(keySelector)
 
@@ -133,4 +153,4 @@ GroupBy(keySelector, elementSelector, resultTransformFn, keyComparer)
 
   }
 
-  __export({ Aggregate, Distinct, Select, ToArray, ToDictionary })
+  __export({ Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary })
