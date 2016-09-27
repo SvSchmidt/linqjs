@@ -4,10 +4,6 @@ function Order() {
   return this.OrderBy(DefaultComparator);
 }
 
-function OrderCompare() {
-  return this.sort(DefaultComparator);
-}
-
 function OrderDescending() {
   return this.OrderByDescending(DefaultComparator);
 }
@@ -42,4 +38,4 @@ function OrderByDescending (comparator) {
     return new OrderedLinqCollection(this, comparator, MaxHeap);
 };
 
-__export({ Order, OrderCompare, OrderBy, OrderDescending, OrderByDescending })
+__export({ Order, OrderBy, OrderDescending, OrderByDescending })
