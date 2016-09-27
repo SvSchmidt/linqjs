@@ -1175,7 +1175,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return true;
       } : arguments[0];
 
-      return this.Where(predicate).ToArray().length;
+      var count = 0;
+      var filtered = this.Where(predicate);
+      while (!filtered.next().done) {
+        count++;
+      }
+      return count;
     }
 
     /**

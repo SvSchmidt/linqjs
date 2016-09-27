@@ -614,7 +614,12 @@ function ConditionalWhere(condition, predicate) {
  * @return {Number}
  */
 function Count (predicate = elem => true) {
-  return this.Where(predicate).ToArray().length
+  let count = 0;
+  let filtered = this.Where(predicate);
+  while (!filtered.next().done) {
+    count++;
+  }
+  return count;
 }
 
  /**
