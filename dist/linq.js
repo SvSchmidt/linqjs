@@ -504,7 +504,7 @@ function DefaultComparator (a, b) {
     const result = new Collection(function * () {
       const secondIter = second.getIterator()
 
-      for (const firstVal of firstIter) {
+      for (let firstVal of firstIter) {
         const secondNext = secondIter.next()
 
         if (secondNext.done) {
