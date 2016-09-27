@@ -77,7 +77,7 @@
 - [ ] TakeExceptLast
 - [ ] TakeFromLast
 - [x] TakeWhile
-- [x] TakeUntil
+- [x] TakeUntil*
 - [x] ThenBy
 - [ ] ThenByDescending
 - [x] ToArray
