@@ -12,7 +12,7 @@
 - [ ] Catch
 - [ ] Choice
 - [x] Concat
-- [x] ConditionalWhere*
+- [x] ConditionalWhere(*)
 - [x] Contains
 - [x] Count
 - [ ] Cycle
@@ -71,13 +71,13 @@
 - [x] SingleOrDefault
 - [x] Skip
 - [x] SkipWhile
-- [x] SkipUntil*
+- [x] SkipUntil(x)
 - [x] Sum
 - [x] Take
 - [ ] TakeExceptLast
 - [ ] TakeFromLast
 - [x] TakeWhile
-- [x] TakeUntil*
+- [x] TakeUntil(*)
 - [x] ThenBy
 - [ ] ThenByDescending
 - [x] ToArray
@@ -96,4 +96,4 @@
 - [ ] WriteLine
 - [x] Zip
 
-* Not an original method of Linq but pretty awesome though
+(*) Not an original method of Linq but pretty awesome though
