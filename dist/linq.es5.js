@@ -1205,7 +1205,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return true;
       }
 
-      return this.Count(predicate) > 0;
+      return !this.Where(predicate).next().done;
     }
 
     /**

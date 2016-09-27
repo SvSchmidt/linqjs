@@ -117,7 +117,7 @@ function Any (predicate) {
     return true
   }
 
-  return this.Count(predicate) > 0
+  return !this.Where(predicate).next().done;
 }
 
 /**
