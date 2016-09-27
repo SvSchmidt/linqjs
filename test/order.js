@@ -109,7 +109,6 @@ describe('ordered-collection.js', function () {
     describe('OrderedLinqCollection', function () {
         describe('OrderBy', function () {
             it('should order the collection properly', function () {
-                const Linq = Collection.prototype.Linq;
                 const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
                 const OrderedLinqCollection = Collection.prototype.OrderedLinqCollection;
 
@@ -308,6 +307,26 @@ describe('ordered-collection.js', function () {
                     expect(collection.ToArray()).to.be.deep.equal(sorted);
                 }
             })
+        })
+
+        describe('OrderDescending', function () {
+          const arr = [3, 7, 9, 3, 1, 2, 35, 7, 4, 9]
+          const sortedDesc = [35, 9, 9, 7, 7, 4, 3, 3, 2, 1]
+
+          it('should order a sequence descending using the default comparator', function () {
+            expect(arr.OrderDescending().ToArray()).to.be.deep.equal(sortedDesc)
+            expect(sortedDesc.OrderDescending().ToArray()).to.be.deep.equal(sortedDesc)
+          })
+        })
+
+        describe('Order', function () {
+          const arr = [35, 9, 9, 7, 7, 4, 3, 3, 2, 1]
+          const sortedAsc = [1, 2, 3, 3, 4, 7, 7, 9, 9, 35]
+
+          it('should order a sequence ascending using the default comparator', function () {
+            expect(arr.Order().ToArray()).to.be.deep.equal(sortedAsc)
+            expect(sortedAsc.Order().ToArray()).to.be.deep.equal(sortedAsc)
+          })
         })
     })
 })
