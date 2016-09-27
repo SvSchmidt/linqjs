@@ -222,7 +222,7 @@ function DefaultComparator (a, b) {
 /* src/helpers/is.js */
 
   function isArray (obj) {
-    return Object.prototype.toString.call(obj) === '[object Array]'
+    return obj instanceof ([]).constructor;
   }
 
   function isFunction (obj) {
@@ -254,7 +254,7 @@ function DefaultComparator (a, b) {
   }
 
   function isGenerator (obj) {
-    return Object.prototype.toString.call(obj) === '[object GeneratorFunction]'
+    return obj instanceof (function * () {}).constructor;
   }
 
 
