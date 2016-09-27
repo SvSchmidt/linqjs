@@ -93,4 +93,24 @@ describe('Transformation', function () {
       expect(pets.Skip(2).ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length).has('miez')).to.be.false
     })
   })
+
+  describe('Reverse', function () {
+    const pets = [
+      { name: 'miez', species: 'cat' },
+      { name: 'wuff', species: 'dog' },
+      { name: 'leo', species: 'cat' },
+      { name: 'flipper', species: 'dolphin' }
+    ]
+    const fruits = ["apple", "mango", "orange", "passionfruit", "grape"]
+
+    it('should return a new sequence with the elements of the original one in reverse order', function () {
+      expect(fruits.Reverse().ToArray()).to.be.deep.equal(['grape', 'passionfruit', 'orange', 'mango', 'apple'])
+      expect(pets.Reverse().ToArray().First()).to.be.deep.equal(pets[3])
+      expect([1,2,3].Reverse().ToArray()).to.be.deep.equal([3,2,1])
+    })
+
+    it('should return the original sequence if Reverse is called twice', function () {
+      expect(pets.Reverse().Reverse().ToArray()).to.be.deep.equal(pets)
+    })
+  })
 })
