@@ -29,7 +29,7 @@
 - [ ] Flatten
 - [ ] ForEach
 - [ ] Force
-- [ ] From
+- [x] From
 - [ ] Generate
 - [ ] GetEnumerator
 - [ ] GroupBy

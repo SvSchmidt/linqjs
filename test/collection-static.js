@@ -8,6 +8,12 @@ describe('Collection static methods', function () {
     })
   })
 
+  describe('Collection.From(iterable)', function () {
+    it('should be equal to Collection.from (lowercase f)', function () {
+      expect(Collection.From).to.be.deep.equal(Collection.from)
+    })
+  })
+
   describe('Collection.Range(start, count)', function () {
     it('should return a new Collection of count numbers from start including', function () {
       expect(Collection.Range(1,5).ToArray()).to.be.deep.equal([1,2,3,4,5])

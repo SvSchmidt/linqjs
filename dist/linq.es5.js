@@ -200,7 +200,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
     });
 
-    var collectionStaticMethods = { from: from, Range: Range };
+    var collectionStaticMethods = { from: from, From: from, Range: Range };
 
     __assign(Collection, collectionStaticMethods);
 

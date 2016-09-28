@@ -33,6 +33,6 @@ Object.defineProperty(Collection, 'Empty', {
   get: function () { return Collection.from([]) }
 })
 
-const collectionStaticMethods = { from, Range }
+const collectionStaticMethods = { from, From: from, Range }
 
 __assign(Collection, collectionStaticMethods)
