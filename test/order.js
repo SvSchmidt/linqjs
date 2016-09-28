@@ -2,7 +2,7 @@ const Collection = require('../dist/linq')
 const expect = require('chai').expect
 
 const maxValue  = 100000;
-const maxLength = 10;
+const maxLength = 50;
 const maxRepeat = 5000;
 
 function checkSortedEquality (sorted, expected) {
