@@ -83,7 +83,7 @@
 - [x] ToArray
 - [x] ToDictionary
 - [ ] ToInfinity
-- [ ] ToJSON
+- [x] ToJSON(*)
 - [ ] ToLookup
 - [ ] ToNegativeInfinity
 - [ ] ToObject

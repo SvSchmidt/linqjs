@@ -94,6 +94,19 @@ describe('Transformation', function () {
     })
   })
 
+  describe('ToJSON', function () {
+    it('should return the JSON representation of the sequence', function () {
+      const people = [
+        { name: 'Gandalf', race: 'istari' },
+        { name: 'Thorin', race: 'dwarfs' },
+        { name: 'Frodo', race: 'hobbit' },
+      ]
+
+      expect(people.ToJSON()).to.be.equal(`[{"name":"Gandalf","race":"istari"},{"name":"Thorin","race":"dwarfs"},{"name":"Frodo","race":"hobbit"}]`)
+      expect([1,2,3].ToJSON()).to.be.equal(`[1,2,3]`)
+    })
+  })
+
   describe('Reverse', function () {
     const pets = [
       { name: 'miez', species: 'cat' },

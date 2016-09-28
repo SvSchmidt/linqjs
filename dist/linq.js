@@ -1323,6 +1323,18 @@ let MaxHeap = (function () {
   }
 
   /**
+   * ToJSON - Returns the representation of the sequence in javascript object notation (JSON)
+   *
+   * @instance
+   * @method
+   * @memberof Collection
+   * @return {string}
+   */
+   function ToJSON () {
+     return toJSON(this.ToArray())
+   }
+
+  /**
    * Reverse - Returns a new sequence with the elements of the original one in reverse order
    * This method should be considered inperformant since the collection must get enumerated once
    *
@@ -1552,7 +1564,7 @@ function OrderByDescending (comparator) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, ToJSON, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

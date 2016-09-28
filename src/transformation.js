@@ -115,6 +115,18 @@
   }
 
   /**
+   * ToJSON - Returns the representation of the sequence in javascript object notation (JSON)
+   *
+   * @instance
+   * @method
+   * @memberof Collection
+   * @return {string}
+   */
+   function ToJSON () {
+     return toJSON(this.ToArray())
+   }
+
+  /**
    * Reverse - Returns a new sequence with the elements of the original one in reverse order
    * This method should be considered inperformant since the collection must get enumerated once
    *
@@ -153,4 +165,4 @@ GroupBy(keySelector, elementSelector, resultTransformFn, keyComparer)
 
   }
 
-  __export({ Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary })
+  __export({ Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, ToJSON })
