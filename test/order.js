@@ -328,5 +328,25 @@ describe('ordered-collection.js', function () {
             expect(sortedAsc.Order().ToArray()).to.be.deep.equal(sortedAsc)
           })
         })
+
+        describe('Shuffle', function () {
+          it('should shuffle a sequence and contain all possible permutations if repeated often enough', function () {
+            /*
+            We're going to shuffle the same array 1000 times and make sure that every possible permutation (3! = 6) is included in the result
+            This test may fail by times but that's okay
+            */
+            const arr = [1,2,3]
+            const permutations = [[2,1,3],[2,3,1],[3,1,2],[1,3,2],[1,2,3],[3,2,1]]
+            let outcomes = []
+
+            for (let i = 0; i < 1000; i++) {
+              outcomes.push(JSON.stringify(arr.Shuffle().ToArray()))
+            }
+
+            for (let p of permutations) {
+              expect(outcomes).to.include(JSON.stringify(p))
+            }
+          })
+        })
     })
 })

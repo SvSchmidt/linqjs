@@ -38,4 +38,16 @@ function OrderByDescending (comparator) {
     return new OrderedLinqCollection(this, comparator, MaxHeap);
 };
 
-__export({ Order, OrderBy, OrderDescending, OrderByDescending })
+/**
+ * Shuffle - Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection
+ *
+ * @instance
+ * @memberof Collection
+ * @method
+ * @return {Collection}
+ */
+function Shuffle () {
+  return this.OrderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */)
+}
+
+__export({ Order, OrderBy, OrderDescending, OrderByDescending, Shuffle })
