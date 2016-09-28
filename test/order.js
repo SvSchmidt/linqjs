@@ -2,8 +2,20 @@ const Collection = require('../dist/linq')
 const expect = require('chai').expect
 
 const maxValue  = 100000;
-const maxLength = 100;
-const maxRepeat = 10;
+const maxLength = 10;
+const maxRepeat = 5000;
+
+function checkSortedEquality (sorted, expected) {
+  let result = true
+
+  for (let i = 0; i < sorted.length; i++) {
+    result = result && JSON.stringify(sorted[i]) === JSON.stringify(expected[i])
+  }
+
+  if (!result) console.log(sorted, expected)
+
+  return result
+}
 
 function generateRandomNumberObjectList() {
     function getRandomNumber(min, max) {
@@ -127,7 +139,9 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorA);
 
-                    expect(Collection.from(list).OrderBy(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderBy(comparatorA).ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
 
@@ -144,7 +158,9 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorA);
 
-                    expect(Collection.from(list).OrderBy('a').ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderBy('a').ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
         })
@@ -176,7 +192,9 @@ describe('ordered-collection.js', function () {
                             .ThenBy(comparatorC)
                             .ThenBy(comparatorD);
 
-                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                    expect(collection.ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
         })
@@ -208,7 +226,9 @@ describe('ordered-collection.js', function () {
                             .ThenBy('c')
                             .ThenBy('d');
 
-                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                    expect(collection.ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
         })
@@ -227,7 +247,9 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort((a, b) => -1 * comparatorA(a, b));
 
-                    expect(Collection.from(list).OrderByDescending(comparatorA).ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderByDescending(comparatorA).ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
             it('should order the collection properly by descending order by the provided key selector', function () {
@@ -243,7 +265,9 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort((a, b) => -1 * comparatorA(a, b));
 
-                    expect(Collection.from(list).OrderByDescending('a').ToArray()).to.be.deep.equal(sorted);
+                    expect(Collection.from(list).OrderByDescending('a').ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
         })
@@ -275,7 +299,9 @@ describe('ordered-collection.js', function () {
                             .ThenBy(comparatorC)
                             .ThenBy(comparatorD);
 
-                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                    expect(collection.ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
             it('should order the collection with respect to subelements properly by descending order and the provided key selector', function () {
@@ -304,7 +330,9 @@ describe('ordered-collection.js', function () {
                             .ThenBy('c')
                             .ThenBy('d');
 
-                    expect(collection.ToArray()).to.be.deep.equal(sorted);
+                    expect(collection.ToArray()).to.satisfy(function (arr) {
+                      return checkSortedEquality(arr, sorted)
+                    })
                 }
             })
         })
