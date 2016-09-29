@@ -36,8 +36,8 @@ function generateRandomNumberObjectList() {
         });
     }
 
+    const a = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
-        const a = getRandomNumber(-1 * maxValue, maxValue);
         result.push({
             a: a,
             b: getRandomNumber(-1 * maxValue, maxValue),
@@ -47,9 +47,9 @@ function generateRandomNumberObjectList() {
         });
     }
 
+    const a = getRandomNumber(-1 * maxValue, maxValue);
+    const b = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
-        const a = getRandomNumber(-1 * maxValue, maxValue);
-        const b = getRandomNumber(-1 * maxValue, maxValue);
         result.push({
             a: a,
             b: b,
@@ -59,10 +59,10 @@ function generateRandomNumberObjectList() {
         });
     }
 
+    const a = getRandomNumber(-1 * maxValue, maxValue);
+    const b = getRandomNumber(-1 * maxValue, maxValue);
+    const c = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
-        const a = getRandomNumber(-1 * maxValue, maxValue);
-        const b = getRandomNumber(-1 * maxValue, maxValue);
-        const c = getRandomNumber(-1 * maxValue, maxValue);
         result.push({
             a: a,
             b: b,
@@ -72,11 +72,11 @@ function generateRandomNumberObjectList() {
         });
     }
 
+    const a = getRandomNumber(-1 * maxValue, maxValue);
+    const b = getRandomNumber(-1 * maxValue, maxValue);
+    const c = getRandomNumber(-1 * maxValue, maxValue);
+    const d = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
-        const a = getRandomNumber(-1 * maxValue, maxValue);
-        const b = getRandomNumber(-1 * maxValue, maxValue);
-        const c = getRandomNumber(-1 * maxValue, maxValue);
-        const d = getRandomNumber(-1 * maxValue, maxValue);
         result.push({
             a: a,
             b: b,
