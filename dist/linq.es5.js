@@ -2340,151 +2340,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }));
     }
 
-    function GroupBy(keySelector) {
-      __assertFunction(keySelector);
-
-      var arr = this.ToArray();
-
-      function isKeyComparer(arg) {
-        var result = getParameterCount(arg) === 2;
-        try {
-          result = result && arg('a', 'a') && !arg('a', 'b');
-        } catch (err) {
-          result = false;
-        }
-
-        return result;
-      }
-
-      /*
-      GroupBy(keySelector)
-      */
-      function groupByOneArgument(keySelector) {
-        return groupByFourArguments(keySelector, function (elem) {
-          return elem;
-        }, undefined, defaultEqualityCompareFn);
-      }
-
-      /*
-      GroupBy(keySelector, keyComparer)
-      GroupBy(keySelector, elementSelector)
-      GroupBy(keySelector, resultTransformFn)
-      */
-      function groupByTwoArguments(keySelector, second) {
-        var keyComparer = void 0,
-            elementSelector = void 0;
-
-        if (isKeyComparer(second)) {
-          keyComparer = second;
-          elementSelector = function elementSelector(elem) {
-            return elem;
-          };
-        } else {
-          keyComparer = defaultEqualityCompareFn;
-          elementSelector = second;
-        }
-
-        return groupByThreeArguments(keySelector, elementSelector, keyComparer);
-      }
-
-      /*
-      GroupBy(keySelector, resultTransformFn, keyComparer)
-      GroupBy(keySelector, elementSelector, keyComparer)
-      GroupBy(keySelector, elementSelector, resultTransformFn)
-      */
-      function groupByThreeArguments(keySelector, second, third) {
-        var keyComparer = void 0,
-            elementSelector = void 0,
-            resultTransformFn = void 0;
-
-        if (isKeyComparer(third)) {
-          keyComparer = third;
-        } else {
-          resultTransformFn = third;
-        }
-
-        if (getParameterCount(second) === 2) {
-          resultTransformFn = second;
-        } else {
-          elementSelector = second;
-        }
-
-        if (!keyComparer) {
-          keyComparer = defaultEqualityCompareFn;
-        }
-
-        if (!elementSelector) {
-          elementSelector = function elementSelector(elem) {
-            return elem;
-          };
-        }
-
-        return groupByFourArguments(keySelector, elementSelector, resultTransformFn, keyComparer);
-      }
-
-      function groupByFourArguments(keySelector, elementSelector, resultTransformFn, keyComparer) {
-        var groups = new Map();
-        var result = void 0;
-
-        var _iteratorNormalCompletion15 = true;
-        var _didIteratorError15 = false;
-        var _iteratorError15 = undefined;
-
-        try {
-          for (var _iterator15 = arr[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-            var val = _step15.value;
-
-            var _key = keySelector(val);
-            var elem = elementSelector(val);
-
-            if (groups.has(_key)) {
-              groups.get(_key).push(elem);
-            } else {
-              groups.set(_key, [elem]);
-            }
-          }
-        } catch (err) {
-          _didIteratorError15 = true;
-          _iteratorError15 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion15 && _iterator15.return) {
-              _iterator15.return();
-            }
-          } finally {
-            if (_didIteratorError15) {
-              throw _iteratorError15;
-            }
-          }
-        }
-
-        if (resultTransformFn) {
-          result = groups.ToArray().Select(function (g) {
-            return resultTransformFn(g[0], g[1]);
-          });
-        } else {
-          result = groups;
-        }
-
-        return result;
-      }
-
-      switch (arguments.length <= 1 ? 0 : arguments.length - 1) {
-        case 1:
-          return groupByTwoArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1]);
-          break;
-        case 2:
-          return groupByThreeArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2]);
-          break;
-        case 3:
-          return groupByFourArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], arguments.length <= 3 ? undefined : arguments[3]);
-          break;
-        default:
-          return groupByOneArgument(keySelector);
-          break;
-      }
-    }
-
     /* src/insert-and-remove.js */
 
     /**
@@ -2717,8 +2572,158 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       } /* Returns -1, 0 or 1 */);
     }
 
+    /* src/grouping.js */
+
+    function GroupBy(keySelector) {
+      __assertFunction(keySelector);
+
+      var arr = this.ToArray();
+
+      function isKeyComparer(arg) {
+        var result = getParameterCount(arg) === 2;
+        try {
+          result = result && arg('a', 'a') && !arg('a', 'b');
+        } catch (err) {
+          result = false;
+        }
+
+        return result;
+      }
+
+      /*
+      GroupBy(keySelector)
+      */
+      function groupByOneArgument(keySelector) {
+        return groupBy(keySelector, function (elem) {
+          return elem;
+        }, undefined, defaultEqualityCompareFn);
+      }
+
+      /*
+      GroupBy(keySelector, keyComparer)
+      GroupBy(keySelector, elementSelector)
+      GroupBy(keySelector, resultTransformFn)
+      */
+      function groupByTwoArguments(keySelector, second) {
+        var keyComparer = void 0,
+            elementSelector = void 0;
+
+        if (isKeyComparer(second)) {
+          keyComparer = second;
+          elementSelector = function elementSelector(elem) {
+            return elem;
+          };
+        } else {
+          keyComparer = defaultEqualityCompareFn;
+          elementSelector = second;
+        }
+
+        return groupByThreeArguments(keySelector, elementSelector, keyComparer);
+      }
+
+      /*
+      GroupBy(keySelector, resultTransformFn, keyComparer)
+      GroupBy(keySelector, elementSelector, keyComparer)
+      GroupBy(keySelector, elementSelector, resultTransformFn)
+      */
+      function groupByThreeArguments(keySelector, second, third) {
+        var keyComparer = void 0,
+            elementSelector = void 0,
+            resultTransformFn = void 0;
+
+        if (isKeyComparer(third)) {
+          keyComparer = third;
+        } else {
+          resultTransformFn = third;
+        }
+
+        if (getParameterCount(second) === 2) {
+          resultTransformFn = second;
+        } else {
+          elementSelector = second;
+        }
+
+        if (!keyComparer) {
+          keyComparer = defaultEqualityCompareFn;
+        }
+
+        if (!elementSelector) {
+          elementSelector = function elementSelector(elem) {
+            return elem;
+          };
+        }
+
+        return groupBy(keySelector, elementSelector, resultTransformFn, keyComparer);
+      }
+
+      function groupBy(keySelector, elementSelector, resultTransformFn, keyComparer) {
+        var groups = new Map();
+        var result = void 0;
+
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
+
+        try {
+          for (var _iterator15 = arr[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var val = _step15.value;
+
+            var _key = keySelector(val);
+            var elem = elementSelector(val);
+
+            if (groups.has(_key)) {
+              groups.get(_key).push(elem);
+            } else {
+              groups.set(_key, [elem]);
+            }
+          }
+        } catch (err) {
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
+            }
+          } finally {
+            if (_didIteratorError15) {
+              throw _iteratorError15;
+            }
+          }
+        }
+
+        if (resultTransformFn) {
+          result = groups.ToArray().Select(function (g) {
+            return resultTransformFn(g[0], g[1]);
+          });
+        } else {
+          result = groups;
+        }
+
+        return result;
+      }
+
+      switch (arguments.length <= 1 ? 0 : arguments.length - 1) {
+        case 0:
+          return groupByOneArgument(keySelector);
+          break;
+        case 1:
+          return groupByTwoArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1]);
+          break;
+        case 2:
+          return groupByThreeArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2]);
+          break;
+        case 3:
+          return groupBy(keySelector, arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], arguments.length <= 3 ? undefined : arguments[3]);
+          break;
+        default:
+          throw new Error('GroupBy parameter count can not be greater than 4!');
+          break;
+      }
+    }
+
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);

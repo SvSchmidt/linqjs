@@ -13,5 +13,6 @@ defineSourceFiles([
   'src/transformation.js',
   'src/insert-and-remove.js',
   'src/ordered-collection.js',
-  'src/order.js'
+  'src/order.js',
+  'src/grouping.js',
 ])
