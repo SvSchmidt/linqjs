@@ -3,7 +3,7 @@ const expect = require('chai').expect
 
 const maxValue  = 100000;
 const maxLength = 50;
-const maxRepeat = 5000;
+const maxRepeat = 100;
 
 function checkSortedEquality (sorted, expected) {
   let result = true
@@ -36,7 +36,7 @@ function generateRandomNumberObjectList() {
         });
     }
 
-    const a = getRandomNumber(-1 * maxValue, maxValue);
+    let a = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
         result.push({
             a: a,
@@ -47,8 +47,8 @@ function generateRandomNumberObjectList() {
         });
     }
 
-    const a = getRandomNumber(-1 * maxValue, maxValue);
-    const b = getRandomNumber(-1 * maxValue, maxValue);
+    a = getRandomNumber(-1 * maxValue, maxValue);
+    let b = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
         result.push({
             a: a,
@@ -59,9 +59,9 @@ function generateRandomNumberObjectList() {
         });
     }
 
-    const a = getRandomNumber(-1 * maxValue, maxValue);
-    const b = getRandomNumber(-1 * maxValue, maxValue);
-    const c = getRandomNumber(-1 * maxValue, maxValue);
+    a = getRandomNumber(-1 * maxValue, maxValue);
+    b = getRandomNumber(-1 * maxValue, maxValue);
+    let c = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
         result.push({
             a: a,
@@ -72,10 +72,10 @@ function generateRandomNumberObjectList() {
         });
     }
 
-    const a = getRandomNumber(-1 * maxValue, maxValue);
-    const b = getRandomNumber(-1 * maxValue, maxValue);
-    const c = getRandomNumber(-1 * maxValue, maxValue);
-    const d = getRandomNumber(-1 * maxValue, maxValue);
+    a = getRandomNumber(-1 * maxValue, maxValue);
+    b = getRandomNumber(-1 * maxValue, maxValue);
+    c = getRandomNumber(-1 * maxValue, maxValue);
+    let d = getRandomNumber(-1 * maxValue, maxValue);
     for (var i = 0; i < length; i++) {
         result.push({
             a: a,
