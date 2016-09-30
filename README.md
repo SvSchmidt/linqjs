@@ -26,7 +26,7 @@
 - [ ] Finally
 - [x] First
 - [x] FirstOrDefault
-- [ ] Flatten
+- [x] Flatten(*)
 - [ ] ForEach
 - [ ] Force
 - [x] From
@@ -60,10 +60,10 @@
 - [ ] Repeat
 - [ ] RepeatWithFinalize
 - [ ] Return
-- [ ] Reverse
+- [x] Reverse
 - [ ] Scan
 - [x] Select
-- [ ] SelectMany
+- [x] SelectMany
 - [ ] SequenceEqual
 - [ ] Share
 - [x] Shuffle
@@ -71,7 +71,7 @@
 - [x] SingleOrDefault
 - [x] Skip
 - [x] SkipWhile
-- [x] SkipUntil(x)
+- [x] SkipUntil(*)
 - [x] Sum
 - [x] Take
 - [ ] TakeExceptLast

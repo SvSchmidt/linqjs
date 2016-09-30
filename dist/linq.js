@@ -242,7 +242,7 @@ function DefaultComparator (a, b) {
   }
 
   function isIterable (obj) {
-    return (Symbol.iterator in obj)
+    return (Symbol.iterator in Object(obj))
   }
 
   function isString (obj) {
@@ -1246,13 +1246,97 @@ let MaxHeap = (function () {
   }
 
   function Select (mapFn = x => x) {
-    const _self = this
+    const iter = this.getIterator()
 
     return new Collection(function * () {
-      _self.reset()
-
-      for (let val of _self) {
+      for (let val of iter) {
         yield mapFn(val)
+      }
+    })
+  }
+
+  /**
+   * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+   *
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+   * // [1, 2, 3, 4, 5, 6,]
+   * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+   * @return {Collection}  A new flattened Collection
+   */
+  function Flatten () {
+    return this.SelectMany(x => x)
+  }
+
+  /**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * The index of the source element can be used in the mapFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * Invokes a resultSelector function on each element of the sequence.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+   * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+   * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+   * @return {Collection}
+   * @
+   */
+  function SelectMany (mapFn, resultSelector = (x, y) => y) {
+    __assertFunction(mapFn)
+    __assertFunction(resultSelector)
+
+    const iter = this.getIterator()
+
+    return new Collection(function * () {
+      let index = 0
+
+      for (let current of iter) {
+        let mappedEntry = mapFn(current, index)
+        let newIter
+
+        if (!isIterable(mappedEntry)) {
+          newIter = [mappedEntry]
+        } else {
+          newIter = mappedEntry
+        }
+
+        for (let val of newIter[Symbol.iterator]()) {
+          yield resultSelector(current, val)
+        }
+
+        index++
       }
     })
   }
@@ -1571,6 +1655,9 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {"S" => ["Sven"], "M" => ["Mauz"]}
+ * ['Sven', 'Mauz'].GroupBy(x => x[0])
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @return {Map} The grouped sequence as a Map
  *//**
@@ -1580,6 +1667,9 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {"4" => ["4", 4], "5" => ["5"]}
+ * ['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
  * @return {Map} The grouped sequence as a Map
@@ -1591,6 +1681,9 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {23 => ["Sven"], 20 => ["jon"]}
+ * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} elementSelector A function to map each group member to a specific value
  * @return {Map} The grouped sequence as a Map
@@ -1602,6 +1695,9 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // [ { age:23, persons: "Sven&julia" }, { age: 20, persons: "jon" } ]
+ * [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&') })).ToArray()
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
  * @return {Collection} The grouped sequence with projected results as a new Collection
@@ -1801,7 +1897,6 @@ function GroupBy (keySelector, ...args) {
       break
     default:
       throw new Error('GroupBy parameter count can not be greater than 4!')
-      break
   }
 
   return fn(keySelector, ...args)
@@ -1809,7 +1904,7 @@ function GroupBy (keySelector, ...args) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, ToJSON, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Reverse, ToArray, ToDictionary, ToJSON, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

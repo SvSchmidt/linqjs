@@ -34,13 +34,97 @@
   }
 
   function Select (mapFn = x => x) {
-    const _self = this
+    const iter = this.getIterator()
 
     return new Collection(function * () {
-      _self.reset()
-
-      for (let val of _self) {
+      for (let val of iter) {
         yield mapFn(val)
+      }
+    })
+  }
+
+  /**
+   * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+   *
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+   * // [1, 2, 3, 4, 5, 6,]
+   * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+   * @return {Collection}  A new flattened Collection
+   */
+  function Flatten () {
+    return this.SelectMany(x => x)
+  }
+
+  /**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * The index of the source element can be used in the mapFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * Invokes a resultSelector function on each element of the sequence.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+   * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+   * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+   * @return {Collection}
+   * @
+   */
+  function SelectMany (mapFn, resultSelector = (x, y) => y) {
+    __assertFunction(mapFn)
+    __assertFunction(resultSelector)
+
+    const iter = this.getIterator()
+
+    return new Collection(function * () {
+      let index = 0
+
+      for (let current of iter) {
+        let mappedEntry = mapFn(current, index)
+        let newIter
+
+        if (!isIterable(mappedEntry)) {
+          newIter = [mappedEntry]
+        } else {
+          newIter = mappedEntry
+        }
+
+        for (let val of newIter[Symbol.iterator]()) {
+          yield resultSelector(current, val)
+        }
+
+        index++
       }
     })
   }
@@ -146,19 +230,4 @@
     })
   }
 
-  /**
-   * Flatten - Flattens a sequence meaning reducing the level of nesting by one
-   *
-   * @memberof Collection
-   * @instance
-   * @method
-   * @example
-   * // [1, 2, 3, 4, 5, 6,]
-   * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
-   * @return {Collection}  A new flattened Collection
-   */
-  function Flatten () {
-    return new Collection(Array.prototype.concat.apply([], this.ToArray()))
-  }
-
-  __export({ Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, ToJSON })
+  __export({ Aggregate, Distinct, Select, SelectMany, Reverse, ToArray, ToDictionary, ToJSON })

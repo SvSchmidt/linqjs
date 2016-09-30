@@ -310,7 +310,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function isIterable(obj) {
-      return Symbol.iterator in obj;
+      return Symbol.iterator in Object(obj);
     }
 
     function isString(obj) {
@@ -2113,7 +2113,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return x;
       } : arguments[0];
 
-      var _self = this;
+      var iter = this.getIterator();
 
       return new Collection(regeneratorRuntime.mark(function _callee14() {
         var _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, val;
@@ -2122,69 +2122,275 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           while (1) {
             switch (_context14.prev = _context14.next) {
               case 0:
-                _self.reset();
-
                 _iteratorNormalCompletion13 = true;
                 _didIteratorError13 = false;
                 _iteratorError13 = undefined;
-                _context14.prev = 4;
-                _iterator13 = _self[Symbol.iterator]();
+                _context14.prev = 3;
+                _iterator13 = iter[Symbol.iterator]();
 
-              case 6:
+              case 5:
                 if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
-                  _context14.next = 13;
+                  _context14.next = 12;
                   break;
                 }
 
                 val = _step13.value;
-                _context14.next = 10;
+                _context14.next = 9;
                 return mapFn(val);
 
-              case 10:
+              case 9:
                 _iteratorNormalCompletion13 = true;
-                _context14.next = 6;
+                _context14.next = 5;
                 break;
 
-              case 13:
-                _context14.next = 19;
+              case 12:
+                _context14.next = 18;
                 break;
 
-              case 15:
-                _context14.prev = 15;
-                _context14.t0 = _context14['catch'](4);
+              case 14:
+                _context14.prev = 14;
+                _context14.t0 = _context14['catch'](3);
                 _didIteratorError13 = true;
                 _iteratorError13 = _context14.t0;
 
-              case 19:
+              case 18:
+                _context14.prev = 18;
                 _context14.prev = 19;
-                _context14.prev = 20;
 
                 if (!_iteratorNormalCompletion13 && _iterator13.return) {
                   _iterator13.return();
                 }
 
-              case 22:
-                _context14.prev = 22;
+              case 21:
+                _context14.prev = 21;
 
                 if (!_didIteratorError13) {
-                  _context14.next = 25;
+                  _context14.next = 24;
                   break;
                 }
 
                 throw _iteratorError13;
 
+              case 24:
+                return _context14.finish(21);
+
               case 25:
-                return _context14.finish(22);
+                return _context14.finish(18);
 
               case 26:
-                return _context14.finish(19);
-
-              case 27:
               case 'end':
                 return _context14.stop();
             }
           }
-        }, _callee14, this, [[4, 15, 19, 27], [20,, 22, 26]]);
+        }, _callee14, this, [[3, 14, 18, 26], [19,, 21, 25]]);
+      }));
+    }
+
+    /**
+     * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+     *
+     * @memberof Collection
+     * @instance
+     * @method
+     * @example
+     * // [1, 2, 3, 4, 5, 6,]
+     * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+     * @return {Collection}  A new flattened Collection
+     */
+    function Flatten() {
+      return this.SelectMany(function (x) {
+        return x;
+      });
+    }
+
+    /**
+     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+     * @return {Collection}
+     */ /**
+        * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+        * The index of the source element can be used in the mapFn.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+        * @memberof Collection
+        * @instance
+        * @method
+        * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+        * @return {Collection}
+        */ /**
+           * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+           * Invokes a resultSelector function on each element of the sequence.
+           *
+           * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+           * @memberof Collection
+           * @instance
+           * @method
+           * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+           * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+           * @return {Collection}
+           */ /**
+              * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+              * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
+              *
+              * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+              * @memberof Collection
+              * @instance
+              * @method
+              * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+              * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+              * @return {Collection}
+              * @
+              */
+    function SelectMany(mapFn) {
+      var resultSelector = arguments.length <= 1 || arguments[1] === undefined ? function (x, y) {
+        return y;
+      } : arguments[1];
+
+      __assertFunction(mapFn);
+      __assertFunction(resultSelector);
+
+      var iter = this.getIterator();
+
+      return new Collection(regeneratorRuntime.mark(function _callee15() {
+        var index, _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, current, mappedEntry, newIter, _iteratorNormalCompletion15, _didIteratorError15, _iteratorError15, _iterator15, _step15, val;
+
+        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+          while (1) {
+            switch (_context15.prev = _context15.next) {
+              case 0:
+                index = 0;
+                _iteratorNormalCompletion14 = true;
+                _didIteratorError14 = false;
+                _iteratorError14 = undefined;
+                _context15.prev = 4;
+                _iterator14 = iter[Symbol.iterator]();
+
+              case 6:
+                if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
+                  _context15.next = 41;
+                  break;
+                }
+
+                current = _step14.value;
+                mappedEntry = mapFn(current, index);
+                newIter = void 0;
+
+
+                if (!isIterable(mappedEntry)) {
+                  newIter = [mappedEntry];
+                } else {
+                  newIter = mappedEntry;
+                }
+
+                _iteratorNormalCompletion15 = true;
+                _didIteratorError15 = false;
+                _iteratorError15 = undefined;
+                _context15.prev = 14;
+                _iterator15 = newIter[Symbol.iterator]()[Symbol.iterator]();
+
+              case 16:
+                if (_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done) {
+                  _context15.next = 23;
+                  break;
+                }
+
+                val = _step15.value;
+                _context15.next = 20;
+                return resultSelector(current, val);
+
+              case 20:
+                _iteratorNormalCompletion15 = true;
+                _context15.next = 16;
+                break;
+
+              case 23:
+                _context15.next = 29;
+                break;
+
+              case 25:
+                _context15.prev = 25;
+                _context15.t0 = _context15['catch'](14);
+                _didIteratorError15 = true;
+                _iteratorError15 = _context15.t0;
+
+              case 29:
+                _context15.prev = 29;
+                _context15.prev = 30;
+
+                if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                  _iterator15.return();
+                }
+
+              case 32:
+                _context15.prev = 32;
+
+                if (!_didIteratorError15) {
+                  _context15.next = 35;
+                  break;
+                }
+
+                throw _iteratorError15;
+
+              case 35:
+                return _context15.finish(32);
+
+              case 36:
+                return _context15.finish(29);
+
+              case 37:
+
+                index++;
+
+              case 38:
+                _iteratorNormalCompletion14 = true;
+                _context15.next = 6;
+                break;
+
+              case 41:
+                _context15.next = 47;
+                break;
+
+              case 43:
+                _context15.prev = 43;
+                _context15.t1 = _context15['catch'](4);
+                _didIteratorError14 = true;
+                _iteratorError14 = _context15.t1;
+
+              case 47:
+                _context15.prev = 47;
+                _context15.prev = 48;
+
+                if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                  _iterator14.return();
+                }
+
+              case 50:
+                _context15.prev = 50;
+
+                if (!_didIteratorError14) {
+                  _context15.next = 53;
+                  break;
+                }
+
+                throw _iteratorError14;
+
+              case 53:
+                return _context15.finish(50);
+
+              case 54:
+                return _context15.finish(47);
+
+              case 55:
+              case 'end':
+                return _context15.stop();
+            }
+          }
+        }, _callee15, this, [[4, 43, 47, 55], [14, 25, 29, 37], [30,, 32, 36], [48,, 50, 54]]);
       }));
     }
 
@@ -2249,13 +2455,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var input = this.ToArray();
       var elementSelector = elementSelectorOrKeyComparer;
 
-      var _iteratorNormalCompletion14 = true;
-      var _didIteratorError14 = false;
-      var _iteratorError14 = undefined;
+      var _iteratorNormalCompletion16 = true;
+      var _didIteratorError16 = false;
+      var _iteratorError16 = undefined;
 
       try {
         var _loop = function _loop() {
-          var value = _step14.value;
+          var value = _step16.value;
 
           var key = keySelector(value);
           var elem = elementSelector(value);
@@ -2269,20 +2475,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           result.set(key, elem);
         };
 
-        for (var _iterator14 = input[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+        for (var _iterator16 = input[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
           _loop();
         }
       } catch (err) {
-        _didIteratorError14 = true;
-        _iteratorError14 = err;
+        _didIteratorError16 = true;
+        _iteratorError16 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion14 && _iterator14.return) {
-            _iterator14.return();
+          if (!_iteratorNormalCompletion16 && _iterator16.return) {
+            _iterator16.return();
           }
         } finally {
-          if (_didIteratorError14) {
-            throw _iteratorError14;
+          if (_didIteratorError16) {
+            throw _iteratorError16;
           }
         }
       }
@@ -2315,34 +2521,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function Reverse() {
       var arr = this.ToArray();
 
-      return new Collection(regeneratorRuntime.mark(function _callee15() {
+      return new Collection(regeneratorRuntime.mark(function _callee16() {
         var i;
-        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+        return regeneratorRuntime.wrap(function _callee16$(_context16) {
           while (1) {
-            switch (_context15.prev = _context15.next) {
+            switch (_context16.prev = _context16.next) {
               case 0:
                 i = arr.length - 1;
 
               case 1:
                 if (!(i >= 0)) {
-                  _context15.next = 7;
+                  _context16.next = 7;
                   break;
                 }
 
-                _context15.next = 4;
+                _context16.next = 4;
                 return arr[i];
 
               case 4:
                 i--;
-                _context15.next = 1;
+                _context16.next = 1;
                 break;
 
               case 7:
               case 'end':
-                return _context15.stop();
+                return _context16.stop();
             }
           }
-        }, _callee15, this);
+        }, _callee16, this);
       }));
     }
 
@@ -2372,26 +2578,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       var oldIter = this.ToArray();
 
-      this.iterable = regeneratorRuntime.mark(function _callee16() {
-        return regeneratorRuntime.wrap(function _callee16$(_context16) {
+      this.iterable = regeneratorRuntime.mark(function _callee17() {
+        return regeneratorRuntime.wrap(function _callee17$(_context17) {
           while (1) {
-            switch (_context16.prev = _context16.next) {
+            switch (_context17.prev = _context17.next) {
               case 0:
-                return _context16.delegateYield(oldIter.slice(0, index), 't0', 1);
+                return _context17.delegateYield(oldIter.slice(0, index), 't0', 1);
 
               case 1:
-                _context16.next = 3;
+                _context17.next = 3;
                 return value;
 
               case 3:
-                return _context16.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
+                return _context17.delegateYield(oldIter.slice(index, oldIter.length), 't1', 4);
 
               case 4:
               case 'end':
-                return _context16.stop();
+                return _context17.stop();
             }
           }
-        }, _callee16, this);
+        }, _callee17, this);
       });
       this.reset();
     }
@@ -2410,19 +2616,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return false;
       }
 
-      this.iterable = regeneratorRuntime.mark(function _callee17() {
-        return regeneratorRuntime.wrap(function _callee17$(_context17) {
+      this.iterable = regeneratorRuntime.mark(function _callee18() {
+        return regeneratorRuntime.wrap(function _callee18$(_context18) {
           while (1) {
-            switch (_context17.prev = _context17.next) {
+            switch (_context18.prev = _context18.next) {
               case 0:
-                return _context17.delegateYield(values, 't0', 1);
+                return _context18.delegateYield(values, 't0', 1);
 
               case 1:
               case 'end':
-                return _context17.stop();
+                return _context18.stop();
             }
           }
-        }, _callee17, this);
+        }, _callee18, this);
       });
       this.reset();
 
@@ -2483,19 +2689,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       OrderedLinqCollection.prototype.getIterator = function () {
         var _self = this;
 
-        return regeneratorRuntime.mark(function _callee18() {
-          return regeneratorRuntime.wrap(function _callee18$(_context18) {
+        return regeneratorRuntime.mark(function _callee19() {
+          return regeneratorRuntime.wrap(function _callee19$(_context19) {
             while (1) {
-              switch (_context18.prev = _context18.next) {
+              switch (_context19.prev = _context19.next) {
                 case 0:
-                  return _context18.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
+                  return _context19.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
 
                 case 1:
                 case 'end':
-                  return _context18.stop();
+                  return _context19.stop();
               }
             }
-          }, _callee18, this);
+          }, _callee19, this);
         })();
       };
 
@@ -2587,6 +2793,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      * @instance
      * @memberof Collection
      * @method
+     * @example
+     * // Map {"S" => ["Sven"], "M" => ["Mauz"]}
+     * ['Sven', 'Mauz'].GroupBy(x => x[0])
      * @param {Function} keySelector A function to select grouping keys from the sequence members
      * @return {Map} The grouped sequence as a Map
      */ /**
@@ -2596,6 +2805,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         * @instance
         * @memberof Collection
         * @method
+        * @example
+        * // Map {"4" => ["4", 4], "5" => ["5"]}
+        * ['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))
         * @param {Function} keySelector A function to select grouping keys from the sequence members
         * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
         * @return {Map} The grouped sequence as a Map
@@ -2607,6 +2819,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
            * @instance
            * @memberof Collection
            * @method
+           * @example
+           * // Map {23 => ["Sven"], 20 => ["jon"]}
+           * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)
            * @param {Function} keySelector A function to select grouping keys from the sequence members
            * @param {Function} elementSelector A function to map each group member to a specific value
            * @return {Map} The grouped sequence as a Map
@@ -2618,6 +2833,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               * @instance
               * @memberof Collection
               * @method
+              * @example
+              * // [ { age:23, persons: "Sven&julia" }, { age: 20, persons: "jon" } ]
+              * [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&') })).ToArray()
               * @param {Function} keySelector A function to select grouping keys from the sequence members
               * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
               * @return {Collection} The grouped sequence with projected results as a new Collection
@@ -2698,29 +2916,29 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
        * getKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
        */
       function getKey(groups, key, keyComparer) {
-        var _iteratorNormalCompletion15 = true;
-        var _didIteratorError15 = false;
-        var _iteratorError15 = undefined;
+        var _iteratorNormalCompletion17 = true;
+        var _didIteratorError17 = false;
+        var _iteratorError17 = undefined;
 
         try {
-          for (var _iterator15 = groups.keys()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-            var groupKey = _step15.value;
+          for (var _iterator17 = groups.keys()[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+            var groupKey = _step17.value;
 
             if (keyComparer(groupKey, key)) {
               return groupKey;
             }
           }
         } catch (err) {
-          _didIteratorError15 = true;
-          _iteratorError15 = err;
+          _didIteratorError17 = true;
+          _iteratorError17 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion15 && _iterator15.return) {
-              _iterator15.return();
+            if (!_iteratorNormalCompletion17 && _iterator17.return) {
+              _iterator17.return();
             }
           } finally {
-            if (_didIteratorError15) {
-              throw _iteratorError15;
+            if (_didIteratorError17) {
+              throw _iteratorError17;
             }
           }
         }
@@ -2806,13 +3024,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         var groups = new Map();
         var result = void 0;
 
-        var _iteratorNormalCompletion16 = true;
-        var _didIteratorError16 = false;
-        var _iteratorError16 = undefined;
+        var _iteratorNormalCompletion18 = true;
+        var _didIteratorError18 = false;
+        var _iteratorError18 = undefined;
 
         try {
-          for (var _iterator16 = arr[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-            var val = _step16.value;
+          for (var _iterator18 = arr[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+            var val = _step18.value;
 
             // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
             var _key2 = getKey(groups, keySelector(val), keyComparer);
@@ -2825,16 +3043,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           }
         } catch (err) {
-          _didIteratorError16 = true;
-          _iteratorError16 = err;
+          _didIteratorError18 = true;
+          _iteratorError18 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion16 && _iterator16.return) {
-              _iterator16.return();
+            if (!_iteratorNormalCompletion18 && _iterator18.return) {
+              _iterator18.return();
             }
           } finally {
-            if (_didIteratorError16) {
-              throw _iteratorError16;
+            if (_didIteratorError18) {
+              throw _iteratorError18;
             }
           }
         }
@@ -2875,14 +3093,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           break;
         default:
           throw new Error('GroupBy parameter count can not be greater than 4!');
-          break;
       }
 
       return fn.apply(undefined, [keySelector].concat(args));
     }
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);
@@ -2895,13 +3112,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
     Object.keys(Collection.prototype).forEach(function (k) {
-      var _iteratorNormalCompletion17 = true;
-      var _didIteratorError17 = false;
-      var _iteratorError17 = undefined;
+      var _iteratorNormalCompletion19 = true;
+      var _didIteratorError19 = false;
+      var _iteratorError19 = undefined;
 
       try {
-        for (var _iterator17 = protosToApplyWrappers[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-          var proto = _step17.value;
+        for (var _iterator19 = protosToApplyWrappers[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+          var proto = _step19.value;
 
           proto[k] = function () {
             var _ref;
@@ -2910,16 +3127,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           };
         }
       } catch (err) {
-        _didIteratorError17 = true;
-        _iteratorError17 = err;
+        _didIteratorError19 = true;
+        _iteratorError19 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion17 && _iterator17.return) {
-            _iterator17.return();
+          if (!_iteratorNormalCompletion19 && _iterator19.return) {
+            _iterator19.return();
           }
         } finally {
-          if (_didIteratorError17) {
-            throw _iteratorError17;
+          if (_didIteratorError19) {
+            throw _iteratorError19;
           }
         }
       }

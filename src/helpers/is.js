@@ -19,7 +19,7 @@
   }
 
   function isIterable (obj) {
-    return (Symbol.iterator in obj)
+    return (Symbol.iterator in Object(obj))
   }
 
   function isString (obj) {

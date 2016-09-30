@@ -126,4 +126,43 @@ describe('Transformation', function () {
       expect(pets.Reverse().Reverse().ToArray()).to.be.deep.equal(pets)
     })
   })
+
+  describe('Flatten', function () {
+
+  })
+
+  describe('SelectMany', function () {
+    const petOwners = [
+      { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+      { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+      { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+    ]
+
+    describe('SelectMany(mapFn)', function () {
+      it('should map each value in the sequence using mapFn and flatten the result', function () {
+        expect(petOwners.SelectMany(petOwner => petOwner.Pets).ToArray()).to.be.deep.equal(['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel'])
+      })
+
+      it('should allow to use the index of the element to project the result', function () {
+          expect(petOwners.SelectMany((petOwner, index) =>
+                                 petOwner.Pets.Select(pet => index + pet)).ToArray()).to.be.deep.equal(['0Scruffy', '0Sam', '1Walker', '1Sugar', '2Scratches', '2Diesel'])
+      })
+    })
+
+    describe('SelectMany(mapFn, resultSelector)', function () {
+      it('should map each value in the sequence using mapFn and flatten the result. A resultSelector function is invoked on each output value.', function () {
+        const result = petOwners.SelectMany(petOwner => petOwner.Pets,
+                                            (owner, petName) => ({ owner, petName }))
+                                .Select(ownerAndPet => ({
+                                  owner: ownerAndPet.owner.Name,
+                                  pet: ownerAndPet.petName,
+                                }))
+                                .Take(2)
+                                .ToArray()
+        const expected = [{"owner":"Higa, Sidney","pet":"Scruffy"},{"owner":"Higa, Sidney","pet":"Sam"}]
+
+        expect(result).to.be.deep.equal(expected)
+      })
+    })
+  })
 })
