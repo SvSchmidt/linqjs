@@ -112,7 +112,7 @@
 
       for (let current of iter) {
         let mappedEntry = mapFn(current, index)
-        let newIter
+        let newIter = mappedEntry
 
         if (!isIterable(mappedEntry)) {
           newIter = [mappedEntry]
@@ -230,4 +230,4 @@
     })
   }
 
-  __export({ Aggregate, Distinct, Select, SelectMany, Reverse, ToArray, ToDictionary, ToJSON })
+  __export({ Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON })

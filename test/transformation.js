@@ -128,7 +128,9 @@ describe('Transformation', function () {
   })
 
   describe('Flatten', function () {
-
+    it('should flatten a sequence', function () {
+      expect([1,2,3,[4,5,6]].Flatten().ToArray()).to.be.deep.equal([1,2,3,4,5,6])
+    })
   })
 
   describe('SelectMany', function () {
