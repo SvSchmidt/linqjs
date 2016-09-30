@@ -147,18 +147,82 @@
     return removeDuplicates(this, equalityCompareFn)
   }
 
+  /**
+   * ToArray - Enforces immediate evaluation of the whole Collection and returns an array of the result
+   *
+   * @see https://msdn.microsoft.com/de-de/library/bb298736(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @return {Array}
+   */
   function ToArray () {
     return [...this.getIterator()]
   }
 
   /**
-   * ToDictionary - description
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector.
    *
    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
-   * @param  {Function} keySelector                  Function to get the keys from the elements
-   * @param  {Function} elementSelectorOrKeyComparer Function to either get the elements or compare the keys
-   * @param  {Function} keyComparer                  Function to compare the keys
-   * @return {Map}                                   A dictionary (Map)
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @return {Map}
+   *//**
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector and each element is transformed using the elementSelector.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+const pets = [
+  { name: 'miez', species: 'cat' },
+  { name: 'wuff', species: 'dog' },
+  { name: 'leo', species: 'cat' },
+  { name: 'flipper', species: 'dolphin' }
+]
+pets.ToDictionary(pet => pet.name, pet => pet.species)
+// -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @param {Function} elementSelector A function to map each element to a specific value, e.g. to properties
+   * @return {Map}
+   *//**
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector. The keys are compared using the keyComparer. Duplicate keys throw an error.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+const pets = [
+  { name: 'miez', species: 'cat' },
+  { name: 'wuff', species: 'dog' },
+  { name: 'leo', species: 'cat' },
+  { name: 'flipper', species: 'dolphin' }
+]
+pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
+// -> error since cat and dog have 3 chars each and considered equal
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @param {Function} keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
+   * @return {Map}
+   *//**
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector and each element is transformed using the elementSelector.
+   * The keys are compared using the keyComparer. Duplicate keys throw an error.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @param {Function} elementSelector A function to map each element to a specific value, e.g. to properties
+   * @param {Function} keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
+   * @return {Map}
    */
   function ToDictionary (keySelector, elementSelectorOrKeyComparer, keyComparer) {
     __assertFunction(keySelector)
@@ -230,4 +294,18 @@
     })
   }
 
-  __export({ Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON })
+  /**
+   * ForEach - Invokes a function for each value of the Collection
+   *
+   * @param  {Function} fn 
+   * @return {void}
+   */
+  function ForEach (fn) {
+    __assertFunction(fn)
+
+    for (let val of this.getIterator()) {
+      fn(val)
+    }
+  }
+
+  __export({ Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach })

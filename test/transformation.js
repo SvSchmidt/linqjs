@@ -167,4 +167,16 @@ describe('Transformation', function () {
       })
     })
   })
+
+  describe('ForEach', function () {
+    it('should invoke a function for each value of the Collection', function () {
+      let called = 0;
+      [1,2,3,4,5,6].ForEach(elem => called++)
+      expect(called).to.be.equal(6)
+
+      let sum = 0;
+      [1,2,3,4,5,6].ForEach(elem => sum += elem)
+      expect(sum).to.be.equal(21)
+    })
+  })
 })
