@@ -5,6 +5,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {"S" => ["Sven"], "M" => ["Mauz"]}
+ * ['Sven', 'Mauz'].GroupBy(x => x[0])
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @return {Map} The grouped sequence as a Map
  *//**
@@ -14,6 +17,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {"4" => ["4", 4], "5" => ["5"]}
+ * ['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
  * @return {Map} The grouped sequence as a Map
@@ -25,6 +31,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {23 => ["Sven"], 20 => ["jon"]}
+ * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} elementSelector A function to map each group member to a specific value
  * @return {Map} The grouped sequence as a Map
@@ -36,6 +45,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // [ { age:23, persons: "Sven&julia" }, { age: 20, persons: "jon" } ]
+ * [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&') })).ToArray()
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
  * @return {Collection} The grouped sequence with projected results as a new Collection

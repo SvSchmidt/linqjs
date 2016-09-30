@@ -33,6 +33,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {"S" => ["Sven"], "M" => ["Mauz"]}
+ * ['Sven', 'Mauz'].GroupBy(x => x[0])
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @return {Map} The grouped sequence as a Map
  *//**
@@ -42,6 +45,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {"4" => ["4", 4], "5" => ["5"]}
+ * ['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
  * @return {Map} The grouped sequence as a Map
@@ -53,6 +59,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // Map {23 => ["Sven"], 20 => ["jon"]}
+ * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} elementSelector A function to map each group member to a specific value
  * @return {Map} The grouped sequence as a Map
@@ -64,6 +73,9 @@
  * @instance
  * @memberof Collection
  * @method
+ * @example
+ * // [ { age:23, persons: "Sven&amp;julia" }, { age: 20, persons: "jon" } ]
+ * [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&amp;') })).ToArray()
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
  * @return {Collection} The grouped sequence with projected results as a new Collection
@@ -121,21 +133,28 @@
  * @
  */
 function GroupBy (keySelector, ...args) {
-  __assertFunction(keySelector)
-
   const arr = this.ToArray()
 
+  /**
+   * isKeyComparer - Checks whether or not a function is a keyComparer. We need to differentiate between the keyComparer and the resultSelector
+   * since both take two arguments.
+   */
   function isKeyComparer (arg) {
     let result = getParameterCount(arg) === 2
     try {
+      // if this is a key comparer, it must return truthy values for equal values and falsy ones if they're different
       result = result &amp;&amp; arg(1, 1) &amp;&amp; !arg(1, 2)
     } catch (err) {
+      // if the function throws an error for values, it can't be a keyComparer
       result = false
     }
 
     return result
   }
 
+  /**
+   * getKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
+   */
   function getKey(groups, key, keyComparer) {
     for (let groupKey of groups.keys()) {
       if (keyComparer(groupKey, key)) {
@@ -203,11 +222,20 @@ function GroupBy (keySelector, ...args) {
     return groupBy(keySelector, elementSelector, resultSelector, keyComparer)
   }
 
+  /**
+   * This is the "basic" function to use. The others just transform their parameters to be used with this one.
+   */
   function groupBy (keySelector, elementSelector, resultSelector, keyComparer) {
+    __assertFunction(keySelector)
+    __assertFunction(elementSelector)
+    __assert(isUndefined(resultSelector) || isFunction(resultSelector), 'resultSelector must be undefined or function!')
+    __assertFunction(keyComparer)
+
     let groups = new Map()
     let result
 
     for (let val of arr) {
+      // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
       const key = getKey(groups, keySelector(val), keyComparer)
       const elem = elementSelector(val)
 
@@ -219,31 +247,37 @@ function GroupBy (keySelector, ...args) {
     }
 
     if (resultSelector) {
+      // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
       result = groups.ToArray().Select(g => resultSelector(...g))
     } else {
+      // our result is just the grouos -> return the Map
       result = groups
     }
 
     return result
   }
 
+  // the first parameter of GroupBy is always the keySelector, so we have to differentiate the following arguments
+  // and select the appropriate function
+  let fn
   switch (args.length) {
     case 0:
-      return groupByOneArgument(keySelector)
+      fn = groupByOneArgument
       break
     case 1:
-      return groupByTwoArguments(keySelector, ...args)
+      fn = groupByTwoArguments
       break
     case 2:
-      return groupByThreeArguments(keySelector, ...args)
+      fn = groupByThreeArguments
       break
     case 3:
-      return groupBy(keySelector, ...args)
+      fn = groupBy
       break
     default:
       throw new Error('GroupBy parameter count can not be greater than 4!')
-      break
   }
+
+  return fn(keySelector, ...args)
 }
 
 __export({ GroupBy })
@@ -263,7 +297,7 @@ __export({ GroupBy })
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Fri Sep 30 2016 13:20:20 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Fri Sep 30 2016 13:49:23 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
