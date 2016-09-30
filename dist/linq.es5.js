@@ -2574,6 +2574,100 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* src/grouping.js */
 
+    /**
+     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @instance
+     * @memberof Collection
+     * @method
+     * @param {Function} keySelector A function to select grouping keys from the sequence members
+     * @return {Map} The grouped sequence as a Map
+     */ /**
+        * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using keyComparer.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+        * @instance
+        * @memberof Collection
+        * @method
+        * @param {Function} keySelector A function to select grouping keys from the sequence members
+        * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+        * @return {Map} The grouped sequence as a Map
+        */ /**
+           * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+           * Each group member is projected to a single value (e.g. a property) using the elementSelector.
+           *
+           * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+           * @instance
+           * @memberof Collection
+           * @method
+           * @param {Function} keySelector A function to select grouping keys from the sequence members
+           * @param {Function} elementSelector A function to map each group member to a specific value
+           * @return {Map} The grouped sequence as a Map
+           */ /**
+              * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+              * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
+              *
+              * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+              * @instance
+              * @memberof Collection
+              * @method
+              * @param {Function} keySelector A function to select grouping keys from the sequence members
+              * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
+              * @return {Collection} The grouped sequence with projected results as a new Collection
+              */ /**
+                 * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+                 * Each group member is projected to a single value (e.g. a property) using the elementSelector.
+                 *
+                 * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+                 * @instance
+                 * @memberof Collection
+                 * @method
+                 * @param {Function} keySelector A function to select grouping keys from the sequence members
+                 * @param {Function} elementSelector A function to map each group member to a specific value
+                 * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+                 * @return {Map} The grouped sequence as a Map
+                 */ /**
+                    * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+                    * Each group member is projected to a single value (e.g. a property) using the elementSelector.
+                    *
+                    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+                    * @instance
+                    * @memberof Collection
+                    * @method
+                    * @param {Function} keySelector A function to select grouping keys from the sequence members
+                    * @param {Function} elementSelector A function to map each group member to a specific value
+                    * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+                    * @return {Map} The grouped sequence as a Map
+                    */ /**
+                       * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+                       * Each group member is projected to a single value (e.g. a property) using the elementSelector.
+                       * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
+                       *
+                       * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+                       * @instance
+                       * @memberof Collection
+                       * @method
+                       * @param {Function} keySelector A function to select grouping keys from the sequence members
+                       * @param {Function} elementSelector A function to map each group member to a specific value
+                       * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
+                       * @return {Collection} The grouped sequence with projected results as a new Collection
+                       */ /**
+                          * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using the keyComparer.
+                          * Each group member is projected to a single value (e.g. a property) using the elementSelector.
+                          * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
+                          *
+                          * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+                          * @instance
+                          * @memberof Collection
+                          * @method
+                          * @param {Function} keySelector A function to select grouping keys from the sequence members
+                          * @param {Function} elementSelector A function to map each group member to a specific value
+                          * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
+                          * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+                          * @return {Collection} The grouped sequence with projected results as a new Collection
+                          * @
+                          */
     function GroupBy(keySelector) {
       __assertFunction(keySelector);
 
@@ -2582,12 +2676,43 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       function isKeyComparer(arg) {
         var result = getParameterCount(arg) === 2;
         try {
-          result = result && arg('a', 'a') && !arg('a', 'b');
+          result = result && arg(1, 1) && !arg(1, 2);
         } catch (err) {
           result = false;
         }
 
         return result;
+      }
+
+      function getKey(groups, key, keyComparer) {
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
+
+        try {
+          for (var _iterator15 = groups.keys()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var groupKey = _step15.value;
+
+            if (keyComparer(groupKey, key)) {
+              return groupKey;
+            }
+          }
+        } catch (err) {
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
+            }
+          } finally {
+            if (_didIteratorError15) {
+              throw _iteratorError15;
+            }
+          }
+        }
+
+        return key;
       }
 
       /*
@@ -2602,7 +2727,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       /*
       GroupBy(keySelector, keyComparer)
       GroupBy(keySelector, elementSelector)
-      GroupBy(keySelector, resultTransformFn)
+      GroupBy(keySelector, resultSelector)
       */
       function groupByTwoArguments(keySelector, second) {
         var keyComparer = void 0,
@@ -2622,23 +2747,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
 
       /*
-      GroupBy(keySelector, resultTransformFn, keyComparer)
+      GroupBy(keySelector, resultSelector, keyComparer)
       GroupBy(keySelector, elementSelector, keyComparer)
-      GroupBy(keySelector, elementSelector, resultTransformFn)
+      GroupBy(keySelector, elementSelector, resultSelector)
       */
       function groupByThreeArguments(keySelector, second, third) {
         var keyComparer = void 0,
             elementSelector = void 0,
-            resultTransformFn = void 0;
+            resultSelector = void 0;
 
         if (isKeyComparer(third)) {
           keyComparer = third;
         } else {
-          resultTransformFn = third;
+          resultSelector = third;
         }
 
         if (getParameterCount(second) === 2) {
-          resultTransformFn = second;
+          resultSelector = second;
         } else {
           elementSelector = second;
         }
@@ -2653,48 +2778,48 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           };
         }
 
-        return groupBy(keySelector, elementSelector, resultTransformFn, keyComparer);
+        return groupBy(keySelector, elementSelector, resultSelector, keyComparer);
       }
 
-      function groupBy(keySelector, elementSelector, resultTransformFn, keyComparer) {
+      function groupBy(keySelector, elementSelector, resultSelector, keyComparer) {
         var groups = new Map();
         var result = void 0;
 
-        var _iteratorNormalCompletion15 = true;
-        var _didIteratorError15 = false;
-        var _iteratorError15 = undefined;
+        var _iteratorNormalCompletion16 = true;
+        var _didIteratorError16 = false;
+        var _iteratorError16 = undefined;
 
         try {
-          for (var _iterator15 = arr[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-            var val = _step15.value;
+          for (var _iterator16 = arr[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            var val = _step16.value;
 
-            var _key = keySelector(val);
+            var _key2 = getKey(groups, keySelector(val), keyComparer);
             var elem = elementSelector(val);
 
-            if (groups.has(_key)) {
-              groups.get(_key).push(elem);
+            if (groups.has(_key2)) {
+              groups.get(_key2).push(elem);
             } else {
-              groups.set(_key, [elem]);
+              groups.set(_key2, [elem]);
             }
           }
         } catch (err) {
-          _didIteratorError15 = true;
-          _iteratorError15 = err;
+          _didIteratorError16 = true;
+          _iteratorError16 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion15 && _iterator15.return) {
-              _iterator15.return();
+            if (!_iteratorNormalCompletion16 && _iterator16.return) {
+              _iterator16.return();
             }
           } finally {
-            if (_didIteratorError15) {
-              throw _iteratorError15;
+            if (_didIteratorError16) {
+              throw _iteratorError16;
             }
           }
         }
 
-        if (resultTransformFn) {
+        if (resultSelector) {
           result = groups.ToArray().Select(function (g) {
-            return resultTransformFn(g[0], g[1]);
+            return resultSelector.apply(undefined, _toConsumableArray(g));
           });
         } else {
           result = groups;
@@ -2703,18 +2828,22 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return result;
       }
 
-      switch (arguments.length <= 1 ? 0 : arguments.length - 1) {
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      switch (args.length) {
         case 0:
           return groupByOneArgument(keySelector);
           break;
         case 1:
-          return groupByTwoArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1]);
+          return groupByTwoArguments.apply(undefined, [keySelector].concat(args));
           break;
         case 2:
-          return groupByThreeArguments(keySelector, arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2]);
+          return groupByThreeArguments.apply(undefined, [keySelector].concat(args));
           break;
         case 3:
-          return groupBy(keySelector, arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], arguments.length <= 3 ? undefined : arguments[3]);
+          return groupBy.apply(undefined, [keySelector].concat(args));
           break;
         default:
           throw new Error('GroupBy parameter count can not be greater than 4!');
@@ -2736,13 +2865,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
     Object.keys(Collection.prototype).forEach(function (k) {
-      var _iteratorNormalCompletion16 = true;
-      var _didIteratorError16 = false;
-      var _iteratorError16 = undefined;
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
 
       try {
-        for (var _iterator16 = protosToApplyWrappers[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-          var proto = _step16.value;
+        for (var _iterator17 = protosToApplyWrappers[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var proto = _step17.value;
 
           proto[k] = function () {
             var _ref;
@@ -2751,16 +2880,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           };
         }
       } catch (err) {
-        _didIteratorError16 = true;
-        _iteratorError16 = err;
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion16 && _iterator16.return) {
-            _iterator16.return();
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
           }
         } finally {
-          if (_didIteratorError16) {
-            throw _iteratorError16;
+          if (_didIteratorError17) {
+            throw _iteratorError17;
           }
         }
       }

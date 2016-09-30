@@ -30,17 +30,17 @@ module.exports = function (grunt) {
     uglify: {
         dist: {
             files: {
-              'dist/linq.min.js': ['dist/linq.es5.js']
+              'dist/linq.es5.min.js': ['dist/linq.es5.js']
             }
         }
     },
     file_info: {
       dist: {
-        src: ['dist/linq.min.js', 'dist/linq.es5.js', 'dist/linq.js'],
+        src: ['dist/linq.es5.min.js', 'dist/linq.es5.js', 'dist/linq.js'],
         options: {
-            stdout: 'linq.js ES6   :   {{= Number(size(src[2])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
-                    'linq.js ES5   :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
-                    'linq.min.js   :   {{= Number(size(src[0])/1024).toFixed(2) }} kB' + grunt.util.linefeed
+            stdout: 'linq.js ES6       :   {{= Number(size(src[2])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
+                    'linq.js ES5       :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
+                    'linq.min.js ES5   :   {{= Number(size(src[0])/1024).toFixed(2) }} kB' + grunt.util.linefeed
         }
       }
     },
