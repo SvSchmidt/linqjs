@@ -5,6 +5,8 @@
  */
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -331,6 +333,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           }
         }, _callee4, this);
       }).constructor;
+    }
+
+    function isUndefined(obj) {
+      return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined));
     }
 
     /* src/helpers/helpers.js */
@@ -2669,21 +2675,28 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                           * @
                           */
     function GroupBy(keySelector) {
-      __assertFunction(keySelector);
-
       var arr = this.ToArray();
 
+      /**
+       * isKeyComparer - Checks whether or not a function is a keyComparer. We need to differentiate between the keyComparer and the resultSelector
+       * since both take two arguments.
+       */
       function isKeyComparer(arg) {
         var result = getParameterCount(arg) === 2;
         try {
+          // if this is a key comparer, it must return truthy values for equal values and falsy ones if they're different
           result = result && arg(1, 1) && !arg(1, 2);
         } catch (err) {
+          // if the function throws an error for values, it can't be a keyComparer
           result = false;
         }
 
         return result;
       }
 
+      /**
+       * getKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
+       */
       function getKey(groups, key, keyComparer) {
         var _iteratorNormalCompletion15 = true;
         var _didIteratorError15 = false;
@@ -2781,7 +2794,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return groupBy(keySelector, elementSelector, resultSelector, keyComparer);
       }
 
+      /**
+       * This is the "basic" function to use. The others just transform their parameters to be used with this one.
+       */
       function groupBy(keySelector, elementSelector, resultSelector, keyComparer) {
+        __assertFunction(keySelector);
+        __assertFunction(elementSelector);
+        __assert(isUndefined(resultSelector) || isFunction(resultSelector), 'resultSelector must be undefined or function!');
+        __assertFunction(keyComparer);
+
         var groups = new Map();
         var result = void 0;
 
@@ -2793,6 +2814,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           for (var _iterator16 = arr[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
             var val = _step16.value;
 
+            // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
             var _key2 = getKey(groups, keySelector(val), keyComparer);
             var elem = elementSelector(val);
 
@@ -2818,15 +2840,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
 
         if (resultSelector) {
+          // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
           result = groups.ToArray().Select(function (g) {
             return resultSelector.apply(undefined, _toConsumableArray(g));
           });
         } else {
+          // our result is just the grouos -> return the Map
           result = groups;
         }
 
         return result;
       }
+
+      // the first parameter of GroupBy is always the keySelector, so we have to differentiate the following arguments
+      // and select the appropriate function
+      var fn = void 0;
 
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
@@ -2834,21 +2862,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       switch (args.length) {
         case 0:
-          return groupByOneArgument(keySelector);
+          fn = groupByOneArgument;
           break;
         case 1:
-          return groupByTwoArguments.apply(undefined, [keySelector].concat(args));
+          fn = groupByTwoArguments;
           break;
         case 2:
-          return groupByThreeArguments.apply(undefined, [keySelector].concat(args));
+          fn = groupByThreeArguments;
           break;
         case 3:
-          return groupBy.apply(undefined, [keySelector].concat(args));
+          fn = groupBy;
           break;
         default:
           throw new Error('GroupBy parameter count can not be greater than 4!');
           break;
       }
+
+      return fn.apply(undefined, [keySelector].concat(args));
     }
 
     /* Export public interface */

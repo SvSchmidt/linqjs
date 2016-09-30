@@ -93,21 +93,28 @@
  * @
  */
 function GroupBy (keySelector, ...args) {
-  __assertFunction(keySelector)
-
   const arr = this.ToArray()
 
+  /**
+   * isKeyComparer - Checks whether or not a function is a keyComparer. We need to differentiate between the keyComparer and the resultSelector
+   * since both take two arguments.
+   */
   function isKeyComparer (arg) {
     let result = getParameterCount(arg) === 2
     try {
+      // if this is a key comparer, it must return truthy values for equal values and falsy ones if they're different
       result = result && arg(1, 1) && !arg(1, 2)
     } catch (err) {
+      // if the function throws an error for values, it can't be a keyComparer
       result = false
     }
 
     return result
   }
 
+  /**
+   * getKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
+   */
   function getKey(groups, key, keyComparer) {
     for (let groupKey of groups.keys()) {
       if (keyComparer(groupKey, key)) {
@@ -175,11 +182,20 @@ function GroupBy (keySelector, ...args) {
     return groupBy(keySelector, elementSelector, resultSelector, keyComparer)
   }
 
+  /**
+   * This is the "basic" function to use. The others just transform their parameters to be used with this one.
+   */
   function groupBy (keySelector, elementSelector, resultSelector, keyComparer) {
+    __assertFunction(keySelector)
+    __assertFunction(elementSelector)
+    __assert(isUndefined(resultSelector) || isFunction(resultSelector), 'resultSelector must be undefined or function!')
+    __assertFunction(keyComparer)
+
     let groups = new Map()
     let result
 
     for (let val of arr) {
+      // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
       const key = getKey(groups, keySelector(val), keyComparer)
       const elem = elementSelector(val)
 
@@ -191,31 +207,37 @@ function GroupBy (keySelector, ...args) {
     }
 
     if (resultSelector) {
+      // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
       result = groups.ToArray().Select(g => resultSelector(...g))
     } else {
+      // our result is just the grouos -> return the Map
       result = groups
     }
 
     return result
   }
 
+  // the first parameter of GroupBy is always the keySelector, so we have to differentiate the following arguments
+  // and select the appropriate function
+  let fn
   switch (args.length) {
     case 0:
-      return groupByOneArgument(keySelector)
+      fn = groupByOneArgument
       break
     case 1:
-      return groupByTwoArguments(keySelector, ...args)
+      fn = groupByTwoArguments
       break
     case 2:
-      return groupByThreeArguments(keySelector, ...args)
+      fn = groupByThreeArguments
       break
     case 3:
-      return groupBy(keySelector, ...args)
+      fn = groupBy
       break
     default:
       throw new Error('GroupBy parameter count can not be greater than 4!')
-      break
   }
+
+  return fn(keySelector, ...args)
 }
 
 __export({ GroupBy })

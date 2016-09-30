@@ -44,6 +44,10 @@ describe('grouping', function () {
       }
     ]
 
+    it('should throw an error if called with more than 4 arguments', function () {
+      expect(function () { pets.GroupBy(pet => pet.Age, pet => pet.Age, 'foo', 'bar', 'baz') }).to.throw(Error)
+    })
+
     describe('GroupBy(keySelector)', function () {
       it('should group the elements using the keySelector', function () {
         const result = pets.GroupBy(pet => pet.Name[0])

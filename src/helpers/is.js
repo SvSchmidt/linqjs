@@ -33,3 +33,7 @@
   function isGenerator (obj) {
     return obj instanceof (function * () {}).constructor;
   }
+
+  function isUndefined (obj) {
+    return typeof obj === typeof undefined
+  }
