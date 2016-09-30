@@ -146,4 +146,19 @@
     })
   }
 
+  /**
+   * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+   *
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+   * // [1, 2, 3, 4, 5, 6,]
+   * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+   * @return {Collection}  A new flattened Collection
+   */
+  function Flatten () {
+    return new Collection(Array.prototype.concat.apply([], this.ToArray()))
+  }
+
   __export({ Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, ToJSON })

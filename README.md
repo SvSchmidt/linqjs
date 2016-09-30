@@ -32,7 +32,7 @@
 - [x] From
 - [ ] Generate
 - [ ] GetEnumerator
-- [ ] GroupBy
+- [x] GroupBy
 - [ ] GroupJoin
 - [ ] IndexOf
 - [x] Insert
