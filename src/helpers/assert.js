@@ -36,12 +36,12 @@
     __assert(isNumeric(obj), 'Parameter must be numeric!')
   }
 
-  function __assertNumberBetween(num, min, max = Infinity) {
+  function __assertNumberBetween (num, min, max = Infinity) {
     __assertNumeric(num)
     __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`)
   }
 
-  function __assertIndexInRange(coll, index) {
+  function __assertIndexInRange (coll, index) {
     __assertCollection(coll)
     __assert(isNumeric(index), 'Index must be number!')
     __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds')

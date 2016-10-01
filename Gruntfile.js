@@ -143,68 +143,74 @@ module.exports = function (grunt) {
     }
   }
 
-  function getCombinedExports (exportsArr = []) {
-    const result = exportsArr
-          .filter(x => String(x) === x)
-          .map(x => x.trim())
-          .join(', ')
-
-    return `  /* Export public interface */\n  __export({ ${result} })\n`
-  }
-
-  function getAssertions (source) {
-    const re = /__assert[a-zA-Z]+/img
+  function getNonExportedFunctions (source, exportsArr) {
+    const pattern = /function ([a-z_][a-zA-Z0-9-_]+)\s?\(.*\) {$/mg
     let result = []
     let match
 
     do {
-        match = re.exec(source);
-        // push into result array if not already
-        match && !~result.indexOf(match[0]) && result.push(match[0])
+        match = pattern.exec(source);
+        // push into result array if not in list of exports
+        match && !~exportsArr.indexOf(match[1]) && result.push(match[1])
     } while (match)
 
-
-    return result
+    return result.sort().reverse()
   }
 
-  function minify (source) {
+  function minify (source, exportsArr) {
     const blockCommentRegexp = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g
     const singleLineCommentRegexp = /(\/\/.*\n)/g
-    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=']
+    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=', '>=']
     const stripWhiteSpacesAfterChars = [',', ';', ')']
     const stripWhiteSpacesBeforeChars = [',', ';', '(']
 
+    // Get functions which are not exported (internal use) and rename them to have shorter names
+    const nonExported = getNonExportedFunctions(source, exportsArr)
+
+    for (let i = 0; i < nonExported.length; i++) {
+      const charCode = 97 + i
+      const result = charCode % 122 >= 97
+                   ? String.fromCharCode(97 + i)
+                   : String.fromCharCode(97 + (charCode % 122)) + String.fromCharCode(97 + (charCode % 122))
+
+      source = source.replace(new RegExp(RegExp.escape(nonExported[i]), 'g'), result)
+    }
+
+    // Remove comments (block and line)
     source = source.replace(blockCommentRegexp, '')
     source = source.replace(singleLineCommentRegexp, '')
-    source = source.replace(/^\s+/mg, '') // leading whitespace
 
+    // Remove leading whitespace
+    source = source.replace(/^\s+/mg, '')
+
+    // Remove whitespace before and after some chars
     stripWhiteSpacesBeforeAndAfterChars.forEach(c => {
       source = source.replace(new RegExp(` ${RegExp.escape(c)} `, 'g'), c)
     })
 
+    // Remove whitespace after some chars
     stripWhiteSpacesAfterChars.forEach(c => {
       source = source.replace(new RegExp(`${RegExp.escape(c)} `, 'g'), c)
     })
 
+    // Remove whitespace before some chars
     stripWhiteSpacesBeforeChars.forEach(c => {
       source = source.replace(new RegExp(` ${RegExp.escape(c)}`, 'g'), c)
     })
 
-    const assertions = getAssertions(source)
-
-    for (let i = 0; i < assertions.length; i++) {
-      const char = '__' + String.fromCharCode(97 + i)
-      source = source.replace(new RegExp(RegExp.escape(assertions[i]), 'g'), char)
-    }
-
-    source = source.replace(/\_\_assert/g, '__')
-
+    // insert semicola at line ends if there was none of the defined characters before
     source = source.replace(/(.+[^;,{}\n])\n(?![\?\:\}])/g, '$1;')
+
+    // remove multi-linebreaks
     source = source.replace(/\n\n/g, '\n')
-    //source = source.replace(/\{\}/g, '{};')
+
+    // Remove line breaks if an opening curly brace was before
+    source = source.replace(/{\n/g, '{')
+
+    // Remove line breaks if followed by any character and a closing curly brace (positive look-ahead)
+    source = source.replace(/\n(?=.*})/mg, '')
+
     //source = source.replace(/\n/g, '')
-    source = source.replace(/(return {.*})\}\("/g, '$1;}(')
-    //source = source.replace(/\}return/g, '};return')
 
     return source
   }
@@ -246,13 +252,23 @@ module.exports = function (grunt) {
       linqjsExports.push(theExports)
     }
 
-    // combine exports, will yield an object in ES6 syntax: { foo, bar, baz }
-    linqJsExports = getCombinedExports(linqjsExports)
+    // combine exports
+    linqjsExports = linqjsExports
+          .filter(x => String(x) === x)
+          .map(x => x.trim())
+          .join(', ')
+    const linqjsExportStr = `  /* Export public interface */\n  __export({ ${linqjsExports} })\n`
 
     /*
     combine the sources in the appropriate order and process the final source code (e.g. normalizing line breaks)
     */
-    let combinedSources = String.prototype.concat.apply('', [pre, moduleLoaderPre, linqjsOutput, linqJsExports, moduleLoaderPost, post])
+    let combinedSources = String.prototype.concat.apply('', [
+      pre,
+      moduleLoaderPre,
+      linqjsOutput,
+      linqjsExportStr,
+      moduleLoaderPost,
+      post])
     let output = normalizeLineBreaks(combinedSources)
 
     /*
@@ -263,7 +279,7 @@ module.exports = function (grunt) {
     /*
     Write minified output
     */
-    grunt.file.write(`./${minTarget}`, minify(output))
+    grunt.file.write(`./${minTarget}`, minify(output, linqjsExports.split(', ')))
 
     grunt.log.ok(`\n${sourceFileNames.join(', ')} ==> ${target}`)
     grunt.log.ok(`\nMinified ${target} => ${minTarget}`)
