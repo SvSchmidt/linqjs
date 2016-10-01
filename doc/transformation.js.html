@@ -62,13 +62,97 @@
   }
 
   function Select (mapFn = x => x) {
-    const _self = this
+    const iter = this.getIterator()
 
     return new Collection(function * () {
-      _self.reset()
-
-      for (let val of _self) {
+      for (let val of iter) {
         yield mapFn(val)
+      }
+    })
+  }
+
+  /**
+   * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+   *
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+   * // [1, 2, 3, 4, 5, 6,]
+   * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+   * @return {Collection}  A new flattened Collection
+   */
+  function Flatten () {
+    return this.SelectMany(x => x)
+  }
+
+  /**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * The index of the source element can be used in the mapFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * Invokes a resultSelector function on each element of the sequence.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+   * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+   * @return {Collection}
+   *//**
+   * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+   * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+   * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+   * @return {Collection}
+   * @
+   */
+  function SelectMany (mapFn, resultSelector = (x, y) => y) {
+    __assertFunction(mapFn)
+    __assertFunction(resultSelector)
+
+    const iter = this.getIterator()
+
+    return new Collection(function * () {
+      let index = 0
+
+      for (let current of iter) {
+        let mappedEntry = mapFn(current, index)
+        let newIter = mappedEntry
+
+        if (!isIterable(mappedEntry)) {
+          newIter = [mappedEntry]
+        } else {
+          newIter = mappedEntry
+        }
+
+        for (let val of newIter[Symbol.iterator]()) {
+          yield resultSelector(current, val)
+        }
+
+        index++
       }
     })
   }
@@ -91,18 +175,65 @@
     return removeDuplicates(this, equalityCompareFn)
   }
 
+  /**
+   * ToArray - Enforces immediate evaluation of the whole Collection and returns an array of the result
+   *
+   * @return {Array}
+   */
   function ToArray () {
     return [...this.getIterator()]
   }
 
   /**
-   * ToDictionary - description
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector.
    *
    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
-   * @param  {Function} keySelector                  Function to get the keys from the elements
-   * @param  {Function} elementSelectorOrKeyComparer Function to either get the elements or compare the keys
-   * @param  {Function} keyComparer                  Function to compare the keys
-   * @return {Map}                                   A dictionary (Map)
+   * @memberof Collection
+   * @instance
+   * @method
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @return {Map}
+   *//**
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector and each element is transformed using the elementSelector.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+const pets = [
+  { name: 'miez', species: 'cat' },
+  { name: 'wuff', species: 'dog' },
+  { name: 'leo', species: 'cat' },
+  { name: 'flipper', species: 'dolphin' }
+]
+pets.ToDictionary(pet => pet.name, pet => pet.species)
+// -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @param {Function} elementSelector A function to map each element to a specific value, e.g. to properties
+   * @return {Map}
+   *//**
+   * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+   * The key is defined by the keySelector. The keys are compared using the keyComparer. Duplicate keys throw an error.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+   * @memberof Collection
+   * @instance
+   * @method
+   * @example
+const pets = [
+  { name: 'miez', species: 'cat' },
+  { name: 'wuff', species: 'dog' },
+  { name: 'leo', species: 'cat' },
+  { name: 'flipper', species: 'dolphin' }
+]
+pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
+// -> error since cat and dog have 3 chars each and considered equal
+   * @param {Function} keySelector The function to use to retrieve the key from the Collection
+   * @param {Function} keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
+   * @return {Map}
    */
   function ToDictionary (keySelector, elementSelectorOrKeyComparer, keyComparer) {
     __assertFunction(keySelector)
@@ -174,7 +305,15 @@
     })
   }
 
-  __export({ Aggregate, Distinct, Select, Reverse, ToArray, ToDictionary, ToJSON })
+  function ForEach (fn) {
+    __assertFunction(fn)
+
+    for (let val of this.getIterator()) {
+      fn(val)
+    }
+  }
+
+  __export({ Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach })
 </code></pre>
         </article>
     </section>
@@ -185,13 +324,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#ToDictionary">ToDictionary</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#ToArray">ToArray</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Fri Sep 30 2016 13:49:23 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Fri Sep 30 2016 20:43:12 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

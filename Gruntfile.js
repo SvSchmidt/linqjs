@@ -1,3 +1,7 @@
+RegExp.escape = function(str) {
+  return String(str).replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+};
+
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
@@ -36,9 +40,10 @@ module.exports = function (grunt) {
     },
     file_info: {
       dist: {
-        src: ['dist/linq.es5.min.js', 'dist/linq.es5.js', 'dist/linq.js'],
+        src: ['dist/linq.es5.min.js', 'dist/linq.es5.js', 'dist/linq.js', 'dist/linq.min.js'],
         options: {
             stdout: 'linq.js ES6       :   {{= Number(size(src[2])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
+                    'linq.min.js ES6   :   {{= Number(size(src[3])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
                     'linq.js ES5       :   {{= Number(size(src[1])/1024).toFixed(2) }} kB' + grunt.util.linefeed +
                     'linq.min.js ES5   :   {{= Number(size(src[0])/1024).toFixed(2) }} kB' + grunt.util.linefeed
         }
@@ -147,7 +152,66 @@ module.exports = function (grunt) {
     return `  /* Export public interface */\n  __export({ ${result} })\n`
   }
 
+  function getAssertions (source) {
+    const re = /__assert[a-zA-Z]+/img
+    let result = []
+    let match
+
+    do {
+        match = re.exec(source);
+        // push into result array if not already
+        match && !~result.indexOf(match[0]) && result.push(match[0])
+    } while (match)
+
+
+    return result
+  }
+
+  function minify (source) {
+    const blockCommentRegexp = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g
+    const singleLineCommentRegexp = /(\/\/.*\n)/g
+    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=']
+    const stripWhiteSpacesAfterChars = [',', ';', ')']
+    const stripWhiteSpacesBeforeChars = [',', ';', '(']
+
+    source = source.replace(blockCommentRegexp, '')
+    source = source.replace(singleLineCommentRegexp, '')
+    source = source.replace(/^\s+/mg, '') // leading whitespace
+
+    stripWhiteSpacesBeforeAndAfterChars.forEach(c => {
+      source = source.replace(new RegExp(` ${RegExp.escape(c)} `, 'g'), c)
+    })
+
+    stripWhiteSpacesAfterChars.forEach(c => {
+      source = source.replace(new RegExp(`${RegExp.escape(c)} `, 'g'), c)
+    })
+
+    stripWhiteSpacesBeforeChars.forEach(c => {
+      source = source.replace(new RegExp(` ${RegExp.escape(c)}`, 'g'), c)
+    })
+
+    const assertions = getAssertions(source)
+
+    for (let i = 0; i < assertions.length; i++) {
+      const char = '__' + String.fromCharCode(97 + i)
+      source = source.replace(new RegExp(RegExp.escape(assertions[i]), 'g'), char)
+    }
+
+    source = source.replace(/\_\_assert/g, '__')
+
+    source = source.replace(/(.+[^;,{}\n])\n(?![\?\:\}])/g, '$1;')
+    source = source.replace(/\n\n/g, '\n')
+    //source = source.replace(/\{\}/g, '{};')
+    //source = source.replace(/\n/g, '')
+    source = source.replace(/(return {.*})\}\("/g, '$1;}(')
+    //source = source.replace(/\}return/g, '};return')
+
+    return source
+  }
+
   function build ({ src, target, debug = false } = {}) {
+    const minTarget = target.replace('.js', '.min.js')
+
     let sourceFileNames;
     global.defineSourceFiles = sources => sourceFileNames = sources;
 
@@ -196,7 +260,13 @@ module.exports = function (grunt) {
     */
     grunt.file.write(`./${target}`, output)
 
+    /*
+    Write minified output
+    */
+    grunt.file.write(`./${minTarget}`, minify(output))
+
     grunt.log.ok(`\n${sourceFileNames.join(', ')} ==> ${target}`)
+    grunt.log.ok(`\nMinified ${target} => ${minTarget}`)
     grunt.log.ok(`\nDefined DEBUG constant: DEBUG=${debug}`)
 
     return !this.errorCount;

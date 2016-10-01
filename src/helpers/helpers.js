@@ -75,9 +75,7 @@
     return elemFound
   }
 
-  const nativeConstructors = [
-    Object, Number, Boolean, String, Symbol
-  ]
+  const nativeConstructors = [Object, Number, Boolean, String, Symbol]
 
   function isNative (obj) {
     return /native code/.test(Object(obj).toString()) || !!~nativeConstructors.indexOf(obj)

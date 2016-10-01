@@ -37,7 +37,7 @@ Collection = (function () {
       }
     }
 
-    return { next, reset, getIterator }
+    return { next, reset, getIterator };
   }())
 
   Collection.prototype[Symbol.iterator] = function * () {
