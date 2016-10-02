@@ -34,10 +34,6 @@
     __assert(isCollection(obj), 'collection', obj)
   }
 
-  function __assertIterationNotStarted (collection) {
-    __assert(!(collection.hasOwnProperty('StartedIterating') && collection.StartedIterating()), 'Iteration already started!')
-  }
-
   function __assertString (obj) {
     __assert(isString(obj), 'string', obj)
   }

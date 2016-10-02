@@ -28,11 +28,11 @@ let OrderedLinqCollection = (function () {
      * @param {any}               <T>                  Element type.
      * @return {OrderedLinqCollection<T>} Created ordered linq collection.
      */
-    OrderedLinqCollection.prototype.ThenBy = function ThenBy(additionalComparator) {
-        __assertIterationNotStarted(this);
+    OrderedLinqCollection.prototype.ThenBy = function (additionalComparator) {
         if (isString(additionalComparator)) {
             additionalComparator = GetComparatorFromKeySelector(additionalComparator);
         }
+
         __assertFunction(additionalComparator);
 
         // build new comparator function when not yet iterated
