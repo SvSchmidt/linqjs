@@ -161,20 +161,38 @@ module.exports = function (grunt) {
   function minify (source, exportsArr) {
     const blockCommentRegexp = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g
     const singleLineCommentRegexp = /(\/\/.*\n)/g
-    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=', '>=']
+    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=', '>=', '=>']
     const stripWhiteSpacesAfterChars = [',', ';', ')']
     const stripWhiteSpacesBeforeChars = [',', ';', '(']
 
     // Get functions which are not exported (internal use) and rename them to have shorter names
-    const nonExported = getNonExportedFunctions(source, exportsArr)
+    // also rename some of the too-long parameter names (e.g. resultSelector)
+    const nonExportedFunctions = getNonExportedFunctions(source, exportsArr)
+    const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'equalityCompareFn',
+      'keySelector', 'keyComparer', 'elementSelector', 'iterableOrGenerator', 'constructorOrValue',
+      'firstKeySelector', 'secondKeySelector', 'predicate']
+    const shouldBeShorter = [...nonExportedFunctions, ...tooLongParameterNames]
 
-    for (let i = 0; i < nonExported.length; i++) {
-      const charCode = 97 + i
-      const result = charCode % 122 >= 97
-                   ? String.fromCharCode(97 + i)
-                   : String.fromCharCode(97 + (charCode % 122)) + String.fromCharCode(97 + (charCode % 122))
+    for (let i = j = 0; i < shouldBeShorter.length; i++) {
+      const asciiLowerLetters = 97
+      const asciiUpperLetters = 65
 
-      source = source.replace(new RegExp(RegExp.escape(nonExported[i]), 'g'), result)
+      let result
+
+      if (i < 26) {
+        // Use the 26 lower letters of the alphabet first
+        result = String.fromCharCode(asciiLowerLetters + (i % 26))
+      } else if (i >= 26 && i < 52) {
+        // Then the upper ones
+        result = String.fromCharCode(asciiUpperLetters + (i % 26))
+      } else {
+        // Then a combination of two lower ones (aa, ab, ac... ba, bb, bc... --> should be more than enough)
+        result = String.fromCharCode(asciiLowerLetters + (i % 26)) + String.fromCharCode(asciiLowerLetters + j)
+        j = Math.floor(i / 26)
+      }
+
+      // Replace each occurence of the too long word with the shortened version using a regular expression
+      source = source.replace(new RegExp(RegExp.escape(shouldBeShorter[i]), 'g'), result)
     }
 
     // Remove comments (block and line)
@@ -210,6 +228,11 @@ module.exports = function (grunt) {
 
     // Remove line breaks if followed by any character and a closing curly brace (positive look-ahead)
     source = source.replace(/\n(?=.*})/mg, '')
+
+    // Remove line breaks followed by ? or : (multi-line ternary operations)
+    source = source.replace(/\n(?=[\:\?])/mg, '')
+    // Remove spaces before or after : or ?
+    source = source.replace(/\s*([\?|\:])\s*/g, '$1')
 
     //source = source.replace(/\n/g, '')
 
