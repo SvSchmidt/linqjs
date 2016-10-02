@@ -145,13 +145,14 @@ module.exports = function (grunt) {
 
   function getNonExportedFunctions (source, exportsArr) {
     const pattern = /function ([a-z_][a-zA-Z0-9-_]+)\s?\(.*\) {$/mg
+    const blacklist = ['next', 'from']
     let result = []
     let match
 
     do {
         match = pattern.exec(source);
         // push into result array if not in list of exports
-        match && !~exportsArr.indexOf(match[1]) && result.push(match[1])
+        match && !~blacklist.indexOf(match[1]) && !~exportsArr.indexOf(match[1]) && result.push(match[1])
     } while (match)
 
     return result.sort().reverse()
