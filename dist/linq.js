@@ -428,15 +428,11 @@ function DefaultComparator (a, b) {
   function Concat (second) {
     __assertIterable(second)
 
-    const firstIter = this
-
-    if (!isCollection(second)) {
-      second = new Collection(second)
-    }
+    const firstIter = this.getIterator()
 
     return new Collection(function * () {
       yield* firstIter
-      yield* second.getIterator()
+      yield* second
     })
   }
 
@@ -465,10 +461,10 @@ function DefaultComparator (a, b) {
     keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
     __assertFunction(keyEqualityCompareFn)
 
-    const firstIter = this
+    const firstIter = this.getIterator()
 
-    const result = new Collection(function * () {
-      const secondIter = second.getIterator()
+    return new Collection(function * () {
+      const secondIter = second[Symbol.iterator]()
 
       for (let firstValue of firstIter) {
         const firstKey = firstKeySelector(firstValue)
@@ -482,10 +478,6 @@ function DefaultComparator (a, b) {
         }
       }
     })
-
-    this.reset()
-
-    return result
   }
 
   /**
@@ -498,20 +490,19 @@ function DefaultComparator (a, b) {
   function Except (second) {
     __assertIterable(second)
 
-    const firstIter = this
+    if (!isCollection(second)) {
+      second = new Collection(second)
+    }
 
-    const result = new Collection(function * () {
+    const firstIter = this.getIterator()
+
+    return new Collection(function * () {
       for (let val of firstIter) {
         if (!second.Contains(val)) {
           yield val
         }
       }
     })
-
-    this.reset()
-    second.reset && second.reset()
-
-    return result
   }
 
   /**
@@ -525,10 +516,10 @@ function DefaultComparator (a, b) {
     __assertIterable(second)
     __assertFunction(resultSelectorFn)
 
-    const firstIter = this
+    const firstIter = this.getIterator()
 
-    const result = new Collection(function * () {
-      const secondIter = second.getIterator()
+    return new Collection(function * () {
+      const secondIter = second[Symbol.iterator]()
 
       for (let firstVal of firstIter) {
         const secondNext = secondIter.next()
@@ -540,11 +531,46 @@ function DefaultComparator (a, b) {
         yield resultSelectorFn(firstVal, secondNext.value)
       }
     })
-
-    this.reset()
-
-    return result
   }
+
+  /**
+  * Intersect - Produces the set intersection of two sequences. The default equality comparator is used to compare values.
+  *
+  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @param  {Iterable} second The sequence to get the intersection from
+  * @return {Collection}
+   *//**
+   /**
+   * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+   * @method
+   * @memberof Collection
+   * @instance
+   * @param  {Iterable} second The sequence to get the intersection from
+   * @param {Function} equalityCompareFn A function of the form (first, second) => boolean to compare the values
+   * @return {Collection}
+   */
+   function Intersect (second, equalityCompareFn = defaultEqualityCompareFn) {
+    __assertIterable(second)
+    __assertFunction(equalityCompareFn)
+
+    const firstIter = this.ToArray()
+
+    return new Collection(function * () {
+      const secondIter = [...second]
+
+      for (let val of firstIter) {
+        if (secondIter.Any(elem => equalityCompareFn(val, elem))) {
+          yield val
+        }
+      }
+    })
+  }
+
 
 
 
@@ -2055,7 +2081,7 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, SequenceEqual })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

@@ -1,15 +1,11 @@
   function Concat (second) {
     __assertIterable(second)
 
-    const firstIter = this
-
-    if (!isCollection(second)) {
-      second = new Collection(second)
-    }
+    const firstIter = this.getIterator()
 
     return new Collection(function * () {
       yield* firstIter
-      yield* second.getIterator()
+      yield* second
     })
   }
 
@@ -38,10 +34,10 @@
     keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
     __assertFunction(keyEqualityCompareFn)
 
-    const firstIter = this
+    const firstIter = this.getIterator()
 
-    const result = new Collection(function * () {
-      const secondIter = second.getIterator()
+    return new Collection(function * () {
+      const secondIter = second[Symbol.iterator]()
 
       for (let firstValue of firstIter) {
         const firstKey = firstKeySelector(firstValue)
@@ -55,10 +51,6 @@
         }
       }
     })
-
-    this.reset()
-
-    return result
   }
 
   /**
@@ -71,20 +63,19 @@
   function Except (second) {
     __assertIterable(second)
 
-    const firstIter = this
+    if (!isCollection(second)) {
+      second = new Collection(second)
+    }
 
-    const result = new Collection(function * () {
+    const firstIter = this.getIterator()
+
+    return new Collection(function * () {
       for (let val of firstIter) {
         if (!second.Contains(val)) {
           yield val
         }
       }
     })
-
-    this.reset()
-    second.reset && second.reset()
-
-    return result
   }
 
   /**
@@ -98,10 +89,10 @@
     __assertIterable(second)
     __assertFunction(resultSelectorFn)
 
-    const firstIter = this
+    const firstIter = this.getIterator()
 
-    const result = new Collection(function * () {
-      const secondIter = second.getIterator()
+    return new Collection(function * () {
+      const secondIter = second[Symbol.iterator]()
 
       for (let firstVal of firstIter) {
         const secondNext = secondIter.next()
@@ -113,10 +104,47 @@
         yield resultSelectorFn(firstVal, secondNext.value)
       }
     })
-
-    this.reset()
-
-    return result
   }
 
-  __export({ Concat, Union, Join, Except, Zip })
+  /**
+  * Intersect - Produces the set intersection of two sequences. The default equality comparator is used to compare values.
+  *
+  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @example
+[44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()
+// -> [26, 30]
+  * @param  {Iterable} second The sequence to get the intersection from
+  * @return {Collection}
+   *//**
+   * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
+   *
+   * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+   * @method
+   * @memberof Collection
+   * @instance
+   * @param  {Iterable} second The sequence to get the intersection from
+   * @param {Function} equalityCompareFn A function of the form (first, second) => boolean to compare the values
+   * @return {Collection}
+   */
+   function Intersect (second, equalityCompareFn = defaultEqualityCompareFn) {
+    __assertIterable(second)
+    __assertFunction(equalityCompareFn)
+
+    const firstIter = this.ToArray()
+
+    return new Collection(function * () {
+      const secondIter = [...second]
+
+      for (let val of firstIter) {
+        if (secondIter.Any(elem => equalityCompareFn(val, elem))) {
+          yield val
+        }
+      }
+    })
+  }
+
+
+  __export({ Concat, Union, Join, Except, Zip, Intersect })

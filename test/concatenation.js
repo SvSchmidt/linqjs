@@ -114,4 +114,16 @@ describe('Concatenation', function () {
       }
     })
   })
+
+  describe('Intersect(second, equalityCompareFn)', function () {
+    it('should produce the set intersection of two sequences', function () {
+      expect([44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()).to.be.deep.equal([26, 30])
+      expect(Collection.from('hello world').Intersect(Collection.from('strawberry')).ToArray()).to.be.deep.equal(['e', 'w', 'r'])
+    })
+
+    it('should accept a custom equality comparator', function () {
+      expect(['hello', 'world'].Intersect(['hallo', 'welt'],
+            (first, second) => first.length === second.length).ToArray()).to.be.deep.equal(["hello", "world"]) // I know, stupid example
+    })
+  })
 })
