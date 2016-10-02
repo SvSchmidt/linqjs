@@ -127,11 +127,35 @@ function Range (start, count) {
   })
 }
 
+/**
+ * Repeat - Generates a sequence that consists of count times val
+ *
+ * @see https://msdn.microsoft.com/de-de/library/bb348899(v=vs.110).aspx
+ * @instance
+ * @memberof Collection
+ * @method
+ * @example
+Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!'
+// -> 'na na na na na na na na na na BATMAN!'
+ * @param  {any} val The value to repeat 
+ * @param  {Number} count
+ * @return {Collection}
+ */
+function Repeat (val, count) {
+  __assertNumberBetween(count, 0, Infinity)
+
+  return new Collection(function * () {
+    for (let i = 0; i < count; i++) {
+      yield val
+    }
+  })
+}
+
 Object.defineProperty(Collection, 'Empty', {
   get: function () { return Collection.from([]) }
 })
 
-const collectionStaticMethods = { from, From: from, Range }
+const collectionStaticMethods = { from, From: from, Range, Repeat }
 
 __assign(Collection, collectionStaticMethods)
 

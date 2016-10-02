@@ -27,7 +27,7 @@
 - [x] First
 - [x] FirstOrDefault
 - [x] Flatten(*)
-- [ ] ForEach
+- [x] ForEach
 - [ ] Force
 - [x] From
 - [ ] Generate
@@ -57,7 +57,7 @@
 - [ ] RangeDown
 - [ ] RangeTo
 - [x] Remove
-- [ ] Repeat
+- [x] Repeat
 - [ ] RepeatWithFinalize
 - [ ] Return
 - [x] Reverse

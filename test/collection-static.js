@@ -33,6 +33,20 @@ describe('Collection static methods', function () {
       expect(Collection.Range(10, 0).ToArray()).to.be.deep.equal([])
     })
   })
+
+  describe('Collection.Repeat(val, count)', function () {
+    it('should return a Collection of count times val', function () {
+      expect(Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!').to.be.equal('na na na na na na na na na na BATMAN!')
+    })
+
+    it('should return an empty collection if count = 0', function () {
+      expect(Collection.Repeat('foo', 0).ToArray()).to.have.length(0)
+    })
+
+    it('should throw an error if count < 0', function () {
+      expect(function () { Collection.Repeat('foo', -1) }).to.throw(Error)
+    })
+  })
 })
 
 describe('Collection static properties', function () {
