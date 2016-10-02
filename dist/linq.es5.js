@@ -11,6 +11,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 (function () {
   'use strict';
 
@@ -284,30 +290,50 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     /* src/helpers/assert.js */
 
-    function __assert(condition, msg) {
+    var AssertionError = function (_Error) {
+      _inherits(AssertionError, _Error);
+
+      function AssertionError(expected, got) {
+        _classCallCheck(this, AssertionError);
+
+        return _possibleConstructorReturn(this, (AssertionError.__proto__ || Object.getPrototypeOf(AssertionError)).call(this, 'Expected ' + expected + ', got ' + got + '!'));
+      }
+
+      return AssertionError;
+    }(Error);
+
+    function __assert(condition) {
       if (!condition) {
-        throw new Error(msg);
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        if (args.length === 1) {
+          throw new Error(msg);
+        } else if (args.length === 2) {
+          throw new (Function.prototype.bind.apply(AssertionError, [null].concat(args)))();
+        }
       }
     }
 
     function __assertFunction(param) {
-      __assert(isFunction(param), 'Parameter must be function!');
+      __assert(isFunction(param), 'function', param);
     }
 
     function __assertArray(param) {
-      __assert(isArray(param), 'Parameter must be array!');
+      __assert(isArray(param), 'array', param);
     }
 
     function __assertNotEmpty(coll) {
-      __assert(!isEmpty(coll), 'Sequence is empty');
+      __assert(!isEmpty(coll), 'Sequence is empty!');
     }
 
     function __assertIterable(obj) {
-      __assert(isIterable(obj), 'Parameter must be iterable!');
+      __assert(isIterable(obj), 'iterable', obj);
     }
 
     function __assertCollection(obj) {
-      __assert(isCollection(obj), 'Pa>rameter must be collection!');
+      __assert(isCollection(obj), 'collection', obj);
     }
 
     function __assertIterationNotStarted(collection) {
@@ -315,11 +341,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function __assertString(obj) {
-      __assert(isString(obj), 'Parameter must be string!');
+      __assert(isString(obj), 'string', obj);
     }
 
     function __assertNumeric(obj) {
-      __assert(isNumeric(obj), 'Parameter must be numeric!');
+      __assert(isNumeric(obj), 'numeric value', obj);
     }
 
     function __assertNumberBetween(num, min) {
@@ -331,7 +357,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
     function __assertIndexInRange(coll, index) {
       __assertCollection(coll);
-      __assert(isNumeric(index), 'Index must be number!');
+      __assert(isNumeric(index), 'number', index);
       __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds');
     }
 
@@ -1034,10 +1060,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     * @method
     * @memberof Collection
     * @instance
+    * @example
+    [44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()
+    // -> [26, 30]
     * @param  {Iterable} second The sequence to get the intersection from
     * @return {Collection}
      */ /**
-        /**
         * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
         *
         * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
@@ -1057,7 +1085,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var firstIter = this.ToArray();
 
       return new Collection(regeneratorRuntime.mark(function _callee11() {
-        var _this = this;
+        var _this2 = this;
 
         var secondIter, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _loop, _iterator7, _step7;
 
@@ -1093,7 +1121,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                           return _context11.stop();
                       }
                     }
-                  }, _loop, _this);
+                  }, _loop, _this2);
                 });
                 _iterator7 = firstIter[Symbol.iterator]();
 
@@ -1430,7 +1458,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function Take() {
       var count = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
-      __assert(isNumeric(count), 'First parameter must be numeric!');
+      __assertNumeric(count);
 
       if (count <= 0) {
         return Collection.Empty;
@@ -1530,7 +1558,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     function Skip() {
       var count = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
-      __assert(isNumeric(count), 'First parameter must be numeric!');
+      __assertNumeric(count);
 
       if (count <= 0) {
         return this;
@@ -3293,13 +3321,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             var _val10 = _step20.value;
 
             // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
-            var _key2 = getKey(groups, keySelector(_val10), keyComparer);
+            var _key3 = getKey(groups, keySelector(_val10), keyComparer);
             var elem = elementSelector(_val10);
 
-            if (groups.has(_key2)) {
-              groups.get(_key2).push(elem);
+            if (groups.has(_key3)) {
+              groups.get(_key3).push(elem);
             } else {
-              groups.set(_key2, [elem]);
+              groups.set(_key3, [elem]);
             }
           }
         } catch (err) {
@@ -3334,8 +3362,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       // and select the appropriate function
       var fn = void 0;
 
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
       }
 
       switch (args.length) {

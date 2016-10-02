@@ -159,18 +159,17 @@ module.exports = function (grunt) {
   }
 
   function minify (source, exportsArr) {
-    const blockCommentRegexp = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g
-    const singleLineCommentRegexp = /(\/\/.*\n)/g
     const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=', '>=', '=>']
-    const stripWhiteSpacesAfterChars = [',', ';', ')']
-    const stripWhiteSpacesBeforeChars = [',', ';', '(']
+    const stripWhiteSpacesAfterChars = [',', ';', ')', '{']
+    const stripWhiteSpacesBeforeChars = [',', ';', '(', '{']
 
     // Get functions which are not exported (internal use) and rename them to have shorter names
     // also rename some of the too-long parameter names (e.g. resultSelector)
     const nonExportedFunctions = getNonExportedFunctions(source, exportsArr)
     const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'equalityCompareFn',
       'keySelector', 'keyComparer', 'elementSelector', 'iterableOrGenerator', 'constructorOrValue',
-      'firstKeySelector', 'secondKeySelector', 'predicate']
+      'firstKeySelector', 'secondKeySelector', 'predicate', 'nativeConstructors', 'firstIter', 'secondIter',
+      'collectionStaticMethods']
     const shouldBeShorter = [...nonExportedFunctions, ...tooLongParameterNames]
 
     for (let i = j = 0; i < shouldBeShorter.length; i++) {
@@ -195,11 +194,11 @@ module.exports = function (grunt) {
       source = source.replace(new RegExp(RegExp.escape(shouldBeShorter[i]), 'g'), result)
     }
 
-    // Remove comments (block and line)
-    source = source.replace(blockCommentRegexp, '')
-    source = source.replace(singleLineCommentRegexp, '')
+    // Remove comments (block and single line)
+    source = source.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '')
+    source = source.replace(/(\/\/.*\n)/g, '')
 
-    // Remove leading whitespace
+    // Remove leading whitespaces (or other invisible characters like \t)
     source = source.replace(/^\s+/mg, '')
 
     // Remove whitespace before and after some chars
@@ -231,6 +230,7 @@ module.exports = function (grunt) {
 
     // Remove line breaks followed by ? or : (multi-line ternary operations)
     source = source.replace(/\n(?=[\:\?])/mg, '')
+    
     // Remove spaces before or after : or ?
     source = source.replace(/\s*([\?|\:])\s*/g, '$1')
 

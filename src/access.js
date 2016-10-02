@@ -28,7 +28,7 @@ function ElementAt (index) {
  * @return {Collection}
  */
 function Take (count = 0) {
-  __assert(isNumeric(count), 'First parameter must be numeric!')
+  __assertNumeric(count)
 
   if (count <= 0) {
     return Collection.Empty
@@ -58,7 +58,7 @@ function Take (count = 0) {
  * @return {Collection}
  */
 function Skip (count = 0) {
-  __assert(isNumeric(count), 'First parameter must be numeric!')
+  __assertNumeric(count)
 
   if (count <= 0) {
     return this
