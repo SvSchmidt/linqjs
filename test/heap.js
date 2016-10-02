@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 const maxValue  = 1000000;
 const maxLenght = 1000;
 const maxRepeat = 10;

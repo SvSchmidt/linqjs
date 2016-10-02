@@ -18,7 +18,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // to the global object
 
   var window = this || (0, eval)('this'); // jshint ignore:line
-  var DEBUG = true;
+  var DEBUG = false;
 
   (function (Collection) {
     try {

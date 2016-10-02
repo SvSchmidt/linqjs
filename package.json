@@ -4,8 +4,8 @@
   "description": "linq-style queries as known by C# for javascript",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --reporter min --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
-    "coverage": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --reporter nyan --recursive",
+    "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
+    "coverage": "grunt coverage",
     "build": "grunt"
   },
   "author": "Sven Schmidt",
@@ -55,3 +55,4 @@
     "mocha-lcov-reporter": "^1.2.0"
   }
 }
+

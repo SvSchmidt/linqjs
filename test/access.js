@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('access', function () {
   const people = [
     { name: 'Gandalf', race: 'istari' },

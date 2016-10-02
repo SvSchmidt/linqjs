@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('grouping', function () {
   describe('GroupBy', function () {
     const pets = [

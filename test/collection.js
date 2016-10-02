@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('collection.js', function () {
     describe('Collection', function () {
         it('should create a new Collection collection for enumerables', function () {

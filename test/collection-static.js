@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('Collection static methods', function () {
   describe('Collection.from(iterable)', function () {
     it('should behave the same as new Collection(iterable)', function () {

@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('Concatenation', function () {
   describe('Concat', function () {
     it('should concatenate two arrays', function () {

@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('Transformation', function () {
   describe('Aggregate', function () {
     it('should aggregate the elements in the array using an aggregator function', function () {

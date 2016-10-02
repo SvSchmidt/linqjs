@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('Insert/Remove', function () {
   describe('Add', function () {
     it('should return a new collection containing the value at the end', function () {

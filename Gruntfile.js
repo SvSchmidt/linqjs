@@ -54,7 +54,7 @@ module.exports = function (grunt) {
             reporter: 'nyan',
             bail: true,
         },
-        dist: ['test/*.js']
+        dist: ['test/runner.js']
     },
     watch: {
         src: {
@@ -98,7 +98,7 @@ module.exports = function (grunt) {
     },
     exec: {
       coverage: {
-        command: './node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- --reporter min --recursive',
+        command: './node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive',
         stdout: true,
         stderr: false
       },

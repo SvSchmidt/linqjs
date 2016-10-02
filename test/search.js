@@ -1,6 +1,3 @@
-const Collection = require('../dist/linq')
-const expect = require('chai').expect
-
 describe('Search', function () {
   const fruits = [
     { name: 'banana', color: 'yellow' },
