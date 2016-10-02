@@ -131,13 +131,13 @@ function Range (start, count) {
  * Repeat - Generates a sequence that consists of count times val
  *
  * @see https://msdn.microsoft.com/de-de/library/bb348899(v=vs.110).aspx
- * @instance
+ * @static
  * @memberof Collection
  * @method
  * @example
 Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!'
 // -> 'na na na na na na na na na na BATMAN!'
- * @param  {any} val The value to repeat 
+ * @param  {any} val The value to repeat
  * @param  {Number} count
  * @return {Collection}
  */
@@ -2003,8 +2003,59 @@ function GroupBy (keySelector, ...args) {
 }
 
 
+
+
+/* src/equality.js */
+
+/**
+* SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
+* returns true for each element in the sequence in correct order. The default equality comparator is used.
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @param  {Iterable} second The sequence to compare with
+* @return {Boolean}
+ *//**
+ * SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
+ * returns true for each element in the sequence in correct order. A custom comparator function is provided.
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Iterable} second The sequence to compare with
+ * @param {Function} equalityCompareFn A function of the form (first, second) => boolean to compare the values
+ * @return {Boolean}
+ */
+function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
+  if (!isIterable(second)) {
+    return false
+  }
+
+  const first = this.ToArray()
+  second = second.ToArray()
+
+  if (first.length !== second.length) {
+    return false
+  }
+
+  for (let i = 0; i < first.length; i++) {
+    let firstVal = first[i]
+    let secondVal = second[i]
+
+    if (!equalityCompareFn(firstVal, secondVal)) {
+      return false
+    }
+  }
+
+  return true
+}
+
+
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Where, ConditionalWhere, Count, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

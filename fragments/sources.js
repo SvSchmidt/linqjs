@@ -15,4 +15,5 @@ defineSourceFiles([
   'src/ordered-collection.js',
   'src/order.js',
   'src/grouping.js',
+  'src/equality.js',
 ])

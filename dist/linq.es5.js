@@ -200,13 +200,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
      * Repeat - Generates a sequence that consists of count times val
      *
      * @see https://msdn.microsoft.com/de-de/library/bb348899(v=vs.110).aspx
-     * @instance
+     * @static
      * @memberof Collection
      * @method
      * @example
     Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!'
     // -> 'na na na na na na na na na na BATMAN!'
-     * @param  {any} val The value to repeat 
+     * @param  {any} val The value to repeat
      * @param  {Number} count
      * @return {Collection}
      */
@@ -3245,8 +3245,58 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       return fn.apply(undefined, [keySelector].concat(args));
     }
 
+    /* src/equality.js */
+
+    /**
+    * SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
+    * returns true for each element in the sequence in correct order. The default equality comparator is used.
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @param  {Iterable} second The sequence to compare with
+    * @return {Boolean}
+     */ /**
+        * SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
+        * returns true for each element in the sequence in correct order. A custom comparator function is provided.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param  {Iterable} second The sequence to compare with
+        * @param {Function} equalityCompareFn A function of the form (first, second) => boolean to compare the values
+        * @return {Boolean}
+        */
+    function SequenceEqual(second) {
+      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+
+      if (!isIterable(second)) {
+        return false;
+      }
+
+      var first = this.ToArray();
+      second = second.ToArray();
+
+      if (first.length !== second.length) {
+        return false;
+      }
+
+      for (var i = 0; i < first.length; i++) {
+        var firstVal = first[i];
+        var secondVal = second[i];
+
+        if (!equalityCompareFn(firstVal, secondVal)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);

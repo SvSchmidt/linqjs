@@ -13,6 +13,7 @@ describe("linqjs", function () {
     run('test/access.js')
     run('test/collection-static.js')
     run('test/concatenation.js')
+    run('test/equality.js')
     run('test/grouping.js')
     run('test/heap.js')
     run('test/insert-and-remove.js')
