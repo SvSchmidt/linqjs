@@ -46,11 +46,15 @@ describe('access', function () {
     })
   })
 
-  describe('Skip/Take are complementary', function () {
+  describe('Skip/Take', function () {
     it('Take(n) concatenated with Skip(n) should yield the sequence itself', function () {
       let arr = [1,2,3,4,5]
 
       expect(arr.Take(2).Concat(arr.Skip(2)).ToArray()).to.be.deep.equal(arr)
+    })
+
+    it('Both should throw an error if called with non-numeric parameter', function () {
+      expect(function () { [1,2,3].Take('foo') }).to.throw(Error)
     })
   })
 
