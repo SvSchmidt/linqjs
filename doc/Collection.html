@@ -653,14 +653,14 @@
 
     
 
-    <h4 class="name" id="ConditionalWhere"><span class="type-signature"></span>ConditionalWhere<span class="signature">(condition, predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+    <h4 class="name" id="Add"><span class="type-signature"></span>Add<span class="signature">(value)</span><span class="type-signature"> &rarr; {void}</span></h4>
 
     
 
 
 
 <div class="description">
-    ConditionalWhere - Filters a sequence based on a predicate function if the condition is true.
+    Add - Adds an element to the end of the sequence
 </div>
 
 
@@ -696,13 +696,13 @@
 
         <tr>
             
-                <td class="name"><code>condition</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">any</span>
 
 
             
@@ -712,30 +712,7 @@
 
             
 
-            <td class="description last">A condition to get checked before filtering the sequence</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>predicate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function of the form elem => boolean to filter the sequence</td>
+            <td class="description last">The value to add to the sequence</td>
         </tr>
 
     
@@ -776,12 +753,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line74">line 74</a>
+        <a href="insert-and-remove.js.html">insert-and-remove.js</a>, <a href="insert-and-remove.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/3wcytfd1(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/3wcytfd1(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -802,10 +786,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The filtered collection or the original sequence if condition was falsy
-</div>
-
 
 
 <dl>
@@ -814,13 +794,454 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Collection.html">Collection</a></span>
+<span class="param-type">void</span>
 
 
     </dd>
 </dl>
 
     
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="All"><span class="type-signature"></span>All<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    All - Returns true if all elements in the sequence match the predicate
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line221">line 221</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3, 4, 5, 6].All(x => x > 3)
+// -> false
+[2, 4, 6, 8, 10, 12].All(x => x % 2 === 0)
+// -> true</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Any"><span class="type-signature"></span>Any<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Any - Returns true if the sequence contains at least one element, false if it is empty
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line193">line 193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3].Any()
+// -> true</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Any"><span class="type-signature"></span>Any<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A predicate function to test elements against: elem => boolean</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line193">line 193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3].Any(x => x > 1)
+// -> true
+[1, 2, 3].Any(x => x > 5)
+// -> false</code></pre>
 
 
 
@@ -952,7 +1373,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line74">line 74</a>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line126">line 126</a>
     </li></ul></dd>
     
 
@@ -982,6 +1403,885 @@
     The filtered collection or the original sequence if condition was falsy
 </div>
 
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="ConditionalWhere"><span class="type-signature"></span>ConditionalWhere<span class="signature">(condition, predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    ConditionalWhere - Filters a sequence based on a predicate function if the condition is true.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A condition to get checked before filtering the sequence</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function of the form elem => boolean to filter the sequence</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The filtered collection or the original sequence if condition was falsy
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Contains"><span class="type-signature"></span>Contains<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Contains - Returns true if the sequence contains the specified element, false if not.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3].Contains(2)
+// -> true
+[1, 2, 3].Contains(4)
+// -> false</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Contains"><span class="type-signature"></span>Contains<span class="signature">(equalityCompareFn)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Contains - Returns true if the sequence contains the specified element, false if not.
+A provided equality compare function is used to specify equality.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>equalityCompareFn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function of the form (first, second) => Boolean to determine whether or not two values are considered equal</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Count"><span class="type-signature"></span>Count<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Count - Returns the number of elements in the sequence matching the predicate
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The predicate of the form elem => boolean</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line158">line 158</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3, 4, 5].Count(x => x > 2)
+// -> 3</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Count"><span class="type-signature"></span>Count<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Count - Returns the length of the sequence
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line158">line 158</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3, 4, 5].Count()
+// -> 5</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="DefaultIfEmpty"><span class="type-signature"></span>DefaultIfEmpty<span class="signature">(constructor)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    DefaultIfEmpty - Returns a new sequence containing the provided constructors default if the sequence is empty or the sequence itself if not
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>constructor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A native constructor to get the default for, e.g. Number</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line475">line 475</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl>
@@ -1105,163 +2405,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line514">line 514</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Collection.html">Collection</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="DefaultIfEmpty"><span class="type-signature"></span>DefaultIfEmpty<span class="signature">(constructor)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    DefaultIfEmpty - Returns a new sequence containing the provided constructors default if the sequence is empty or the sequence itself if not
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>constructor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A native constructor to get the default for, e.g. Number</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line514">line 514</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line475">line 475</a>
     </li></ul></dd>
     
 
@@ -1473,131 +2617,6 @@
 
     
 
-    <h4 class="name" id="First"><span class="type-signature"></span>First<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
-
-    
-
-
-
-<div class="description">
-    First - Returns the first element in a sequence
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line293">line 293</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-<h5>Throws:</h5>
-
-        
-
-    <div class="param-desc">
-    
-        Will throw an error if the sequence is empty
-    
-    </div>
-
-
-    
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">any</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>[1, 2, 3].First()
-// -> 1</code></pre>
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="First"><span class="type-signature"></span>First<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {any}</span></h4>
 
     
@@ -1698,7 +2717,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line293">line 293</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line254">line 254</a>
     </li></ul></dd>
     
 
@@ -1764,6 +2783,247 @@
     
     <pre class="prettyprint"><code>[1, 2, 3, 4].First(x => x % 2 === 0)
 // -> 2</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="First"><span class="type-signature"></span>First<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+
+    
+
+
+
+<div class="description">
+    First - Returns the first element in a sequence
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line254">line 254</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        Will throw an error if the sequence is empty
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3].First()
+// -> 1</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="FirstOrDefault"><span class="type-signature"></span>FirstOrDefault<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+
+    
+
+
+
+<div class="description">
+    FirstOrDefault - Returns the first element in a sequence or a default value if the sequence is empty.
+The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line294">line 294</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[].FirstOrDefault()
+// -> null
+[].FirstOrDefault(Number)
+// -> 0</code></pre>
 
 
 
@@ -1873,7 +3133,7 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line333">line 333</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line294">line 294</a>
     </li></ul></dd>
     
 
@@ -1929,122 +3189,6 @@ The default value is determined by a provided constructor (e.g. Number) or the v
  // -> null
  [1, 2, 3].FirstOrDefault(x => x > 5, 6)
  // -> 6</code></pre>
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="FirstOrDefault"><span class="type-signature"></span>FirstOrDefault<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
-
-    
-
-
-
-<div class="description">
-    FirstOrDefault - Returns the first element in a sequence or a default value if the sequence is empty.
-The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line333">line 333</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">any</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>[].FirstOrDefault()
-// -> null
-[].FirstOrDefault(Number)
-// -> 0</code></pre>
 
 
 
@@ -2155,6 +3299,196 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <pre class="prettyprint"><code>// [1, 2, 3, 4, 5, 6,]
 [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, elementSelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+Each group member is projected to a single value (e.g. a property) using the elementSelector.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to select grouping keys from the sequence members</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>elementSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to map each group member to a specific value</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The grouped sequence as a Map
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Map {23 => ["Sven"], 20 => ["jon"]}
+[{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)</code></pre>
 
 
 
@@ -2395,420 +3729,6 @@ The resultSelector is used to project each resulting group to a single value (e.
 
     
 
-    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, elementSelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-<div class="description">
-    GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
-Each group member is projected to a single value (e.g. a property) using the elementSelector.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to select grouping keys from the sequence members</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>elementSelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to map each group member to a specific value</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>keyComparer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function of the form (first, second) => bool to check if keys are considered equal</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The grouped sequence as a Map
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, elementSelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-<div class="description">
-    GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
-Each group member is projected to a single value (e.g. a property) using the elementSelector.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to select grouping keys from the sequence members</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>elementSelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to map each group member to a specific value</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>keyComparer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function of the form (first, second) => bool to check if keys are considered equal</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The grouped sequence as a Map
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, resultSelector)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
 
     
@@ -2991,6 +3911,775 @@ The resultSelector is used to project each resulting group to a single value (e.
     
     <pre class="prettyprint"><code>// [ { age:23, persons: "Sven&amp;julia" }, { age: 20, persons: "jon" } ]
 [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&amp;') })).ToArray()</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, elementSelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+Each group member is projected to a single value (e.g. a property) using the elementSelector.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to select grouping keys from the sequence members</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>elementSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to map each group member to a specific value</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keyComparer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function of the form (first, second) => bool to check if keys are considered equal</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The grouped sequence as a Map
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, elementSelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+Each group member is projected to a single value (e.g. a property) using the elementSelector.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to select grouping keys from the sequence members</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>elementSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to map each group member to a specific value</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keyComparer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function of the form (first, second) => bool to check if keys are considered equal</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The grouped sequence as a Map
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    GroupBy - Groups a sequence using the keys selected from the members using the keySelector
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to select grouping keys from the sequence members</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The grouped sequence as a Map
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Map {"S" => ["Sven"], "M" => ["Mauz"]}
+['Sven', 'Mauz'].GroupBy(x => x[0])</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using keyComparer.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to select grouping keys from the sequence members</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>keyComparer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function of the form (first, second) => bool to check if keys are considered equal</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The grouped sequence as a Map
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Map {"4" => ["4", 4], "5" => ["5"]}
+['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))</code></pre>
 
 
 
@@ -3207,15 +4896,14 @@ The resultSelector is used to project each resulting group to a single value (e.
 
     
 
-    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, elementSelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+    <h4 class="name" id="IndexOf"><span class="type-signature"></span>IndexOf<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
 
     
 
 
 
 <div class="description">
-    GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
-Each group member is projected to a single value (e.g. a property) using the elementSelector.
+    IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
 </div>
 
 
@@ -3224,78 +4912,6 @@ Each group member is projected to a single value (e.g. a property) using the ele
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to select grouping keys from the sequence members</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>elementSelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to map each group member to a specific value</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -3331,19 +4947,12 @@ Each group member is projected to a single value (e.g. a property) using the ele
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -3364,10 +4973,6 @@ Each group member is projected to a single value (e.g. a property) using the ele
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The grouped sequence as a Map
-</div>
-
 
 
 <dl>
@@ -3376,7 +4981,7 @@ Each group member is projected to a single value (e.g. a property) using the ele
     </dt>
     <dd>
         
-<span class="param-type">Map</span>
+<span class="param-type">Number</span>
 
 
     </dd>
@@ -3387,363 +4992,10 @@ Each group member is projected to a single value (e.g. a property) using the ele
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>// Map {23 => ["Sven"], 20 => ["jon"]}
-[{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)</code></pre>
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-<div class="description">
-    GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using keyComparer.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to select grouping keys from the sequence members</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>keyComparer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function of the form (first, second) => bool to check if keys are considered equal</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The grouped sequence as a Map
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// Map {"4" => ["4", 4], "5" => ["5"]}
-['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))</code></pre>
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="GroupBy"><span class="type-signature"></span>GroupBy<span class="signature">(keySelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-<div class="description">
-    GroupBy - Groups a sequence using the keys selected from the members using the keySelector
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to select grouping keys from the sequence members</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="grouping.js.html">grouping.js</a>, <a href="grouping.js.html#line107">line 107</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The grouped sequence as a Map
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// Map {"S" => ["Sven"], "M" => ["Mauz"]}
-['Sven', 'Mauz'].GroupBy(x => x[0])</code></pre>
+    <pre class="prettyprint"><code>[1, 2, 3].IndexOf(2)
+// -> 1
+[1, 2, 3].IndexOf(4)
+// -> -1</code></pre>
 
 
 
@@ -3853,7 +5105,7 @@ A provided equality compare function is used to specify equality.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line69">line 69</a>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -3902,14 +5154,14 @@ A provided equality compare function is used to specify equality.
 
     
 
-    <h4 class="name" id="IndexOf"><span class="type-signature"></span>IndexOf<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    <h4 class="name" id="Insert"><span class="type-signature"></span>Insert<span class="signature">(value, index)</span><span class="type-signature"> &rarr; {void}</span></h4>
 
     
 
 
 
 <div class="description">
-    IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+    Insert - Inserts an element to the specified index of the sequence
 </div>
 
 
@@ -3918,6 +5170,78 @@ A provided equality compare function is used to specify equality.
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The value to add</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The index to add the value to</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -3953,12 +5277,19 @@ A provided equality compare function is used to specify equality.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line69">line 69</a>
+        <a href="insert-and-remove.js.html">insert-and-remove.js</a>, <a href="insert-and-remove.js.html#line32">line 32</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -3987,7 +5318,7 @@ A provided equality compare function is used to specify equality.
     </dt>
     <dd>
         
-<span class="param-type">Number</span>
+<span class="param-type">void</span>
 
 
     </dd>
@@ -3998,10 +5329,11 @@ A provided equality compare function is used to specify equality.
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>[1, 2, 3].IndexOf(2)
-// -> 1
-[1, 2, 3].IndexOf(4)
-// -> -1</code></pre>
+    <pre class="prettyprint"><code>let coll = Collection.from([1, 2, 3])
+coll.Contains(4) // -> false
+coll.Insert(4, 0)
+coll.Contains(4) // -> true
+coll.ToArray() // [4, 1, 2, 3]</code></pre>
 
 
 
@@ -4351,6 +5683,131 @@ A provided equality compare function is used to specify equality.
 
     
 
+    <h4 class="name" id="Last"><span class="type-signature"></span>Last<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Last - Returns the last element in a sequence
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line324">line 324</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        Will throw an error if the sequence is empty
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>[1, 2, 3].Last()
+// -> 3</code></pre>
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="Last"><span class="type-signature"></span>Last<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {any}</span></h4>
 
     
@@ -4451,7 +5908,7 @@ A provided equality compare function is used to specify equality.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line363">line 363</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line324">line 324</a>
     </li></ul></dd>
     
 
@@ -4525,14 +5982,15 @@ A provided equality compare function is used to specify equality.
 
     
 
-    <h4 class="name" id="Last"><span class="type-signature"></span>Last<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+    <h4 class="name" id="LastOrDefault"><span class="type-signature"></span>LastOrDefault<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
 
     
 
 
 
 <div class="description">
-    Last - Returns the last element in a sequence
+    LastOrDefault - Returns the last element in a sequence or a default value if the sequence is empty.
+The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
 </div>
 
 
@@ -4576,7 +6034,7 @@ A provided equality compare function is used to specify equality.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line363">line 363</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line361">line 361</a>
     </li></ul></dd>
     
 
@@ -4586,7 +6044,7 @@ A provided equality compare function is used to specify equality.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx</a></li>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx</a></li>
         </ul>
     </dd>
     
@@ -4604,18 +6062,6 @@ A provided equality compare function is used to specify equality.
 
 
 
-<h5>Throws:</h5>
-
-        
-
-    <div class="param-desc">
-    
-        Will throw an error if the sequence is empty
-    
-    </div>
-
-
-    
 
 
 <h5>Returns:</h5>
@@ -4640,8 +6086,10 @@ A provided equality compare function is used to specify equality.
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>[1, 2, 3].Last()
-// -> 3</code></pre>
+    <pre class="prettyprint"><code>[].FirstOrDefault()
+// -> null
+[].FirstOrDefault(Number)
+// -> 0</code></pre>
 
 
 
@@ -4751,7 +6199,7 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line400">line 400</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line361">line 361</a>
     </li></ul></dd>
     
 
@@ -4815,15 +6263,14 @@ The default value is determined by a provided constructor (e.g. Number) or the v
 
     
 
-    <h4 class="name" id="LastOrDefault"><span class="type-signature"></span>LastOrDefault<span class="signature">()</span><span class="type-signature"> &rarr; {any}</span></h4>
+    <h4 class="name" id="Remove"><span class="type-signature"></span>Remove<span class="signature">(value)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
 
     
 
 
 
 <div class="description">
-    LastOrDefault - Returns the last element in a sequence or a default value if the sequence is empty.
-The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+    Remove - Removes an element from the sequence
 </div>
 
 
@@ -4832,6 +6279,55 @@ The default value is determined by a provided constructor (e.g. Number) or the v
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The value to remove</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -4867,19 +6363,12 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line400">line 400</a>
+        <a href="insert-and-remove.js.html">insert-and-remove.js</a>, <a href="insert-and-remove.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -4900,6 +6389,10 @@ The default value is determined by a provided constructor (e.g. Number) or the v
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    True if the element was removed, false if not (or the element was not found)
+</div>
+
 
 
 <dl>
@@ -4908,21 +6401,13 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     </dt>
     <dd>
         
-<span class="param-type">any</span>
+<span class="param-type">Boolean</span>
 
 
     </dd>
 </dl>
 
     
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>[].FirstOrDefault()
-// -> null
-[].FirstOrDefault(Number)
-// -> 0</code></pre>
 
 
 
@@ -5047,6 +6532,164 @@ This method should be considered inperformant since the collection must get enum
 
 <div class="description">
     SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+The index of the source element can be used in the mapFn.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mapFn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to use to map each element of the sequence, has the form (elem, index) => any</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="transformation.js.html">transformation.js</a>, <a href="transformation.js.html#line104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="SelectMany"><span class="type-signature"></span>SelectMany<span class="signature">(mapFn, resultSelector)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+Invokes a resultSelector function on each element of the sequence.
 </div>
 
 
@@ -5099,6 +6742,29 @@ This method should be considered inperformant since the collection must get enum
             
 
             <td class="description last">The function to use to map each element of the sequence, has the form elem => any</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resultSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a function of the form (sourceElement, element) => any to map the result Value</td>
         </tr>
 
     
@@ -5387,164 +7053,6 @@ Invokes a resultSelector function on each element of the sequence. The index of 
 
 <div class="description">
     SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
-The index of the source element can be used in the mapFn.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mapFn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The function to use to map each element of the sequence, has the form (elem, index) => any</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transformation.js.html">transformation.js</a>, <a href="transformation.js.html#line104">line 104</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Collection.html">Collection</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="SelectMany"><span class="type-signature"></span>SelectMany<span class="signature">(mapFn, resultSelector)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
-Invokes a resultSelector function on each element of the sequence.
 </div>
 
 
@@ -5597,29 +7105,6 @@ Invokes a resultSelector function on each element of the sequence.
             
 
             <td class="description last">The function to use to map each element of the sequence, has the form elem => any</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>resultSelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">a function of the form (sourceElement, element) => any to map the result Value</td>
         </tr>
 
     
@@ -6204,7 +7689,7 @@ returns true for each element in the sequence in correct order. The default equa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line434">line 434</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line395">line 395</a>
     </li></ul></dd>
     
 
@@ -6380,7 +7865,7 @@ returns true for each element in the sequence in correct order. The default equa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line434">line 434</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line395">line 395</a>
     </li></ul></dd>
     
 
@@ -6509,7 +7994,7 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line491">line 491</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line452">line 452</a>
     </li></ul></dd>
     
 
@@ -6675,7 +8160,7 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line491">line 491</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line452">line 452</a>
     </li></ul></dd>
     
 
@@ -6849,7 +8334,7 @@ The default value is determined by a provided constructor (e.g. Number) or the v
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line126">line 126</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -7006,7 +8491,7 @@ SkipUntil behaves like calling SkipWhile with a negated predicate.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line263">line 263</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line224">line 224</a>
     </li></ul></dd>
     
 
@@ -7155,168 +8640,12 @@ SkipUntil behaves like calling SkipWhile with a negated predicate.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line263">line 263</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line224">line 224</a>
     </li></ul></dd>
     
 
     
 
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Collection.html">Collection</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="SkipWhile"><span class="type-signature"></span>SkipWhile<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>predicate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">type</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The predicate of the form elem => boolean</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line225">line 225</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
     
 
     
@@ -7461,7 +8790,163 @@ can be used in the logic of the predicate function.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line225">line 225</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line186">line 186</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="SkipWhile"><span class="type-signature"></span>SkipWhile<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">type</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The predicate of the form elem => boolean</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line186">line 186</a>
     </li></ul></dd>
     
 
@@ -7625,7 +9110,7 @@ can be used in the logic of the predicate function.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line96">line 96</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -7638,6 +9123,155 @@ can be used in the logic of the predicate function.
             <li><a href="https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx</a></li>
         </ul>
     </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="TakeUntil"><span class="type-signature"></span>TakeUntil<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. TakeUntil behaves like calling TakeWhile with a negated predicate.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The predicate of the form elem => boolean</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
     
 
     
@@ -7782,156 +9416,7 @@ TakeUntil behaves like calling TakeWhile with a negated predicate.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line201">line 201</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Collection.html">Collection</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="TakeUntil"><span class="type-signature"></span>TakeUntil<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. TakeUntil behaves like calling TakeWhile with a negated predicate.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>predicate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The predicate of the form elem => boolean</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line201">line 201</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line162">line 162</a>
     </li></ul></dd>
     
 
@@ -8080,7 +9565,7 @@ TakeUntil behaves like calling TakeWhile with a negated predicate.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line159">line 159</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -8236,7 +9721,7 @@ TakeUntil behaves like calling TakeWhile with a negated predicate.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="access.js.html">access.js</a>, <a href="access.js.html#line159">line 159</a>
+        <a href="access.js.html">access.js</a>, <a href="access.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -8385,163 +9870,6 @@ TakeUntil behaves like calling TakeWhile with a negated predicate.
     <dd>
         
 <span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="ToDictionary"><span class="type-signature"></span>ToDictionary<span class="signature">(keySelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-<div class="description">
-    ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
-The key is defined by the keySelector.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The function to use to retrieve the key from the Collection</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transformation.js.html">transformation.js</a>, <a href="transformation.js.html#line227">line 227</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
 
 
     </dd>
@@ -8760,198 +10088,6 @@ The keys are compared using the keyComparer. Duplicate keys throw an error.
 
     
 
-    <h4 class="name" id="ToDictionary"><span class="type-signature"></span>ToDictionary<span class="signature">(keySelector, elementSelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
-
-    
-
-
-
-<div class="description">
-    ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
-The key is defined by the keySelector and each element is transformed using the elementSelector.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keySelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The function to use to retrieve the key from the Collection</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>elementSelector</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function to map each element to a specific value, e.g. to properties</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="transformation.js.html">transformation.js</a>, <a href="transformation.js.html#line227">line 227</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Map</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>const pets = [
-  { name: 'miez', species: 'cat' },
-  { name: 'wuff', species: 'dog' },
-  { name: 'leo', species: 'cat' },
-  { name: 'flipper', species: 'dolphin' }
-]
-pets.ToDictionary(pet => pet.name, pet => pet.species)
-// -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}</code></pre>
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="ToDictionary"><span class="type-signature"></span>ToDictionary<span class="signature">(keySelector, keyComparer)</span><span class="type-signature"> &rarr; {Map}</span></h4>
 
     
@@ -9144,6 +10280,355 @@ pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
 
     
 
+    <h4 class="name" id="ToDictionary"><span class="type-signature"></span>ToDictionary<span class="signature">(keySelector, elementSelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+The key is defined by the keySelector and each element is transformed using the elementSelector.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to use to retrieve the key from the Collection</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>elementSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function to map each element to a specific value, e.g. to properties</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="transformation.js.html">transformation.js</a>, <a href="transformation.js.html#line227">line 227</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const pets = [
+  { name: 'miez', species: 'cat' },
+  { name: 'wuff', species: 'dog' },
+  { name: 'leo', species: 'cat' },
+  { name: 'flipper', species: 'dolphin' }
+]
+pets.ToDictionary(pet => pet.name, pet => pet.species)
+// -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="ToDictionary"><span class="type-signature"></span>ToDictionary<span class="signature">(keySelector)</span><span class="type-signature"> &rarr; {Map}</span></h4>
+
+    
+
+
+
+<div class="description">
+    ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+The key is defined by the keySelector.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keySelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function to use to retrieve the key from the Collection</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="transformation.js.html">transformation.js</a>, <a href="transformation.js.html#line227">line 227</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Map</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="ToJSON"><span class="type-signature"></span>ToJSON<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
 
     
@@ -9230,166 +10715,6 @@ pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
     <dd>
         
 <span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="Where"><span class="type-signature"></span>Where<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
-
-    
-
-
-
-<div class="description">
-    Where - Filters a sequence based on a predicate function
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>predicate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A function of the form elem => boolean to filter the sequence</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line35">line 35</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx</a></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The filtered collection
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="Collection.html">Collection</a></span>
 
 
     </dd>
@@ -9504,7 +10829,167 @@ pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line35">line 35</a>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line87">line 87</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx">https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The filtered collection
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Where"><span class="type-signature"></span>Where<span class="signature">(predicate)</span><span class="type-signature"> &rarr; {<a href="Collection.html">Collection</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Where - Filters a sequence based on a predicate function
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>predicate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A function of the form elem => boolean to filter the sequence</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -9575,13 +11060,13 @@ pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Add">Add</a></li><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#All">All</a></li><li><a href="global.html#Any">Any</a></li><li><a href="global.html#Count">Count</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#ForEach">ForEach</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Insert">Insert</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Remove">Remove</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Aggregate">Aggregate</a></li><li><a href="global.html#Distinct">Distinct</a></li><li><a href="global.html#Except">Except</a></li><li><a href="global.html#ForEach">ForEach</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#Zip">Zip</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 03 2016 13:10:20 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 03 2016 13:33:56 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

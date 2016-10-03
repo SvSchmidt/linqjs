@@ -1,3 +1,8 @@
+/*!
+ * linqjs v0.0.0
+ * (c) Sven Schmidt 
+ * License: MIT (http://www.opensource.org/licenses/mit-license.php)
+ */
 (function () {
   'use strict';
 
@@ -647,25 +652,25 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
   return !!~this.IndexOf(elem, equalityCompareFn)
 }
 
- /**
- * Where - Filters a sequence based on a predicate function
- *
- * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
- * @method
- * @memberof Collection
- * @instance
- * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
- * @return {Collection} The filtered collection
-  *//**
-  * Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
-  *
-  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
-  * @method
-  * @memberof Collection
-  * @instance
-  * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
-  * @return {Collection} The filtered collection
-  */
+/**
+* Where - Filters a sequence based on a predicate function
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @param  {Function} predicate A function of the form elem => boolean to filter the sequence
+* @return {Collection} The filtered collection
+*//**
+* Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+* @return {Collection} The filtered collection
+*/
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
@@ -1847,10 +1852,13 @@ pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
 /* src/insert-and-remove.js */
 
 /**
- * Add - Adds an element to the end of the array
+ * Add - Adds an element to the end of the sequence
  *
  * @see https://msdn.microsoft.com/de-de/library/3wcytfd1(v=vs.110).aspx
- * @param  {any}         value The value to add
+ * @instance
+ * @method
+ * @memberof Collection
+ * @param  {any} value The value to add to the sequence
  * @return {void}
  */
 function Add (value) {
@@ -1858,9 +1866,18 @@ function Add (value) {
 }
 
 /**
- * Insert - Adds an element to the specified index of the collection
+ * Insert - Inserts an element to the specified index of the sequence
  *
  * @see https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx
+ * @instance
+ * @method
+ * @memberof Collection
+ * @example
+let coll = Collection.from([1, 2, 3])
+coll.Contains(4) // -> false
+coll.Insert(4, 0)
+coll.Contains(4) // -> true
+coll.ToArray() // [4, 1, 2, 3]
  * @param  {any}         value The value to add
  * @param  {Number}      index The index to add the value to
  * @return {void}
@@ -1875,7 +1892,6 @@ function Insert (value, index) {
     yield value
     yield* oldIter.slice(index, oldIter.length)
   }
-  this.reset()
 }
 
 /**
