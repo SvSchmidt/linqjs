@@ -45,12 +45,47 @@ function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
   }
 }
 
+
+/**
+* Select - Projects each member of the sequence into a new form
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+* @memberof Collection
+* @instance
+* @method
+* @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+* @example
+const petOwners = [
+  { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+  { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+  { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+]
+
+petOwners.Select(x => x.Name).ToArray()
+// -> ['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette']
+* @return {Collection}
+*//**
+* Select - Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+* @memberof Collection
+* @instance
+* @method
+* @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+* @example
+[1, 2, 3].Select((x, i) => x + i).ToArray()
+// -> [1, 3, 5]
+* @return {Collection}
+*/
 function Select (mapFn = x => x) {
   const iter = this.getIterator()
 
+  let index = 0
+
   return new Collection(function * () {
     for (let val of iter) {
-      yield mapFn(val)
+      yield mapFn(val, index)
+      index ++
     }
   })
 }

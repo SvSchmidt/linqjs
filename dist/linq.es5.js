@@ -2745,12 +2745,45 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
     }
 
+    /**
+    * Select - Projects each member of the sequence into a new form
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+    * @memberof Collection
+    * @instance
+    * @method
+    * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+    * @example
+    const petOwners = [
+      { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+      { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+      { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+    ]
+    
+    petOwners.Select(x => x.Name).ToArray()
+    // -> ['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette']
+    * @return {Collection}
+    */ /**
+       * Select - Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
+       *
+       * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+       * @memberof Collection
+       * @instance
+       * @method
+       * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+       * @example
+       [1, 2, 3].Select((x, i) => x + i).ToArray()
+       // -> [1, 3, 5]
+       * @return {Collection}
+       */
     function Select() {
       var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
         return x;
       } : arguments[0];
 
       var iter = this.getIterator();
+
+      var index = 0;
 
       return new Collection(regeneratorRuntime.mark(function _callee16() {
         var _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, _val7;
@@ -2767,59 +2800,62 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
               case 5:
                 if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
-                  _context17.next = 12;
+                  _context17.next = 13;
                   break;
                 }
 
                 _val7 = _step14.value;
                 _context17.next = 9;
-                return mapFn(_val7);
+                return mapFn(_val7, index);
 
               case 9:
+                index++;
+
+              case 10:
                 _iteratorNormalCompletion14 = true;
                 _context17.next = 5;
                 break;
 
-              case 12:
-                _context17.next = 18;
+              case 13:
+                _context17.next = 19;
                 break;
 
-              case 14:
-                _context17.prev = 14;
+              case 15:
+                _context17.prev = 15;
                 _context17.t0 = _context17['catch'](3);
                 _didIteratorError14 = true;
                 _iteratorError14 = _context17.t0;
 
-              case 18:
-                _context17.prev = 18;
+              case 19:
                 _context17.prev = 19;
+                _context17.prev = 20;
 
                 if (!_iteratorNormalCompletion14 && _iterator14.return) {
                   _iterator14.return();
                 }
 
-              case 21:
-                _context17.prev = 21;
+              case 22:
+                _context17.prev = 22;
 
                 if (!_didIteratorError14) {
-                  _context17.next = 24;
+                  _context17.next = 25;
                   break;
                 }
 
                 throw _iteratorError14;
 
-              case 24:
-                return _context17.finish(21);
-
               case 25:
-                return _context17.finish(18);
+                return _context17.finish(22);
 
               case 26:
+                return _context17.finish(19);
+
+              case 27:
               case 'end':
                 return _context17.stop();
             }
           }
-        }, _callee16, this, [[3, 14, 18, 26], [19,, 21, 25]]);
+        }, _callee16, this, [[3, 15, 19, 27], [20,, 22, 26]]);
       }));
     }
 

@@ -130,6 +130,23 @@ describe('Transformation', function () {
     })
   })
 
+  describe('Select', function () {
+    it('should transform each element to a new form', function () {
+      const petOwners = [
+        { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+        { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+        { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+      ]
+
+      expect(petOwners.Select(x => x.Name).ToArray()).to.be.deep.equal(['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette'])
+      expect([1, 2, 3].Select(x => 2 * x).ToArray()).to.be.deep.equal([2, 4, 6])
+    })
+
+    it('should accept the index in the mapFn', function () {
+      expect([1, 2, 3].Select((x, i) => x + i).ToArray()).to.be.deep.equal([1, 3, 5])
+    })
+  })
+
   describe('SelectMany', function () {
     const petOwners = [
       { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
