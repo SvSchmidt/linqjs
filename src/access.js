@@ -1,3 +1,30 @@
+function resultOrDefault(collection, originalFn, predicateOrDefault = x => true, fallback = Object) {
+  let predicate
+
+  if (isNative(predicateOrDefault) || !isFunction(predicateOrDefault)) {
+    predicate = x => true
+    fallback = predicateOrDefault
+  } else {
+    predicate = predicateOrDefault
+  }
+
+  __assertFunction(predicate)
+
+  const defaultVal = getDefault(fallback)
+
+  if (isEmpty(collection)) {
+    return defaultVal
+  }
+
+  let result = originalFn.call(collection, predicate)
+
+  if (!result) {
+    return defaultVal
+  }
+
+  return result
+}
+
 /**
  * ElementAt - Returns the element at the given index
  *
@@ -198,30 +225,32 @@ function SkipUntil (predicate = (elem, index) => false) {
   return this.SkipWhile((elem, index) => !predicate(elem, index))
 }
 
-function resultOrDefault(collection, originalFn, predicateOrConstructor = x => true, constructor = Object) {
-  //__assertArray(arr)
-
-  let predicate
-
-  if (isNative(predicateOrConstructor)) {
-    predicate = x => true
-    constructor = predicateOrConstructor
-  } else {
-    predicate = predicateOrConstructor
-  }
-
-  __assertFunction(predicate)
-  __assert(isNative(constructor), 'constructor must be native constructor, e.g. Number!')
-
-  const defaultVal = getDefault(constructor)
-
-  if (isEmpty(collection)) {
-    return defaultVal
-  }
-
-  return originalFn.call(collection, predicate)
-}
-
+/**
+* First - Returns the first element in a sequence
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @throws Will throw an error if the sequence is empty
+* @example
+[1, 2, 3].First()
+// -> 1
+* @return {any}
+ *//**
+ * First - Returns the first element in a sequence that matches the given predicate
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @throws Will throw an error if the sequence is empty
+ * @param  {Function} predicate The predicate of the form elem => Boolean
+ * @example
+[1, 2, 3, 4].First(x => x % 2 === 0)
+// -> 2
+ * @return {any}
+ */
 function First (predicate = x => true) {
   __assertFunction(predicate)
   __assertNotEmpty(this)
@@ -232,10 +261,66 @@ function First (predicate = x => true) {
   return result
 }
 
+/**
+* FirstOrDefault - Returns the first element in a sequence or a default value if the sequence is empty.
+* The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @example
+[].FirstOrDefault()
+// -> null
+[].FirstOrDefault(Number)
+// -> 0
+ * @return {any}
+ *//**
+ * FirstOrDefault - Returns the first element in a sequence that matches the predicate or a default value if no such element is found.
+ * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate The predicate of the form elem => Boolean
+ * @example
+ [1, 2, 3].FirstOrDefault(x => x > 5)
+ // -> null
+ [1, 2, 3].FirstOrDefault(x => x > 5, 6)
+ // -> 6
+ * @return {any}
+ */
 function FirstOrDefault (predicateOrConstructor = x => true, constructor = Object) {
   return resultOrDefault(this, First, predicateOrConstructor, constructor)
 }
 
+/**
+* Last - Returns the last element in a sequence
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @throws Will throw an error if the sequence is empty
+* @example
+[1, 2, 3].Last()
+// -> 3
+ * @return {any}
+ *//**
+ * Last - Returns the last element in a sequence that matches the given predicate
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @throws Will throw an error if the sequence is empty
+ * @param  {Function} predicate The predicate of the form elem => Boolean
+ * @example
+[1, 2, 3, 4].Last(x => x % 2 === 0)
+// -> 4
+ * @return {any}
+ */
 function Last (predicate = x => true) {
   __assertFunction(predicate)
   __assertNotEmpty(this)
@@ -243,10 +328,70 @@ function Last (predicate = x => true) {
   return this.Reverse().First(predicate)
 }
 
+/**
+* LastOrDefault - Returns the last element in a sequence or a default value if the sequence is empty.
+* The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @example
+[].FirstOrDefault()
+// -> null
+[].FirstOrDefault(Number)
+// -> 0
+ * @return {any}
+ *//**
+ * LastOrDefault - Returns the last element in a sequence that matches the predicate or a default value if no such element is found.
+ * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate The predicate of the form elem => Boolean
+ * @example
+ [1, 2, 3].LastOrDefault(x => x > 5)
+ // -> null
+ [1, 2, 3].LastOrDefault(x => x > 5, 6)
+ // -> 6
+ * @return {any}
+ */
 function LastOrDefault (predicateOrConstructor = x => true, constructor = Object) {
   return resultOrDefault(this, Last, predicateOrConstructor, constructor)
 }
 
+/**
+* Single - Returns a single value of a sequence. Throws an error if there's not exactly one element.
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.single(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @throws Will throw an error if the sequence is empty or there's more than one element
+* @example
+[1, 2, 3].Single()
+// -> Error
+[1].Single()
+// -> 1
+ * @return {any}
+ *//**
+ * Single - Returns a single, specific value of a sequence matching the predicate. Throws an error if there's not exactly one such element.
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.single(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @throws Will throw an error if the sequence is empty or there's more than one element matching the predicate
+ * @example
+[1, 2, 3].Single(x => x % 2 === 0)
+// -> 2
+[1, 2, 3].Single(x => x < 3)
+// Error
+ * @param  {Function} predicate The predicate of the form elem => Boolean
+ * @return {any}
+ */
 function Single (predicate = x => true) {
   __assertFunction(predicate)
   __assertNotEmpty(this)
@@ -270,6 +415,40 @@ function Single (predicate = x => true) {
   return result
 }
 
+/**
+* SingleOrDefault - Returns a single element of a sequence or a default value if the sequence is empty.
+* Will throw an error if there's more than one element.
+* The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @example
+[1, 2, 3].SingleOrDefault()
+// -> Error
+[].SingleOrDefault(Number)
+// -> 1
+ * @return {any}
+ *//**
+ * SingleOrDefault - Returns a single, specific element of a sequence matching the predicate or a default value if no such element is found.
+ * Will throw an error if there's more than one such element.
+ * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param  {Function} predicate The predicate of the form elem => Boolean
+ * @example
+ [1, 2, 3].SingleOrDefault(x => x > 5)
+ // -> null
+ [1, 2, 3].SingleOrDefault(x => x > 5, 6)
+ // -> 6
+ [1, 2, 3].SingleOrDefault(x => x > 1, 6)
+ // -> Error
+ * @return {any}
+ */
 function SingleOrDefault (predicateOrConstructor = x => true, constructor = Object) {
   return resultOrDefault(this, Single, predicateOrConstructor, constructor)
 }

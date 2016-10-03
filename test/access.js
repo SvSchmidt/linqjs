@@ -138,6 +138,22 @@ describe('access', function () {
       expect([].SingleOrDefault(Number)).to.be.equal(0)
       expect([].SingleOrDefault(x => x > 1, Boolean)).to.be.false
     })
+
+    it('should return default if no element is found matching the predicate', function () {
+      const arr = [1,2,3]
+
+      expect(arr.FirstOrDefault(x => x > 5)).to.be.null
+      expect(arr.FirstOrDefault(x => x > 5, 6)).to.be.equal(6)
+      expect(arr.FirstOrDefault(x => x > 5, Boolean)).to.be.false
+
+      expect(arr.LastOrDefault(x => x > 5)).to.be.null
+      expect(arr.LastOrDefault(x => x > 5, 6)).to.be.equal(6)
+      expect(arr.LastOrDefault(x => x > 5, Boolean)).to.be.false
+
+      expect(arr.SingleOrDefault(x => x > 5)).to.be.null
+      expect(arr.SingleOrDefault(x => x > 5, 6)).to.be.equal(6)
+      expect(arr.SingleOrDefault(x => x > 6, Boolean)).to.be.false
+    })
   })
 
   describe('Last', function () {
