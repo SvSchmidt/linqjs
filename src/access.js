@@ -45,6 +45,45 @@ function ElementAt (index) {
 }
 
 /**
+* IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+*
+* @method
+* @memberof Collection
+* @instance
+* @example
+[1, 2, 3].IndexOf(2)
+// -> 1
+[1, 2, 3].IndexOf(4)
+// -> -1
+ * @return {Number}
+ *//**
+ * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+ * A provided equality compare function is used to specify equality.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+ * @return {Number}
+ */
+function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
+  __assertFunction(equalityCompareFn)
+
+  const iter = this.getIterator()
+  let i = 0
+
+  for (let val of iter) {
+    if (equalityCompareFn(val, element)) {
+      return i
+    }
+
+    i++
+  }
+
+  return -1
+}
+
+/**
  * Take - Returns count elements of the sequence starting from the beginning as a new Collection
  *
  * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
@@ -480,4 +519,4 @@ function DefaultIfEmpty (constructorOrValue) {
   return [getDefault(constructorOrValue)]
 }
 
-__export({ ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty })
+__export({ ElementAt, IndexOf, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty })

@@ -23,7 +23,7 @@
 - [x] From
 - [x] GroupBy
 - [ ] GroupJoin
-- [ ] IndexOf
+- [x] IndexOf(*)
 - [x] Insert
 - [x] Intersect
 - [x] Join
@@ -57,7 +57,6 @@
 - [ ] ThenByDescending
 - [x] ToArray
 - [x] ToDictionary
-- [ ] ToInfinity
 - [x] ToJSON(*)
 - [ ] ToLookup
 - [x] Union
