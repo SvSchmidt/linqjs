@@ -2,22 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: grouping.js</title>
+    <title>grouping.js - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
-    <h1 class="page-title">Source: grouping.js</h1>
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a><ul class='methods'><li data-type='method'><a href="Collection.html#.from">from</a></li><li data-type='method'><a href="Collection.html#.Range">Range</a></li><li data-type='method'><a href="Collection.html#.Repeat">Repeat</a></li><li data-type='method'><a href="Collection.html#Add">Add</a></li><li data-type='method'><a href="Collection.html#Aggregate">Aggregate</a></li><li data-type='method'><a href="Collection.html#Aggregate">Aggregate</a></li><li data-type='method'><a href="Collection.html#Aggregate">Aggregate</a></li><li data-type='method'><a href="Collection.html#All">All</a></li><li data-type='method'><a href="Collection.html#Any">Any</a></li><li data-type='method'><a href="Collection.html#Any">Any</a></li><li data-type='method'><a href="Collection.html#Average">Average</a></li><li data-type='method'><a href="Collection.html#Average">Average</a></li><li data-type='method'><a href="Collection.html#Concat">Concat</a></li><li data-type='method'><a href="Collection.html#ConditionalWhere">ConditionalWhere</a></li><li data-type='method'><a href="Collection.html#ConditionalWhere">ConditionalWhere</a></li><li data-type='method'><a href="Collection.html#Contains">Contains</a></li><li data-type='method'><a href="Collection.html#Contains">Contains</a></li><li data-type='method'><a href="Collection.html#Count">Count</a></li><li data-type='method'><a href="Collection.html#Count">Count</a></li><li data-type='method'><a href="Collection.html#DefaultIfEmpty">DefaultIfEmpty</a></li><li data-type='method'><a href="Collection.html#DefaultIfEmpty">DefaultIfEmpty</a></li><li data-type='method'><a href="Collection.html#Distinct">Distinct</a></li><li data-type='method'><a href="Collection.html#Distinct">Distinct</a></li><li data-type='method'><a href="Collection.html#ElementAt">ElementAt</a></li><li data-type='method'><a href="Collection.html#Except">Except</a></li><li data-type='method'><a href="Collection.html#First">First</a></li><li data-type='method'><a href="Collection.html#First">First</a></li><li data-type='method'><a href="Collection.html#FirstOrDefault">FirstOrDefault</a></li><li data-type='method'><a href="Collection.html#FirstOrDefault">FirstOrDefault</a></li><li data-type='method'><a href="Collection.html#Flatten">Flatten</a></li><li data-type='method'><a href="Collection.html#ForEach">ForEach</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#GroupBy">GroupBy</a></li><li data-type='method'><a href="Collection.html#IndexOf">IndexOf</a></li><li data-type='method'><a href="Collection.html#IndexOf">IndexOf</a></li><li data-type='method'><a href="Collection.html#Insert">Insert</a></li><li data-type='method'><a href="Collection.html#Intersect">Intersect</a></li><li data-type='method'><a href="Collection.html#Intersect">Intersect</a></li><li data-type='method'><a href="Collection.html#Last">Last</a></li><li data-type='method'><a href="Collection.html#Last">Last</a></li><li data-type='method'><a href="Collection.html#LastOrDefault">LastOrDefault</a></li><li data-type='method'><a href="Collection.html#LastOrDefault">LastOrDefault</a></li><li data-type='method'><a href="Collection.html#Max">Max</a></li><li data-type='method'><a href="Collection.html#Max">Max</a></li><li data-type='method'><a href="Collection.html#Min">Min</a></li><li data-type='method'><a href="Collection.html#Min">Min</a></li><li data-type='method'><a href="Collection.html#Remove">Remove</a></li><li data-type='method'><a href="Collection.html#Reverse">Reverse</a></li><li data-type='method'><a href="Collection.html#Select">Select</a></li><li data-type='method'><a href="Collection.html#Select">Select</a></li><li data-type='method'><a href="Collection.html#SelectMany">SelectMany</a></li><li data-type='method'><a href="Collection.html#SelectMany">SelectMany</a></li><li data-type='method'><a href="Collection.html#SelectMany">SelectMany</a></li><li data-type='method'><a href="Collection.html#SelectMany">SelectMany</a></li><li data-type='method'><a href="Collection.html#SequenceEqual">SequenceEqual</a></li><li data-type='method'><a href="Collection.html#SequenceEqual">SequenceEqual</a></li><li data-type='method'><a href="Collection.html#Shuffle">Shuffle</a></li><li data-type='method'><a href="Collection.html#Single">Single</a></li><li data-type='method'><a href="Collection.html#Single">Single</a></li><li data-type='method'><a href="Collection.html#SingleOrDefault">SingleOrDefault</a></li><li data-type='method'><a href="Collection.html#SingleOrDefault">SingleOrDefault</a></li><li data-type='method'><a href="Collection.html#Skip">Skip</a></li><li data-type='method'><a href="Collection.html#SkipUntil">SkipUntil</a></li><li data-type='method'><a href="Collection.html#SkipUntil">SkipUntil</a></li><li data-type='method'><a href="Collection.html#SkipWhile">SkipWhile</a></li><li data-type='method'><a href="Collection.html#SkipWhile">SkipWhile</a></li><li data-type='method'><a href="Collection.html#Sum">Sum</a></li><li data-type='method'><a href="Collection.html#Sum">Sum</a></li><li data-type='method'><a href="Collection.html#Take">Take</a></li><li data-type='method'><a href="Collection.html#TakeUntil">TakeUntil</a></li><li data-type='method'><a href="Collection.html#TakeUntil">TakeUntil</a></li><li data-type='method'><a href="Collection.html#TakeWhile">TakeWhile</a></li><li data-type='method'><a href="Collection.html#TakeWhile">TakeWhile</a></li><li data-type='method'><a href="Collection.html#ToArray">ToArray</a></li><li data-type='method'><a href="Collection.html#ToDictionary">ToDictionary</a></li><li data-type='method'><a href="Collection.html#ToDictionary">ToDictionary</a></li><li data-type='method'><a href="Collection.html#ToDictionary">ToDictionary</a></li><li data-type='method'><a href="Collection.html#ToDictionary">ToDictionary</a></li><li data-type='method'><a href="Collection.html#ToJSON">ToJSON</a></li><li data-type='method'><a href="Collection.html#Union">Union</a></li><li data-type='method'><a href="Collection.html#Union">Union</a></li><li data-type='method'><a href="Collection.html#Where">Where</a></li><li data-type='method'><a href="Collection.html#Where">Where</a></li><li data-type='method'><a href="Collection.html#Zip">Zip</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#DefaultComparator">DefaultComparator</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li><li><a href="global.html#paramOrValue">paramOrValue</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">grouping.js</h1>
+    
 
     
 
@@ -290,17 +302,13 @@ __export({ GroupBy })
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#Join">Join</a></li><li><a href="global.html#OrderBy">OrderBy</a></li><li><a href="global.html#OrderByDescending">OrderByDescending</a></li></ul>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 03 2016 15:32:28 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 03 2016 17:44:46 GMT+0200 (CEST) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>

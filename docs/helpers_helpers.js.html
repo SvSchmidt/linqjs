@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>ordered-collection.js - Documentation</title>
+    <title>helpers/helpers.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,7 +28,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">ordered-collection.js</h1>
+    <h1 class="page-title">helpers/helpers.js</h1>
     
 
     
@@ -38,87 +38,108 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Ordered linq collection.
- */
-let OrderedLinqCollection = (function () {
+            <pre class="prettyprint source linenums"><code>  function toJSON (obj) {
+    return JSON.stringify(obj)
+  }
 
-    /**
-     * Creates a new ordered linq collection using the given comparator and heap for sorting.
-     *
-     * @param {Iterable&lt;T>}       iterable        Datasource for this collection.
-     * @param {(T, T) => boolean} comparator      Comparator for sorting.
-     * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
-     * @param {any}               &lt;T>             Element type.
-     */
-    function OrderedLinqCollection(iterable, comparator, heapConstructor) {
-        __assertIterable(iterable);
-        __assertFunction(comparator);
-        __assertFunction(heapConstructor);
-        Collection.apply(this, [iterable]);
+  function __assign (target, source) {
+    Object.assign(Object(target), source)
 
-        this.__comparator      = comparator;
-        this.__heapConstructor = heapConstructor;
-    }
+    return target
+  }
 
-    /**
-     * Specifies further sorting by the given comparator for equal elements.
-     *
-     * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
-     * @param {any}               &lt;T>                  Element type.
-     * @return {OrderedLinqCollection&lt;T>} Created ordered linq collection.
-     */
-    OrderedLinqCollection.prototype.ThenBy = function (additionalComparator) {
-        if (isString(additionalComparator)) {
-            additionalComparator = GetComparatorFromKeySelector(additionalComparator);
+  function __export (obj) {
+    __assign(linqjsExports, obj)
+  }
+
+  /**
+   * paramOrValue - Helper method to get the passed parameter or a default value if it is undefined
+   *
+   * @param  {any} param The parameter to check
+   * @param  {any} value Value to return when param is undefined
+   * @return {any}
+   */
+  function paramOrValue(param, value) {
+    return typeof param === 'undefined'
+      ? value
+      : param
+  }
+
+  function aggregateCollection (coll, seed, accumulator, resultTransformFn) {
+    __assertFunction(accumulator)
+    __assertFunction(resultTransformFn)
+    __assertNotEmpty(coll)
+
+    return resultTransformFn([seed].concat(coll).reduce(accumulator))
+  }
+
+  function removeDuplicates (coll, equalityCompareFn = defaultEqualityCompareFn) {
+    __assertIterable(coll)
+    __assertFunction(equalityCompareFn)
+
+    const previous = []
+
+    return new Collection(function * () {
+      const iter = coll.getIterator()
+
+      outer: for (let val of iter) {
+        inner: for (let prev of previous) {
+          if (equalityCompareFn(val, prev)) {
+            continue outer;
+          }
         }
 
-        __assertFunction(additionalComparator);
+        previous.push(val)
 
-        // build new comparator function when not yet iterated
-        let currentComparator = this.__comparator;
-        this.__comparator = (a, b) => {
-            let res = currentComparator(a, b);
-            if (res !== 0) {
-                return res;
-            }
-            return additionalComparator(a, b);
-        };
-        return this;
-    };
+        yield val
+      }
+    })
+  }
 
-    OrderedLinqCollection.prototype.getIterator = function () {
-      const _self = this
+  function removeFromArray (arr, value) {
+    __assertArray(arr)
 
-      return function * () {
-        yield* Reflect.construct(_self.__heapConstructor, [[..._self.iterable], _self.__comparator])
-      }()
+    let elemsBefore = []
+    let elemFound = false
+    let current
+
+    // remove all elements from the array (shift) and push them into a temporary variable until the desired element was found
+    while ((current = arr.shift()) &amp;&amp; !(elemFound = defaultEqualityCompareFn(current, value))) {
+      elemsBefore.push(current)
     }
 
-    return OrderedLinqCollection;
-})();
+    // add the temporary values back to the array (to the front)
+    // -> unshift modifies the original array instead of returning a new one
+    arr.unshift(...elemsBefore)
 
-/**
- * Creates a comparator function from the given selector string.
- * The selector string has to be in same format as within javascript code.
- *
- * @param  {string} selector Javascript code selector string.
- * @return {(any, any) => boolean} Created comparator function.
- */
-function GetComparatorFromKeySelector(selector) {
-    __assertString(selector);
-    if (selector === '') {
-        return Collection.prototype.DefaultComparator;
-    }
-    if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-        selector = `.${selector}`;
-    }
-    let result;
-    eval(`result = function (a, b) { return Collection.prototype.DefaultComparator(a${selector}, b${selector}) }`);
-    return result;
-}
+    return elemFound
+  }
 
-__export({ GetComparatorFromKeySelector, OrderedLinqCollection })
+  const nativeConstructors = [Object, Number, Boolean, String, Symbol]
+
+  function isNative (obj) {
+    return /native code/.test(Object(obj).toString()) || !!~nativeConstructors.indexOf(obj)
+  }
+
+  function getDefault (constructorOrValue = Object) {
+    if (constructorOrValue &amp;&amp; isNative(constructorOrValue) &amp;&amp; typeof constructorOrValue === 'function') {
+      let defaultValue = constructorOrValue()
+
+      if (defaultValue instanceof Object || constructorOrValue === Date) {
+        return null
+      } else {
+        return defaultValue
+      }
+    }
+
+    return constructorOrValue
+  }
+
+  function getParameterCount (fn) {
+    __assertFunction(fn)
+
+    return fn.length
+  }
 </code></pre>
         </article>
     </section>
