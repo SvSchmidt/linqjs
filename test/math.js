@@ -57,6 +57,11 @@ describe('Mathematics', function () {
       expect([1,2,3,4,5].Average()).to.be.equal(3)
     })
 
+    it('should be able to transform the values using a mapFn and then return the sum', function () {
+      expect([1,2,3,4,5].Average(x => 2 * x)).to.be.equal(6)
+      expect(pets.Average(pet => pet.Age)).to.be.equal(4.333333333333333)
+    })
+
     it('should throw an error if the array is empty', function () {
       expect(function () { [].Average() }).to.throw(Error)
     })
@@ -65,6 +70,11 @@ describe('Mathematics', function () {
   describe('Sum', function () {
     it('should return the sum of the array values', function () {
       expect([1,2,3,4,5].Sum()).to.be.equal(15)
+    })
+
+    it('should be able to transform the values using a mapFn and then return the sum', function () {
+      expect([1,2,3,4,5].Sum(x => 2 * x)).to.be.equal(30)
+      expect(pets.Sum(pet => pet.Age)).to.be.equal(13)
     })
 
     it('should throw an error if the array is empty', function () {

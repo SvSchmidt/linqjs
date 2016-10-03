@@ -638,6 +638,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     /* src/math.js */
 
+    /**
+    * Min - Returns the minimum of the numbers contained in the sequence. Transforms the values using a map function before.
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.min(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @throws Throws an error if the sequence is empty
+    * @example
+    [1, 2, 3].Min()
+    // -> 1
+     * @return {Number}
+     */ /**
+        * Min - Returns the minimum of the numbers contained in the sequence
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.min(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @throws Throws an error if the sequence is empty
+        * @param {Function} mapFn A function to use to transform each value before getting the minimum
+        * @example
+        [2, 3, 5].Min(x => x * 2)
+        // -> 4
+        * @return {Number}
+        */
     function Min() {
       var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
         return x;
@@ -649,6 +675,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       return Math.min.apply(null, this.Select(mapFn).ToArray());
     }
 
+    /**
+    * Max - Returns the maximum of the numbers contained in the sequence
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.max(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @throws Throws an error if the sequence is empty
+    * @example
+    [1, 2, 3].Max()
+    // -> 3
+     * @return {Number}
+     */ /**
+        * Max - Returns the max of the numbers contained in the sequence. Transforms the values using a map function before.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.max(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @throws Throws an error if the sequence is empty
+        * @param {Function} mapFn A function to use to transform each value before getting the maximum
+        * @example
+        [2, 3, 5].Max(x => x * 2)
+        // -> 10
+        * @return {Number}
+        */
     function Max() {
       var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
         return x;
@@ -660,22 +712,95 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       return Math.max.apply(null, this.Select(mapFn).ToArray());
     }
 
+    /**
+    * Sum - Returns the sum of the numbers contained in the sequence
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sum(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @throws Throws an error if the sequence is empty
+    * @example
+    [1, 2, 3].Sum()
+    // -> 6
+     * @return {Number}
+     */ /**
+        * Sum - Returns the sum of the numbers contained in the sequence. Transforms the values using a map function before.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sum(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @throws Throws an error if the sequence is empty
+        * @param {Function} mapFn A function to use to transform each value before calculating the sum
+        * @example
+        [2, 3, 5].Sum(x => x * 2)
+        // -> 20
+        * @return {Number}
+        */
     function Sum() {
+      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return x;
+      } : arguments[0];
+
       __assertNotEmpty(this);
 
-      return this.Aggregate(0, function (prev, curr) {
+      return this.Select(mapFn).Aggregate(0, function (prev, curr) {
         return prev + curr;
       });
     }
 
+    /**
+    * Average - Returns the average of the numbers contained in the sequence
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @throws Throws an error if the sequence is empty
+    * @example
+    [1, 2, 3].Average()
+    // -> 2
+     * @return {Number}
+     */ /**
+        * Average - Returns the average of the numbers contained in the sequence. Transforms the values using a map function before.
+        *
+        * @see hhttps://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @throws Throws an error if the sequence is empty
+        * @param {Function} mapFn A function to use to transform each value before calculating the average
+        * @example
+        [2, 3, 5].Average(x => x * 2)
+        // -> 6.666666667
+        * @return {Number}
+        */
     function Average() {
+      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+        return x;
+      } : arguments[0];
+
       __assertNotEmpty(this);
 
-      return this.Sum() / this.Count();
+      return this.Sum(mapFn) / this.Count();
     }
 
     /* src/concatenation.js */
 
+    /**
+     * Concat - Concatenates two sequences
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb302894(v=vs.110).aspx
+     * @method
+     * @instance
+     * @memberof Collection
+     * @example
+    [1, 2, 3].Concat([4, 5, 6]).ToArray()
+    // -> [1, 2, 3, 4, 5, 6]
+     * @param  {iterable} second               The second sequence to concat with the first one
+     * @return {Collection}                      A new collection of the resulting pairs
+     */
     function Concat(second) {
       __assertIterable(second);
 
@@ -700,6 +825,28 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }));
     }
 
+    /**
+    * Union - Concatenates two sequences and removes duplicate values (produces the set union).
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.union(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @example
+    [1, 2, 3].Union([1, 4, 5, 6]).ToArray()
+    // -> [1, 2, 3, 4, 5, 6]
+     * @param {iterable} second The sequence to create the set union with
+     * @return {Collction}
+     */ /**
+        * Union - Concatenates two sequences and removes duplicate values (produces the set union).
+        * A custom equality comparator is used to compare values for equality.
+        *
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+        * @return {Number}
+        */
     function Union(second) {
       var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
 
@@ -865,6 +1012,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * Except - Returns the element of the sequence that do not appear in second
      *
      * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+    [1, 2, 3, 4].Except([1, 5, 6, 7]).ToArray()
+    // -> [2, 3, 4]
      * @param  {Iterable} second
      * @return {Collection}        new Collection with the values of first without the ones in second
      */
@@ -957,9 +1110,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     /**
      * Zip - Applies a function to the elements of two sequences, producing a sequence of the results
      *
+     * @see https://msdn.microsoft.com/de-de/library/dd267698(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @example
+    const numbers = [ 1, 2, 3, 4 ]
+    const words = [ "one", "two", "three" ]
+    
+    const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
+    numbersAndWords.ForEach(x => console.log(x))
+    // Outputs:
+    "1 one"
+    "2 two"
+    "3 three"
      * @param  {Iterable} second
      * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
-     * @return {collection}
+     * @return {Collection}
      */
     function Zip(second, resultSelectorFn) {
       __assertIterable(second);
@@ -2532,19 +2698,31 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * Aggregate - applies a accumulator function to a sequence
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
      * @param {Function} accumulator The accumulator function of the form (prev, current) => any
      * @return {any} the result of the accumulation
      */ /**
         * Aggregate - applies a accumulator function to a sequence. Starts with seed.
         *
         * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+        * @memberof Collection
+        * @instance
+        * @method
         * @param {any} seed The starting value of the accumulation
         * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+        * @example
+        [1, 2, 3].Aggregate(0, (prev, curr) => prev + curr)
+        // -> 6 (this example is equal to [1, 2, 3].Sum())
         * @return {any} the result of the accumulation
         */ /**
            * Aggregate - applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
            *
            * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+           * @memberof Collection
+           * @instance
+           * @method
            * @param {any} seed The starting value of the accumulation
            * @param {Function} accumulator The accumulator function of the form (prev, current) => any
            * @param {Function} resultTransformFn A function to transform the result
@@ -2856,14 +3034,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     /**
      * Distinct - Returns the distinct elemens from a sequence using the default equality compare function
      *
-     * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
-     * @return {Array}
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @example
+    [1, 2, 3, 3, 4, 7, 9, 9, 12].Distinct().ToArray()
+    // -> [1, 2, 3, 4, 7, 9, 12]
+     * @return {Collection}
      */ /**
         * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
         *
-        * https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+        * @memberof Collection
+        * @instance
+        * @method
         * @param {Function} equalityCompareFn The function of the form (first, second) => boolean determining if the values are equal
-        * @return {Array}
+        * @return {Collection}
         */
     function Distinct() {
       var equalityCompareFn = arguments.length <= 0 || arguments[0] === undefined ? defaultEqualityCompareFn : arguments[0];
@@ -3078,7 +3265,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     /**
      * ForEach - Invokes a function for each value of the Collection
      *
-     * @param  {Function} fn 
+     * @method
+     * @instance
+     * @memberof Collection
+     * @example
+    [1, 2, 3].ForEach(x => console.log(x))
+    // Output:
+    1
+    2
+    3
+     * @param  {Function} fn
      * @return {void}
      */
     function ForEach(fn) {
@@ -3172,10 +3368,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /**
-     * Remove - Removes an element from an array
+     * Remove - Removes an element from the sequence
      *
+     * @instance
+     * @method
+     * @memberof Collection
      * @param  {any} value The value to remove
-     * @return {Boolean}       True if the element was removed, false if not (or the element was not found)
+     * @return {Boolean} True if the element was removed, false if not (or the element was not found)
      */
     function Remove(value) {
       var values = this.ToArray();
@@ -3199,7 +3398,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           }
         }, _callee20, this);
       });
-      this.reset();
 
       return true;
     }
