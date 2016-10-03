@@ -107,7 +107,7 @@ module.exports = function (grunt) {
         dist : {
             src: ['src/*.js', 'test/*.js'],
             options: {
-                destination: 'doc'
+                destination: 'docs'
             }
         }
     }
@@ -230,7 +230,7 @@ module.exports = function (grunt) {
 
     // Remove line breaks followed by ? or : (multi-line ternary operations)
     source = source.replace(/\n(?=[\:\?])/mg, '')
-    
+
     // Remove spaces before or after : or ?
     source = source.replace(/\s*([\?|\:])\s*/g, '$1')
 
