@@ -7,6 +7,23 @@ describe('Search', function () {
     { name: 'blueberry', color: 'blue' }
   ]
 
+  const people = [
+    { name: 'Gandalf', race: 'istari' },
+    { name: 'Thorin', race: 'dwarfs' },
+    { name: 'Frodo', race: 'hobbit' },
+  ]
+
+  describe('IndexOf(element, equalityCompareFn)', function () {
+    it('should return the index of the first occurence of element in the sequence or -1 if not found', function () {
+      expect(people.IndexOf({ name: 'Gandalf', race: 'istari' })).to.be.equal(0)
+      expect(people.IndexOf({ name: 'Saruman', race: 'istari' })).to.be.equal(-1)
+    })
+
+    it('should accept a custom equality comparator', function () {
+      expect(people.IndexOf({ name: 'Saruman', race: 'istari' }, (first, second) => first.race === second.race)).to.be.equal(0)
+    })
+  })
+
   describe('Contains', function () {
     /*
     Spec: https://msdn.microsoft.com/de-de/library/bb352880(v=vs.110).aspx

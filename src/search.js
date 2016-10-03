@@ -1,37 +1,89 @@
-function Contains (elem) {
-  let result = false
-
-  for (let val of this) {
-    if (defaultEqualityCompareFn(elem, val)) {
-      result = true
-      break
-    }
-  }
-
-  this.reset()
-
-  return result
-}
-
- /**
- * Where - Filters a sequence based on a predicate function
+/**
+* IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+*
+* @method
+* @memberof Collection
+* @instance
+* @example
+[1, 2, 3].IndexOf(2)
+// -> 1
+[1, 2, 3].IndexOf(4)
+// -> -1
+ * @return {Number}
+ *//**
+ * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+ * A provided equality compare function is used to specify equality.
  *
- * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
  * @method
  * @memberof Collection
  * @instance
- * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
- * @return {Collection} The filtered collection
-  *//**
-  * Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
-  *
-  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
-  * @method
-  * @memberof Collection
-  * @instance
-  * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
-  * @return {Collection} The filtered collection
-  */
+ * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+ * @return {Number}
+ */
+function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
+  __assertFunction(equalityCompareFn)
+
+  const iter = this.getIterator()
+  let i = 0
+
+  for (let val of iter) {
+    if (equalityCompareFn(val, element)) {
+      return i
+    }
+
+    i++
+  }
+
+  return -1
+}
+
+/**
+* Contains - Returns true if the sequence contains the specified element, false if not.
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @example
+[1, 2, 3].Contains(2)
+// -> true
+[1, 2, 3].Contains(4)
+// -> false
+ * @return {Boolean}
+ *//**
+ * Contains - Returns true if the sequence contains the specified element, false if not.
+ * A provided equality compare function is used to specify equality.
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+ * @return {Boolean}
+ */
+function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
+  return !!~this.IndexOf(elem, equalityCompareFn)
+}
+
+/**
+* Where - Filters a sequence based on a predicate function
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @param  {Function} predicate A function of the form elem => boolean to filter the sequence
+* @return {Collection} The filtered collection
+*//**
+* Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
+*
+* @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+* @method
+* @memberof Collection
+* @instance
+* @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+* @return {Collection} The filtered collection
+*/
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
@@ -61,16 +113,16 @@ function Where (predicate = (elem, index) => true) {
 * @param {Boolean} condition A condition to get checked before filtering the sequence
 * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
 * @return {Collection} The filtered collection or the original sequence if condition was falsy
- *//**
- * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
- *
- * @method
- * @memberof Collection
- * @instance
- * @param {Boolean} condition A condition to get checked before filtering the sequence
- * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
- * @return {Collection} The filtered collection or the original sequence if condition was falsy
- */
+*//**
+* ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
+*
+* @method
+* @memberof Collection
+* @instance
+* @param {Boolean} condition A condition to get checked before filtering the sequence
+* @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+* @return {Collection} The filtered collection or the original sequence if condition was falsy
+*/
 function ConditionalWhere(condition, predicate) {
   if (condition) {
     return this.Where(predicate)
@@ -80,10 +132,27 @@ function ConditionalWhere(condition, predicate) {
 }
 
 /**
- * Count - Returns the amount of elements matching a predicate or the array length if no parameters given
+ * Count - Returns the length of the sequence
  *
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
- * @param  {Function} predicate
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1, 2, 3, 4, 5].Count()
+// -> 5
+ * @return {Number}
+ *//**
+ * Count - Returns the number of elements in the sequence matching the predicate
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1, 2, 3, 4, 5].Count(x => x > 2)
+// -> 3
+ * @param  {Function} predicate The predicate of the form elem => boolean
  * @return {Number}
  */
 function Count (predicate = elem => true) {
@@ -99,11 +168,25 @@ function Count (predicate = elem => true) {
   * Any - Returns true if the sequence contains at least one element, false if it is empty
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @example
+[1, 2, 3].Any()
+// -> true
   * @return {Boolean}
   *//**
   * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+  * @method
+  * @memberof Collection
+  * @instance
+  * @example
+[1, 2, 3].Any(x => x > 1)
+// -> true
+[1, 2, 3].Any(x => x > 5)
+// -> false
   * @param  {Function} predicate A predicate function to test elements against: elem => boolean
   * @return {Boolean}
   */
@@ -121,9 +204,17 @@ function Any (predicate) {
 }
 
 /**
- * All - Returns true if all elements match the predicate
+ * All - Returns true if all elements in the sequence match the predicate
  *
  * @see https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1, 2, 3, 4, 5, 6].All(x => x > 3)
+// -> false
+[2, 4, 6, 8, 10, 12].All(x => x % 2 === 0)
+// -> true
  * @param  {Function} predicate
  * @return {Boolean}
  */
@@ -135,4 +226,4 @@ function All (predicate = elem => true) {
   return !this.Any(x => !predicate(x))
 }
 
-__export({ Where, ConditionalWhere, Count, Any, All })
+__export({ Where, ConditionalWhere, Count, Contains, IndexOf, Any, All })

@@ -1,8 +1,3 @@
-/*!
- * linqjs v0.0.0
- * (c) Sven Schmidt 
- * License: MIT (http://www.opensource.org/licenses/mit-license.php)
- */
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -1179,21 +1174,49 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     /* src/search.js */
 
-    function Contains(elem) {
-      var result = false;
+    /**
+    * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+    *
+    * @method
+    * @memberof Collection
+    * @instance
+    * @example
+    [1, 2, 3].IndexOf(2)
+    // -> 1
+    [1, 2, 3].IndexOf(4)
+    // -> -1
+     * @return {Number}
+     */ /**
+        * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+        * A provided equality compare function is used to specify equality.
+        *
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+        * @return {Number}
+        */
+    function IndexOf(element) {
+      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+
+      __assertFunction(equalityCompareFn);
+
+      var iter = this.getIterator();
+      var i = 0;
 
       var _iteratorNormalCompletion8 = true;
       var _didIteratorError8 = false;
       var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator8 = this[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+        for (var _iterator8 = iter[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
           var _val = _step8.value;
 
-          if (defaultEqualityCompareFn(elem, _val)) {
-            result = true;
-            break;
+          if (equalityCompareFn(_val, element)) {
+            return i;
           }
+
+          i++;
         }
       } catch (err) {
         _didIteratorError8 = true;
@@ -1210,9 +1233,37 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
       }
 
-      this.reset();
+      return -1;
+    }
 
-      return result;
+    /**
+    * Contains - Returns true if the sequence contains the specified element, false if not.
+    *
+    * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+    * @method
+    * @memberof Collection
+    * @instance
+    * @example
+    [1, 2, 3].Contains(2)
+    // -> true
+    [1, 2, 3].Contains(4)
+    // -> false
+     * @return {Boolean}
+     */ /**
+        * Contains - Returns true if the sequence contains the specified element, false if not.
+        * A provided equality compare function is used to specify equality.
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+        * @return {Boolean}
+        */
+    function Contains(elem) {
+      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+
+      return !!~this.IndexOf(elem, equalityCompareFn);
     }
 
     /**
@@ -1336,16 +1387,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     * @param {Boolean} condition A condition to get checked before filtering the sequence
     * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
     * @return {Collection} The filtered collection or the original sequence if condition was falsy
-     */ /**
-        * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
-        *
-        * @method
-        * @memberof Collection
-        * @instance
-        * @param {Boolean} condition A condition to get checked before filtering the sequence
-        * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
-        * @return {Collection} The filtered collection or the original sequence if condition was falsy
-        */
+    */ /**
+       * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
+       *
+       * @method
+       * @memberof Collection
+       * @instance
+       * @param {Boolean} condition A condition to get checked before filtering the sequence
+       * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+       * @return {Collection} The filtered collection or the original sequence if condition was falsy
+       */
     function ConditionalWhere(condition, predicate) {
       if (condition) {
         return this.Where(predicate);
@@ -1355,12 +1406,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /**
-     * Count - Returns the amount of elements matching a predicate or the array length if no parameters given
+     * Count - Returns the length of the sequence
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
-     * @param  {Function} predicate
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+    [1, 2, 3, 4, 5].Count()
+    // -> 5
      * @return {Number}
-     */
+     */ /**
+        * Count - Returns the number of elements in the sequence matching the predicate
+        *
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @example
+        [1, 2, 3, 4, 5].Count(x => x > 2)
+        // -> 3
+        * @param  {Function} predicate The predicate of the form elem => boolean
+        * @return {Number}
+        */
     function Count() {
       var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem) {
         return true;
@@ -1378,11 +1446,25 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * Any - Returns true if the sequence contains at least one element, false if it is empty
      *
      * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+    [1, 2, 3].Any()
+    // -> true
      * @return {Boolean}
      */ /**
         * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
         *
         * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+        * @method
+        * @memberof Collection
+        * @instance
+        * @example
+        [1, 2, 3].Any(x => x > 1)
+        // -> true
+        [1, 2, 3].Any(x => x > 5)
+        // -> false
         * @param  {Function} predicate A predicate function to test elements against: elem => boolean
         * @return {Boolean}
         */
@@ -1400,9 +1482,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /**
-     * All - Returns true if all elements match the predicate
+     * All - Returns true if all elements in the sequence match the predicate
      *
      * @see https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+    [1, 2, 3, 4, 5, 6].All(x => x > 3)
+    // -> false
+    [2, 4, 6, 8, 10, 12].All(x => x % 2 === 0)
+    // -> true
      * @param  {Function} predicate
      * @return {Boolean}
      */
@@ -1476,68 +1566,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /**
-    * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
-    *
-    * @method
-    * @memberof Collection
-    * @instance
-    * @example
-    [1, 2, 3].IndexOf(2)
-    // -> 1
-    [1, 2, 3].IndexOf(4)
-    // -> -1
-     * @return {Number}
-     */ /**
-        * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
-        * A provided equality compare function is used to specify equality.
-        *
-        * @method
-        * @memberof Collection
-        * @instance
-        * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
-        * @return {Number}
-        */
-    function IndexOf(element) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
-
-      __assertFunction(equalityCompareFn);
-
-      var iter = this.getIterator();
-      var i = 0;
-
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
-
-      try {
-        for (var _iterator10 = iter[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var _val3 = _step10.value;
-
-          if (equalityCompareFn(_val3, element)) {
-            return i;
-          }
-
-          i++;
-        }
-      } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion10 && _iterator10.return) {
-            _iterator10.return();
-          }
-        } finally {
-          if (_didIteratorError10) {
-            throw _iteratorError10;
-          }
-        }
-      }
-
-      return -1;
-    }
-
-    /**
      * Take - Returns count elements of the sequence starting from the beginning as a new Collection
      *
      * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
@@ -1558,28 +1586,28 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       var iter = this.getIterator();
       return new Collection(regeneratorRuntime.mark(function _callee13() {
-        var i, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, _val4;
+        var i, _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, _val3;
 
         return regeneratorRuntime.wrap(function _callee13$(_context14) {
           while (1) {
             switch (_context14.prev = _context14.next) {
               case 0:
                 i = 0;
-                _iteratorNormalCompletion11 = true;
-                _didIteratorError11 = false;
-                _iteratorError11 = undefined;
+                _iteratorNormalCompletion10 = true;
+                _didIteratorError10 = false;
+                _iteratorError10 = undefined;
                 _context14.prev = 4;
-                _iterator11 = iter[Symbol.iterator]();
+                _iterator10 = iter[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
+                if (_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done) {
                   _context14.next = 15;
                   break;
                 }
 
-                _val4 = _step11.value;
+                _val3 = _step10.value;
                 _context14.next = 10;
-                return _val4;
+                return _val3;
 
               case 10:
                 if (!(++i === count)) {
@@ -1590,7 +1618,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 return _context14.abrupt('break', 15);
 
               case 12:
-                _iteratorNormalCompletion11 = true;
+                _iteratorNormalCompletion10 = true;
                 _context14.next = 6;
                 break;
 
@@ -1601,26 +1629,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 17:
                 _context14.prev = 17;
                 _context14.t0 = _context14['catch'](4);
-                _didIteratorError11 = true;
-                _iteratorError11 = _context14.t0;
+                _didIteratorError10 = true;
+                _iteratorError10 = _context14.t0;
 
               case 21:
                 _context14.prev = 21;
                 _context14.prev = 22;
 
-                if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                  _iterator11.return();
+                if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                  _iterator10.return();
                 }
 
               case 24:
                 _context14.prev = 24;
 
-                if (!_didIteratorError11) {
+                if (!_didIteratorError10) {
                   _context14.next = 27;
                   break;
                 }
 
-                throw _iteratorError11;
+                throw _iteratorError10;
 
               case 27:
                 return _context14.finish(24);
@@ -1694,7 +1722,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var iter = this.getIterator();
 
       var result = new Collection(regeneratorRuntime.mark(function _callee14() {
-        var index, endTake, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, _val5;
+        var index, endTake, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, _val4;
 
         return regeneratorRuntime.wrap(function _callee14$(_context15) {
           while (1) {
@@ -1702,27 +1730,27 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 0:
                 index = 0;
                 endTake = false;
-                _iteratorNormalCompletion12 = true;
-                _didIteratorError12 = false;
-                _iteratorError12 = undefined;
+                _iteratorNormalCompletion11 = true;
+                _didIteratorError11 = false;
+                _iteratorError11 = undefined;
                 _context15.prev = 5;
-                _iterator12 = iter[Symbol.iterator]();
+                _iterator11 = iter[Symbol.iterator]();
 
               case 7:
-                if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
+                if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
                   _context15.next = 17;
                   break;
                 }
 
-                _val5 = _step12.value;
+                _val4 = _step11.value;
 
-                if (!(!endTake && predicate(_val5, index++))) {
+                if (!(!endTake && predicate(_val4, index++))) {
                   _context15.next = 13;
                   break;
                 }
 
                 _context15.next = 12;
-                return _val5;
+                return _val4;
 
               case 12:
                 return _context15.abrupt('continue', 14);
@@ -1732,7 +1760,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 endTake = true;
 
               case 14:
-                _iteratorNormalCompletion12 = true;
+                _iteratorNormalCompletion11 = true;
                 _context15.next = 7;
                 break;
 
@@ -1743,26 +1771,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 19:
                 _context15.prev = 19;
                 _context15.t0 = _context15['catch'](5);
-                _didIteratorError12 = true;
-                _iteratorError12 = _context15.t0;
+                _didIteratorError11 = true;
+                _iteratorError11 = _context15.t0;
 
               case 23:
                 _context15.prev = 23;
                 _context15.prev = 24;
 
-                if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                  _iterator12.return();
+                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                  _iterator11.return();
                 }
 
               case 26:
                 _context15.prev = 26;
 
-                if (!_didIteratorError12) {
+                if (!_didIteratorError11) {
                   _context15.next = 29;
                   break;
                 }
 
-                throw _iteratorError12;
+                throw _iteratorError11;
 
               case 29:
                 return _context15.finish(26);
@@ -1841,7 +1869,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var iter = this.getIterator();
 
       return new Collection(regeneratorRuntime.mark(function _callee15() {
-        var index, endSkip, _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, _val6;
+        var index, endSkip, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, _val5;
 
         return regeneratorRuntime.wrap(function _callee15$(_context16) {
           while (1) {
@@ -1849,21 +1877,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 0:
                 index = 0;
                 endSkip = false;
-                _iteratorNormalCompletion13 = true;
-                _didIteratorError13 = false;
-                _iteratorError13 = undefined;
+                _iteratorNormalCompletion12 = true;
+                _didIteratorError12 = false;
+                _iteratorError12 = undefined;
                 _context16.prev = 5;
-                _iterator13 = iter[Symbol.iterator]();
+                _iterator12 = iter[Symbol.iterator]();
 
               case 7:
-                if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
+                if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
                   _context16.next = 17;
                   break;
                 }
 
-                _val6 = _step13.value;
+                _val5 = _step12.value;
 
-                if (!(!endSkip && predicate(_val6, index++))) {
+                if (!(!endSkip && predicate(_val5, index++))) {
                   _context16.next = 11;
                   break;
                 }
@@ -1874,10 +1902,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
                 endSkip = true;
                 _context16.next = 14;
-                return _val6;
+                return _val5;
 
               case 14:
-                _iteratorNormalCompletion13 = true;
+                _iteratorNormalCompletion12 = true;
                 _context16.next = 7;
                 break;
 
@@ -1888,26 +1916,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 19:
                 _context16.prev = 19;
                 _context16.t0 = _context16['catch'](5);
-                _didIteratorError13 = true;
-                _iteratorError13 = _context16.t0;
+                _didIteratorError12 = true;
+                _iteratorError12 = _context16.t0;
 
               case 23:
                 _context16.prev = 23;
                 _context16.prev = 24;
 
-                if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                  _iterator13.return();
+                if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                  _iterator12.return();
                 }
 
               case 26:
                 _context16.prev = 26;
 
-                if (!_didIteratorError13) {
+                if (!_didIteratorError12) {
                   _context16.next = 29;
                   break;
                 }
 
-                throw _iteratorError13;
+                throw _iteratorError12;
 
               case 29:
                 return _context16.finish(26);
@@ -2150,32 +2178,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var index = 0;
       var result = void 0;
 
-      var _iteratorNormalCompletion14 = true;
-      var _didIteratorError14 = false;
-      var _iteratorError14 = undefined;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
       try {
-        for (var _iterator14 = this.getIterator()[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-          var _val7 = _step14.value;
+        for (var _iterator13 = this.getIterator()[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var _val6 = _step13.value;
 
-          if (predicate(_val7)) {
-            result = _val7;
+          if (predicate(_val6)) {
+            result = _val6;
             break;
           }
 
           index++;
         }
       } catch (err) {
-        _didIteratorError14 = true;
-        _iteratorError14 = err;
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion14 && _iterator14.return) {
-            _iterator14.return();
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
           }
         } finally {
-          if (_didIteratorError14) {
-            throw _iteratorError14;
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
       }
@@ -2542,30 +2570,30 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var iter = this.getIterator();
 
       return new Collection(regeneratorRuntime.mark(function _callee16() {
-        var _iteratorNormalCompletion15, _didIteratorError15, _iteratorError15, _iterator15, _step15, _val8;
+        var _iteratorNormalCompletion14, _didIteratorError14, _iteratorError14, _iterator14, _step14, _val7;
 
         return regeneratorRuntime.wrap(function _callee16$(_context17) {
           while (1) {
             switch (_context17.prev = _context17.next) {
               case 0:
-                _iteratorNormalCompletion15 = true;
-                _didIteratorError15 = false;
-                _iteratorError15 = undefined;
+                _iteratorNormalCompletion14 = true;
+                _didIteratorError14 = false;
+                _iteratorError14 = undefined;
                 _context17.prev = 3;
-                _iterator15 = iter[Symbol.iterator]();
+                _iterator14 = iter[Symbol.iterator]();
 
               case 5:
-                if (_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done) {
+                if (_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done) {
                   _context17.next = 12;
                   break;
                 }
 
-                _val8 = _step15.value;
+                _val7 = _step14.value;
                 _context17.next = 9;
-                return mapFn(_val8);
+                return mapFn(_val7);
 
               case 9:
-                _iteratorNormalCompletion15 = true;
+                _iteratorNormalCompletion14 = true;
                 _context17.next = 5;
                 break;
 
@@ -2576,26 +2604,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 14:
                 _context17.prev = 14;
                 _context17.t0 = _context17['catch'](3);
-                _didIteratorError15 = true;
-                _iteratorError15 = _context17.t0;
+                _didIteratorError14 = true;
+                _iteratorError14 = _context17.t0;
 
               case 18:
                 _context17.prev = 18;
                 _context17.prev = 19;
 
-                if (!_iteratorNormalCompletion15 && _iterator15.return) {
-                  _iterator15.return();
+                if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                  _iterator14.return();
                 }
 
               case 21:
                 _context17.prev = 21;
 
-                if (!_didIteratorError15) {
+                if (!_didIteratorError14) {
                   _context17.next = 24;
                   break;
                 }
 
-                throw _iteratorError15;
+                throw _iteratorError14;
 
               case 24:
                 return _context17.finish(21);
@@ -2683,26 +2711,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var iter = this.getIterator();
 
       return new Collection(regeneratorRuntime.mark(function _callee17() {
-        var index, _iteratorNormalCompletion16, _didIteratorError16, _iteratorError16, _iterator16, _step16, current, mappedEntry, newIter, _iteratorNormalCompletion17, _didIteratorError17, _iteratorError17, _iterator17, _step17, _val9;
+        var index, _iteratorNormalCompletion15, _didIteratorError15, _iteratorError15, _iterator15, _step15, current, mappedEntry, newIter, _iteratorNormalCompletion16, _didIteratorError16, _iteratorError16, _iterator16, _step16, _val8;
 
         return regeneratorRuntime.wrap(function _callee17$(_context18) {
           while (1) {
             switch (_context18.prev = _context18.next) {
               case 0:
                 index = 0;
-                _iteratorNormalCompletion16 = true;
-                _didIteratorError16 = false;
-                _iteratorError16 = undefined;
+                _iteratorNormalCompletion15 = true;
+                _didIteratorError15 = false;
+                _iteratorError15 = undefined;
                 _context18.prev = 4;
-                _iterator16 = iter[Symbol.iterator]();
+                _iterator15 = iter[Symbol.iterator]();
 
               case 6:
-                if (_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done) {
+                if (_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done) {
                   _context18.next = 41;
                   break;
                 }
 
-                current = _step16.value;
+                current = _step15.value;
                 mappedEntry = mapFn(current, index);
                 newIter = mappedEntry;
 
@@ -2713,24 +2741,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                   newIter = mappedEntry;
                 }
 
-                _iteratorNormalCompletion17 = true;
-                _didIteratorError17 = false;
-                _iteratorError17 = undefined;
+                _iteratorNormalCompletion16 = true;
+                _didIteratorError16 = false;
+                _iteratorError16 = undefined;
                 _context18.prev = 14;
-                _iterator17 = newIter[Symbol.iterator]()[Symbol.iterator]();
+                _iterator16 = newIter[Symbol.iterator]()[Symbol.iterator]();
 
               case 16:
-                if (_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done) {
+                if (_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done) {
                   _context18.next = 23;
                   break;
                 }
 
-                _val9 = _step17.value;
+                _val8 = _step16.value;
                 _context18.next = 20;
-                return resultSelector(current, _val9);
+                return resultSelector(current, _val8);
 
               case 20:
-                _iteratorNormalCompletion17 = true;
+                _iteratorNormalCompletion16 = true;
                 _context18.next = 16;
                 break;
 
@@ -2741,26 +2769,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 25:
                 _context18.prev = 25;
                 _context18.t0 = _context18['catch'](14);
-                _didIteratorError17 = true;
-                _iteratorError17 = _context18.t0;
+                _didIteratorError16 = true;
+                _iteratorError16 = _context18.t0;
 
               case 29:
                 _context18.prev = 29;
                 _context18.prev = 30;
 
-                if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                  _iterator17.return();
+                if (!_iteratorNormalCompletion16 && _iterator16.return) {
+                  _iterator16.return();
                 }
 
               case 32:
                 _context18.prev = 32;
 
-                if (!_didIteratorError17) {
+                if (!_didIteratorError16) {
                   _context18.next = 35;
                   break;
                 }
 
-                throw _iteratorError17;
+                throw _iteratorError16;
 
               case 35:
                 return _context18.finish(32);
@@ -2773,7 +2801,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 index++;
 
               case 38:
-                _iteratorNormalCompletion16 = true;
+                _iteratorNormalCompletion15 = true;
                 _context18.next = 6;
                 break;
 
@@ -2784,26 +2812,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               case 43:
                 _context18.prev = 43;
                 _context18.t1 = _context18['catch'](4);
-                _didIteratorError16 = true;
-                _iteratorError16 = _context18.t1;
+                _didIteratorError15 = true;
+                _iteratorError15 = _context18.t1;
 
               case 47:
                 _context18.prev = 47;
                 _context18.prev = 48;
 
-                if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                  _iterator16.return();
+                if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                  _iterator15.return();
                 }
 
               case 50:
                 _context18.prev = 50;
 
-                if (!_didIteratorError16) {
+                if (!_didIteratorError15) {
                   _context18.next = 53;
                   break;
                 }
 
-                throw _iteratorError16;
+                throw _iteratorError15;
 
               case 53:
                 return _context18.finish(50);
@@ -2945,13 +2973,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var input = this.ToArray();
       var elementSelector = elementSelectorOrKeyComparer;
 
-      var _iteratorNormalCompletion18 = true;
-      var _didIteratorError18 = false;
-      var _iteratorError18 = undefined;
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
 
       try {
         var _loop2 = function _loop2() {
-          var value = _step18.value;
+          var value = _step17.value;
 
           var key = keySelector(value);
           var elem = elementSelector(value);
@@ -2965,20 +2993,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           result.set(key, elem);
         };
 
-        for (var _iterator18 = input[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+        for (var _iterator17 = input[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
           _loop2();
         }
       } catch (err) {
-        _didIteratorError18 = true;
-        _iteratorError18 = err;
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion18 && _iterator18.return) {
-            _iterator18.return();
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
           }
         } finally {
-          if (_didIteratorError18) {
-            throw _iteratorError18;
+          if (_didIteratorError17) {
+            throw _iteratorError17;
           }
         }
       }
@@ -3051,27 +3079,27 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     function ForEach(fn) {
       __assertFunction(fn);
 
-      var _iteratorNormalCompletion19 = true;
-      var _didIteratorError19 = false;
-      var _iteratorError19 = undefined;
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
 
       try {
-        for (var _iterator19 = this.getIterator()[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-          var _val10 = _step19.value;
+        for (var _iterator18 = this.getIterator()[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var _val9 = _step18.value;
 
-          fn(_val10);
+          fn(_val9);
         }
       } catch (err) {
-        _didIteratorError19 = true;
-        _iteratorError19 = err;
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion19 && _iterator19.return) {
-            _iterator19.return();
+          if (!_iteratorNormalCompletion18 && _iterator18.return) {
+            _iterator18.return();
           }
         } finally {
-          if (_didIteratorError19) {
-            throw _iteratorError19;
+          if (_didIteratorError18) {
+            throw _iteratorError18;
           }
         }
       }
@@ -3441,29 +3469,29 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * getKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
        */
       function getKey(groups, key, keyComparer) {
-        var _iteratorNormalCompletion20 = true;
-        var _didIteratorError20 = false;
-        var _iteratorError20 = undefined;
+        var _iteratorNormalCompletion19 = true;
+        var _didIteratorError19 = false;
+        var _iteratorError19 = undefined;
 
         try {
-          for (var _iterator20 = groups.keys()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-            var groupKey = _step20.value;
+          for (var _iterator19 = groups.keys()[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+            var groupKey = _step19.value;
 
             if (keyComparer(groupKey, key)) {
               return groupKey;
             }
           }
         } catch (err) {
-          _didIteratorError20 = true;
-          _iteratorError20 = err;
+          _didIteratorError19 = true;
+          _iteratorError19 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion20 && _iterator20.return) {
-              _iterator20.return();
+            if (!_iteratorNormalCompletion19 && _iterator19.return) {
+              _iterator19.return();
             }
           } finally {
-            if (_didIteratorError20) {
-              throw _iteratorError20;
+            if (_didIteratorError19) {
+              throw _iteratorError19;
             }
           }
         }
@@ -3549,17 +3577,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         var groups = new Map();
         var result = void 0;
 
-        var _iteratorNormalCompletion21 = true;
-        var _didIteratorError21 = false;
-        var _iteratorError21 = undefined;
+        var _iteratorNormalCompletion20 = true;
+        var _didIteratorError20 = false;
+        var _iteratorError20 = undefined;
 
         try {
-          for (var _iterator21 = arr[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-            var _val11 = _step21.value;
+          for (var _iterator20 = arr[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+            var _val10 = _step20.value;
 
             // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
-            var _key3 = getKey(groups, keySelector(_val11), keyComparer);
-            var elem = elementSelector(_val11);
+            var _key3 = getKey(groups, keySelector(_val10), keyComparer);
+            var elem = elementSelector(_val10);
 
             if (groups.has(_key3)) {
               groups.get(_key3).push(elem);
@@ -3568,16 +3596,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             }
           }
         } catch (err) {
-          _didIteratorError21 = true;
-          _iteratorError21 = err;
+          _didIteratorError20 = true;
+          _iteratorError20 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion21 && _iterator21.return) {
-              _iterator21.return();
+            if (!_iteratorNormalCompletion20 && _iterator20.return) {
+              _iterator20.return();
             }
           } finally {
-            if (_didIteratorError21) {
-              throw _iteratorError21;
+            if (_didIteratorError20) {
+              throw _iteratorError20;
             }
           }
         }
@@ -3674,7 +3702,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Any: Any, All: All, ElementAt: ElementAt, IndexOf: IndexOf, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil, Contains: Contains, First: First, FirstOrDefault: FirstOrDefault, Last: Last, LastOrDefault: LastOrDefault, Single: Single, SingleOrDefault: SingleOrDefault, DefaultIfEmpty: DefaultIfEmpty }, _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);
@@ -3687,13 +3715,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
     Object.keys(Collection.prototype).forEach(function (k) {
-      var _iteratorNormalCompletion22 = true;
-      var _didIteratorError22 = false;
-      var _iteratorError22 = undefined;
+      var _iteratorNormalCompletion21 = true;
+      var _didIteratorError21 = false;
+      var _iteratorError21 = undefined;
 
       try {
-        for (var _iterator22 = protosToApplyWrappers[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-          var proto = _step22.value;
+        for (var _iterator21 = protosToApplyWrappers[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+          var proto = _step21.value;
 
           proto[k] = function () {
             var _ref;
@@ -3702,16 +3730,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           };
         }
       } catch (err) {
-        _didIteratorError22 = true;
-        _iteratorError22 = err;
+        _didIteratorError21 = true;
+        _iteratorError21 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion22 && _iterator22.return) {
-            _iterator22.return();
+          if (!_iteratorNormalCompletion21 && _iterator21.return) {
+            _iterator21.return();
           }
         } finally {
-          if (_didIteratorError22) {
-            throw _iteratorError22;
+          if (_didIteratorError21) {
+            throw _iteratorError21;
           }
         }
       }

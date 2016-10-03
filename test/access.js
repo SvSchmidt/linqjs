@@ -16,17 +16,6 @@ describe('access', function () {
     })
   })
 
-  describe('IndexOf(element, equalityCompareFn)', function () {
-    it('should return the index of the first occurence of element in the sequence or -1 if not found', function () {
-      expect(people.IndexOf({ name: 'Gandalf', race: 'istari' })).to.be.equal(0)
-      expect(people.IndexOf({ name: 'Saruman', race: 'istari' })).to.be.equal(-1)
-    })
-
-    it('should accept a custom equality comparator', function () {
-      expect(people.IndexOf({ name: 'Saruman', race: 'istari' }, (first, second) => first.race === second.race)).to.be.equal(0)
-    })
-  })
-
   describe('Take', function () {
       it('should return the first count elements in the sequence as a new sequence', function () {
         expect([1,2,3,4,5].Take(2).ToArray()).to.be.deep.equal([1,2])
