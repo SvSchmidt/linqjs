@@ -180,6 +180,7 @@ function Count (predicate = elem => true) {
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
   * @method
+  * @variation Any(predicate)
   * @memberof Collection
   * @instance
   * @example
