@@ -10,7 +10,6 @@
   // to the global object
   const window = this || (0, eval)('this'); // jshint ignore:line
   const DEBUG = true;
-
 (function (Collection) {
   try {
     if (typeof define === 'function' && define.amd) {

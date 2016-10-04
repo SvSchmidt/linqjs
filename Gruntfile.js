@@ -3,23 +3,19 @@ RegExp.escape = function(str) {
 };
 
 module.exports = function (grunt) {
-  require('load-grunt-tasks')(grunt);
+  require('load-grunt-tasks')(grunt)
+
+  const _ = grunt.util._
 
   grunt.option('force', true);
 
-  const banner = '/*!\n' +
-          ' * <%= pkg.name %> v<%= pkg.version %>\n' +
-          ' * (c) <%= pkg.author %> \n' +
-          ' * License: <%= pkg.licenses[0].type %> (<%= pkg.licenses[0].url %>)\n' +
-          ' */';
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    clean: {
-      dist: ['dist/'],
-      tmp: ['tmp/'],
-      output: ['tmp/', 'dist/'],
-    },
+    banner: '/*!\n' +
+            ' * <%= pkg.name %> v<%= pkg.version %>\n' +
+            ' * (c) <%= pkg.author %> \n' +
+            ' * License: <%= pkg.licenses[0].type %> (<%= pkg.licenses[0].url %>)\n' +
+            ' */',
     babel: {
         options: {
           sourceMap: false,
@@ -65,18 +61,6 @@ module.exports = function (grunt) {
           },
         },
     },
-    usebanner: {
-      dist: {
-        options: {
-          position: 'top',
-          banner: banner,
-          linebreak: true
-        },
-        files: {
-          dist: [ 'dist/*.js' ]
-        }
-      }
-    },
     jshint: {
       options: {
         jshintrc: true,
@@ -119,8 +103,16 @@ module.exports = function (grunt) {
       .replace(/  \n/ig, '\n')
   }
 
+  function applyBanner (source) {
+    return `${grunt.config.get('banner')}\n${source}`
+  }
+
   function normalizeLineBreaks (str) {
     return String(str).replace(/\r\n/g, '\n')
+  }
+
+  function defineDebugContant (source, value) {
+    return source.replace(new RegExp('DEBUG_CONSTANT_VALUE'), String(value))
   }
 
   function getAndRemoveExports (source) {
@@ -234,20 +226,18 @@ module.exports = function (grunt) {
   function build ({ src, target, debug = false } = {}) {
     const minTarget = target.replace('.js', '.min.js')
 
-    let sourceFileNames;
-    global.defineSourceFiles = sources => sourceFileNames = sources;
-
     /*
-    The specified source file contains a call for defineSourceFiles which we just defined globally
-    meaning after the evaluation sourceFileNames will contain the desired data
+    The specified source file contains a call for defineSourceFiles which we gonna define globally
+    meaning after the evaluation sourceFileNames will contain the desired data for further usage
     */
+    let sourceFileNames
+    global.defineSourceFiles = sources => sourceFileNames = sources
     eval(grunt.file.read('./' + src))
 
     /*
     Combine pre and post source code (iife, module loading etc.)
     */
     let pre = getSource('fragments/pre.js')
-    pre += `  const DEBUG = ${debug};\n\n`; // add DEBUG constant to output
     let moduleLoaderPre = getSource('fragments/module-loader-pre.js')
 
     let moduleLoaderPost = getSource('fragments/module-loader-post.js')
@@ -276,7 +266,7 @@ module.exports = function (grunt) {
     const linqjsExportStr = `  /* Export public interface */\n  __export({ ${linqjsExports} })\n`
 
     /*
-    combine the sources in the appropriate order and process the final source code (e.g. normalizing line breaks)
+    combine the sources in the appropriate order
     */
     let combinedSources = String.prototype.concat.apply('', [
       pre,
@@ -285,43 +275,62 @@ module.exports = function (grunt) {
       linqjsExportStr,
       moduleLoaderPost,
       post])
+
+    /*
+    Process the final outcome
+    */
     let output = normalizeLineBreaks(combinedSources)
+    output = defineDebugContant(output, debug)
 
     /*
-    Write combined output into the target file and offer some output
+    Create minified output
     */
+    let minOutput = minify(output, linqjsExports.split(', '))
+
+    /*
+    Finally do the magic, apply the banner and write back the output to the destination files
+    */
+    output = applyBanner(output)
+    minOutput = applyBanner(minOutput)
     grunt.file.write(`./${target}`, output)
-
-    /*
-    Write minified output
-    */
-    grunt.file.write(`./${minTarget}`, minify(output, linqjsExports.split(', ')))
+    grunt.file.write(`./${minTarget}`, minOutput)
 
     grunt.log.ok(`\n${sourceFileNames.join(', ')} ==> ${target}`)
     grunt.log.ok(`\nMinified ${target} => ${minTarget}`)
-    grunt.log.ok(`\nDefined DEBUG constant: DEBUG=${debug}`)
+    grunt.log.ok(`\nDefined DEBUG constant: ${debug}`)
 
     return !this.errorCount;
   }
 
-  grunt.registerMultiTask('build', 'Concat files', function () {
+  grunt.registerTask('clean', 'Clean output files', function () {
+    const files = ['dist/linq.es5.js', 'dist/linq.js', 'dist/linq.es5.min.js', 'dist/linq.min.js']
+
+    _.forEach(files, function (file) {
+        if (grunt.file.exists(file)) {
+          grunt.file.delete(file)
+        }
+    })
+
+    grunt.log.ok("Cleaned output files")
+
+    return !this.errorCount
+  })
+
+  grunt.registerMultiTask('build', 'Build linqjs', function () {
     build(this.data)
   })
 
   grunt.registerTask('test', ['mochacli'])
   grunt.registerTask('coverage', ['exec:coverage'])
-  grunt.registerTask('debug', ['clean:dist',
+  grunt.registerTask('debug', ['clean',
                                 'build:debug',
                                 'babel:dist',
                                 'uglify:dist',
-                                'usebanner',
                                 'file_info'])
-  grunt.registerTask('dist',   ['clean:dist',
+  grunt.registerTask('dist',   ['clean',
                                 'build:dist',
                                 'babel:dist',
                                 'uglify:dist',
-                                'usebanner',
-                                'file_info',
-                                'clean:tmp'])
+                                'file_info'])
   grunt.registerTask('default', ['debug', 'test', 'watch'])
 };

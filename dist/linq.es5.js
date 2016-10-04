@@ -1,11 +1,6 @@
-/*!
- * linqjs v0.0.0
- * (c) Sven Schmidt 
- * License: MIT (http://www.opensource.org/licenses/mit-license.php)
- */
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -17,6 +12,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/*!
+ * linqjs v0.0.0
+ * (c) Sven Schmidt 
+ * License: MIT (http://www.opensource.org/licenses/mit-license.php)
+ */
 (function () {
   'use strict';
 
@@ -25,7 +25,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
   var window = this || (0, eval)('this'); // jshint ignore:line
   var DEBUG = true;
-
   (function (Collection) {
     try {
       if (typeof define === 'function' && define.amd) {
@@ -345,7 +344,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     function __assertNumberBetween(num, min) {
-      var max = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
+      var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
 
       __assertNumeric(num);
       __assert(num >= min && num <= max, 'Number must be between ' + min + ' and ' + max + '!');
@@ -445,7 +444,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     function removeDuplicates(coll) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+      var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
       __assertIterable(coll);
       __assertFunction(equalityCompareFn);
@@ -615,7 +614,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     function getDefault() {
-      var constructorOrValue = arguments.length <= 0 || arguments[0] === undefined ? Object : arguments[0];
+      var constructorOrValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Object;
 
       if (constructorOrValue && isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         var defaultValue = constructorOrValue();
@@ -665,9 +664,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function Min() {
-      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return x;
-      } : arguments[0];
+      };
 
       __assertFunction(mapFn);
       __assertNotEmpty(this);
@@ -702,9 +701,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function Max() {
-      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return x;
-      } : arguments[0];
+      };
 
       __assertFunction(mapFn);
       __assertNotEmpty(this);
@@ -739,9 +738,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function Sum() {
-      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return x;
-      } : arguments[0];
+      };
 
       __assertNotEmpty(this);
 
@@ -777,9 +776,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function Average() {
-      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return x;
-      } : arguments[0];
+      };
 
       __assertNotEmpty(this);
 
@@ -848,7 +847,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function Union(second) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+      var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
       __assertIterable(second);
 
@@ -1239,7 +1238,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Collection}
         */
     function Intersect(second) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+      var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
       __assertIterable(second);
       __assertFunction(equalityCompareFn);
@@ -1368,7 +1367,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function IndexOf(element) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+      var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
       __assertFunction(equalityCompareFn);
 
@@ -1432,7 +1431,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Boolean}
         */
     function Contains(elem) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+      var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
       return !!~this.IndexOf(elem, equalityCompareFn);
     }
@@ -1457,9 +1456,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @return {Collection} The filtered collection
        */
     function Where() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
 
@@ -1601,9 +1600,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Number}
         */
     function Count() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem) {
         return true;
-      } : arguments[0];
+      };
 
       var count = 0;
       var filtered = this.Where(predicate);
@@ -1668,9 +1667,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * @return {Boolean}
      */
     function All() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
 
@@ -1684,10 +1683,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     /* src/access.js */
 
     function resultOrDefault(collection, originalFn) {
-      var predicateOrDefault = arguments.length <= 2 || arguments[2] === undefined ? function (x) {
+      var predicateOrDefault = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (x) {
         return true;
-      } : arguments[2];
-      var fallback = arguments.length <= 3 || arguments[3] === undefined ? Object : arguments[3];
+      };
+      var fallback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Object;
 
       var predicate = void 0;
 
@@ -1747,7 +1746,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * @return {Collection}
      */
     function Take() {
-      var count = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+      var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
       __assertNumeric(count);
 
@@ -1847,7 +1846,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * @return {Collection}
      */
     function Skip() {
-      var count = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+      var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
       __assertNumeric(count);
 
@@ -1884,9 +1883,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Collection}
         */
     function TakeWhile() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
 
@@ -2001,9 +2000,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Collection}
         */
     function TakeUntil() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
         return false;
-      } : arguments[0];
+      };
 
       return this.TakeWhile(function (elem, index) {
         return !predicate(elem, index);
@@ -2031,9 +2030,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Collection}
         */
     function SkipWhile() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
 
@@ -2142,9 +2141,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Collection}
         */
     function SkipUntil() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (elem, index) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
         return false;
-      } : arguments[0];
+      };
 
       return this.SkipWhile(function (elem, index) {
         return !predicate(elem, index);
@@ -2178,9 +2177,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {any}
         */
     function First() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
       __assertNotEmpty(this);
@@ -2224,10 +2223,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {any}
         */
     function FirstOrDefault() {
-      var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var predicateOrConstructor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return true;
-      } : arguments[0];
-      var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
+      };
+      var constructor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Object;
 
       return resultOrDefault(this, First, predicateOrConstructor, constructor);
     }
@@ -2259,9 +2258,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {any}
         */
     function Last() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
       __assertNotEmpty(this);
@@ -2300,10 +2299,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {any}
         */
     function LastOrDefault() {
-      var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var predicateOrConstructor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return true;
-      } : arguments[0];
-      var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
+      };
+      var constructor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Object;
 
       return resultOrDefault(this, Last, predicateOrConstructor, constructor);
     }
@@ -2339,9 +2338,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {any}
         */
     function Single() {
-      var predicate = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return true;
-      } : arguments[0];
+      };
 
       __assertFunction(predicate);
       __assertNotEmpty(this);
@@ -2423,10 +2422,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {any}
         */
     function SingleOrDefault() {
-      var predicateOrConstructor = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var predicateOrConstructor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return true;
-      } : arguments[0];
-      var constructor = arguments.length <= 1 || arguments[1] === undefined ? Object : arguments[1];
+      };
+      var constructor = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Object;
 
       return resultOrDefault(this, Single, predicateOrConstructor, constructor);
     }
@@ -2513,7 +2512,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {any}              <T>        Heap element type.
        */
       function MinHeap(elements) {
-        var comparator = arguments.length <= 1 || arguments[1] === undefined ? DefaultComparator : arguments[1];
+        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultComparator;
 
         __assertArray(elements);
         __assertFunction(comparator);
@@ -2674,7 +2673,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {any}               <T>        Heap element type.
        */
       function MaxHeap(elements) {
-        var comparator = arguments.length <= 1 || arguments[1] === undefined ? DefaultComparator : arguments[1];
+        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultComparator;
 
         __assertArray(elements);
         __assertFunction(comparator);
@@ -2777,9 +2776,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @return {Collection}
        */
     function Select() {
-      var mapFn = arguments.length <= 0 || arguments[0] === undefined ? function (x) {
+      var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
         return x;
-      } : arguments[0];
+      };
 
       var iter = this.getIterator();
 
@@ -2920,9 +2919,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
               * @
               */
     function SelectMany(mapFn) {
-      var resultSelector = arguments.length <= 1 || arguments[1] === undefined ? function (x, y) {
+      var resultSelector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (x, y) {
         return y;
-      } : arguments[1];
+      };
 
       __assertFunction(mapFn);
       __assertFunction(resultSelector);
@@ -3089,7 +3088,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Collection}
         */
     function Distinct() {
-      var equalityCompareFn = arguments.length <= 0 || arguments[0] === undefined ? defaultEqualityCompareFn : arguments[0];
+      var equalityCompareFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultEqualityCompareFn;
 
       __assertFunction(equalityCompareFn);
 
@@ -3926,7 +3925,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @return {Boolean}
         */
     function SequenceEqual(second) {
-      var equalityCompareFn = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCompareFn : arguments[1];
+      var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
       if (!isIterable(second)) {
         return false;
