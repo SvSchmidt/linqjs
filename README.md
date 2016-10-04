@@ -3,7 +3,6 @@
 - [x] Aggregate
 - [x] All
 - [x] Add
-- [ ] Alternate
 - [x] Any
 - [x] Average
 - [x] Concat
@@ -28,7 +27,7 @@
 - [x] Intersect
 - [x] Join
 - [x] Last
-- [ ] LastIndexOf
+- [x] LastIndexOf
 - [x] LastOrDefault
 - [x] Max
 - [x] Min

@@ -743,7 +743,7 @@ function Zip (second, resultSelectorFn) {
 /* src/search.js */
 
 /**
-* IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+* IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
 *
 * @method
 * @memberof Collection
@@ -755,7 +755,7 @@ function Zip (second, resultSelectorFn) {
 // -> -1
  * @return {Number}
  *//**
- * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+ * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
  * A provided equality compare function is used to specify equality.
  *
  * @method
@@ -779,6 +779,46 @@ function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
   }
 
   return -1
+}
+
+/**
+* LastIndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+*
+* @method
+* @memberof Collection
+* @instance
+* @example
+[1, 2, 3, 1, 4, 7, 1].LastIndexOf(1)
+// -> 6
+[1, 2, 3].LastIndexOf(4)
+// -> -1
+ * @return {Number}
+ *//**
+ * IndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+ * A provided equality compare function is used to specify equality.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+ * @return {Number}
+ */
+function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
+  __assertFunction(equalityCompareFn)
+
+  const iter = this.getIterator()
+  let i = 0
+  let lastIndex = -1
+
+  for (let val of iter) {
+    if (equalityCompareFn(val, element)) {
+      lastIndex = i
+    }
+
+    i++
+  }
+
+  return lastIndex
 }
 
 /**
@@ -924,6 +964,7 @@ function Count (predicate = elem => true) {
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
   * @method
+  * @variation Any(predicate)
   * @memberof Collection
   * @instance
   * @example
@@ -2294,6 +2335,7 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @variation (keySelector)
  * @example
  * // Map {"S" => ["Sven"], "M" => ["Mauz"]}
  * ['Sven', 'Mauz'].GroupBy(x => x[0])
@@ -2306,6 +2348,7 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @variation (keySelector, keyComparer)
  * @example
  * // Map {"4" => ["4", 4], "5" => ["5"]}
  * ['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))
@@ -2320,6 +2363,7 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @variation (keySelector, elementSelector)
  * @example
  * // Map {23 => ["Sven"], 20 => ["jon"]}
  * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)
@@ -2334,11 +2378,25 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @variation (keySelector, resultSelector)
  * @example
  * // [ { age:23, persons: "Sven&julia" }, { age: 20, persons: "jon" } ]
  * [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&') })).ToArray()
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
+ * @return {Collection} The grouped sequence with projected results as a new Collection
+ *//**
+ * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+ * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
+ *
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+ * @instance
+ * @memberof Collection
+ * @method
+ * @variation (keySelector, resultSelector, keyComparer)
+ * @param {Function} keySelector A function to select grouping keys from the sequence members
+ * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
+ * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
  * @return {Collection} The grouped sequence with projected results as a new Collection
  *//**
  * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
@@ -2348,18 +2406,7 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
- * @param {Function} keySelector A function to select grouping keys from the sequence members
- * @param {Function} elementSelector A function to map each group member to a specific value
- * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
- * @return {Map} The grouped sequence as a Map
- *//**
- * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
- * Each group member is projected to a single value (e.g. a property) using the elementSelector.
- *
- * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
- * @instance
- * @memberof Collection
- * @method
+ * @variation (keySelector, elementSelector, keyComparer)
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} elementSelector A function to map each group member to a specific value
  * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
@@ -2373,6 +2420,7 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @variation (keySelector, elementSelector, resultSelector)
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} elementSelector A function to map each group member to a specific value
  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
@@ -2386,6 +2434,7 @@ function Shuffle () {
  * @instance
  * @memberof Collection
  * @method
+ * @variation (keySelector, elementSelector, resultSelector, keyComparer)
  * @param {Function} keySelector A function to select grouping keys from the sequence members
  * @param {Function} elementSelector A function to map each group member to a specific value
  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
@@ -2594,7 +2643,7 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, SequenceEqual })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

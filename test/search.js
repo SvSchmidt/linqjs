@@ -24,6 +24,18 @@ describe('Search', function () {
     })
   })
 
+  describe('LastIndexOf(element, equalityCompareFn)', function () {
+    it('should return the index of the last occurence of element in the sequence or -1 if not found', function () {
+      expect(people.LastIndexOf({ name: 'Gandalf', race: 'istari' })).to.be.equal(0)
+      expect(people.LastIndexOf({ name: 'Saruman', race: 'istari' })).to.be.equal(-1)
+      expect([1,2,3,4,1,5,6].LastIndexOf(1)).to.be.equal(4)
+    })
+
+    it('should accept a custom equality comparator', function () {
+      expect(people.LastIndexOf({ name: 'Saruman', race: 'istari' }, (first, second) => first.race === second.race)).to.be.equal(0)
+    })
+  })
+
   describe('Contains', function () {
     /*
     Spec: https://msdn.microsoft.com/de-de/library/bb352880(v=vs.110).aspx

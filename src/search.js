@@ -1,5 +1,5 @@
 /**
-* IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+* IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
 *
 * @method
 * @memberof Collection
@@ -11,7 +11,7 @@
 // -> -1
  * @return {Number}
  *//**
- * IndexOf - Returns the first index of the given element in the sequence or -1 if it was not found.
+ * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
  * A provided equality compare function is used to specify equality.
  *
  * @method
@@ -35,6 +35,46 @@ function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
   }
 
   return -1
+}
+
+/**
+* LastIndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+*
+* @method
+* @memberof Collection
+* @instance
+* @example
+[1, 2, 3, 1, 4, 7, 1].LastIndexOf(1)
+// -> 6
+[1, 2, 3].LastIndexOf(4)
+// -> -1
+ * @return {Number}
+ *//**
+ * IndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+ * A provided equality compare function is used to specify equality.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+ * @return {Number}
+ */
+function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
+  __assertFunction(equalityCompareFn)
+
+  const iter = this.getIterator()
+  let i = 0
+  let lastIndex = -1
+
+  for (let val of iter) {
+    if (equalityCompareFn(val, element)) {
+      lastIndex = i
+    }
+
+    i++
+  }
+
+  return lastIndex
 }
 
 /**
@@ -227,4 +267,4 @@ function All (predicate = elem => true) {
   return !this.Any(x => !predicate(x))
 }
 
-__export({ Where, ConditionalWhere, Count, Contains, IndexOf, Any, All })
+__export({ Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All })
