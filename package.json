@@ -7,7 +7,7 @@
     "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
     "coverage": "grunt coverage",
     "build": "grunt",
-    "generate-docs": "./node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
+    "generate-docs": "./node_modules/.bin/jsdoc --configure .jsdoc --verbose"
   },
   "author": "Sven Schmidt",
   "contributors": [
@@ -52,7 +52,6 @@
     "jscoverage": "^0.6.0",
     "jsdoc": "^3.4.1",
     "load-grunt-tasks": "^3.5.2",
-    "minami": "^1.1.1",
     "mocha": "^3.0.2",
     "mocha-lcov-reporter": "^1.2.0"
   }
