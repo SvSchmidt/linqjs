@@ -5,7 +5,13 @@
  * @memberof Collection
  * @instance
  * @method
+ * @variation (accumulator)
  * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+ * @example
+ const sentence = "the quick brown fox jumps over the lazy dog"
+ const words = sentence.split(' ')
+ const reversed = words.Aggregate((workingSentence, next) => next + " " + workingSentence)
+ // --> "dog lazy the over jumps fox brown quick the"
  * @return {any} the result of the accumulation
  *//**
  * Aggregate - applies a accumulator function to a sequence. Starts with seed.
@@ -14,6 +20,7 @@
  * @memberof Collection
  * @instance
  * @method
+ * @variation (seed, accumulator)
  * @param {any} seed The starting value of the accumulation
  * @param {Function} accumulator The accumulator function of the form (prev, current) => any
  * @example
@@ -27,11 +34,17 @@
  * @memberof Collection
  * @instance
  * @method
+ * @variation (seed, accumulator, resultTransformFn)
  * @param {any} seed The starting value of the accumulation
  * @param {Function} accumulator The accumulator function of the form (prev, current) => any
  * @param {Function} resultTransformFn A function to transform the result
+ * @example
+const fruits = ["apple", "mango", "orange", "passionfruit", "grape"]
+const longestName = fruits.Aggregate('banana',
+   (longest, next) => next.length > longest.length ? next : longest,
+   fruit => fruit.toUpperCase())
+// -> "PASSIONFRUIT"
  * @return {any} the result of the accumulation
- * @
  */
 function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
   const values = this.ToArray()
@@ -53,6 +66,7 @@ function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
 * @memberof Collection
 * @instance
 * @method
+* @variation (elem => any)
 * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
 * @example
 const petOwners = [
@@ -71,6 +85,7 @@ petOwners.Select(x => x.Name).ToArray()
 * @memberof Collection
 * @instance
 * @method
+* @variation ((elem, index) => any)
 * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
 * @example
 [1, 2, 3].Select((x, i) => x + i).ToArray()
@@ -112,6 +127,16 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (elem => any)
+ * @example
+const petOwners = [
+ { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+ { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+ { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+]
+
+const pets = petOwners.SelectMany(petOwner => petOwner.Pets).ToArray())
+// -> ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
  * @return {Collection}
  *//**
@@ -122,6 +147,7 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation ((elem, index) => any)
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
  * @return {Collection}
  *//**
@@ -132,6 +158,27 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (elem => any, resultSelector)
+ * @example
+const petOwners = [
+  { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+  { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+  { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+]
+petOwners.SelectMany(
+    petOwner => petOwner.Pets,
+    (owner, petName) => ({ owner, petName })
+  ).Select(ownerAndPet => ({
+     owner: ownerAndPet.owner.Name,
+     pet: ownerAndPet.petName,
+  }))
+  .Take(2)
+  .ToArray()
+
+// -> [
+//  { owner: "Higa, Sidney", pet: "Scruffy"},
+//  { owner: "Higa, Sidney", pet: "Sam"}
+// ]
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
  * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
  * @return {Collection}
@@ -143,10 +190,10 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation ((elem, index) => any, resultSelector)
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
  * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
  * @return {Collection}
- * @
  */
 function SelectMany (mapFn, resultSelector = (x, y) => y) {
   __assertFunction(mapFn)

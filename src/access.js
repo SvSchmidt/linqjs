@@ -460,6 +460,7 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
  * @method
  * @memberof Collection
  * @instance
+ * @variation (constructor)
  * @param {Function} constructor A native constructor to get the default for, e.g. Number
  * @return {Collection}
  *//**
@@ -469,7 +470,8 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
  * @method
  * @memberof Collection
  * @instance
- * @param {any} value The default vlaue
+ * @variation (defaultValue)
+ * @param {any} value The default value
  * @return {Collection}
  */
 function DefaultIfEmpty (constructorOrValue) {

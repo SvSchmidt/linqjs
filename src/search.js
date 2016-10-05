@@ -89,6 +89,7 @@ function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
 // -> true
 [1, 2, 3].Contains(4)
 // -> false
+ * @param {any} elem The element to check
  * @return {Boolean}
  *//**
  * Contains - Returns true if the sequence contains the specified element, false if not.
@@ -98,6 +99,7 @@ function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
  * @method
  * @memberof Collection
  * @instance
+ * @param {any} elem The element to check
  * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
  * @return {Boolean}
  */
@@ -112,6 +114,7 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (elem => boolean)
 * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
 * @return {Collection} The filtered collection
 *//**
@@ -121,6 +124,7 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
 * @method
 * @memberof Collection
 * @instance
+* @variation ((elem, index) => boolean)
 * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
 * @return {Collection} The filtered collection
 */
@@ -150,6 +154,7 @@ function Where (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (condition, elem => bool)
 * @param {Boolean} condition A condition to get checked before filtering the sequence
 * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
 * @return {Collection} The filtered collection or the original sequence if condition was falsy
@@ -159,6 +164,7 @@ function Where (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (condition, (elem, index) => bool)
 * @param {Boolean} condition A condition to get checked before filtering the sequence
 * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
 * @return {Collection} The filtered collection or the original sequence if condition was falsy
@@ -220,7 +226,7 @@ function Count (predicate = elem => true) {
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
   * @method
-  * @variation Any(predicate)
+  * @variation (predicate)
   * @memberof Collection
   * @instance
   * @example

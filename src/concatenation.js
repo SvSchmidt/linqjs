@@ -132,9 +132,9 @@ const words = [ "one", "two", "three" ]
 const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
 numbersAndWords.ForEach(x => console.log(x))
 // Outputs:
-"1 one"
-"2 two"
-"3 three"
+// "1 one"
+// "2 two"
+// "3 three"
  * @param  {Iterable} second
  * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
  * @return {Collection}
