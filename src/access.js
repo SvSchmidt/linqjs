@@ -105,6 +105,16 @@ function Skip (count = 0) {
  * @method
  * @memberof Collection
  * @instance
+ * @variation (elem => boolean)
+ * @example
+ const girls = [
+   { name: 'Julia', isHot: true },
+   { name: 'Sarah', isHot: true },
+   { name: 'Maude', isHot: false },
+ ]
+
+ girls.TakeWhile(g => g.isHot).ToArray()
+ // -> [ { name: 'Julia', isHot: true },  { name: 'Sarah', isHot: true } ]
  * @param  {Function} predicate The predicate of the form elem => boolean
  * @return {Collection}
   *//**
@@ -114,6 +124,7 @@ function Skip (count = 0) {
   * @method
   * @memberof Collection
   * @instance
+  * @variation ((elem, index) => boolean)
   * @param  {Function} predicate The predicate of the form (elem, index) => boolean
   * @return {Collection}
   */
@@ -147,6 +158,16 @@ function TakeWhile (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (elem => boolean)
+* @example
+const girls = [
+  { name: 'Julia', isHot: true },
+  { name: 'Sarah', isHot: true },
+  { name: 'Maude', isHot: false },
+]
+
+girls.TakeUntil(g => !g.isHot).ToArray()
+// -> [ { name: 'Julia', isHot: true },  { name: 'Sarah', isHot: true } ]
 * @param  {Function} predicate The predicate of the form elem => boolean
 * @return {Collection}
  *//**
@@ -156,6 +177,7 @@ function TakeWhile (predicate = (elem, index) => true) {
  * @method
  * @memberof Collection
  * @instance
+* @variation ((elem, index) => boolean)
  * @param  {Function} predicate The predicate of the form (elem, index) => boolean
  * @return {Collection}
  */
@@ -169,7 +191,13 @@ function TakeUntil (predicate = (elem, index) => false) {
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
  * @method
  * @memberof Collection
+ * @variation (elem => boolean)
  * @instance
+ * @example
+ const numbers = [1, 3, 7, 9, 12, 13, 14, 15]
+
+numbers.SkipWhile(x => x % 2 === 1).ToArray()
+// -> [12, 13, 14, 15]
  * @param  {type} predicate The predicate of the form elem => boolean
  * @return {Collection}
   *//**
@@ -180,6 +208,7 @@ function TakeUntil (predicate = (elem, index) => false) {
   * @method
   * @memberof Collection
   * @instance
+  * @variation ((elem, index) => boolean)
   * @param  {type} predicate The predicate of the form (elem, index) => boolean
   * @return {Collection}
   */
@@ -209,6 +238,18 @@ function SkipWhile (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (elem => boolean)
+* @example
+const people = [
+  { name: 'Gandalf', race: 'istari' },
+  { name: 'Thorin', race: 'dwarfs' },
+  { name: 'Frodo', race: 'hobbit' },
+  { name: 'Samweis', race: 'hobbit' },
+  { name: 'Pippin', race: 'hobbit' },
+]
+
+people.SkipUntil(p => p.race === 'hobbit').Select(x => x.name).ToArray()
+// -> ['Frodo', 'Samweis', 'Pippin']
 * @param  {Function} predicate The predicate of the form elem => boolean
 * @return {Collection}
  *//**
@@ -218,6 +259,7 @@ function SkipWhile (predicate = (elem, index) => true) {
  * @method
  * @memberof Collection
  * @instance
+ * @variation ((elem, index) => boolean)
  * @param  {Function} predicate The predicate of the form (elem, index) => boolean
  * @return {Collection}
  */

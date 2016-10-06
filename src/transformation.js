@@ -112,9 +112,9 @@ function Select (mapFn = x => x) {
  * @instance
  * @method
  * @example
- * // [1, 2, 3, 4, 5, 6,]
- * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
- * @return {Collection}  A new flattened Collection
+[1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+// -> [1, 2, 3, 4, 5, 6,]
+ * @return {Collection}  A new, flattened Collection
  */
 function Flatten () {
   return this.SelectMany(x => x)

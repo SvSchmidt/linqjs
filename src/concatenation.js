@@ -96,8 +96,13 @@ function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, ke
  * @memberof Collection
  * @instance
  * @example
-[1, 2, 3, 4].Except([1, 5, 6, 7]).ToArray()
-// -> [2, 3, 4]
+const people = [
+  'Sven', 'Julia', 'Tobi', 'Sarah', 'George', 'Jorge', 'Jon'
+]
+const peopleIHate = ['George', 'Jorge']
+const peopleILike = people.Except(peopleIHate)
+peopleILike.ToArray()
+// -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
  * @param  {Iterable} second
  * @return {Collection}        new Collection with the values of first without the ones in second
  */
