@@ -150,10 +150,11 @@ module.exports = function (grunt) {
     // Get functions which are not exported (internal use) and rename them to have shorter names
     // also rename some of the too-long parameter names (e.g. resultSelector)
     const nonExportedFunctions = getNonExportedFunctions(source, exportsArr)
-    const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'equalityCompareFn',
+    const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'elementSelectorOrKeyComparer', 'equalityCompareFn',
       'keySelector', 'keyComparer', 'elementSelector', 'iterableOrGenerator', 'constructorOrValue',
       'firstKeySelector', 'secondKeySelector', 'predicate', 'nativeConstructors', 'firstIter', 'secondIter',
-      'collectionStaticMethods', 'first', 'second', 'keyEqualityCompareFn', 'condition', 'elem', 'param']
+      'collectionStaticMethods', 'first', 'second', 'keyEqualityCompareFn', 'condition', 'elem', 'param',
+      'additionalComparator', 'seedOrAccumulator', 'seed', 'accumulator', 'mappedEntry', 'current']
     const shouldBeShorter = [...nonExportedFunctions, ...tooLongParameterNames]
 
     for (let i = j = 0; i < shouldBeShorter.length; i++) {
@@ -189,6 +190,9 @@ module.exports = function (grunt) {
     // Remove leading whitespaces (or other invisible characters like \t)
     source = source.replace(/^\s+/mg, '')
 
+    // Remove multi-whitespaces in general
+    source = source.replace(/\s{2,}/g, ' ')
+
     // Remove whitespace before and after some chars
     stripWhiteSpacesBeforeAndAfterChars.forEach(c => {
       source = source.replace(new RegExp(` ${RegExp.escape(c)} `, 'g'), c)
@@ -221,6 +225,9 @@ module.exports = function (grunt) {
 
     // Remove spaces before or after : or ?
     source = source.replace(/\s*([\?|\:])\s*/g, '$1')
+
+    // Remove semicola followed by }
+    source = source.replace(/\;(?=\})/g, '')
 
     //source = source.replace(/\n/g, '')
 
