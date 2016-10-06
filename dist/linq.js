@@ -632,8 +632,13 @@ function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, ke
  * @memberof Collection
  * @instance
  * @example
-[1, 2, 3, 4].Except([1, 5, 6, 7]).ToArray()
-// -> [2, 3, 4]
+const people = [
+  'Sven', 'Julia', 'Tobi', 'Sarah', 'George', 'Jorge', 'Jon'
+]
+const peopleIHate = ['George', 'Jorge']
+const peopleILike = people.Except(peopleIHate)
+peopleILike.ToArray()
+// -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
  * @param  {Iterable} second
  * @return {Collection}        new Collection with the values of first without the ones in second
  */
@@ -668,9 +673,9 @@ const words = [ "one", "two", "three" ]
 const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
 numbersAndWords.ForEach(x => console.log(x))
 // Outputs:
-"1 one"
-"2 two"
-"3 three"
+// "1 one"
+// "2 two"
+// "3 three"
  * @param  {Iterable} second
  * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
  * @return {Collection}
@@ -833,6 +838,7 @@ function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
 // -> true
 [1, 2, 3].Contains(4)
 // -> false
+ * @param {any} elem The element to check
  * @return {Boolean}
  *//**
  * Contains - Returns true if the sequence contains the specified element, false if not.
@@ -842,6 +848,7 @@ function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
  * @method
  * @memberof Collection
  * @instance
+ * @param {any} elem The element to check
  * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
  * @return {Boolean}
  */
@@ -856,6 +863,7 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (elem => boolean)
 * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
 * @return {Collection} The filtered collection
 *//**
@@ -865,6 +873,7 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
 * @method
 * @memberof Collection
 * @instance
+* @variation ((elem, index) => boolean)
 * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
 * @return {Collection} The filtered collection
 */
@@ -894,6 +903,7 @@ function Where (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (condition, elem => bool)
 * @param {Boolean} condition A condition to get checked before filtering the sequence
 * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
 * @return {Collection} The filtered collection or the original sequence if condition was falsy
@@ -903,6 +913,7 @@ function Where (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (condition, (elem, index) => bool)
 * @param {Boolean} condition A condition to get checked before filtering the sequence
 * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
 * @return {Collection} The filtered collection or the original sequence if condition was falsy
@@ -964,7 +975,7 @@ function Count (predicate = elem => true) {
   *
   * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
   * @method
-  * @variation Any(predicate)
+  * @variation (predicate)
   * @memberof Collection
   * @instance
   * @example
@@ -1123,6 +1134,16 @@ function Skip (count = 0) {
  * @method
  * @memberof Collection
  * @instance
+ * @variation (elem => boolean)
+ * @example
+ const girls = [
+   { name: 'Julia', isHot: true },
+   { name: 'Sarah', isHot: true },
+   { name: 'Maude', isHot: false },
+ ]
+
+ girls.TakeWhile(g => g.isHot).ToArray()
+ // -> [ { name: 'Julia', isHot: true },  { name: 'Sarah', isHot: true } ]
  * @param  {Function} predicate The predicate of the form elem => boolean
  * @return {Collection}
   *//**
@@ -1132,6 +1153,7 @@ function Skip (count = 0) {
   * @method
   * @memberof Collection
   * @instance
+  * @variation ((elem, index) => boolean)
   * @param  {Function} predicate The predicate of the form (elem, index) => boolean
   * @return {Collection}
   */
@@ -1165,6 +1187,16 @@ function TakeWhile (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (elem => boolean)
+* @example
+const girls = [
+  { name: 'Julia', isHot: true },
+  { name: 'Sarah', isHot: true },
+  { name: 'Maude', isHot: false },
+]
+
+girls.TakeUntil(g => !g.isHot).ToArray()
+// -> [ { name: 'Julia', isHot: true },  { name: 'Sarah', isHot: true } ]
 * @param  {Function} predicate The predicate of the form elem => boolean
 * @return {Collection}
  *//**
@@ -1174,6 +1206,7 @@ function TakeWhile (predicate = (elem, index) => true) {
  * @method
  * @memberof Collection
  * @instance
+* @variation ((elem, index) => boolean)
  * @param  {Function} predicate The predicate of the form (elem, index) => boolean
  * @return {Collection}
  */
@@ -1187,7 +1220,13 @@ function TakeUntil (predicate = (elem, index) => false) {
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
  * @method
  * @memberof Collection
+ * @variation (elem => boolean)
  * @instance
+ * @example
+ const numbers = [1, 3, 7, 9, 12, 13, 14, 15]
+
+numbers.SkipWhile(x => x % 2 === 1).ToArray()
+// -> [12, 13, 14, 15]
  * @param  {type} predicate The predicate of the form elem => boolean
  * @return {Collection}
   *//**
@@ -1198,6 +1237,7 @@ function TakeUntil (predicate = (elem, index) => false) {
   * @method
   * @memberof Collection
   * @instance
+  * @variation ((elem, index) => boolean)
   * @param  {type} predicate The predicate of the form (elem, index) => boolean
   * @return {Collection}
   */
@@ -1227,6 +1267,18 @@ function SkipWhile (predicate = (elem, index) => true) {
 * @method
 * @memberof Collection
 * @instance
+* @variation (elem => boolean)
+* @example
+const people = [
+  { name: 'Gandalf', race: 'istari' },
+  { name: 'Thorin', race: 'dwarfs' },
+  { name: 'Frodo', race: 'hobbit' },
+  { name: 'Samweis', race: 'hobbit' },
+  { name: 'Pippin', race: 'hobbit' },
+]
+
+people.SkipUntil(p => p.race === 'hobbit').Select(x => x.name).ToArray()
+// -> ['Frodo', 'Samweis', 'Pippin']
 * @param  {Function} predicate The predicate of the form elem => boolean
 * @return {Collection}
  *//**
@@ -1236,6 +1288,7 @@ function SkipWhile (predicate = (elem, index) => true) {
  * @method
  * @memberof Collection
  * @instance
+ * @variation ((elem, index) => boolean)
  * @param  {Function} predicate The predicate of the form (elem, index) => boolean
  * @return {Collection}
  */
@@ -1478,6 +1531,7 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
  * @method
  * @memberof Collection
  * @instance
+ * @variation (constructor)
  * @param {Function} constructor A native constructor to get the default for, e.g. Number
  * @return {Collection}
  *//**
@@ -1487,7 +1541,8 @@ function SingleOrDefault (predicateOrConstructor = x => true, constructor = Obje
  * @method
  * @memberof Collection
  * @instance
- * @param {any} value The default vlaue
+ * @variation (defaultValue)
+ * @param {any} value The default value
  * @return {Collection}
  */
 function DefaultIfEmpty (constructorOrValue) {
@@ -1741,7 +1796,13 @@ let MaxHeap = (function () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (accumulator)
  * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+ * @example
+ const sentence = "the quick brown fox jumps over the lazy dog"
+ const words = sentence.split(' ')
+ const reversed = words.Aggregate((workingSentence, next) => next + " " + workingSentence)
+ // --> "dog lazy the over jumps fox brown quick the"
  * @return {any} the result of the accumulation
  *//**
  * Aggregate - applies a accumulator function to a sequence. Starts with seed.
@@ -1750,6 +1811,7 @@ let MaxHeap = (function () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (seed, accumulator)
  * @param {any} seed The starting value of the accumulation
  * @param {Function} accumulator The accumulator function of the form (prev, current) => any
  * @example
@@ -1763,11 +1825,17 @@ let MaxHeap = (function () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (seed, accumulator, resultTransformFn)
  * @param {any} seed The starting value of the accumulation
  * @param {Function} accumulator The accumulator function of the form (prev, current) => any
  * @param {Function} resultTransformFn A function to transform the result
+ * @example
+const fruits = ["apple", "mango", "orange", "passionfruit", "grape"]
+const longestName = fruits.Aggregate('banana',
+   (longest, next) => next.length > longest.length ? next : longest,
+   fruit => fruit.toUpperCase())
+// -> "PASSIONFRUIT"
  * @return {any} the result of the accumulation
- * @
  */
 function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
   const values = this.ToArray()
@@ -1789,6 +1857,7 @@ function Aggregate (seedOrAccumulator, accumulator, resultTransformFn) {
 * @memberof Collection
 * @instance
 * @method
+* @variation (elem => any)
 * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
 * @example
 const petOwners = [
@@ -1807,6 +1876,7 @@ petOwners.Select(x => x.Name).ToArray()
 * @memberof Collection
 * @instance
 * @method
+* @variation ((elem, index) => any)
 * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
 * @example
 [1, 2, 3].Select((x, i) => x + i).ToArray()
@@ -1833,9 +1903,9 @@ function Select (mapFn = x => x) {
  * @instance
  * @method
  * @example
- * // [1, 2, 3, 4, 5, 6,]
- * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
- * @return {Collection}  A new flattened Collection
+[1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+// -> [1, 2, 3, 4, 5, 6,]
+ * @return {Collection}  A new, flattened Collection
  */
 function Flatten () {
   return this.SelectMany(x => x)
@@ -1848,6 +1918,16 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (elem => any)
+ * @example
+const petOwners = [
+ { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+ { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+ { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+]
+
+const pets = petOwners.SelectMany(petOwner => petOwner.Pets).ToArray())
+// -> ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
  * @return {Collection}
  *//**
@@ -1858,6 +1938,7 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation ((elem, index) => any)
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
  * @return {Collection}
  *//**
@@ -1868,6 +1949,27 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation (elem => any, resultSelector)
+ * @example
+const petOwners = [
+  { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+  { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+  { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+]
+petOwners.SelectMany(
+    petOwner => petOwner.Pets,
+    (owner, petName) => ({ owner, petName })
+  ).Select(ownerAndPet => ({
+     owner: ownerAndPet.owner.Name,
+     pet: ownerAndPet.petName,
+  }))
+  .Take(2)
+  .ToArray()
+
+// -> [
+//  { owner: "Higa, Sidney", pet: "Scruffy"},
+//  { owner: "Higa, Sidney", pet: "Sam"}
+// ]
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
  * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
  * @return {Collection}
@@ -1879,10 +1981,10 @@ function Flatten () {
  * @memberof Collection
  * @instance
  * @method
+ * @variation ((elem, index) => any, resultSelector)
  * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
  * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
  * @return {Collection}
- * @
  */
 function SelectMany (mapFn, resultSelector = (x, y) => y) {
   __assertFunction(mapFn)

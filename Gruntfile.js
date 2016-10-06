@@ -143,7 +143,7 @@ module.exports = function (grunt) {
   }
 
   function minify (source, exportsArr) {
-    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '||', '&&', '!=', '!==', '<', '>', '<=', '>=', '=>']
+    const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '*', '||', '&&', '!=', '!==', '<', '>', '<=', '>=', '=>']
     const stripWhiteSpacesAfterChars = [',', ';', ')', '{']
     const stripWhiteSpacesBeforeChars = [',', ';', '(', '{']
 
@@ -153,7 +153,7 @@ module.exports = function (grunt) {
     const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'equalityCompareFn',
       'keySelector', 'keyComparer', 'elementSelector', 'iterableOrGenerator', 'constructorOrValue',
       'firstKeySelector', 'secondKeySelector', 'predicate', 'nativeConstructors', 'firstIter', 'secondIter',
-      'collectionStaticMethods']
+      'collectionStaticMethods', 'first', 'second', 'keyEqualityCompareFn', 'condition', 'elem', 'param']
     const shouldBeShorter = [...nonExportedFunctions, ...tooLongParameterNames]
 
     for (let i = j = 0; i < shouldBeShorter.length; i++) {
@@ -178,6 +178,10 @@ module.exports = function (grunt) {
       source = source.replace(new RegExp(RegExp.escape(shouldBeShorter[i]), 'g'), result)
     }
 
+    // Replace true by !0 and false by !1
+    source = source.replace(/true/g, '!0')
+    source = source.replace(/false/g, '!1')
+
     // Remove comments (block and single line)
     source = source.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '')
     source = source.replace(/(\/\/.*\n)/g, '')
@@ -200,8 +204,8 @@ module.exports = function (grunt) {
       source = source.replace(new RegExp(` ${RegExp.escape(c)}`, 'g'), c)
     })
 
-    // insert semicola at line ends if there was none of the defined characters before
-    source = source.replace(/(.+[^;,{}\n])\n(?![\?\:\}])/g, '$1;')
+    // insert semicola at line ends if there is not any of the defined characters following
+    source = source.replace(/(.+[^;,{}\n])\n(?![\?\:\}\{])/g, '$1;')
 
     // remove multi-linebreaks
     source = source.replace(/\n\n/g, '\n')
