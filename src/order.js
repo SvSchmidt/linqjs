@@ -1,11 +1,11 @@
 // TODO: change implementation to use iterators!
 
 function Order() {
-  return this.OrderBy(DefaultComparator);
+  return this.OrderBy(defaultComparator);
 }
 
 function OrderDescending() {
-  return this.OrderByDescending(DefaultComparator);
+  return this.OrderByDescending(defaultComparator);
 }
 
 /**

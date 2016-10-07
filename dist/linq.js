@@ -183,7 +183,7 @@ function defaultEqualityCompareFn (first, second) {
  *                  returns  1 if "b" is smaller than "a",
  *                  returns  0 if they are equal.
  */
-function DefaultComparator (a, b) {
+function defaultComparator (a, b) {
     if (a < b) {
         return -1;
     }
@@ -191,7 +191,7 @@ function DefaultComparator (a, b) {
         return 1;
     }
     return 0;
-};
+}
 
 
 
@@ -550,17 +550,17 @@ function Average (mapFn = x => x) {
  * @example
 [1, 2, 3].Concat([4, 5, 6]).ToArray()
 // -> [1, 2, 3, 4, 5, 6]
- * @param  {iterable} second               The second sequence to concat with the first one
+ * @param  {iterable} inner               The inner sequence to concat with the outer one
  * @return {Collection}                      A new collection of the resulting pairs
  */
-function Concat (second) {
-  __assertIterable(second)
+function Concat (inner) {
+  __assertIterable(inner)
 
-  const firstIter = this.getIterator()
+  const outer = this
 
   return new Collection(function * () {
-    yield* firstIter
-    yield* second
+    yield* outer.getIterator()
+    yield* inner
   })
 }
 
@@ -574,7 +574,7 @@ function Concat (second) {
 * @example
 [1, 2, 3].Union([1, 4, 5, 6]).ToArray()
 // -> [1, 2, 3, 4, 5, 6]
- * @param {iterable} second The sequence to create the set union with
+ * @param {iterable} inner The sequence to create the set union with
  * @return {Collction}
  *//**
  * Union - Concatenates two sequences and removes duplicate values (produces the set union).
@@ -586,42 +586,42 @@ function Concat (second) {
  * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
  * @return {Number}
  */
-function Union (second, equalityCompareFn = defaultEqualityCompareFn) {
-  __assertIterable(second)
+function Union (inner, equalityCompareFn = defaultEqualityCompareFn) {
+  __assertIterable(inner)
 
-  return this.Concat(second).Distinct(equalityCompareFn)
+  return this.Concat(inner).Distinct(equalityCompareFn)
 }
 
 /**
  * Join - Correlates the elements of two sequences based on matching keys
  *
  * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
- * @param  {iterable} second               The second sequence to join with the first one
- * @param  {Function} firstKeySelector     A selector fn to extract the key from the first sequence
- * @param  {Function} secondKeySelector    A selector fn to extract the key from the second sequence
+ * @param  {iterable} inner               The inner sequence to join with the outer one
+ * @param  {Function} outerKeySelector     A selector fn to extract the key from the outer sequence
+ * @param  {Function} innerKeySelector    A selector fn to extract the key from the inner sequence
  * @param  {Function} resultSelectorFn     A fn to transform the pairings into the result
  * @param  {Function} keyEqualityCompareFn Optional fn to compare the keys
  * @return {Collection}                      A new collection of the resulting pairs
  */
-function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, keyEqualityCompareFn) {
-  __assertIterable(second)
-  __assertFunction(firstKeySelector)
-  __assertFunction(secondKeySelector)
+function Join (inner, outerKeySelector, innerKeySelector, resultSelectorFn, keyEqualityCompareFn) {
+  __assertIterable(inner)
+  __assertFunction(outerKeySelector)
+  __assertFunction(innerKeySelector)
   __assertFunction(resultSelectorFn)
   keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
   __assertFunction(keyEqualityCompareFn)
 
-  const first = this
+  const outer = this
 
   return new Collection(function * () {
-    for (let firstValue of first.getIterator()) {
-      const firstKey = firstKeySelector(firstValue)
+    for (let outerValue of outer.getIterator()) {
+      const outerKey = outerKeySelector(outerValue)
 
-      for (let secondValue of second[Symbol.iterator]()) {
-        const secondKey = secondKeySelector(secondValue)
+      for (let innerValue of inner[Symbol.iterator]()) {
+        const innerKey = innerKeySelector(innerValue)
 
-        if (keyEqualityCompareFn(firstKey, secondKey)) {
-          yield resultSelectorFn(firstValue, secondValue)
+        if (keyEqualityCompareFn(outerKey, innerKey)) {
+          yield resultSelectorFn(outerValue, innerValue)
         }
       }
     }
@@ -629,7 +629,7 @@ function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, ke
 }
 
 /**
- * Except - Returns the element of the sequence that do not appear in second
+ * Except - Returns the element of the sequence that do not appear in inner
  *
  * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
  * @method
@@ -643,21 +643,21 @@ const peopleIHate = ['George', 'Jorge']
 const peopleILike = people.Except(peopleIHate)
 peopleILike.ToArray()
 // -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
- * @param  {Iterable} second
- * @return {Collection}        new Collection with the values of first without the ones in second
+ * @param  {Iterable} inner The second sequence to get exceptions from
+ * @return {Collection} new Collection with the values of outer without the ones in inner
  */
-function Except (second) {
-  __assertIterable(second)
+function Except (inner) {
+  __assertIterable(inner)
 
-  if (!isCollection(second)) {
-    second = new Collection(second)
+  if (!isCollection(inner)) {
+    inner = new Collection(inner)
   }
 
-  const firstIter = this.getIterator()
+  const outer = this
 
   return new Collection(function * () {
-    for (let val of firstIter) {
-      if (!second.Contains(val)) {
+    for (let val of outer.getIterator()) {
+      if (!inner.Contains(val)) {
         yield val
       }
     }
@@ -674,33 +674,33 @@ function Except (second) {
 const numbers = [ 1, 2, 3, 4 ]
 const words = [ "one", "two", "three" ]
 
-const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
+const numbersAndWords = numbers.Zip(words, (outer, inner) => outer + " " + inner)
 numbersAndWords.ForEach(x => console.log(x))
 // Outputs:
 // "1 one"
 // "2 two"
 // "3 three"
- * @param  {Iterable} second
- * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
+ * @param  {Iterable} inner
+ * @param  {type} resultSelectorFn A function of the form (outerValue, innerValue) => any to produce the output sequence
  * @return {Collection}
  */
-function Zip (second, resultSelectorFn) {
-  __assertIterable(second)
+function Zip (inner, resultSelectorFn) {
+  __assertIterable(inner)
   __assertFunction(resultSelectorFn)
 
-  const firstIter = this.getIterator()
+  const outer = this
 
   return new Collection(function * () {
-    const secondIter = second[Symbol.iterator]()
+    const innerIter = inner[Symbol.iterator]()
 
-    for (let firstVal of firstIter) {
-      const secondNext = secondIter.next()
+    for (let outerVal of outer.getIterator()) {
+      const innerNext = innerIter.next()
 
-      if (secondNext.done) {
+      if (innerNext.done) {
         break
       }
 
-      yield resultSelectorFn(firstVal, secondNext.value)
+      yield resultSelectorFn(outerVal, innerNext.value)
     }
   })
 }
@@ -715,7 +715,7 @@ function Zip (second, resultSelectorFn) {
 * @example
 [44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()
 // -> [26, 30]
-* @param  {Iterable} second The sequence to get the intersection from
+* @param  {Iterable} inner The sequence to get the intersection from
 * @return {Collection}
  *//**
  * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
@@ -724,21 +724,21 @@ function Zip (second, resultSelectorFn) {
  * @method
  * @memberof Collection
  * @instance
- * @param  {Iterable} second The sequence to get the intersection from
- * @param {Function} equalityCompareFn A function of the form (first, second) => boolean to compare the values
+ * @param  {Iterable} inner The sequence to get the intersection from
+ * @param {Function} equalityCompareFn A function of the form (outer, inner) => boolean to compare the values
  * @return {Collection}
  */
- function Intersect (second, equalityCompareFn = defaultEqualityCompareFn) {
-  __assertIterable(second)
+ function Intersect (inner, equalityCompareFn = defaultEqualityCompareFn) {
+  __assertIterable(inner)
   __assertFunction(equalityCompareFn)
 
-  const firstIter = this.ToArray()
+  const outerIter = this.ToArray()
 
   return new Collection(function * () {
-    const secondIter = [...second]
+    const innerIter = [...inner]
 
-    for (let val of firstIter) {
-      if (secondIter.Any(elem => equalityCompareFn(val, elem))) {
+    for (let val of outerIter) {
+      if (innerIter.Any(elem => equalityCompareFn(val, elem))) {
         yield val
       }
     }
@@ -1614,7 +1614,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function MinHeap(elements, comparator = DefaultComparator) {
+    function MinHeap(elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -1624,10 +1624,12 @@ let MinHeap = (function () {
         // create comparator that works on heap elements (it also ensures equal elements remain in original order)
         this.comparator = (a, b) => {
             let res = comparator(a.__value, b.__value);
+
             if (res !== 0) {
                 return res;
             }
-            return DefaultComparator(a.__index, b.__index);
+
+            return defaultComparator(a.__index, b.__index);
         };
 
         // create heap ordering
@@ -1773,7 +1775,7 @@ let MaxHeap = (function () {
      * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}               <T>        Heap element type.
      */
-    function MaxHeap(elements, comparator = DefaultComparator) {
+    function MaxHeap(elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -2360,16 +2362,17 @@ let OrderedLinqCollection = (function () {
  * @return {(any, any) => boolean} Created comparator function.
  */
 function GetComparatorFromKeySelector(selector) {
-    __assertString(selector);
+    __assertString(selector)
+
     if (selector === '') {
-        return Collection.prototype.DefaultComparator;
+        return defaultComparator
     }
+
     if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-        selector = `.${selector}`;
+        selector = `.${selector}`
     }
-    let result;
-    eval(`result = function (a, b) { return Collection.prototype.DefaultComparator(a${selector}, b${selector}) }`);
-    return result;
+
+    return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, defaultComparator)
 }
 
 
@@ -2380,11 +2383,11 @@ function GetComparatorFromKeySelector(selector) {
 // TODO: change implementation to use iterators!
 
 function Order() {
-  return this.OrderBy(DefaultComparator);
+  return this.OrderBy(defaultComparator);
 }
 
 function OrderDescending() {
-  return this.OrderByDescending(DefaultComparator);
+  return this.OrderByDescending(defaultComparator);
 }
 
 /**
@@ -2704,7 +2707,7 @@ function GroupBy (keySelector, ...args) {
  * @instance
  * @memberof Collection
  * @method
- * @see 
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
  * @param  {Iterable} inner The values to join with this Collection
  * @param  {Function} outerKeySelector A function to extract the grouping keys from the outer Collection
  * @param  {Function} innerKeySelector A function to extract the grouping keys from the inner Collection
@@ -2806,15 +2809,15 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
+  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)
 
   // [2] Let OrderedCollection inherit from Collection (we don't want to implement stuff twice)
-  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
-  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
-
+  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype)
+  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection
+  
   // [3] Apply wrapper functions to selected prototypes which are iterable (Array, Set, Map etc.)
   const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
 

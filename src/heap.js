@@ -50,7 +50,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function MinHeap(elements, comparator = DefaultComparator) {
+    function MinHeap(elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -60,10 +60,12 @@ let MinHeap = (function () {
         // create comparator that works on heap elements (it also ensures equal elements remain in original order)
         this.comparator = (a, b) => {
             let res = comparator(a.__value, b.__value);
+
             if (res !== 0) {
                 return res;
             }
-            return DefaultComparator(a.__index, b.__index);
+
+            return defaultComparator(a.__index, b.__index);
         };
 
         // create heap ordering
@@ -209,7 +211,7 @@ let MaxHeap = (function () {
      * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}               <T>        Heap element type.
      */
-    function MaxHeap(elements, comparator = DefaultComparator) {
+    function MaxHeap(elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -224,4 +226,4 @@ let MaxHeap = (function () {
     return MaxHeap;
 })()
 
-__export({ DefaultComparator, MinHeap, MaxHeap })
+__export({ MinHeap, MaxHeap })

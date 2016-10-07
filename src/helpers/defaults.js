@@ -14,7 +14,7 @@ function defaultEqualityCompareFn (first, second) {
  *                  returns  1 if "b" is smaller than "a",
  *                  returns  0 if they are equal.
  */
-function DefaultComparator (a, b) {
+function defaultComparator (a, b) {
     if (a < b) {
         return -1;
     }
@@ -22,6 +22,6 @@ function DefaultComparator (a, b) {
         return 1;
     }
     return 0;
-};
+}
 
-__export({ DefaultComparator })
+__export({ defaultComparator })

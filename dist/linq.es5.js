@@ -285,7 +285,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      *                  returns  1 if "b" is smaller than "a",
      *                  returns  0 if they are equal.
      */
-    function DefaultComparator(a, b) {
+    function defaultComparator(a, b) {
       if (a < b) {
         return -1;
       }
@@ -293,7 +293,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return 1;
       }
       return 0;
-    };
+    }
 
     /* src/helpers/assert.js */
 
@@ -805,23 +805,23 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * @example
     [1, 2, 3].Concat([4, 5, 6]).ToArray()
     // -> [1, 2, 3, 4, 5, 6]
-     * @param  {iterable} second               The second sequence to concat with the first one
+     * @param  {iterable} inner               The inner sequence to concat with the outer one
      * @return {Collection}                      A new collection of the resulting pairs
      */
-    function Concat(second) {
-      __assertIterable(second);
+    function Concat(inner) {
+      __assertIterable(inner);
 
-      var firstIter = this.getIterator();
+      var outer = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee7() {
         return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                return _context7.delegateYield(firstIter, 't0', 1);
+                return _context7.delegateYield(outer.getIterator(), 't0', 1);
 
               case 1:
-                return _context7.delegateYield(second, 't1', 2);
+                return _context7.delegateYield(inner, 't1', 2);
 
               case 2:
               case 'end':
@@ -842,7 +842,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     * @example
     [1, 2, 3].Union([1, 4, 5, 6]).ToArray()
     // -> [1, 2, 3, 4, 5, 6]
-     * @param {iterable} second The sequence to create the set union with
+     * @param {iterable} inner The sequence to create the set union with
      * @return {Collction}
      */ /**
         * Union - Concatenates two sequences and removes duplicate values (produces the set union).
@@ -854,37 +854,37 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
         * @return {Number}
         */
-    function Union(second) {
+    function Union(inner) {
       var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
-      __assertIterable(second);
+      __assertIterable(inner);
 
-      return this.Concat(second).Distinct(equalityCompareFn);
+      return this.Concat(inner).Distinct(equalityCompareFn);
     }
 
     /**
      * Join - Correlates the elements of two sequences based on matching keys
      *
      * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
-     * @param  {iterable} second               The second sequence to join with the first one
-     * @param  {Function} firstKeySelector     A selector fn to extract the key from the first sequence
-     * @param  {Function} secondKeySelector    A selector fn to extract the key from the second sequence
+     * @param  {iterable} inner               The inner sequence to join with the outer one
+     * @param  {Function} outerKeySelector     A selector fn to extract the key from the outer sequence
+     * @param  {Function} innerKeySelector    A selector fn to extract the key from the inner sequence
      * @param  {Function} resultSelectorFn     A fn to transform the pairings into the result
      * @param  {Function} keyEqualityCompareFn Optional fn to compare the keys
      * @return {Collection}                      A new collection of the resulting pairs
      */
-    function Join(second, firstKeySelector, secondKeySelector, resultSelectorFn, keyEqualityCompareFn) {
-      __assertIterable(second);
-      __assertFunction(firstKeySelector);
-      __assertFunction(secondKeySelector);
+    function Join(inner, outerKeySelector, innerKeySelector, resultSelectorFn, keyEqualityCompareFn) {
+      __assertIterable(inner);
+      __assertFunction(outerKeySelector);
+      __assertFunction(innerKeySelector);
       __assertFunction(resultSelectorFn);
       keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn);
       __assertFunction(keyEqualityCompareFn);
 
-      var first = this;
+      var outer = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee8() {
-        var _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, firstValue, firstKey, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, secondValue, secondKey;
+        var _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, outerValue, outerKey, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, innerValue, innerKey;
 
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
@@ -894,7 +894,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError3 = false;
                 _iteratorError3 = undefined;
                 _context8.prev = 3;
-                _iterator3 = first.getIterator()[Symbol.iterator]();
+                _iterator3 = outer.getIterator()[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
@@ -902,13 +902,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                   break;
                 }
 
-                firstValue = _step3.value;
-                firstKey = firstKeySelector(firstValue);
+                outerValue = _step3.value;
+                outerKey = outerKeySelector(outerValue);
                 _iteratorNormalCompletion4 = true;
                 _didIteratorError4 = false;
                 _iteratorError4 = undefined;
                 _context8.prev = 11;
-                _iterator4 = second[Symbol.iterator]()[Symbol.iterator]();
+                _iterator4 = inner[Symbol.iterator]()[Symbol.iterator]();
 
               case 13:
                 if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
@@ -916,16 +916,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                   break;
                 }
 
-                secondValue = _step4.value;
-                secondKey = secondKeySelector(secondValue);
+                innerValue = _step4.value;
+                innerKey = innerKeySelector(innerValue);
 
-                if (!keyEqualityCompareFn(firstKey, secondKey)) {
+                if (!keyEqualityCompareFn(outerKey, innerKey)) {
                   _context8.next = 19;
                   break;
                 }
 
                 _context8.next = 19;
-                return resultSelectorFn(firstValue, secondValue);
+                return resultSelectorFn(outerValue, innerValue);
 
               case 19:
                 _iteratorNormalCompletion4 = true;
@@ -1015,7 +1015,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /**
-     * Except - Returns the element of the sequence that do not appear in second
+     * Except - Returns the element of the sequence that do not appear in inner
      *
      * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
      * @method
@@ -1029,17 +1029,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     const peopleILike = people.Except(peopleIHate)
     peopleILike.ToArray()
     // -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
-     * @param  {Iterable} second
-     * @return {Collection}        new Collection with the values of first without the ones in second
+     * @param  {Iterable} inner The second sequence to get exceptions from
+     * @return {Collection} new Collection with the values of outer without the ones in inner
      */
-    function Except(second) {
-      __assertIterable(second);
+    function Except(inner) {
+      __assertIterable(inner);
 
-      if (!isCollection(second)) {
-        second = new Collection(second);
+      if (!isCollection(inner)) {
+        inner = new Collection(inner);
       }
 
-      var firstIter = this.getIterator();
+      var outer = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee9() {
         var _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, val;
@@ -1052,7 +1052,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError5 = false;
                 _iteratorError5 = undefined;
                 _context9.prev = 3;
-                _iterator5 = firstIter[Symbol.iterator]();
+                _iterator5 = outer.getIterator()[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {
@@ -1062,7 +1062,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
                 val = _step5.value;
 
-                if (second.Contains(val)) {
+                if (inner.Contains(val)) {
                   _context9.next = 10;
                   break;
                 }
@@ -1128,35 +1128,35 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     const numbers = [ 1, 2, 3, 4 ]
     const words = [ "one", "two", "three" ]
     
-    const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
+    const numbersAndWords = numbers.Zip(words, (outer, inner) => outer + " " + inner)
     numbersAndWords.ForEach(x => console.log(x))
     // Outputs:
     // "1 one"
     // "2 two"
     // "3 three"
-     * @param  {Iterable} second
-     * @param  {type} resultSelectorFn A function of the form (firstValue, secondValue) => any to produce the output sequence
+     * @param  {Iterable} inner
+     * @param  {type} resultSelectorFn A function of the form (outerValue, innerValue) => any to produce the output sequence
      * @return {Collection}
      */
-    function Zip(second, resultSelectorFn) {
-      __assertIterable(second);
+    function Zip(inner, resultSelectorFn) {
+      __assertIterable(inner);
       __assertFunction(resultSelectorFn);
 
-      var firstIter = this.getIterator();
+      var outer = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee10() {
-        var secondIter, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, firstVal, secondNext;
+        var innerIter, _iteratorNormalCompletion6, _didIteratorError6, _iteratorError6, _iterator6, _step6, outerVal, innerNext;
 
         return regeneratorRuntime.wrap(function _callee10$(_context10) {
           while (1) {
             switch (_context10.prev = _context10.next) {
               case 0:
-                secondIter = second[Symbol.iterator]();
+                innerIter = inner[Symbol.iterator]();
                 _iteratorNormalCompletion6 = true;
                 _didIteratorError6 = false;
                 _iteratorError6 = undefined;
                 _context10.prev = 4;
-                _iterator6 = firstIter[Symbol.iterator]();
+                _iterator6 = outer.getIterator()[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done) {
@@ -1164,10 +1164,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                   break;
                 }
 
-                firstVal = _step6.value;
-                secondNext = secondIter.next();
+                outerVal = _step6.value;
+                innerNext = innerIter.next();
 
-                if (!secondNext.done) {
+                if (!innerNext.done) {
                   _context10.next = 11;
                   break;
                 }
@@ -1176,7 +1176,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
               case 11:
                 _context10.next = 13;
-                return resultSelectorFn(firstVal, secondNext.value);
+                return resultSelectorFn(outerVal, innerNext.value);
 
               case 13:
                 _iteratorNormalCompletion6 = true;
@@ -1236,7 +1236,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     * @example
     [44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()
     // -> [26, 30]
-    * @param  {Iterable} second The sequence to get the intersection from
+    * @param  {Iterable} inner The sequence to get the intersection from
     * @return {Collection}
      */ /**
         * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
@@ -1245,28 +1245,28 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @method
         * @memberof Collection
         * @instance
-        * @param  {Iterable} second The sequence to get the intersection from
-        * @param {Function} equalityCompareFn A function of the form (first, second) => boolean to compare the values
+        * @param  {Iterable} inner The sequence to get the intersection from
+        * @param {Function} equalityCompareFn A function of the form (outer, inner) => boolean to compare the values
         * @return {Collection}
         */
-    function Intersect(second) {
+    function Intersect(inner) {
       var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCompareFn;
 
-      __assertIterable(second);
+      __assertIterable(inner);
       __assertFunction(equalityCompareFn);
 
-      var firstIter = this.ToArray();
+      var outerIter = this.ToArray();
 
       return new Collection(regeneratorRuntime.mark(function _callee11() {
         var _this2 = this;
 
-        var secondIter, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _loop, _iterator7, _step7;
+        var innerIter, _iteratorNormalCompletion7, _didIteratorError7, _iteratorError7, _loop, _iterator7, _step7;
 
         return regeneratorRuntime.wrap(function _callee11$(_context12) {
           while (1) {
             switch (_context12.prev = _context12.next) {
               case 0:
-                secondIter = [].concat(_toConsumableArray(second));
+                innerIter = [].concat(_toConsumableArray(inner));
                 _iteratorNormalCompletion7 = true;
                 _didIteratorError7 = false;
                 _iteratorError7 = undefined;
@@ -1279,7 +1279,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                         case 0:
                           val = _step7.value;
 
-                          if (!secondIter.Any(function (elem) {
+                          if (!innerIter.Any(function (elem) {
                             return equalityCompareFn(val, elem);
                           })) {
                             _context11.next = 4;
@@ -1296,7 +1296,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                     }
                   }, _loop, _this2);
                 });
-                _iterator7 = firstIter[Symbol.iterator]();
+                _iterator7 = outerIter[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done) {
@@ -2636,7 +2636,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {any}              <T>        Heap element type.
        */
       function MinHeap(elements) {
-        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultComparator;
+        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
         __assertArray(elements);
         __assertFunction(comparator);
@@ -2647,10 +2647,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         // create comparator that works on heap elements (it also ensures equal elements remain in original order)
         this.comparator = function (a, b) {
           var res = comparator(a.__value, b.__value);
+
           if (res !== 0) {
             return res;
           }
-          return DefaultComparator(a.__index, b.__index);
+
+          return defaultComparator(a.__index, b.__index);
         };
 
         // create heap ordering
@@ -2797,7 +2799,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {any}               <T>        Heap element type.
        */
       function MaxHeap(elements) {
-        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DefaultComparator;
+        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
         __assertArray(elements);
         __assertFunction(comparator);
@@ -3689,15 +3691,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      */
     function GetComparatorFromKeySelector(selector) {
       __assertString(selector);
+
       if (selector === '') {
-        return Collection.prototype.DefaultComparator;
+        return defaultComparator;
       }
+
       if (!(selector.startsWith('[') || selector.startsWith('.'))) {
         selector = '.' + selector;
       }
-      var result = void 0;
-      eval('result = function (a, b) { return Collection.prototype.DefaultComparator(a' + selector + ', b' + selector + ') }');
-      return result;
+
+      return new Function('comparator', 'a', 'b', 'return comparator(a' + selector + ', b' + selector + ')').bind(null, defaultComparator);
     }
 
     /* src/order.js */
@@ -3705,11 +3708,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     // TODO: change implementation to use iterators!
 
     function Order() {
-      return this.OrderBy(DefaultComparator);
+      return this.OrderBy(defaultComparator);
     }
 
     function OrderDescending() {
-      return this.OrderByDescending(DefaultComparator);
+      return this.OrderByDescending(defaultComparator);
     }
 
     /**
@@ -4085,7 +4088,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * @instance
      * @memberof Collection
      * @method
-     * @see 
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
      * @param  {Iterable} inner The values to join with this Collection
      * @param  {Function} outerKeySelector A function to extract the grouping keys from the outer Collection
      * @param  {Function} innerKeySelector A function to extract the grouping keys from the inner Collection
@@ -4346,7 +4349,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, LastIndexOf: LastIndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'GroupJoin', GroupJoin), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
+    __export((_export = { defaultComparator: defaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, LastIndexOf: LastIndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'GroupJoin', GroupJoin), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);

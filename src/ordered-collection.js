@@ -66,16 +66,17 @@ let OrderedLinqCollection = (function () {
  * @return {(any, any) => boolean} Created comparator function.
  */
 function GetComparatorFromKeySelector(selector) {
-    __assertString(selector);
+    __assertString(selector)
+
     if (selector === '') {
-        return Collection.prototype.DefaultComparator;
+        return defaultComparator
     }
+
     if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-        selector = `.${selector}`;
+        selector = `.${selector}`
     }
-    let result;
-    eval(`result = function (a, b) { return Collection.prototype.DefaultComparator(a${selector}, b${selector}) }`);
-    return result;
+
+    return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, defaultComparator)
 }
 
 __export({ GetComparatorFromKeySelector, OrderedLinqCollection })

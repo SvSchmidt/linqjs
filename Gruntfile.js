@@ -151,10 +151,12 @@ module.exports = function (grunt) {
     // also rename some of the too-long parameter names (e.g. resultSelector)
     const nonExportedFunctions = getNonExportedFunctions(source, exportsArr)
     const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'elementSelectorOrKeyComparer', 'equalityCompareFn',
+      'outerKeySelector', 'innerKeySelector', 'iterable',
       'keySelector', 'keyComparer', 'elementSelector', 'iterableOrGenerator', 'constructorOrValue',
       'firstKeySelector', 'secondKeySelector', 'predicate', 'nativeConstructors', 'firstIter', 'secondIter',
-      'collectionStaticMethods', 'first', 'second', 'keyEqualityCompareFn', 'condition', 'elem', 'param',
-      'additionalComparator', 'seedOrAccumulator', 'seed', 'accumulator', 'mappedEntry', 'current']
+      'collectionStaticMethods', 'outer', 'inner', 'first', 'second', 'keyEqualityCompareFn', 'condition',
+      'elem', 'param', 'additionalComparator', 'seedOrAccumulator', 'seed', 'accumulator', 'mappedEntry',
+      'current', 'outerIter', 'innerIter', 'mapFn', 'iter']
     const shouldBeShorter = [...nonExportedFunctions, ...tooLongParameterNames]
 
     for (let i = j = 0; i < shouldBeShorter.length; i++) {
