@@ -873,25 +873,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn);
       __assertFunction(keyEqualityCompareFn);
 
-      var firstIter = this.getIterator();
+      var first = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee8() {
-        var secondIter, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, firstValue, firstKey, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, secondValue, secondKey;
+        var _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, firstValue, firstKey, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, secondValue, secondKey;
 
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                secondIter = second[Symbol.iterator]();
                 _iteratorNormalCompletion3 = true;
                 _didIteratorError3 = false;
                 _iteratorError3 = undefined;
-                _context8.prev = 4;
-                _iterator3 = firstIter[Symbol.iterator]();
+                _context8.prev = 3;
+                _iterator3 = first.getIterator()[Symbol.iterator]();
 
-              case 6:
+              case 5:
                 if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {
-                  _context8.next = 40;
+                  _context8.next = 39;
                   break;
                 }
 
@@ -900,12 +899,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _iteratorNormalCompletion4 = true;
                 _didIteratorError4 = false;
                 _iteratorError4 = undefined;
-                _context8.prev = 12;
-                _iterator4 = secondIter[Symbol.iterator]();
+                _context8.prev = 11;
+                _iterator4 = second[Symbol.iterator]()[Symbol.iterator]();
 
-              case 14:
+              case 13:
                 if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {
-                  _context8.next = 23;
+                  _context8.next = 22;
                   break;
                 }
 
@@ -913,97 +912,97 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 secondKey = secondKeySelector(secondValue);
 
                 if (!keyEqualityCompareFn(firstKey, secondKey)) {
-                  _context8.next = 20;
+                  _context8.next = 19;
                   break;
                 }
 
-                _context8.next = 20;
+                _context8.next = 19;
                 return resultSelectorFn(firstValue, secondValue);
 
-              case 20:
+              case 19:
                 _iteratorNormalCompletion4 = true;
-                _context8.next = 14;
+                _context8.next = 13;
                 break;
 
-              case 23:
-                _context8.next = 29;
+              case 22:
+                _context8.next = 28;
                 break;
 
-              case 25:
-                _context8.prev = 25;
-                _context8.t0 = _context8['catch'](12);
+              case 24:
+                _context8.prev = 24;
+                _context8.t0 = _context8['catch'](11);
                 _didIteratorError4 = true;
                 _iteratorError4 = _context8.t0;
 
-              case 29:
+              case 28:
+                _context8.prev = 28;
                 _context8.prev = 29;
-                _context8.prev = 30;
 
                 if (!_iteratorNormalCompletion4 && _iterator4.return) {
                   _iterator4.return();
                 }
 
-              case 32:
-                _context8.prev = 32;
+              case 31:
+                _context8.prev = 31;
 
                 if (!_didIteratorError4) {
-                  _context8.next = 35;
+                  _context8.next = 34;
                   break;
                 }
 
                 throw _iteratorError4;
 
+              case 34:
+                return _context8.finish(31);
+
               case 35:
-                return _context8.finish(32);
+                return _context8.finish(28);
 
               case 36:
-                return _context8.finish(29);
-
-              case 37:
                 _iteratorNormalCompletion3 = true;
-                _context8.next = 6;
+                _context8.next = 5;
                 break;
 
-              case 40:
-                _context8.next = 46;
+              case 39:
+                _context8.next = 45;
                 break;
 
-              case 42:
-                _context8.prev = 42;
-                _context8.t1 = _context8['catch'](4);
+              case 41:
+                _context8.prev = 41;
+                _context8.t1 = _context8['catch'](3);
                 _didIteratorError3 = true;
                 _iteratorError3 = _context8.t1;
 
-              case 46:
+              case 45:
+                _context8.prev = 45;
                 _context8.prev = 46;
-                _context8.prev = 47;
 
                 if (!_iteratorNormalCompletion3 && _iterator3.return) {
                   _iterator3.return();
                 }
 
-              case 49:
-                _context8.prev = 49;
+              case 48:
+                _context8.prev = 48;
 
                 if (!_didIteratorError3) {
-                  _context8.next = 52;
+                  _context8.next = 51;
                   break;
                 }
 
                 throw _iteratorError3;
 
+              case 51:
+                return _context8.finish(48);
+
               case 52:
-                return _context8.finish(49);
+                return _context8.finish(45);
 
               case 53:
-                return _context8.finish(46);
-
-              case 54:
               case 'end':
                 return _context8.stop();
             }
           }
-        }, _callee8, this, [[4, 42, 46, 54], [12, 25, 29, 37], [30,, 32, 36], [47,, 49, 53]]);
+        }, _callee8, this, [[3, 41, 45, 53], [11, 24, 28, 36], [29,, 31, 35], [46,, 48, 52]]);
       }));
     }
 
@@ -4071,6 +4070,35 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       return fn.apply(undefined, [keySelector].concat(args));
     }
 
+    function GroupJoin(second, firstKeySelector, secondKeySelector, resultSelector) {
+      var equalityCompareFn = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultEqualityCompareFn;
+
+      var result = [];
+
+      var _iteratorNormalCompletion22 = true;
+      var _didIteratorError22 = false;
+      var _iteratorError22 = undefined;
+
+      try {
+        for (var _iterator22 = this.getIterator()[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          var firstVal = _step22.value;
+        }
+      } catch (err) {
+        _didIteratorError22 = true;
+        _iteratorError22 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion22 && _iterator22.return) {
+            _iterator22.return();
+          }
+        } finally {
+          if (_didIteratorError22) {
+            throw _iteratorError22;
+          }
+        }
+      }
+    }
+
     /* src/equality.js */
 
     /**
@@ -4122,7 +4150,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /* Export public interface */
-    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, LastIndexOf: LastIndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
+    __export((_export = { DefaultComparator: DefaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, LastIndexOf: LastIndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'DefaultComparator', DefaultComparator), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'GroupJoin', GroupJoin), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);
@@ -4135,13 +4163,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
     Object.keys(Collection.prototype).forEach(function (k) {
-      var _iteratorNormalCompletion22 = true;
-      var _didIteratorError22 = false;
-      var _iteratorError22 = undefined;
+      var _iteratorNormalCompletion23 = true;
+      var _didIteratorError23 = false;
+      var _iteratorError23 = undefined;
 
       try {
-        for (var _iterator22 = protosToApplyWrappers[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-          var proto = _step22.value;
+        for (var _iterator23 = protosToApplyWrappers[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+          var proto = _step23.value;
 
           proto[k] = function () {
             var _ref;
@@ -4150,16 +4178,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           };
         }
       } catch (err) {
-        _didIteratorError22 = true;
-        _iteratorError22 = err;
+        _didIteratorError23 = true;
+        _iteratorError23 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion22 && _iterator22.return) {
-            _iterator22.return();
+          if (!_iteratorNormalCompletion23 && _iterator23.return) {
+            _iterator23.return();
           }
         } finally {
-          if (_didIteratorError22) {
-            throw _iteratorError22;
+          if (_didIteratorError23) {
+            throw _iteratorError23;
           }
         }
       }

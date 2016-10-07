@@ -69,15 +69,13 @@ function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, ke
   keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
   __assertFunction(keyEqualityCompareFn)
 
-  const firstIter = this.getIterator()
+  const first = this
 
   return new Collection(function * () {
-    const secondIter = second[Symbol.iterator]()
-
-    for (let firstValue of firstIter) {
+    for (let firstValue of first.getIterator()) {
       const firstKey = firstKeySelector(firstValue)
 
-      for (let secondValue of secondIter) {
+      for (let secondValue of second[Symbol.iterator]()) {
         const secondKey = secondKeySelector(secondValue)
 
         if (keyEqualityCompareFn(firstKey, secondKey)) {

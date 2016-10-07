@@ -605,15 +605,13 @@ function Join (second, firstKeySelector, secondKeySelector, resultSelectorFn, ke
   keyEqualityCompareFn = paramOrValue(keyEqualityCompareFn, defaultEqualityCompareFn)
   __assertFunction(keyEqualityCompareFn)
 
-  const firstIter = this.getIterator()
+  const first = this
 
   return new Collection(function * () {
-    const secondIter = second[Symbol.iterator]()
-
-    for (let firstValue of firstIter) {
+    for (let firstValue of first.getIterator()) {
       const firstKey = firstKeySelector(firstValue)
 
-      for (let secondValue of secondIter) {
+      for (let secondValue of second[Symbol.iterator]()) {
         const secondKey = secondKeySelector(secondValue)
 
         if (keyEqualityCompareFn(firstKey, secondKey)) {
@@ -2692,6 +2690,14 @@ function GroupBy (keySelector, ...args) {
   return fn(keySelector, ...args)
 }
 
+function GroupJoin (second, firstKeySelector, secondKeySelector, resultSelector, equalityCompareFn = defaultEqualityCompareFn) {
+  let result = []
+
+  for (let firstVal of this.getIterator()) {
+
+  }
+}
+
 
 
 
@@ -2745,7 +2751,7 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, SequenceEqual })
+  __export({ DefaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, DefaultComparator, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

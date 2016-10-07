@@ -56,6 +56,8 @@ describe('Concatenation', function () {
         'Weiss, Charlotte - Whiskers',
       ]
 
+      expect(query.Count()).to.be.equal(4)
+
       let index = 0
       for (let pair of query) {
         expect(`${pair.OwnerName} - ${pair.Pet}`).to.be.deep.equal(expectedResults[index])
