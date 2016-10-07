@@ -1,5 +1,7 @@
 'use strict';
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -150,12 +152,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     /**
      * Same as new Collection()
-     * @function from
+     * @function Collection.From
      * @memberof Collection
      * @static
      * @return {Collection}
      */
-    function from(iterable) {
+    function From(iterable) {
       return new Collection(iterable);
     }
 
@@ -249,13 +251,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }));
     }
 
+    /**
+     * Represents a empty Collection, e.g. Collection.Empty.ToArray() -> []
+     *
+     * @name Collection.Empty
+     * @static
+     */
     Object.defineProperty(Collection, 'Empty', {
       get: function get() {
         return Collection.from([]);
       }
     });
 
-    var collectionStaticMethods = { from: from, From: from, Range: Range, Repeat: Repeat };
+    var collectionStaticMethods = { From: From, from: From, Range: Range, Repeat: Repeat };
 
     __assign(Collection, collectionStaticMethods);
 
@@ -3751,6 +3759,40 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     /* src/grouping.js */
 
     /**
+     * getEqualKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
+     */
+    function getEqualKey(groups, key, keyComparer) {
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
+
+      try {
+        for (var _iterator20 = groups.keys()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var groupKey = _step20.value;
+
+          if (keyComparer(groupKey, key)) {
+            return groupKey;
+          }
+        }
+      } catch (err) {
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
+          }
+        } finally {
+          if (_didIteratorError20) {
+            throw _iteratorError20;
+          }
+        }
+      }
+
+      return key;
+    }
+
+    /**
      * GroupBy - Groups a sequence using the keys selected from the members using the keySelector
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
@@ -3773,9 +3815,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @variation (keySelector, keyComparer)
         * @example
         * // Map {"4" => ["4", 4], "5" => ["5"]}
-        * ['4', 4, '5'].GroupBy(x => x, (first, second) => parseInt(first) === parseInt(second))
+        * ['4', 4, '5'].GroupBy(x => x, (outer, inner) => parseInt(outer) === parseInt(inner))
         * @param {Function} keySelector A function to select grouping keys from the sequence members
-        * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+        * @param {Function} keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
         * @return {Map} The grouped sequence as a Map
         */ /**
            * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
@@ -3818,7 +3860,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                  * @variation (keySelector, resultSelector, keyComparer)
                  * @param {Function} keySelector A function to select grouping keys from the sequence members
                  * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
-                 * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+                 * @param {Function} keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
                  * @return {Collection} The grouped sequence with projected results as a new Collection
                  */ /**
                     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
@@ -3831,7 +3873,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                     * @variation (keySelector, elementSelector, keyComparer)
                     * @param {Function} keySelector A function to select grouping keys from the sequence members
                     * @param {Function} elementSelector A function to map each group member to a specific value
-                    * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+                    * @param {Function} keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
                     * @return {Map} The grouped sequence as a Map
                     */ /**
                        * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
@@ -3860,7 +3902,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                           * @param {Function} keySelector A function to select grouping keys from the sequence members
                           * @param {Function} elementSelector A function to map each group member to a specific value
                           * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
-                          * @param {Function} keyComparer A function of the form (first, second) => bool to check if keys are considered equal
+                          * @param {Function} keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
                           * @return {Collection} The grouped sequence with projected results as a new Collection
                           * @
                           */
@@ -3884,40 +3926,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return result;
       }
 
-      /**
-       * getKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
-       */
-      function getKey(groups, key, keyComparer) {
-        var _iteratorNormalCompletion20 = true;
-        var _didIteratorError20 = false;
-        var _iteratorError20 = undefined;
-
-        try {
-          for (var _iterator20 = groups.keys()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-            var groupKey = _step20.value;
-
-            if (keyComparer(groupKey, key)) {
-              return groupKey;
-            }
-          }
-        } catch (err) {
-          _didIteratorError20 = true;
-          _iteratorError20 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion20 && _iterator20.return) {
-              _iterator20.return();
-            }
-          } finally {
-            if (_didIteratorError20) {
-              throw _iteratorError20;
-            }
-          }
-        }
-
-        return key;
-      }
-
       /*
       GroupBy(keySelector)
       */
@@ -3932,18 +3940,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       GroupBy(keySelector, elementSelector)
       GroupBy(keySelector, resultSelector)
       */
-      function groupByTwoArguments(keySelector, second) {
+      function groupByTwoArguments(keySelector, inner) {
         var keyComparer = void 0,
             elementSelector = void 0;
 
-        if (isKeyComparer(second)) {
-          keyComparer = second;
+        if (isKeyComparer(inner)) {
+          keyComparer = inner;
           elementSelector = function elementSelector(elem) {
             return elem;
           };
         } else {
           keyComparer = defaultEqualityCompareFn;
-          elementSelector = second;
+          elementSelector = inner;
         }
 
         return groupByThreeArguments(keySelector, elementSelector, keyComparer);
@@ -3954,7 +3962,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       GroupBy(keySelector, elementSelector, keyComparer)
       GroupBy(keySelector, elementSelector, resultSelector)
       */
-      function groupByThreeArguments(keySelector, second, third) {
+      function groupByThreeArguments(keySelector, inner, third) {
         var keyComparer = void 0,
             elementSelector = void 0,
             resultSelector = void 0;
@@ -3965,10 +3973,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           resultSelector = third;
         }
 
-        if (getParameterCount(second) === 2) {
-          resultSelector = second;
+        if (getParameterCount(inner) === 2) {
+          resultSelector = inner;
         } else {
-          elementSelector = second;
+          elementSelector = inner;
         }
 
         if (!keyComparer) {
@@ -4005,7 +4013,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
             var _val11 = _step21.value;
 
             // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
-            var _key3 = getKey(groups, keySelector(_val11), keyComparer);
+            var _key3 = getEqualKey(groups, keySelector(_val11), keyComparer);
             var elem = elementSelector(_val11);
 
             if (groups.has(_key3)) {
@@ -4042,7 +4050,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return result;
       }
 
-      // the first parameter of GroupBy is always the keySelector, so we have to differentiate the following arguments
+      // the outer parameter of GroupBy is always the keySelector, so we have to differentiate the following arguments
       // and select the appropriate function
       var fn = void 0;
 
@@ -4070,18 +4078,134 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       return fn.apply(undefined, [keySelector].concat(args));
     }
 
-    function GroupJoin(second, firstKeySelector, secondKeySelector, resultSelector) {
+    /**
+     * GroupJoin - Correlates the elements of two sequences based on equality of keys and groups the results.
+     * The default equality comparer is used to compare keys.
+     *
+     * @instance
+     * @memberof Collection
+     * @method
+     * @see 
+     * @param  {Iterable} inner The values to join with this Collection
+     * @param  {Function} outerKeySelector A function to extract the grouping keys from the outer Collection
+     * @param  {Function} innerKeySelector A function to extract the grouping keys from the inner Collection
+     * @param  {Function} resultSelector A function of the form (key, values) => any to select the final result from each grouping
+     * @return {any}
+     */ /**
+        * GroupJoin - Correlates the elements of two sequences based on equality of keys and groups the results.
+        * The provided custom keyComparer is used to compare keys.
+        *
+        * @instance
+        * @memberof Collection
+        * @method
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
+        * @param  {Iterable} inner The values to join with this Collection
+        * @param  {Function} outerKeySelector A function to extract the grouping keys from the outer Collection
+        * @param  {Function} innerKeySelector A function to extract the grouping keys from the inner Collection
+        * @param  {Function} resultSelector A function of the form (key, values) => any to select the final result from each grouping
+        * @param {Function} keyComparer A function of the form (first, second) => bool to compare keys for equality
+        * @return {any}
+        */
+    function GroupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
       var equalityCompareFn = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultEqualityCompareFn;
 
-      var result = [];
+      __assertIterable(inner);
+      __assertFunction(outerKeySelector);
+      __assertFunction(innerKeySelector);
+      __assertFunction(resultSelector);
+
+      var groups = new Map();
+      var outer = this;
 
       var _iteratorNormalCompletion22 = true;
       var _didIteratorError22 = false;
       var _iteratorError22 = undefined;
 
       try {
-        for (var _iterator22 = this.getIterator()[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-          var firstVal = _step22.value;
+        var _loop3 = function _loop3() {
+          var outerVal = _step22.value;
+
+          var outerKey = outerKeySelector(outerVal);
+
+          groups.set(outerVal, new Collection(regeneratorRuntime.mark(function _callee23() {
+            var _iteratorNormalCompletion24, _didIteratorError24, _iteratorError24, _iterator24, _step24, innerVal;
+
+            return regeneratorRuntime.wrap(function _callee23$(_context24) {
+              while (1) {
+                switch (_context24.prev = _context24.next) {
+                  case 0:
+                    _iteratorNormalCompletion24 = true;
+                    _didIteratorError24 = false;
+                    _iteratorError24 = undefined;
+                    _context24.prev = 3;
+                    _iterator24 = inner[Symbol.iterator]()[Symbol.iterator]();
+
+                  case 5:
+                    if (_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done) {
+                      _context24.next = 13;
+                      break;
+                    }
+
+                    innerVal = _step24.value;
+
+                    if (!equalityCompareFn(outerKey, innerKeySelector(innerVal))) {
+                      _context24.next = 10;
+                      break;
+                    }
+
+                    _context24.next = 10;
+                    return innerVal;
+
+                  case 10:
+                    _iteratorNormalCompletion24 = true;
+                    _context24.next = 5;
+                    break;
+
+                  case 13:
+                    _context24.next = 19;
+                    break;
+
+                  case 15:
+                    _context24.prev = 15;
+                    _context24.t0 = _context24['catch'](3);
+                    _didIteratorError24 = true;
+                    _iteratorError24 = _context24.t0;
+
+                  case 19:
+                    _context24.prev = 19;
+                    _context24.prev = 20;
+
+                    if (!_iteratorNormalCompletion24 && _iterator24.return) {
+                      _iterator24.return();
+                    }
+
+                  case 22:
+                    _context24.prev = 22;
+
+                    if (!_didIteratorError24) {
+                      _context24.next = 25;
+                      break;
+                    }
+
+                    throw _iteratorError24;
+
+                  case 25:
+                    return _context24.finish(22);
+
+                  case 26:
+                    return _context24.finish(19);
+
+                  case 27:
+                  case 'end':
+                    return _context24.stop();
+                }
+              }
+            }, _callee23, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+          })));
+        };
+
+        for (var _iterator22 = outer.getIterator()[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          _loop3();
         }
       } catch (err) {
         _didIteratorError22 = true;
@@ -4097,6 +4221,78 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           }
         }
       }
+
+      return new Collection(regeneratorRuntime.mark(function _callee22() {
+        var _iteratorNormalCompletion23, _didIteratorError23, _iteratorError23, _iterator23, _step23, _step23$value, _key4, values;
+
+        return regeneratorRuntime.wrap(function _callee22$(_context23) {
+          while (1) {
+            switch (_context23.prev = _context23.next) {
+              case 0:
+                _iteratorNormalCompletion23 = true;
+                _didIteratorError23 = false;
+                _iteratorError23 = undefined;
+                _context23.prev = 3;
+                _iterator23 = groups[Symbol.iterator]();
+
+              case 5:
+                if (_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done) {
+                  _context23.next = 14;
+                  break;
+                }
+
+                _step23$value = _slicedToArray(_step23.value, 2);
+                _key4 = _step23$value[0];
+                values = _step23$value[1];
+                _context23.next = 11;
+                return resultSelector(_key4, values.ToArray());
+
+              case 11:
+                _iteratorNormalCompletion23 = true;
+                _context23.next = 5;
+                break;
+
+              case 14:
+                _context23.next = 20;
+                break;
+
+              case 16:
+                _context23.prev = 16;
+                _context23.t0 = _context23['catch'](3);
+                _didIteratorError23 = true;
+                _iteratorError23 = _context23.t0;
+
+              case 20:
+                _context23.prev = 20;
+                _context23.prev = 21;
+
+                if (!_iteratorNormalCompletion23 && _iterator23.return) {
+                  _iterator23.return();
+                }
+
+              case 23:
+                _context23.prev = 23;
+
+                if (!_didIteratorError23) {
+                  _context23.next = 26;
+                  break;
+                }
+
+                throw _iteratorError23;
+
+              case 26:
+                return _context23.finish(23);
+
+              case 27:
+                return _context23.finish(20);
+
+              case 28:
+              case 'end':
+                return _context23.stop();
+            }
+          }
+        }, _callee22, this, [[3, 16, 20, 28], [21,, 23, 27]]);
+      }));
     }
 
     /* src/equality.js */
@@ -4163,13 +4359,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];
 
     Object.keys(Collection.prototype).forEach(function (k) {
-      var _iteratorNormalCompletion23 = true;
-      var _didIteratorError23 = false;
-      var _iteratorError23 = undefined;
+      var _iteratorNormalCompletion25 = true;
+      var _didIteratorError25 = false;
+      var _iteratorError25 = undefined;
 
       try {
-        for (var _iterator23 = protosToApplyWrappers[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-          var proto = _step23.value;
+        for (var _iterator25 = protosToApplyWrappers[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+          var proto = _step25.value;
 
           proto[k] = function () {
             var _ref;
@@ -4178,16 +4374,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
           };
         }
       } catch (err) {
-        _didIteratorError23 = true;
-        _iteratorError23 = err;
+        _didIteratorError25 = true;
+        _iteratorError25 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion23 && _iterator23.return) {
-            _iterator23.return();
+          if (!_iteratorNormalCompletion25 && _iterator25.return) {
+            _iterator25.return();
           }
         } finally {
-          if (_didIteratorError23) {
-            throw _iteratorError23;
+          if (_didIteratorError25) {
+            throw _iteratorError25;
           }
         }
       }

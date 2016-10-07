@@ -1,11 +1,11 @@
 /**
  * Same as new Collection()
- * @function from
+ * @function Collection.From
  * @memberof Collection
  * @static
  * @return {Collection}
  */
-function from (iterable) {
+function From (iterable) {
   return new Collection(iterable)
 }
 
@@ -53,10 +53,16 @@ function Repeat (val, count) {
   })
 }
 
+/**
+ * Represents a empty Collection, e.g. Collection.Empty.ToArray() -> []
+ *
+ * @name Collection.Empty
+ * @static
+ */
 Object.defineProperty(Collection, 'Empty', {
   get: function () { return Collection.from([]) }
 })
 
-const collectionStaticMethods = { from, From: from, Range, Repeat }
+const collectionStaticMethods = { From, from: From, Range, Repeat }
 
 __assign(Collection, collectionStaticMethods)

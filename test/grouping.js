@@ -21,7 +21,7 @@ describe('grouping', function () {
 
     // in the keyCompraer examples we want to have "4" (string 4) and 4 (number) treated as equal keys
     // that's why we need a copy of the pets array with "Boots" having a age of "4" (string 4)
-    const keyComparer = (first, second) => Math.floor(parseFloat(first)) === Math.floor(parseFloat(second))
+    const keyComparer = (outer, inner) => Math.floor(parseFloat(outer)) === Math.floor(parseFloat(inner))
     const petsKeyComparer = [
       {
         Name: 'Barley',
@@ -172,9 +172,83 @@ describe('grouping', function () {
                min: ages.Min(),
                max: ages.Max(),
              }),
-             (first, second) => Math.floor(parseFloat(first)) === Math.floor(parseFloat(second)))
+             (outer, inner) => Math.floor(parseFloat(outer)) === Math.floor(parseFloat(inner)))
 
         expect(result.ToArray()).to.be.deep.equal(expected)
+      })
+    })
+  })
+
+  describe('GroupJoin', function () {
+    describe('GroupJoin(inner, outerKeySelector, innerKeySelector, resultSelector)', function () {
+      it('should correlate two sequences by using the key selectors and select a result using the resultSelector', function () {
+        const magnus = { Name: 'Hedlund, Magnus' }
+        const terry = { Name: 'Addams, Terry' }
+        const charlotte = { Name: 'Weiss, Charlotte' }
+
+        const barley = { Name: 'Barley', Owner: terry }
+        const boots = { Name: 'Boots', Owner: terry }
+        const whiskers = { Name: 'Whiskers', Owner: charlotte }
+        const daisy = { Name: 'Daisy', Owner: magnus }
+
+        const persons = [magnus, terry, charlotte]
+        const pets = [barley, boots, whiskers, daisy]
+
+        const query = persons.GroupJoin(pets,
+                             person => person,
+                             pet => pet.Owner,
+                             (person, petCollection) =>
+                                 ({
+                                     OwnerName: person.Name,
+                                     Pets: petCollection.Select(pet => pet.Name).ToArray(),
+                                 }))
+
+        const expected = [
+          {
+           OwnerName: magnus.Name,
+           Pets: [daisy.Name],
+          },
+          {
+           OwnerName: terry.Name,
+           Pets: [barley.Name, boots.Name],
+          },
+          {
+           OwnerName: charlotte.Name,
+           Pets: [whiskers.Name],
+          },
+        ]
+
+        expect(query.ToArray()).to.be.deep.equal(expected)
+      })
+    })
+
+    describe('GroupJoin(inner, outerKeySelector, innerKEySelector, resultSelector, keyComparer)', function () {
+      it('should correlate two sequences by using the key selectors, compare keys using the keyComparer and select a result using the resultSelector', function () {
+        const customers = [
+          { Code: 5, Name: 'Sam' },
+          { Code: 6, Name: 'Dave' },
+          { Code: 7, Name: 'Julia' },
+          { Code: 8, Name: 'Sue' },
+        ]
+
+        const orders = [
+          { KeyCode: 5, Product: 'Book' },
+          { KeyCode: '5', Product: 'Game' },
+          { KeyCode: '7', Product: 'Computer' },
+          { KeyCode: 7, Product: 'Mouse' },
+          { KeyCode: 8, Product: 'Shirt' },
+          { KeyCode: 5, Product: 'Underwear' },
+        ]
+
+        const query = customers.GroupJoin(orders,
+                c => c.Code,
+                o => o.KeyCode,
+                (customer, bought) => ({ customer: customer.Name, bought: bought.Select(b => b.Product).ToArray() }),
+                (a, b) => parseInt(a) === parseInt(b));
+        expect(query.First()).to.be.deep.equal({
+          customer: 'Sam',
+          bought: ['Book', 'Game', 'Underwear']
+        })
       })
     })
   })
