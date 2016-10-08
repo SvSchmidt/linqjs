@@ -1124,11 +1124,7 @@ function Skip (count = 0) {
     return this
   }
 
-  const result = this.SkipWhile((elem, index) => index < count)
-
-  this.reset()
-
-  return result
+  return this.SkipWhile((elem, index) => index < count)
 }
 
  /**
@@ -1164,13 +1160,13 @@ function Skip (count = 0) {
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this.getIterator()
+  const _self = this
 
   const result = new Collection(function * () {
     let index = 0
     let endTake = false
 
-    for (let val of iter) {
+    for (let val of _self.getIterator()) {
       if (!endTake && predicate(val, index++)) {
         yield val
         continue
@@ -1248,13 +1244,13 @@ numbers.SkipWhile(x => x % 2 === 1).ToArray()
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this.getIterator()
+  const _self = this
 
   return new Collection(function * () {
     let index = 0
     let endSkip = false
 
-    for (let val of iter) {
+    for (let val of _self.getIterator()) {
       if (!endSkip && predicate(val, index++)) {
         continue
       }
@@ -1574,7 +1570,7 @@ let HeapElement = (function () {
      * @param {T}      value Element value.
      * @param {any}    <T>   Value type.
      */
-    function HeapElement(index, value) {
+    function HeapElement (index, value) {
         this.__index = index;
         this.__value = value;
 
@@ -1591,7 +1587,7 @@ let HeapElement = (function () {
      * @param {any}              <T>   Value type.
      * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
      */
-    HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
+    HeapElement.CreateHeapElement = function (index, obj) {
         if (obj === undefined || obj.__isHeapElementInstance) {
             return obj;
         }
@@ -1614,7 +1610,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function MinHeap(elements, comparator = defaultComparator) {
+    function MinHeap (elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -1644,7 +1640,7 @@ let MinHeap = (function () {
      * @param {number}           i          Index of the element that will be placed to the correct position.
      * @param {any}              <T>        Heap element type.
      */
-    function heapify(elements, comparator, i) {
+    function heapify (elements, comparator, i) {
         let right     = 2 * (i + 1);
         let left      = right - 1;
         let bestIndex = i;
@@ -1685,7 +1681,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function createHeap(elements, comparator) {
+    function createHeap (elements, comparator) {
 
         // sepecial case: empty array
         if (elements.length === 0) {
@@ -1775,7 +1771,7 @@ let MaxHeap = (function () {
      * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}               <T>        Heap element type.
      */
-    function MaxHeap(elements, comparator = defaultComparator) {
+    function MaxHeap (elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 

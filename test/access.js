@@ -46,18 +46,6 @@ describe('access', function () {
     })
   })
 
-  describe('Skip/Take', function () {
-    it('Take(n) concatenated with Skip(n) should yield the sequence itself', function () {
-      let arr = [1,2,3,4,5]
-
-      expect(arr.Take(2).Concat(arr.Skip(2)).ToArray()).to.be.deep.equal(arr)
-    })
-
-    it('Both should throw an error if called with non-numeric parameter', function () {
-      expect(function () { [1,2,3].Take('foo') }).to.throw(Error)
-    })
-  })
-
   describe('TakeWhile', function () {
     it('should return all elements while the predicate mathces', function () {
       expect(people.TakeWhile(p => p.race !== 'hobbit').ToArray()).to.be.deep.equal(people.Take(2).ToArray())
@@ -77,6 +65,18 @@ describe('access', function () {
 
     it('should accept predicates using the index as second parameter', function () {
       expect([1,2,3,4,5].SkipWhile((elem, index) => index < 3).ToArray()).to.be.deep.equal([4,5])
+    })
+  })
+
+  describe('Skip/Take', function () {
+    it('Take(n) concatenated with Skip(n) should yield the sequence itself', function () {
+      let arr = [1,2,3,4,5]
+
+      expect(arr.Take(2).Concat(arr.Skip(2)).ToArray()).to.be.deep.equal(arr)
+    })
+
+    it('Both should throw an error if called with non-numeric parameter', function () {
+      expect(function () { [1,2,3].Take('foo') }).to.throw(Error)
     })
   })
 

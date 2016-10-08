@@ -1936,13 +1936,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return this;
       }
 
-      var result = this.SkipWhile(function (elem, index) {
+      return this.SkipWhile(function (elem, index) {
         return index < count;
       });
-
-      this.reset();
-
-      return result;
     }
 
     /**
@@ -1981,7 +1977,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(predicate);
 
-      var iter = this.getIterator();
+      var _self = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee14() {
         var index, endTake, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, _val5;
@@ -1996,7 +1992,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError12 = false;
                 _iteratorError12 = undefined;
                 _context15.prev = 5;
-                _iterator12 = iter[Symbol.iterator]();
+                _iterator12 = _self.getIterator()[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
@@ -2145,7 +2141,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(predicate);
 
-      var iter = this.getIterator();
+      var _self = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee15() {
         var index, endSkip, _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, _val6;
@@ -2160,7 +2156,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError13 = false;
                 _iteratorError13 = undefined;
                 _context16.prev = 5;
-                _iterator13 = iter[Symbol.iterator]();
+                _iterator13 = _self.getIterator()[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
@@ -2612,7 +2608,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {any}              <T>   Value type.
        * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
        */
-      HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
+      HeapElement.CreateHeapElement = function (index, obj) {
         if (obj === undefined || obj.__isHeapElementInstance) {
           return obj;
         }

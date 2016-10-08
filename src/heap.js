@@ -10,7 +10,7 @@ let HeapElement = (function () {
      * @param {T}      value Element value.
      * @param {any}    <T>   Value type.
      */
-    function HeapElement(index, value) {
+    function HeapElement (index, value) {
         this.__index = index;
         this.__value = value;
 
@@ -27,7 +27,7 @@ let HeapElement = (function () {
      * @param {any}              <T>   Value type.
      * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
      */
-    HeapElement.CreateHeapElement = function CreateHeapElement(index, obj) {
+    HeapElement.CreateHeapElement = function (index, obj) {
         if (obj === undefined || obj.__isHeapElementInstance) {
             return obj;
         }
@@ -50,7 +50,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function MinHeap(elements, comparator = defaultComparator) {
+    function MinHeap (elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -80,7 +80,7 @@ let MinHeap = (function () {
      * @param {number}           i          Index of the element that will be placed to the correct position.
      * @param {any}              <T>        Heap element type.
      */
-    function heapify(elements, comparator, i) {
+    function heapify (elements, comparator, i) {
         let right     = 2 * (i + 1);
         let left      = right - 1;
         let bestIndex = i;
@@ -121,7 +121,7 @@ let MinHeap = (function () {
      * @param {(T, T) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}              <T>        Heap element type.
      */
-    function createHeap(elements, comparator) {
+    function createHeap (elements, comparator) {
 
         // sepecial case: empty array
         if (elements.length === 0) {
@@ -211,7 +211,7 @@ let MaxHeap = (function () {
      * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
      * @param {any}               <T>        Heap element type.
      */
-    function MaxHeap(elements, comparator = defaultComparator) {
+    function MaxHeap (elements, comparator = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 

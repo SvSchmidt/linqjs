@@ -129,7 +129,7 @@ module.exports = function (grunt) {
 
   function getNonExportedFunctions (source, exportsArr) {
     const pattern = /function ([a-z_][a-zA-Z0-9-_]+)\s?\(.*\) {$/mg
-    const blacklist = ['next', 'from']
+    const blacklist = ['next', 'from', 'constructor', 'eval']
     let result = []
     let match
 
@@ -142,6 +142,42 @@ module.exports = function (grunt) {
     return result.sort().reverse()
   }
 
+  function getFunctionParameters (source) {
+    const pattern = /function [\ba-zA-Z1-9]+ ?\((.*)\)/ig
+    const blacklist = ['constructor', 'next', 'index', 'start', 'value', 'val', 'key']
+
+    let result = []
+    let match
+
+    do {
+        match = pattern.exec(source)
+
+        if (!match) continue
+
+        // we will receive ALL function parameters (the whole list), separated by comma
+        // so we have to do some cleaning-up first
+        let params = match[1].split(',').map(x => {
+            let p = x.split('=')[0].trim()
+
+            if (p === '' || p.length < 3 || /[^a-zA-Z0-9]+/.test(p)) {
+              return null
+            }
+
+            return p
+        })
+
+        // push each param into the result array if not already contained and not blacklisted
+        params.forEach(p => {
+          if (p && !~result.indexOf(p) && !~blacklist.indexOf(p)) {
+            result.push(p)
+          }
+        })
+    } while (match)
+
+    // sort by length descending
+    return result.sort((a, b) => b.length - a.length)
+  }
+
   function minify (source, exportsArr) {
     const stripWhiteSpacesBeforeAndAfterChars = ['=', '==', '===', '+', '-', '*', '||', '&&', '!=', '!==', '<', '>', '<=', '>=', '=>']
     const stripWhiteSpacesAfterChars = [',', ';', ')', '{']
@@ -150,14 +186,12 @@ module.exports = function (grunt) {
     // Get functions which are not exported (internal use) and rename them to have shorter names
     // also rename some of the too-long parameter names (e.g. resultSelector)
     const nonExportedFunctions = getNonExportedFunctions(source, exportsArr)
-    const tooLongParameterNames = ['resultSelector', 'resultTransformFn', 'elementSelectorOrKeyComparer', 'equalityCompareFn',
-      'outerKeySelector', 'innerKeySelector', 'iterable',
-      'keySelector', 'keyComparer', 'elementSelector', 'iterableOrGenerator', 'constructorOrValue',
-      'firstKeySelector', 'secondKeySelector', 'predicate', 'nativeConstructors', 'firstIter', 'secondIter',
-      'collectionStaticMethods', 'outer', 'inner', 'first', 'second', 'keyEqualityCompareFn', 'condition',
-      'elem', 'param', 'additionalComparator', 'seedOrAccumulator', 'seed', 'accumulator', 'mappedEntry',
-      'current', 'outerIter', 'innerIter', 'mapFn', 'iter']
-    const shouldBeShorter = [...nonExportedFunctions, ...tooLongParameterNames]
+    const functionParams = getFunctionParameters(source)
+    const tooLongVariableNames = ['nativeConstructors', 'outerValue', 'innerValue', 'firstIter', 'secondIter',
+      'defaultVal', 'result', 'previous', 'outerVal', 'innerVal', 'innerNext', 'outerNext', 'lastIndex',
+      'staticMethods', 'outer', 'additionalComparator', 'mappedEntry', 'current', 'outerIter', 'innerIter',
+      'groupKey']
+    const shouldBeShorter = [...nonExportedFunctions, ...functionParams, ...tooLongVariableNames]
 
     for (let i = j = 0; i < shouldBeShorter.length; i++) {
       const asciiLowerLetters = 97
@@ -166,8 +200,12 @@ module.exports = function (grunt) {
       let result
 
       if (i < 26) {
-        // Use the 26 lower letters of the alphabet first
+        // Use the 26 lower letters of the alphabet first (except common one-character-variables like i, j, x)
         result = String.fromCharCode(asciiLowerLetters + (i % 26))
+
+        if (['i', 'j', 'x', 'n'].indexOf(result)) {
+          result = result + '1'
+        }
       } else if (i >= 26 && i < 52) {
         // Then the upper ones
         result = String.fromCharCode(asciiUpperLetters + (i % 26))

@@ -91,11 +91,7 @@ function Skip (count = 0) {
     return this
   }
 
-  const result = this.SkipWhile((elem, index) => index < count)
-
-  this.reset()
-
-  return result
+  return this.SkipWhile((elem, index) => index < count)
 }
 
  /**
@@ -131,13 +127,13 @@ function Skip (count = 0) {
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this.getIterator()
+  const _self = this
 
   const result = new Collection(function * () {
     let index = 0
     let endTake = false
 
-    for (let val of iter) {
+    for (let val of _self.getIterator()) {
       if (!endTake && predicate(val, index++)) {
         yield val
         continue
@@ -215,13 +211,13 @@ numbers.SkipWhile(x => x % 2 === 1).ToArray()
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this.getIterator()
+  const _self = this
 
   return new Collection(function * () {
     let index = 0
     let endSkip = false
 
-    for (let val of iter) {
+    for (let val of _self.getIterator()) {
       if (!endSkip && predicate(val, index++)) {
         continue
       }
