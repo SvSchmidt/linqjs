@@ -1,7 +1,7 @@
 /*
  * Ordered linq collection.
  */
-let OrderedLinqCollection = (function () {
+let OrderedCollection = (function () {
 
     /**
      * Creates a new ordered linq collection using the given comparator and heap for sorting.
@@ -11,14 +11,15 @@ let OrderedLinqCollection = (function () {
      * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
      * @param {any}               <T>             Element type.
      */
-    function OrderedLinqCollection(iterable, comparator, heapConstructor) {
-        __assertIterable(iterable);
-        __assertFunction(comparator);
-        __assertFunction(heapConstructor);
-        Collection.apply(this, [iterable]);
+    function OrderedCollection (iterable, comparator, heapConstructor) {
+        __assertIterable(iterable)
+        __assertFunction(comparator)
+        __assertFunction(heapConstructor)
 
-        this.__comparator      = comparator;
-        this.__heapConstructor = heapConstructor;
+        Collection.apply(this, [iterable])
+
+        this.__comparator = comparator
+        this.__heapConstructor = heapConstructor
     }
 
     /**
@@ -26,9 +27,9 @@ let OrderedLinqCollection = (function () {
      *
      * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
      * @param {any}               <T>                  Element type.
-     * @return {OrderedLinqCollection<T>} Created ordered linq collection.
+     * @return {OrderedCollection<T>} Created ordered linq collection.
      */
-    OrderedLinqCollection.prototype.ThenBy = function (additionalComparator) {
+    OrderedCollection.prototype.ThenBy = function (additionalComparator) {
         if (isString(additionalComparator)) {
             additionalComparator = GetComparatorFromKeySelector(additionalComparator);
         }
@@ -47,7 +48,7 @@ let OrderedLinqCollection = (function () {
         return this;
     };
 
-    OrderedLinqCollection.prototype.getIterator = function () {
+    OrderedCollection.prototype.getIterator = function () {
       const _self = this
 
       return function * () {
@@ -55,7 +56,7 @@ let OrderedLinqCollection = (function () {
       }()
     }
 
-    return OrderedLinqCollection;
+    return OrderedCollection;
 })();
 
 /**
@@ -79,4 +80,4 @@ function GetComparatorFromKeySelector(selector) {
     return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, defaultComparator)
 }
 
-__export({ GetComparatorFromKeySelector, OrderedLinqCollection })
+__export({ GetComparatorFromKeySelector, OrderedCollection })

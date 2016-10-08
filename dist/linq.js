@@ -2297,7 +2297,7 @@ function Remove (value) {
 /*
  * Ordered linq collection.
  */
-let OrderedLinqCollection = (function () {
+let OrderedCollection = (function () {
 
     /**
      * Creates a new ordered linq collection using the given comparator and heap for sorting.
@@ -2307,14 +2307,15 @@ let OrderedLinqCollection = (function () {
      * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
      * @param {any}               <T>             Element type.
      */
-    function OrderedLinqCollection(iterable, comparator, heapConstructor) {
-        __assertIterable(iterable);
-        __assertFunction(comparator);
-        __assertFunction(heapConstructor);
-        Collection.apply(this, [iterable]);
+    function OrderedCollection (iterable, comparator, heapConstructor) {
+        __assertIterable(iterable)
+        __assertFunction(comparator)
+        __assertFunction(heapConstructor)
 
-        this.__comparator      = comparator;
-        this.__heapConstructor = heapConstructor;
+        Collection.apply(this, [iterable])
+
+        this.__comparator = comparator
+        this.__heapConstructor = heapConstructor
     }
 
     /**
@@ -2322,9 +2323,9 @@ let OrderedLinqCollection = (function () {
      *
      * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
      * @param {any}               <T>                  Element type.
-     * @return {OrderedLinqCollection<T>} Created ordered linq collection.
+     * @return {OrderedCollection<T>} Created ordered linq collection.
      */
-    OrderedLinqCollection.prototype.ThenBy = function (additionalComparator) {
+    OrderedCollection.prototype.ThenBy = function (additionalComparator) {
         if (isString(additionalComparator)) {
             additionalComparator = GetComparatorFromKeySelector(additionalComparator);
         }
@@ -2343,7 +2344,7 @@ let OrderedLinqCollection = (function () {
         return this;
     };
 
-    OrderedLinqCollection.prototype.getIterator = function () {
+    OrderedCollection.prototype.getIterator = function () {
       const _self = this
 
       return function * () {
@@ -2351,7 +2352,7 @@ let OrderedLinqCollection = (function () {
       }()
     }
 
-    return OrderedLinqCollection;
+    return OrderedCollection;
 })();
 
 /**
@@ -2395,14 +2396,14 @@ function OrderDescending() {
  *
  * @param {(T, T) => boolean} comparator Comparator to be used.
  * @param {any}               <T>        Element type.
- * @return {OrderedLinqCollection<T>} Ordered collection.
+ * @return {OrderedCollection<T>} Ordered collection.
  */
 function OrderBy (comparator) {
     if (isString(comparator)) {
         comparator = GetComparatorFromKeySelector(comparator);
     }
     __assertFunction(comparator);
-    return new OrderedLinqCollection(this, comparator, MinHeap);
+    return new OrderedCollection(this, comparator, MinHeap);
 };
 
 /**
@@ -2410,14 +2411,14 @@ function OrderBy (comparator) {
  *
  * @param {(T, T) => boolean} comparator Comparator to be used.
  * @param {any}               <T>        Element type.
- * @return {OrderedLinqCollection<T>} Ordered collection.
+ * @return {OrderedCollection<T>} Ordered collection.
  */
 function OrderByDescending (comparator) {
     if (isString(comparator)) {
         comparator = GetComparatorFromKeySelector(comparator);
     }
     __assertFunction(comparator);
-    return new OrderedLinqCollection(this, comparator, MaxHeap);
+    return new OrderedCollection(this, comparator, MaxHeap);
 };
 
 /**
@@ -2809,15 +2810,15 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedLinqCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
+  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)
 
   // [2] Let OrderedCollection inherit from Collection (we don't want to implement stuff twice)
-  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype)
-  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection
-  
+  OrderedCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedCollection.prototype)
+  OrderedCollection.prototype.constructor = OrderedCollection
+
   // [3] Apply wrapper functions to selected prototypes which are iterable (Array, Set, Map etc.)
   const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
 

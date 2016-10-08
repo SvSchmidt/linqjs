@@ -13,14 +13,14 @@ function OrderDescending() {
  *
  * @param {(T, T) => boolean} comparator Comparator to be used.
  * @param {any}               <T>        Element type.
- * @return {OrderedLinqCollection<T>} Ordered collection.
+ * @return {OrderedCollection<T>} Ordered collection.
  */
 function OrderBy (comparator) {
     if (isString(comparator)) {
         comparator = GetComparatorFromKeySelector(comparator);
     }
     __assertFunction(comparator);
-    return new OrderedLinqCollection(this, comparator, MinHeap);
+    return new OrderedCollection(this, comparator, MinHeap);
 };
 
 /**
@@ -28,14 +28,14 @@ function OrderBy (comparator) {
  *
  * @param {(T, T) => boolean} comparator Comparator to be used.
  * @param {any}               <T>        Element type.
- * @return {OrderedLinqCollection<T>} Ordered collection.
+ * @return {OrderedCollection<T>} Ordered collection.
  */
 function OrderByDescending (comparator) {
     if (isString(comparator)) {
         comparator = GetComparatorFromKeySelector(comparator);
     }
     __assertFunction(comparator);
-    return new OrderedLinqCollection(this, comparator, MaxHeap);
+    return new OrderedCollection(this, comparator, MaxHeap);
 };
 
 /**

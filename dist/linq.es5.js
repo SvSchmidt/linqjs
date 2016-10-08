@@ -3614,7 +3614,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     /*
      * Ordered linq collection.
      */
-    var OrderedLinqCollection = function () {
+    var OrderedCollection = function () {
 
       /**
        * Creates a new ordered linq collection using the given comparator and heap for sorting.
@@ -3624,10 +3624,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
        * @param {any}               <T>             Element type.
        */
-      function OrderedLinqCollection(iterable, comparator, heapConstructor) {
+      function OrderedCollection(iterable, comparator, heapConstructor) {
         __assertIterable(iterable);
         __assertFunction(comparator);
         __assertFunction(heapConstructor);
+
         Collection.apply(this, [iterable]);
 
         this.__comparator = comparator;
@@ -3639,9 +3640,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        *
        * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
        * @param {any}               <T>                  Element type.
-       * @return {OrderedLinqCollection<T>} Created ordered linq collection.
+       * @return {OrderedCollection<T>} Created ordered linq collection.
        */
-      OrderedLinqCollection.prototype.ThenBy = function (additionalComparator) {
+      OrderedCollection.prototype.ThenBy = function (additionalComparator) {
         if (isString(additionalComparator)) {
           additionalComparator = GetComparatorFromKeySelector(additionalComparator);
         }
@@ -3660,7 +3661,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return this;
       };
 
-      OrderedLinqCollection.prototype.getIterator = function () {
+      OrderedCollection.prototype.getIterator = function () {
         var _self = this;
 
         return regeneratorRuntime.mark(function _callee21() {
@@ -3679,7 +3680,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         })();
       };
 
-      return OrderedLinqCollection;
+      return OrderedCollection;
     }();
 
     /**
@@ -3720,14 +3721,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      *
      * @param {(T, T) => boolean} comparator Comparator to be used.
      * @param {any}               <T>        Element type.
-     * @return {OrderedLinqCollection<T>} Ordered collection.
+     * @return {OrderedCollection<T>} Ordered collection.
      */
     function OrderBy(comparator) {
       if (isString(comparator)) {
         comparator = GetComparatorFromKeySelector(comparator);
       }
       __assertFunction(comparator);
-      return new OrderedLinqCollection(this, comparator, MinHeap);
+      return new OrderedCollection(this, comparator, MinHeap);
     };
 
     /**
@@ -3735,14 +3736,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      *
      * @param {(T, T) => boolean} comparator Comparator to be used.
      * @param {any}               <T>        Element type.
-     * @return {OrderedLinqCollection<T>} Ordered collection.
+     * @return {OrderedCollection<T>} Ordered collection.
      */
     function OrderByDescending(comparator) {
       if (isString(comparator)) {
         comparator = GetComparatorFromKeySelector(comparator);
       }
       __assertFunction(comparator);
-      return new OrderedLinqCollection(this, comparator, MaxHeap);
+      return new OrderedCollection(this, comparator, MaxHeap);
     };
 
     /**
@@ -4349,14 +4350,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }
 
     /* Export public interface */
-    __export((_export = { defaultComparator: defaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, LastIndexOf: LastIndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedLinqCollection', OrderedLinqCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'GroupJoin', GroupJoin), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
+    __export((_export = { defaultComparator: defaultComparator, Min: Min, Max: Max, Average: Average, Sum: Sum, Concat: Concat, Union: Union, Join: Join, Except: Except, Zip: Zip, Intersect: Intersect, Where: Where, ConditionalWhere: ConditionalWhere, Count: Count, Contains: Contains, IndexOf: IndexOf, LastIndexOf: LastIndexOf, Any: Any, All: All, ElementAt: ElementAt, Take: Take, TakeWhile: TakeWhile, TakeUntil: TakeUntil, Skip: Skip, SkipWhile: SkipWhile, SkipUntil: SkipUntil }, _defineProperty(_export, 'Contains', Contains), _defineProperty(_export, 'First', First), _defineProperty(_export, 'FirstOrDefault', FirstOrDefault), _defineProperty(_export, 'Last', Last), _defineProperty(_export, 'LastOrDefault', LastOrDefault), _defineProperty(_export, 'Single', Single), _defineProperty(_export, 'SingleOrDefault', SingleOrDefault), _defineProperty(_export, 'DefaultIfEmpty', DefaultIfEmpty), _defineProperty(_export, 'MinHeap', MinHeap), _defineProperty(_export, 'MaxHeap', MaxHeap), _defineProperty(_export, 'Aggregate', Aggregate), _defineProperty(_export, 'Distinct', Distinct), _defineProperty(_export, 'Select', Select), _defineProperty(_export, 'SelectMany', SelectMany), _defineProperty(_export, 'Flatten', Flatten), _defineProperty(_export, 'Reverse', Reverse), _defineProperty(_export, 'ToArray', ToArray), _defineProperty(_export, 'ToDictionary', ToDictionary), _defineProperty(_export, 'ToJSON', ToJSON), _defineProperty(_export, 'ForEach', ForEach), _defineProperty(_export, 'Add', Add), _defineProperty(_export, 'Insert', Insert), _defineProperty(_export, 'Remove', Remove), _defineProperty(_export, 'GetComparatorFromKeySelector', GetComparatorFromKeySelector), _defineProperty(_export, 'OrderedCollection', OrderedCollection), _defineProperty(_export, 'Order', Order), _defineProperty(_export, 'OrderBy', OrderBy), _defineProperty(_export, 'OrderDescending', OrderDescending), _defineProperty(_export, 'OrderByDescending', OrderByDescending), _defineProperty(_export, 'Shuffle', Shuffle), _defineProperty(_export, 'GroupBy', GroupBy), _defineProperty(_export, 'GroupJoin', GroupJoin), _defineProperty(_export, 'SequenceEqual', SequenceEqual), _export));
     // Install linqjs
     // [1] Assign exports to the prototype of Collection
     __assign(Collection.prototype, linqjsExports);
 
     // [2] Let OrderedCollection inherit from Collection (we don't want to implement stuff twice)
-    OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype);
-    OrderedLinqCollection.prototype.constructor = OrderedLinqCollection;
+    OrderedCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedCollection.prototype);
+    OrderedCollection.prototype.constructor = OrderedCollection;
 
     // [3] Apply wrapper functions to selected prototypes which are iterable (Array, Set, Map etc.)
     var protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype];

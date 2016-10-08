@@ -3,9 +3,9 @@
   __assign(Collection.prototype, linqjsExports)
 
   // [2] Let OrderedCollection inherit from Collection (we don't want to implement stuff twice)
-  OrderedLinqCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedLinqCollection.prototype)
-  OrderedLinqCollection.prototype.constructor = OrderedLinqCollection
-  
+  OrderedCollection.prototype = __assign(__assign({}, Collection.prototype), OrderedCollection.prototype)
+  OrderedCollection.prototype.constructor = OrderedCollection
+
   // [3] Apply wrapper functions to selected prototypes which are iterable (Array, Set, Map etc.)
   const protosToApplyWrappers = [window.Array.prototype, window.Set.prototype, window.Map.prototype]
 
