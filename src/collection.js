@@ -4,7 +4,7 @@
  * @class
  * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
  */
-Collection = (function () {
+let Collection = (function () {
   function Collection (iterableOrGenerator) {
     __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!')
 

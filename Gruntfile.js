@@ -144,7 +144,7 @@ module.exports = function (grunt) {
 
   function getFunctionParameters (source) {
     const pattern = /function [\ba-zA-Z1-9]+ ?\((.*)\)/ig
-    const blacklist = ['constructor', 'next', 'index', 'start', 'value', 'val', 'key']
+    const blacklist = ['constructor', 'next', 'index', 'start', 'value', 'val', 'key', 'iterable', 'collection', 'coll', 'arr']
 
     let result = []
     let match
@@ -190,7 +190,11 @@ module.exports = function (grunt) {
     const tooLongVariableNames = ['nativeConstructors', 'outerValue', 'innerValue', 'firstIter', 'secondIter',
       'defaultVal', 'result', 'previous', 'outerVal', 'innerVal', 'innerNext', 'outerNext', 'lastIndex',
       'staticMethods', 'outer', 'additionalComparator', 'mappedEntry', 'current', 'outerIter', 'innerIter',
-      'groupKey']
+      'groupKey', 'endSkip', 'HeapElement', 'hasTopElement']
+
+    // Note that order DOES matter, since if we put functionParams on the first position,
+    // we may replace parameters by very short names (e.g. i, x..., see below)
+    // and everyone knows that these are common variable names which would cause conflicts
     const shouldBeShorter = [...nonExportedFunctions, ...functionParams, ...tooLongVariableNames]
 
     for (let i = j = 0; i < shouldBeShorter.length; i++) {
@@ -202,10 +206,6 @@ module.exports = function (grunt) {
       if (i < 26) {
         // Use the 26 lower letters of the alphabet first (except common one-character-variables like i, j, x)
         result = String.fromCharCode(asciiLowerLetters + (i % 26))
-
-        if (['i', 'j', 'x', 'n'].indexOf(result)) {
-          result = result + '1'
-        }
       } else if (i >= 26 && i < 52) {
         // Then the upper ones
         result = String.fromCharCode(asciiUpperLetters + (i % 26))
@@ -222,6 +222,9 @@ module.exports = function (grunt) {
     // Replace true by !0 and false by !1
     source = source.replace(/true/g, '!0')
     source = source.replace(/false/g, '!1')
+
+    // Replace Infinity by 1/0
+    source = source.replace(/Infinity/g, '1/0')
 
     // Remove comments (block and single line)
     source = source.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '')
@@ -269,7 +272,14 @@ module.exports = function (grunt) {
     // Remove semicola followed by }
     source = source.replace(/\;(?=\})/g, '')
 
-    //source = source.replace(/\n/g, '')
+    // Remove space before else keyword
+    source = source.replace(/(\s+)(?=else)/g, '')
+
+    // Remove space after else keyword if not followed by 'if'
+    source = source.replace(/else(\s+)(?!if)/g, '')
+
+    // Remove line breaks after semicola
+    source = source.replace(/;\n/g, ';')
 
     return source
   }

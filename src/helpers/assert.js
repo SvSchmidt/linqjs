@@ -22,8 +22,8 @@
     __assert(isArray(param), 'array', param)
   }
 
-  function __assertNotEmpty (coll) {
-    __assert(!isEmpty(coll), 'Sequence is empty!')
+  function __assertNotEmpty (self) {
+    __assert(!isEmpty(self), 'Sequence is empty!')
   }
 
   function __assertIterable (obj) {
@@ -47,8 +47,8 @@
     __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`)
   }
 
-  function __assertIndexInRange (coll, index) {
-    __assertCollection(coll)
+  function __assertIndexInRange (self, index) {
+    __assertCollection(self)
     __assert(isNumeric(index), 'number', index)
-    __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds')
+    __assert(index >= 0 && index < self.Count(), 'Index is out of bounds')
   }

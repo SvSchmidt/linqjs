@@ -14,5 +14,3 @@
 }(function () {
   // We will apply any public methods to linqjsExports and apply them to the Collection.prototype later
   let linqjsExports = {}
-  // Collection is the object we're gonna 'build' and return later
-  let Collection

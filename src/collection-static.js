@@ -63,6 +63,6 @@ Object.defineProperty(Collection, 'Empty', {
   get: function () { return Collection.from([]) }
 })
 
-const collectionStaticMethods = { From, from: From, Range, Repeat }
+const staticMethods = { From, from: From, Range, Repeat }
 
-__assign(Collection, collectionStaticMethods)
+__assign(Collection, staticMethods)

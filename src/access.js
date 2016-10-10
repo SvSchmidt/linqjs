@@ -1,4 +1,4 @@
-function resultOrDefault(collection, originalFn, predicateOrDefault = x => true, fallback = Object) {
+function resultOrDefault(self, originalFn, predicateOrDefault = x => true, fallback = Object) {
   let predicate
 
   if (isNative(predicateOrDefault) || !isFunction(predicateOrDefault)) {
@@ -12,11 +12,11 @@ function resultOrDefault(collection, originalFn, predicateOrDefault = x => true,
 
   const defaultVal = getDefault(fallback)
 
-  if (isEmpty(collection)) {
+  if (isEmpty(self)) {
     return defaultVal
   }
 
-  let result = originalFn.call(collection, predicate)
+  let result = originalFn.call(self, predicate)
 
   if (!result) {
     return defaultVal

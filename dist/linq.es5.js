@@ -47,8 +47,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     // We will apply any public methods to linqjsExports and apply them to the Collection.prototype later
     var linqjsExports = {};
-    // Collection is the object we're gonna 'build' and return later
-    var Collection = void 0;
 
     /* src/collection.js */
 
@@ -58,7 +56,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * @class
      * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
      */
-    Collection = function () {
+    var Collection = function () {
       function Collection(iterableOrGenerator) {
         __assert(isIterable(iterableOrGenerator) || isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
 
@@ -263,9 +261,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
     });
 
-    var collectionStaticMethods = { From: From, from: From, Range: Range, Repeat: Repeat };
+    var staticMethods = { From: From, from: From, Range: Range, Repeat: Repeat };
 
-    __assign(Collection, collectionStaticMethods);
+    __assign(Collection, staticMethods);
 
     /* src/helpers/defaults.js */
 
@@ -331,8 +329,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       __assert(isArray(param), 'array', param);
     }
 
-    function __assertNotEmpty(coll) {
-      __assert(!isEmpty(coll), 'Sequence is empty!');
+    function __assertNotEmpty(self) {
+      __assert(!isEmpty(self), 'Sequence is empty!');
     }
 
     function __assertIterable(obj) {
@@ -358,10 +356,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       __assert(num >= min && num <= max, 'Number must be between ' + min + ' and ' + max + '!');
     }
 
-    function __assertIndexInRange(coll, index) {
-      __assertCollection(coll);
+    function __assertIndexInRange(self, index) {
+      __assertCollection(self);
       __assert(isNumeric(index), 'number', index);
-      __assert(index >= 0 && index < coll.Count(), 'Index is out of bounds');
+      __assert(index >= 0 && index < self.Count(), 'Index is out of bounds');
     }
 
     /* src/helpers/is.js */
@@ -1764,7 +1762,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     /* src/access.js */
 
-    function resultOrDefault(collection, originalFn) {
+    function resultOrDefault(self, originalFn) {
       var predicateOrDefault = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : function (x) {
         return true;
       };
@@ -1785,11 +1783,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       var defaultVal = getDefault(fallback);
 
-      if (isEmpty(collection)) {
+      if (isEmpty(self)) {
         return defaultVal;
       }
 
-      var result = originalFn.call(collection, predicate);
+      var result = originalFn.call(self, predicate);
 
       if (!result) {
         return defaultVal;
