@@ -26,7 +26,6 @@ describe('heap.js', function () {
                 [function (a) {}, function (a,b) {}],
             ];
         it('should produce the same results as the "<", ">" & "==" operators', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
             const MinHeap = Collection.prototype.MinHeap;
             const defaultComparator = Collection.prototype.defaultComparator;
 
@@ -50,60 +49,8 @@ describe('heap.js', function () {
         })
     })
 
-    describe('MaxHeap', function () {
-        it ('should sort the array', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
-
-            for (var i; i < maxRepeat; i++) {
-                const list = generateRandomNumberList();
-
-                var sorted = list.slice(0);
-                sorted.sort((a, b) => -1 * defaultComparator(a, b));
-
-                expect([...(new MaxHeap(list, defaultComparator))]).to.be.deep.equal(sorted);
-            }
-        });
-        it ('should order "equal" elements by original index', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
-
-            const testComparator = (a, b) => defaultComparator(a.a, b.a);
-            const tests = [
-                {
-                    input:  [{a: 1, b: 1}, {a: 1, b: 2}],
-                    output: [{a: 1, b: 1}, {a: 1, b: 2}],
-                },
-                {
-                    input:  [{a: 1, b: 2}, {a: 1, b: 1}],
-                    output: [{a: 1, b: 2}, {a: 1, b: 1}],
-                }
-            ];
-            for (var test of tests) {
-                expect([...(new MaxHeap(test.input, testComparator))]).to.be.deep.equal(test.output);
-            }
-        });
-        it ('should return the empty array', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
-
-            expect([...(new MaxHeap([], defaultComparator))]).to.be.deep.equal([]);
-        });
-        it ('should return the array with one element', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
-
-            expect([...(new MaxHeap([42], defaultComparator))]).to.be.deep.equal([42]);
-        });
-    })
-
     describe('MinHeap', function () {
         it ('should sort the array in descending order', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
             const MinHeap = Collection.prototype.MinHeap;
             const defaultComparator = Collection.prototype.defaultComparator;
 
@@ -117,7 +64,6 @@ describe('heap.js', function () {
             }
         });
         it ('should order "equal" elements by original index', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
             const MinHeap = Collection.prototype.MinHeap;
             const defaultComparator = Collection.prototype.defaultComparator;
 
@@ -137,14 +83,12 @@ describe('heap.js', function () {
             }
         });
         it ('should return the empty array', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
             const MinHeap = Collection.prototype.MinHeap;
             const defaultComparator = Collection.prototype.defaultComparator;
 
             expect([...(new MinHeap([], defaultComparator))]).to.be.deep.equal([]);
         });
         it ('should return the array with one element', function () {
-            const MaxHeap = Collection.prototype.MaxHeap;
             const MinHeap = Collection.prototype.MinHeap;
             const defaultComparator = Collection.prototype.defaultComparator;
 

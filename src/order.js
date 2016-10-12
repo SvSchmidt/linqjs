@@ -133,7 +133,7 @@ pets.OrderByDescending(x => x.Age).ToArray()
  * @return {Collection} Ordered collection.
  */
 function OrderByDescending (keySelector, comparator = defaultComparator)  {
-    return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MaxHeap)
+    return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, (a, b) => comparator(b, a)))
 }
 
 /**

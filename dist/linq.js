@@ -295,64 +295,6 @@ function defaultComparator (a, b) {
   }
 
 
-/* src/helpers/mergesort.js */
-
-/*
- * Modified Merge Sort implementation, originally written Nicholas C. Zakas
- * and released with MIT license
- * https://github.com/nzakas/computer-science-in-javascript/blob/master/algorithms/sorting/merge-sort-recursive/merge-sort-inplace.js
- */
-
-/**
- * Merges to arrays in order based on the passed comparator or the default one
- * @param {Array} left The first array to merge.
- * @param {Array} right The second array to merge.
- * @return {Array} The merged array.
- */
-function merge (left, right, comparator) {
-  let result = []
-  let il = 0
-  let ir = 0
-
-  while (il < left.length && ir < right.length){
-    if (comparator(left[il], right[ir]) < 0) {
-      result.push(left[il++])
-    } else {
-      result.push(right[ir++])
-    }
-  }
-
-  return result.concat(left.slice(il)).concat(right.slice(ir))
-}
-
-/**
- * Sorts an array using the given comparator in mergesort
- *
- * @param {Array} items The array to sort.
- * @return {Array} The sorted array.
- */
-function mergeSort (items, comparator = defaultComparator){
-  if (items.length < 2) {
-    return items
-  }
-
-  const middle = Math.floor(items.length / 2)
-  const left = items.slice(0, middle)
-  const right = items.slice(middle)
-
-  const params = merge(
-    mergeSort(left, comparator),
-    mergeSort(right, comparator),
-    comparator)
-
-  // Add the arguments to replace everything between 0 and last item in the array
-  params.unshift(0, items.length)
-  items.splice.apply(items, params)
-
-  return items
-}
-
-
 /* src/helpers/helpers.js */
 
   function toJSON (obj) {
@@ -1817,34 +1759,6 @@ let MinHeap = (function () {
     return MinHeap;
 })();
 
-/*
- * Partially sorted heap that contains the largest element within root position.
- */
-let MaxHeap = (function () {
-
-    /**
-     * Creates the heap from the array of elements with the given comparator function.
-     *
-     * @param {T[]}               elements   Array with elements to create the heap from.
-     *                                       Will be modified in place for heap logic.
-     * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
-     * @param {any}               <T>        Heap element type.
-     */
-    function MaxHeap (elements, comparator = defaultComparator) {
-        __assertArray(elements);
-        __assertFunction(comparator);
-
-        // simply negate the result of the comparator function so we get reverse ordering within the heap
-        MinHeap.apply(this, [elements, function (a, b) { return -1 * comparator(a, b); }]);
-    }
-
-    // inheritance stuff (we don't want to implement stuff twice)
-    MaxHeap.prototype = Object.create(MinHeap.prototype);
-    MaxHeap.prototype.constructor = MaxHeap;
-
-    return MaxHeap;
-})()
-
 
 
 
@@ -2359,18 +2273,14 @@ let OrderedCollection = (function () {
      *
      * @param {Iterable<T>}       iterable        Datasource for this collection.
      * @param {(T, T) => boolean} comparator      Comparator for sorting.
-     * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
      * @param {any}               <T>             Element type.
      */
-    function OrderedCollection (iterable, comparator, heapConstructor) {
-        __assertIterable(iterable)
+    function OrderedCollection (iterableOrGenerator, comparator) {
         __assertFunction(comparator)
-        __assertFunction(heapConstructor)
 
-        Collection.apply(this, [iterable])
+        Collection.apply(this, [iterableOrGenerator])
 
         this.__comparator = comparator
-        this.__heapConstructor = heapConstructor
     }
 
     /**
@@ -2384,10 +2294,8 @@ let OrderedCollection = (function () {
       const currentComparator = this.__comparator
       const additionalComparator = GetComparatorFromKeySelector(keySelector, comparator)
 
-      const factor = this.__heapConstructor === MaxHeap ? -1 : 1
-
       const newComparator = (a, b) => {
-        const res = factor * currentComparator(a, b)
+        const res = currentComparator(a, b)
 
         if (res !== 0) {
           return res
@@ -2398,11 +2306,7 @@ let OrderedCollection = (function () {
 
       const self = this
 
-      return new Collection(function * () {
-        const arr = self.ToArray()
-
-        yield* mergeSort(arr, newComparator)
-      })
+      return new OrderedCollection(this.getIterator(), newComparator)
     };
 
     OrderedCollection.prototype.ThenByDescending = function (keySelector, comparator = defaultComparator) {
@@ -2413,7 +2317,7 @@ let OrderedCollection = (function () {
       const _self = this
 
       return function * () {
-        yield* Reflect.construct(_self.__heapConstructor, [[..._self.iterable], _self.__comparator])
+        yield* Reflect.construct(MinHeap, [[..._self.iterable], _self.__comparator])
       }()
     }
 
@@ -2579,7 +2483,7 @@ pets.OrderByDescending(x => x.Age).ToArray()
  * @return {Collection} Ordered collection.
  */
 function OrderByDescending (keySelector, comparator = defaultComparator)  {
-    return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MaxHeap)
+    return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, (a, b) => comparator(b, a)))
 }
 
 /**
@@ -2971,7 +2875,7 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, MaxHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
+  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)

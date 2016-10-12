@@ -198,32 +198,4 @@ let MinHeap = (function () {
     return MinHeap;
 })();
 
-/*
- * Partially sorted heap that contains the largest element within root position.
- */
-let MaxHeap = (function () {
-
-    /**
-     * Creates the heap from the array of elements with the given comparator function.
-     *
-     * @param {T[]}               elements   Array with elements to create the heap from.
-     *                                       Will be modified in place for heap logic.
-     * @param {(T, T) => boolean} comparator Comparator function (same as the one for Array.sort()).
-     * @param {any}               <T>        Heap element type.
-     */
-    function MaxHeap (elements, comparator = defaultComparator) {
-        __assertArray(elements);
-        __assertFunction(comparator);
-
-        // simply negate the result of the comparator function so we get reverse ordering within the heap
-        MinHeap.apply(this, [elements, function (a, b) { return -1 * comparator(a, b); }]);
-    }
-
-    // inheritance stuff (we don't want to implement stuff twice)
-    MaxHeap.prototype = Object.create(MinHeap.prototype);
-    MaxHeap.prototype.constructor = MaxHeap;
-
-    return MaxHeap;
-})()
-
-__export({ MinHeap, MaxHeap })
+__export({ MinHeap })

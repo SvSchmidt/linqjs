@@ -8,18 +8,14 @@ let OrderedCollection = (function () {
      *
      * @param {Iterable<T>}       iterable        Datasource for this collection.
      * @param {(T, T) => boolean} comparator      Comparator for sorting.
-     * @param {MinHeap|MaxHeap}   heapConstructor Heap implementation for sorting.
      * @param {any}               <T>             Element type.
      */
-    function OrderedCollection (iterable, comparator, heapConstructor) {
-        __assertIterable(iterable)
+    function OrderedCollection (iterableOrGenerator, comparator) {
         __assertFunction(comparator)
-        __assertFunction(heapConstructor)
 
-        Collection.apply(this, [iterable])
+        Collection.apply(this, [iterableOrGenerator])
 
         this.__comparator = comparator
-        this.__heapConstructor = heapConstructor
     }
 
     /**
@@ -33,10 +29,8 @@ let OrderedCollection = (function () {
       const currentComparator = this.__comparator
       const additionalComparator = GetComparatorFromKeySelector(keySelector, comparator)
 
-      const factor = this.__heapConstructor === MaxHeap ? -1 : 1
-
       const newComparator = (a, b) => {
-        const res = factor * currentComparator(a, b)
+        const res = currentComparator(a, b)
 
         if (res !== 0) {
           return res
@@ -47,11 +41,7 @@ let OrderedCollection = (function () {
 
       const self = this
 
-      return new Collection(function * () {
-        const arr = self.ToArray()
-
-        yield* mergeSort(arr, newComparator)
-      })
+      return new OrderedCollection(this.getIterator(), newComparator)
     };
 
     OrderedCollection.prototype.ThenByDescending = function (keySelector, comparator = defaultComparator) {
@@ -62,7 +52,7 @@ let OrderedCollection = (function () {
       const _self = this
 
       return function * () {
-        yield* Reflect.construct(_self.__heapConstructor, [[..._self.iterable], _self.__comparator])
+        yield* Reflect.construct(MinHeap, [[..._self.iterable], _self.__comparator])
       }()
     }
 
