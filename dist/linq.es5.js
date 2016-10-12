@@ -3776,10 +3776,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       if (isFunction(selector)) {
         return new Function('comparator', 'keySelectorFn', 'a', 'b', 'return comparator(keySelectorFn(a), keySelectorFn(b))').bind(null, comparator, selector);
       } else if (isString(selector)) {
-        if (selector === '') {
-          return comparator;
-        }
-
         if (!(selector.startsWith('[') || selector.startsWith('.'))) {
           selector = '.' + selector;
         }
