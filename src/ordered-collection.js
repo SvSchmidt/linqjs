@@ -77,5 +77,3 @@ function GetComparatorFromKeySelector(selector, comparator = defaultComparator) 
       return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, comparator)
     }
 }
-
-__export({ GetComparatorFromKeySelector, OrderedCollection })

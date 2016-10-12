@@ -189,7 +189,7 @@ module.exports = function (grunt) {
     const functionParams = getFunctionParameters(source)
     const tooLongVariableNames = ['nativeConstructors', 'outerValue', 'innerValue', 'firstIter', 'secondIter',
       'defaultVal', 'result', 'previous', 'outerVal', 'innerVal', 'innerNext', 'outerNext', 'lastIndex',
-      'staticMethods', 'outer', 'additionalComparator', 'mappedEntry', 'current', 'outerIter', 'innerIter',
+      'staticMethods', 'outer',  'left', 'right', 'additionalComparator', 'mappedEntry', 'current', 'outerIter', 'innerIter',
       'groupKey', 'endSkip', 'HeapElement', 'hasTopElement']
 
     // Note that order DOES matter, since if we put functionParams on the first position,

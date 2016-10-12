@@ -2344,8 +2344,6 @@ function GetComparatorFromKeySelector(selector, comparator = defaultComparator) 
 }
 
 
-
-
 /* src/order.js */
 
 /**
@@ -2875,7 +2873,7 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
 
 
   /* Export public interface */
-  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, GetComparatorFromKeySelector, OrderedCollection, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
+  __export({ defaultComparator, Min, Max, Average, Sum, Concat, Union, Join, Except, Zip, Intersect, Where, ConditionalWhere, Count, Contains, IndexOf, LastIndexOf, Any, All, ElementAt, Take, TakeWhile, TakeUntil, Skip, SkipWhile, SkipUntil, Contains, First, FirstOrDefault, Last, LastOrDefault, Single, SingleOrDefault, DefaultIfEmpty, MinHeap, Aggregate, Distinct, Select, SelectMany, Flatten, Reverse, ToArray, ToDictionary, ToJSON, ForEach, Add, Insert, Remove, Order, OrderBy, OrderDescending, OrderByDescending, Shuffle, GroupBy, GroupJoin, SequenceEqual })
   // Install linqjs
   // [1] Assign exports to the prototype of Collection
   __assign(Collection.prototype, linqjsExports)
