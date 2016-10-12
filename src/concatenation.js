@@ -54,6 +54,9 @@ function Union (inner, equalityCompareFn = defaultEqualityCompareFn) {
  * Join - Correlates the elements of two sequences based on matching keys
  *
  * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
+ * @instance
+ * @memberof Collection
+ * @method
  * @param  {iterable} inner               The inner sequence to join with the outer one
  * @param  {Function} outerKeySelector     A selector fn to extract the key from the outer sequence
  * @param  {Function} innerKeySelector    A selector fn to extract the key from the inner sequence

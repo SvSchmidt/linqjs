@@ -4,6 +4,7 @@ defineSourceFiles([
   'src/helpers/defaults.js',
   'src/helpers/assert.js',
   'src/helpers/is.js',
+  'src/helpers/mergesort.js',
   'src/helpers/helpers.js',
   'src/math.js',
   'src/concatenation.js',

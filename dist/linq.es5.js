@@ -414,6 +414,62 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined));
     }
 
+    /* src/helpers/mergesort.js */
+
+    /*
+     * Modified Merge Sort implementation, originally written Nicholas C. Zakas
+     * and released with MIT license
+     * https://github.com/nzakas/computer-science-in-javascript/blob/master/algorithms/sorting/merge-sort-recursive/merge-sort-inplace.js
+     */
+
+    /**
+     * Merges to arrays in order based on the passed comparator or the default one
+     * @param {Array} left The first array to merge.
+     * @param {Array} right The second array to merge.
+     * @return {Array} The merged array.
+     */
+    function merge(left, right, comparator) {
+      var result = [];
+      var il = 0;
+      var ir = 0;
+
+      while (il < left.length && ir < right.length) {
+        if (comparator(left[il], right[ir]) < 0) {
+          result.push(left[il++]);
+        } else {
+          result.push(right[ir++]);
+        }
+      }
+
+      return result.concat(left.slice(il)).concat(right.slice(ir));
+    }
+
+    /**
+     * Sorts an array using the given comparator in mergesort
+     *
+     * @param {Array} items The array to sort.
+     * @return {Array} The sorted array.
+     */
+    function mergeSort(items) {
+      var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
+
+      if (items.length < 2) {
+        return items;
+      }
+
+      var middle = Math.floor(items.length / 2);
+      var left = items.slice(0, middle);
+      var right = items.slice(middle);
+
+      var params = merge(mergeSort(left, comparator), mergeSort(right, comparator), comparator);
+
+      // Add the arguments to replace everything between 0 and last item in the array
+      params.unshift(0, items.length);
+      items.splice.apply(items, params);
+
+      return items;
+    }
+
     /* src/helpers/helpers.js */
 
     function toJSON(obj) {
@@ -864,6 +920,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
      * Join - Correlates the elements of two sequences based on matching keys
      *
      * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
+     * @instance
+     * @memberof Collection
+     * @method
      * @param  {iterable} inner               The inner sequence to join with the outer one
      * @param  {Function} outerKeySelector     A selector fn to extract the key from the outer sequence
      * @param  {Function} innerKeySelector    A selector fn to extract the key from the inner sequence
@@ -3636,41 +3695,68 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
        * @param {any}               <T>                  Element type.
        * @return {OrderedCollection<T>} Created ordered linq collection.
        */
-      OrderedCollection.prototype.ThenBy = function (additionalComparator) {
-        if (isString(additionalComparator)) {
-          additionalComparator = GetComparatorFromKeySelector(additionalComparator);
-        }
+      OrderedCollection.prototype.ThenBy = function (keySelector) {
+        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
-        __assertFunction(additionalComparator);
-
-        // build new comparator function when not yet iterated
         var currentComparator = this.__comparator;
-        this.__comparator = function (a, b) {
-          var res = currentComparator(a, b);
+        var additionalComparator = GetComparatorFromKeySelector(keySelector, comparator);
+
+        var factor = this.__heapConstructor === MaxHeap ? -1 : 1;
+
+        var newComparator = function newComparator(a, b) {
+          var res = factor * currentComparator(a, b);
+
           if (res !== 0) {
             return res;
           }
+
           return additionalComparator(a, b);
         };
-        return this;
-      };
 
-      OrderedCollection.prototype.getIterator = function () {
-        var _self = this;
+        var self = this;
 
-        return regeneratorRuntime.mark(function _callee21() {
+        return new Collection(regeneratorRuntime.mark(function _callee21() {
+          var arr;
           return regeneratorRuntime.wrap(function _callee21$(_context22) {
             while (1) {
               switch (_context22.prev = _context22.next) {
                 case 0:
-                  return _context22.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
+                  arr = self.ToArray();
+                  return _context22.delegateYield(mergeSort(arr, newComparator), 't0', 2);
 
-                case 1:
+                case 2:
                 case 'end':
                   return _context22.stop();
               }
             }
           }, _callee21, this);
+        }));
+      };
+
+      OrderedCollection.prototype.ThenByDescending = function (keySelector) {
+        var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
+
+        return this.ThenBy(keySelector, function (a, b) {
+          return comparator(b, a);
+        });
+      };
+
+      OrderedCollection.prototype.getIterator = function () {
+        var _self = this;
+
+        return regeneratorRuntime.mark(function _callee22() {
+          return regeneratorRuntime.wrap(function _callee22$(_context23) {
+            while (1) {
+              switch (_context23.prev = _context23.next) {
+                case 0:
+                  return _context23.delegateYield(Reflect.construct(_self.__heapConstructor, [[].concat(_toConsumableArray(_self.iterable)), _self.__comparator]), 't0', 1);
+
+                case 1:
+                case 'end':
+                  return _context23.stop();
+              }
+            }
+          }, _callee22, this);
         })();
       };
 
@@ -3678,67 +3764,181 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     }();
 
     /**
-     * Creates a comparator function from the given selector string.
-     * The selector string has to be in same format as within javascript code.
+     * Creates a comparator function from the given selector string or selector function.
+     * The selector can either be a string which can be mapped to a property (e.g. Age) or a function to get the ordering key, e.g. person => person.Age
      *
-     * @param  {string} selector Javascript code selector string.
-     * @return {(any, any) => boolean} Created comparator function.
+     * @param  {String|Function} selector
+     * @return {Function} Created comparator function of the form (first, second) => Number.
      */
     function GetComparatorFromKeySelector(selector) {
-      __assertString(selector);
+      var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
-      if (selector === '') {
-        return defaultComparator;
+      if (isFunction(selector)) {
+        return new Function('comparator', 'keySelectorFn', 'a', 'b', 'return comparator(keySelectorFn(a), keySelectorFn(b))').bind(null, comparator, selector);
+      } else if (isString(selector)) {
+        if (selector === '') {
+          return comparator;
+        }
+
+        if (!(selector.startsWith('[') || selector.startsWith('.'))) {
+          selector = '.' + selector;
+        }
+
+        return new Function('comparator', 'a', 'b', 'return comparator(a' + selector + ', b' + selector + ')').bind(null, comparator);
       }
-
-      if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-        selector = '.' + selector;
-      }
-
-      return new Function('comparator', 'a', 'b', 'return comparator(a' + selector + ', b' + selector + ')').bind(null, defaultComparator);
     }
 
     /* src/order.js */
 
-    // TODO: change implementation to use iterators!
-
+    /**
+     * Orders the sequence by the numeric representation of the values ascending.
+     * The default comparator is used to compare values.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+    [1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
+    
+    // -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
+     * @return {Collection} Ordered collection.
+     */ /**
+        * Orders the sequence by the numeric representation of the values ascending.
+        * A custom comparator is used to compare values.
+        *
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+        * @return {Collection} Ordered collection.
+        */
     function Order() {
-      return this.OrderBy(defaultComparator);
+      var comparator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultComparator;
+
+      return this.OrderBy(function (x) {
+        return x;
+      }, comparator);
     }
 
+    /**
+     * Orders the sequence by the numeric representation of the values descending.
+     * The default comparator is used to compare values.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+    [1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
+    
+    // -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
+     * @return {Collection} Ordered collection.
+     */ /**
+        * Orders the sequence by the numeric representation of the values descending.
+        * A custom comparator is used to compare values.
+        *
+        * @method
+        * @memberof Collection
+        * @instance
+        * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+        * @return {Collection} Ordered collection.
+        */
     function OrderDescending() {
-      return this.OrderByDescending(defaultComparator);
+      var comparator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultComparator;
+
+      return this.OrderByDescending(function (x) {
+        return x;
+      }, comparator);
     }
 
     /**
-     * Orderes this linq collection using the given comparator.
-     *
-     * @param {(T, T) => boolean} comparator Comparator to be used.
-     * @param {any}               <T>        Element type.
-     * @return {OrderedCollection<T>} Ordered collection.
-     */
-    function OrderBy(comparator) {
-      if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-      }
+     * Orders the sequence by the appropriate property selected by keySelector ascending.
+     * The default comparator is used to compare values.
+     * @method
+     * @memberof Collection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+     * @example
+    const pets = [
+     {
+       Name: 'Barley',
+       Age: 8,
+     },
+     {
+       Name: 'Booots',
+       Age: 4,
+     },
+     {
+       Name: 'Whiskers',
+       Age: 1,
+     }
+    ]
+    
+    pets.OrderBy(x => x.Age).ToArray()
+    // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @return {Collection} Ordered collection.
+     */ /**
+        * Orders the sequence by the appropriate property selected by keySelector ascending.
+        * A custom comparator is used to compare values.
+        * @method
+        * @memberof Collection
+        * @instance
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+        * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+        * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+        * @return {Collection} Ordered collection.
+        */
+    function OrderBy(keySelector) {
+      var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
+
       __assertFunction(comparator);
-      return new OrderedCollection(this, comparator, MinHeap);
-    };
+
+      return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MinHeap);
+    }
 
     /**
-     * Orderes this linq collection in descending order using the given comparator.
-     *
-     * @param {(T, T) => boolean} comparator Comparator to be used.
-     * @param {any}               <T>        Element type.
-     * @return {OrderedCollection<T>} Ordered collection.
-     */
-    function OrderByDescending(comparator) {
-      if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-      }
-      __assertFunction(comparator);
-      return new OrderedCollection(this, comparator, MaxHeap);
-    };
+     * Orders the sequence by the appropriate property selected by keySelector ascending.
+     * The default comparator is used to compare values.
+     * @method
+     * @memberof Collection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+     * @example
+    const pets = [
+     {
+       Name: 'Barley',
+       Age: 8,
+     },
+     {
+       Name: 'Booots',
+       Age: 4,
+     },
+     {
+       Name: 'Whiskers',
+       Age: 1,
+     }
+    ]
+    
+    pets.OrderByDescending(x => x.Age).ToArray()
+    // -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @return {Collection} Ordered collection.
+     */ /**
+        * Orders the sequence by the appropriate property selected by keySelector ascending.
+        * A custom comparator is used to compare values.
+        * @method
+        * @memberof Collection
+        * @instance
+        * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+        * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+        * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+        * @return {Collection} Ordered collection.
+        */
+    function OrderByDescending(keySelector) {
+      var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
+
+      return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MaxHeap);
+    }
 
     /**
      * Shuffle - Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection
@@ -4125,80 +4325,80 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
           var outerKey = outerKeySelector(outerVal);
 
-          groups.set(outerVal, new Collection(regeneratorRuntime.mark(function _callee23() {
+          groups.set(outerVal, new Collection(regeneratorRuntime.mark(function _callee24() {
             var _iteratorNormalCompletion24, _didIteratorError24, _iteratorError24, _iterator24, _step24, innerVal;
 
-            return regeneratorRuntime.wrap(function _callee23$(_context24) {
+            return regeneratorRuntime.wrap(function _callee24$(_context25) {
               while (1) {
-                switch (_context24.prev = _context24.next) {
+                switch (_context25.prev = _context25.next) {
                   case 0:
                     _iteratorNormalCompletion24 = true;
                     _didIteratorError24 = false;
                     _iteratorError24 = undefined;
-                    _context24.prev = 3;
+                    _context25.prev = 3;
                     _iterator24 = inner[Symbol.iterator]()[Symbol.iterator]();
 
                   case 5:
                     if (_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done) {
-                      _context24.next = 13;
+                      _context25.next = 13;
                       break;
                     }
 
                     innerVal = _step24.value;
 
                     if (!equalityCompareFn(outerKey, innerKeySelector(innerVal))) {
-                      _context24.next = 10;
+                      _context25.next = 10;
                       break;
                     }
 
-                    _context24.next = 10;
+                    _context25.next = 10;
                     return innerVal;
 
                   case 10:
                     _iteratorNormalCompletion24 = true;
-                    _context24.next = 5;
+                    _context25.next = 5;
                     break;
 
                   case 13:
-                    _context24.next = 19;
+                    _context25.next = 19;
                     break;
 
                   case 15:
-                    _context24.prev = 15;
-                    _context24.t0 = _context24['catch'](3);
+                    _context25.prev = 15;
+                    _context25.t0 = _context25['catch'](3);
                     _didIteratorError24 = true;
-                    _iteratorError24 = _context24.t0;
+                    _iteratorError24 = _context25.t0;
 
                   case 19:
-                    _context24.prev = 19;
-                    _context24.prev = 20;
+                    _context25.prev = 19;
+                    _context25.prev = 20;
 
                     if (!_iteratorNormalCompletion24 && _iterator24.return) {
                       _iterator24.return();
                     }
 
                   case 22:
-                    _context24.prev = 22;
+                    _context25.prev = 22;
 
                     if (!_didIteratorError24) {
-                      _context24.next = 25;
+                      _context25.next = 25;
                       break;
                     }
 
                     throw _iteratorError24;
 
                   case 25:
-                    return _context24.finish(22);
+                    return _context25.finish(22);
 
                   case 26:
-                    return _context24.finish(19);
+                    return _context25.finish(19);
 
                   case 27:
                   case 'end':
-                    return _context24.stop();
+                    return _context25.stop();
                 }
               }
-            }, _callee23, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+            }, _callee24, this, [[3, 15, 19, 27], [20,, 22, 26]]);
           })));
         };
 
@@ -4220,76 +4420,76 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
       }
 
-      return new Collection(regeneratorRuntime.mark(function _callee22() {
+      return new Collection(regeneratorRuntime.mark(function _callee23() {
         var _iteratorNormalCompletion23, _didIteratorError23, _iteratorError23, _iterator23, _step23, _step23$value, _key4, values;
 
-        return regeneratorRuntime.wrap(function _callee22$(_context23) {
+        return regeneratorRuntime.wrap(function _callee23$(_context24) {
           while (1) {
-            switch (_context23.prev = _context23.next) {
+            switch (_context24.prev = _context24.next) {
               case 0:
                 _iteratorNormalCompletion23 = true;
                 _didIteratorError23 = false;
                 _iteratorError23 = undefined;
-                _context23.prev = 3;
+                _context24.prev = 3;
                 _iterator23 = groups[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done) {
-                  _context23.next = 14;
+                  _context24.next = 14;
                   break;
                 }
 
                 _step23$value = _slicedToArray(_step23.value, 2);
                 _key4 = _step23$value[0];
                 values = _step23$value[1];
-                _context23.next = 11;
+                _context24.next = 11;
                 return resultSelector(_key4, values.ToArray());
 
               case 11:
                 _iteratorNormalCompletion23 = true;
-                _context23.next = 5;
+                _context24.next = 5;
                 break;
 
               case 14:
-                _context23.next = 20;
+                _context24.next = 20;
                 break;
 
               case 16:
-                _context23.prev = 16;
-                _context23.t0 = _context23['catch'](3);
+                _context24.prev = 16;
+                _context24.t0 = _context24['catch'](3);
                 _didIteratorError23 = true;
-                _iteratorError23 = _context23.t0;
+                _iteratorError23 = _context24.t0;
 
               case 20:
-                _context23.prev = 20;
-                _context23.prev = 21;
+                _context24.prev = 20;
+                _context24.prev = 21;
 
                 if (!_iteratorNormalCompletion23 && _iterator23.return) {
                   _iterator23.return();
                 }
 
               case 23:
-                _context23.prev = 23;
+                _context24.prev = 23;
 
                 if (!_didIteratorError23) {
-                  _context23.next = 26;
+                  _context24.next = 26;
                   break;
                 }
 
                 throw _iteratorError23;
 
               case 26:
-                return _context23.finish(23);
+                return _context24.finish(23);
 
               case 27:
-                return _context23.finish(20);
+                return _context24.finish(20);
 
               case 28:
               case 'end':
-                return _context23.stop();
+                return _context24.stop();
             }
           }
-        }, _callee22, this, [[3, 16, 20, 28], [21,, 23, 27]]);
+        }, _callee23, this, [[3, 16, 20, 28], [21,, 23, 27]]);
       }));
     }
 

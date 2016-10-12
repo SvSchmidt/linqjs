@@ -29,24 +29,34 @@ let OrderedCollection = (function () {
      * @param {any}               <T>                  Element type.
      * @return {OrderedCollection<T>} Created ordered linq collection.
      */
-    OrderedCollection.prototype.ThenBy = function (additionalComparator) {
-        if (isString(additionalComparator)) {
-            additionalComparator = GetComparatorFromKeySelector(additionalComparator);
+    OrderedCollection.prototype.ThenBy = function (keySelector, comparator = defaultComparator) {
+      const currentComparator = this.__comparator
+      const additionalComparator = GetComparatorFromKeySelector(keySelector, comparator)
+
+      const factor = this.__heapConstructor === MaxHeap ? -1 : 1
+
+      const newComparator = (a, b) => {
+        const res = factor * currentComparator(a, b)
+
+        if (res !== 0) {
+          return res
         }
 
-        __assertFunction(additionalComparator);
+        return additionalComparator(a, b)
+      }
 
-        // build new comparator function when not yet iterated
-        let currentComparator = this.__comparator;
-        this.__comparator = (a, b) => {
-            let res = currentComparator(a, b);
-            if (res !== 0) {
-                return res;
-            }
-            return additionalComparator(a, b);
-        };
-        return this;
+      const self = this
+
+      return new Collection(function * () {
+        const arr = self.ToArray()
+
+        yield* mergeSort(arr, newComparator)
+      })
     };
+
+    OrderedCollection.prototype.ThenByDescending = function (keySelector, comparator = defaultComparator) {
+      return this.ThenBy(keySelector, (a, b) => comparator(b, a))
+    }
 
     OrderedCollection.prototype.getIterator = function () {
       const _self = this
@@ -60,24 +70,26 @@ let OrderedCollection = (function () {
 })();
 
 /**
- * Creates a comparator function from the given selector string.
- * The selector string has to be in same format as within javascript code.
+ * Creates a comparator function from the given selector string or selector function.
+ * The selector can either be a string which can be mapped to a property (e.g. Age) or a function to get the ordering key, e.g. person => person.Age
  *
- * @param  {string} selector Javascript code selector string.
- * @return {(any, any) => boolean} Created comparator function.
+ * @param  {String|Function} selector
+ * @return {Function} Created comparator function of the form (first, second) => Number.
  */
-function GetComparatorFromKeySelector(selector) {
-    __assertString(selector)
+function GetComparatorFromKeySelector(selector, comparator = defaultComparator) {
+    if (isFunction(selector)) {
+      return new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector)
+    } else if (isString(selector)) {
+      if (selector === '') {
+          return comparator
+      }
 
-    if (selector === '') {
-        return defaultComparator
+      if (!(selector.startsWith('[') || selector.startsWith('.'))) {
+          selector = `.${selector}`
+      }
+
+      return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, comparator)
     }
-
-    if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-        selector = `.${selector}`
-    }
-
-    return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, defaultComparator)
 }
 
 __export({ GetComparatorFromKeySelector, OrderedCollection })

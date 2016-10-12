@@ -1,42 +1,140 @@
-// TODO: change implementation to use iterators!
+/**
+ * Orders the sequence by the numeric representation of the values ascending.
+ * The default comparator is used to compare values.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
 
-function Order() {
-  return this.OrderBy(defaultComparator);
-}
-
-function OrderDescending() {
-  return this.OrderByDescending(defaultComparator);
+// -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the numeric representation of the values ascending.
+ * A custom comparator is used to compare values.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
+ */
+function Order(comparator = defaultComparator) {
+  return this.OrderBy(x => x, comparator);
 }
 
 /**
- * Orderes this linq collection using the given comparator.
+ * Orders the sequence by the numeric representation of the values descending.
+ * The default comparator is used to compare values.
  *
- * @param {(T, T) => boolean} comparator Comparator to be used.
- * @param {any}               <T>        Element type.
- * @return {OrderedCollection<T>} Ordered collection.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
+
+// -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the numeric representation of the values descending.
+ * A custom comparator is used to compare values.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
  */
-function OrderBy (comparator) {
-    if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-    }
-    __assertFunction(comparator);
-    return new OrderedCollection(this, comparator, MinHeap);
-};
+function OrderDescending(comparator = defaultComparator) {
+  return this.OrderByDescending(x => x, comparator);
+}
 
 /**
- * Orderes this linq collection in descending order using the given comparator.
- *
- * @param {(T, T) => boolean} comparator Comparator to be used.
- * @param {any}               <T>        Element type.
- * @return {OrderedCollection<T>} Ordered collection.
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * The default comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+ * @example
+const pets = [
+ {
+   Name: 'Barley',
+   Age: 8,
+ },
+ {
+   Name: 'Booots',
+   Age: 4,
+ },
+ {
+   Name: 'Whiskers',
+   Age: 1,
+ }
+]
+
+pets.OrderBy(x => x.Age).ToArray()
+// -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * A custom comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
  */
-function OrderByDescending (comparator) {
-    if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-    }
-    __assertFunction(comparator);
-    return new OrderedCollection(this, comparator, MaxHeap);
-};
+function OrderBy (keySelector, comparator = defaultComparator) {
+  __assertFunction(comparator)
+
+  return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MinHeap)
+}
+
+/**
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * The default comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+ * @example
+const pets = [
+ {
+   Name: 'Barley',
+   Age: 8,
+ },
+ {
+   Name: 'Booots',
+   Age: 4,
+ },
+ {
+   Name: 'Whiskers',
+   Age: 1,
+ }
+]
+
+pets.OrderByDescending(x => x.Age).ToArray()
+// -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * A custom comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
+ */
+function OrderByDescending (keySelector, comparator = defaultComparator)  {
+    return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MaxHeap)
+}
 
 /**
  * Shuffle - Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection

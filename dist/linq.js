@@ -295,6 +295,64 @@ function defaultComparator (a, b) {
   }
 
 
+/* src/helpers/mergesort.js */
+
+/*
+ * Modified Merge Sort implementation, originally written Nicholas C. Zakas
+ * and released with MIT license
+ * https://github.com/nzakas/computer-science-in-javascript/blob/master/algorithms/sorting/merge-sort-recursive/merge-sort-inplace.js
+ */
+
+/**
+ * Merges to arrays in order based on the passed comparator or the default one
+ * @param {Array} left The first array to merge.
+ * @param {Array} right The second array to merge.
+ * @return {Array} The merged array.
+ */
+function merge (left, right, comparator) {
+  let result = []
+  let il = 0
+  let ir = 0
+
+  while (il < left.length && ir < right.length){
+    if (comparator(left[il], right[ir]) < 0) {
+      result.push(left[il++])
+    } else {
+      result.push(right[ir++])
+    }
+  }
+
+  return result.concat(left.slice(il)).concat(right.slice(ir))
+}
+
+/**
+ * Sorts an array using the given comparator in mergesort
+ *
+ * @param {Array} items The array to sort.
+ * @return {Array} The sorted array.
+ */
+function mergeSort (items, comparator = defaultComparator){
+  if (items.length < 2) {
+    return items
+  }
+
+  const middle = Math.floor(items.length / 2)
+  const left = items.slice(0, middle)
+  const right = items.slice(middle)
+
+  const params = merge(
+    mergeSort(left, comparator),
+    mergeSort(right, comparator),
+    comparator)
+
+  // Add the arguments to replace everything between 0 and last item in the array
+  params.unshift(0, items.length)
+  items.splice.apply(items, params)
+
+  return items
+}
+
+
 /* src/helpers/helpers.js */
 
   function toJSON (obj) {
@@ -594,6 +652,9 @@ function Union (inner, equalityCompareFn = defaultEqualityCompareFn) {
  * Join - Correlates the elements of two sequences based on matching keys
  *
  * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
+ * @instance
+ * @memberof Collection
+ * @method
  * @param  {iterable} inner               The inner sequence to join with the outer one
  * @param  {Function} outerKeySelector     A selector fn to extract the key from the outer sequence
  * @param  {Function} innerKeySelector    A selector fn to extract the key from the inner sequence
@@ -2319,24 +2380,34 @@ let OrderedCollection = (function () {
      * @param {any}               <T>                  Element type.
      * @return {OrderedCollection<T>} Created ordered linq collection.
      */
-    OrderedCollection.prototype.ThenBy = function (additionalComparator) {
-        if (isString(additionalComparator)) {
-            additionalComparator = GetComparatorFromKeySelector(additionalComparator);
+    OrderedCollection.prototype.ThenBy = function (keySelector, comparator = defaultComparator) {
+      const currentComparator = this.__comparator
+      const additionalComparator = GetComparatorFromKeySelector(keySelector, comparator)
+
+      const factor = this.__heapConstructor === MaxHeap ? -1 : 1
+
+      const newComparator = (a, b) => {
+        const res = factor * currentComparator(a, b)
+
+        if (res !== 0) {
+          return res
         }
 
-        __assertFunction(additionalComparator);
+        return additionalComparator(a, b)
+      }
 
-        // build new comparator function when not yet iterated
-        let currentComparator = this.__comparator;
-        this.__comparator = (a, b) => {
-            let res = currentComparator(a, b);
-            if (res !== 0) {
-                return res;
-            }
-            return additionalComparator(a, b);
-        };
-        return this;
+      const self = this
+
+      return new Collection(function * () {
+        const arr = self.ToArray()
+
+        yield* mergeSort(arr, newComparator)
+      })
     };
+
+    OrderedCollection.prototype.ThenByDescending = function (keySelector, comparator = defaultComparator) {
+      return this.ThenBy(keySelector, (a, b) => comparator(b, a))
+    }
 
     OrderedCollection.prototype.getIterator = function () {
       const _self = this
@@ -2350,24 +2421,26 @@ let OrderedCollection = (function () {
 })();
 
 /**
- * Creates a comparator function from the given selector string.
- * The selector string has to be in same format as within javascript code.
+ * Creates a comparator function from the given selector string or selector function.
+ * The selector can either be a string which can be mapped to a property (e.g. Age) or a function to get the ordering key, e.g. person => person.Age
  *
- * @param  {string} selector Javascript code selector string.
- * @return {(any, any) => boolean} Created comparator function.
+ * @param  {String|Function} selector
+ * @return {Function} Created comparator function of the form (first, second) => Number.
  */
-function GetComparatorFromKeySelector(selector) {
-    __assertString(selector)
+function GetComparatorFromKeySelector(selector, comparator = defaultComparator) {
+    if (isFunction(selector)) {
+      return new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector)
+    } else if (isString(selector)) {
+      if (selector === '') {
+          return comparator
+      }
 
-    if (selector === '') {
-        return defaultComparator
+      if (!(selector.startsWith('[') || selector.startsWith('.'))) {
+          selector = `.${selector}`
+      }
+
+      return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, comparator)
     }
-
-    if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-        selector = `.${selector}`
-    }
-
-    return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, defaultComparator)
 }
 
 
@@ -2375,45 +2448,143 @@ function GetComparatorFromKeySelector(selector) {
 
 /* src/order.js */
 
-// TODO: change implementation to use iterators!
+/**
+ * Orders the sequence by the numeric representation of the values ascending.
+ * The default comparator is used to compare values.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
 
-function Order() {
-  return this.OrderBy(defaultComparator);
-}
-
-function OrderDescending() {
-  return this.OrderByDescending(defaultComparator);
+// -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the numeric representation of the values ascending.
+ * A custom comparator is used to compare values.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
+ */
+function Order(comparator = defaultComparator) {
+  return this.OrderBy(x => x, comparator);
 }
 
 /**
- * Orderes this linq collection using the given comparator.
+ * Orders the sequence by the numeric representation of the values descending.
+ * The default comparator is used to compare values.
  *
- * @param {(T, T) => boolean} comparator Comparator to be used.
- * @param {any}               <T>        Element type.
- * @return {OrderedCollection<T>} Ordered collection.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @example
+[1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
+
+// -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the numeric representation of the values descending.
+ * A custom comparator is used to compare values.
+ *
+ * @method
+ * @memberof Collection
+ * @instance
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
  */
-function OrderBy (comparator) {
-    if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-    }
-    __assertFunction(comparator);
-    return new OrderedCollection(this, comparator, MinHeap);
-};
+function OrderDescending(comparator = defaultComparator) {
+  return this.OrderByDescending(x => x, comparator);
+}
 
 /**
- * Orderes this linq collection in descending order using the given comparator.
- *
- * @param {(T, T) => boolean} comparator Comparator to be used.
- * @param {any}               <T>        Element type.
- * @return {OrderedCollection<T>} Ordered collection.
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * The default comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+ * @example
+const pets = [
+ {
+   Name: 'Barley',
+   Age: 8,
+ },
+ {
+   Name: 'Booots',
+   Age: 4,
+ },
+ {
+   Name: 'Whiskers',
+   Age: 1,
+ }
+]
+
+pets.OrderBy(x => x.Age).ToArray()
+// -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * A custom comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
  */
-function OrderByDescending (comparator) {
-    if (isString(comparator)) {
-        comparator = GetComparatorFromKeySelector(comparator);
-    }
-    __assertFunction(comparator);
-    return new OrderedCollection(this, comparator, MaxHeap);
-};
+function OrderBy (keySelector, comparator = defaultComparator) {
+  __assertFunction(comparator)
+
+  return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MinHeap)
+}
+
+/**
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * The default comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+ * @example
+const pets = [
+ {
+   Name: 'Barley',
+   Age: 8,
+ },
+ {
+   Name: 'Booots',
+   Age: 4,
+ },
+ {
+   Name: 'Whiskers',
+   Age: 1,
+ }
+]
+
+pets.OrderByDescending(x => x.Age).ToArray()
+// -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @return {Collection} Ordered collection.
+ *//**
+ * Orders the sequence by the appropriate property selected by keySelector ascending.
+ * A custom comparator is used to compare values.
+ * @method
+ * @memberof Collection
+ * @instance
+ * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+ * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+ * @return {Collection} Ordered collection.
+ */
+function OrderByDescending (keySelector, comparator = defaultComparator)  {
+    return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MaxHeap)
+}
 
 /**
  * Shuffle - Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection

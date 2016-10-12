@@ -117,16 +117,8 @@ describe('ordered-collection.js', function () {
         describe('OrderBy', function () {
             it('should order the collection properly', function () {
                 const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
-                const OrderedCollection = Collection.prototype.OrderedCollection;
 
                 const comparatorA = GetComparatorFromKeySelector('a');
-                const comparatorB = GetComparatorFromKeySelector('b');
-                const comparatorC = GetComparatorFromKeySelector('c');
-                const comparatorD = GetComparatorFromKeySelector('d');
-
-                const comparatorFull = function (a, b) {
-                    return comparatorA(a, b) || comparatorB(a, b) || comparatorC(a, b) || comparatorD(a, b);
-                };
 
                 for (var i = 0; i < maxRepeat; i++) {
                     const list = generateRandomNumberObjectList();
@@ -134,16 +126,14 @@ describe('ordered-collection.js', function () {
                     var sorted = list.slice(0);
                     sorted.sort(comparatorA);
 
-                    expect(Collection.from(list).OrderBy(comparatorA).ToArray()).to.satisfy(function (arr) {
+                    expect(Collection.from(list).OrderBy('a').ToArray()).to.satisfy(function (arr) {
                       return checkSortedEquality(arr, sorted)
                     })
                 }
             })
 
             it('should order the collection properly by the provided key selector', function () {
-                const Linq = Collection.prototype.Linq;
                 const GetComparatorFromKeySelector = Collection.prototype.GetComparatorFromKeySelector;
-                const OrderedCollection = Collection.prototype.OrderedCollection;
 
                 const comparatorA = GetComparatorFromKeySelector('a');
 
