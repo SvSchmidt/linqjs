@@ -12,7 +12,7 @@
 
   function isEmpty (coll) {
     if (isCollection(coll)) {
-      return isEmpty(coll.Take(1).ToArray())
+      return coll.next(true).done
     }
 
     return coll.length === 0

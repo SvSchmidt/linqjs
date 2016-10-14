@@ -93,12 +93,12 @@ petOwners.Select(x => x.Name).ToArray()
 * @return {Collection}
 */
 function Select (mapFn = x => x) {
-  const iter = this.getIterator()
+  const self = this
 
   let index = 0
 
   return new Collection(function * () {
-    for (let val of iter) {
+    for (let val of self.getIterator()) {
       yield mapFn(val, index)
       index ++
     }

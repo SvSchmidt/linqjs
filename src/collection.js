@@ -12,8 +12,8 @@ let Collection = (function () {
   }
 
   Collection.prototype = (function () {
-    function next () {
-      if (!this.started) {
+    function next (reset = false) {
+      if (reset || !this.started) {
         this.started = true
         this.iterator = this.getIterator()
       }

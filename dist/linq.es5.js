@@ -65,7 +65,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       Collection.prototype = function () {
         function next() {
-          if (!this.started) {
+          var reset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+          if (reset || !this.started) {
             this.started = true;
             this.iterator = this.getIterator();
           }
@@ -314,7 +316,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         }
 
         if (args.length === 1) {
-          throw new Error(msg);
+          throw new Error(args[0]);
         } else if (args.length === 2) {
           throw new (Function.prototype.bind.apply(AssertionError, [null].concat(args)))();
         }
@@ -378,7 +380,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     function isEmpty(coll) {
       if (isCollection(coll)) {
-        return isEmpty(coll.Take(1).ToArray());
+        return coll.next(true).done;
       }
 
       return coll.length === 0;
@@ -1384,7 +1386,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(equalityCompareFn);
 
-      var iter = this.getIterator();
       var i = 0;
 
       var _iteratorNormalCompletion8 = true;
@@ -1392,7 +1393,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator8 = iter[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+        for (var _iterator8 = this.getIterator()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
           var _val = _step8.value;
 
           if (equalityCompareFn(_val, element)) {
@@ -1446,7 +1447,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(equalityCompareFn);
 
-      var iter = this.getIterator();
       var i = 0;
       var lastIndex = -1;
 
@@ -1455,7 +1455,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       var _iteratorError9 = undefined;
 
       try {
-        for (var _iterator9 = iter[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+        for (var _iterator9 = this.getIterator()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
           var _val2 = _step9.value;
 
           if (equalityCompareFn(_val2, element)) {
@@ -1542,7 +1542,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(predicate);
 
-      var iter = this.getIterator();
+      var self = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee12() {
         var index, _iteratorNormalCompletion10, _didIteratorError10, _iteratorError10, _iterator10, _step10, _val3;
@@ -1556,7 +1556,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError10 = false;
                 _iteratorError10 = undefined;
                 _context13.prev = 4;
-                _iterator10 = iter[Symbol.iterator]();
+                _iterator10 = self.getIterator()[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done) {
@@ -1688,9 +1688,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       var count = 0;
       var filtered = this.Where(predicate);
+
       while (!filtered.next().done) {
         count++;
       }
+
       return count;
     }
 
@@ -1837,7 +1839,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return Collection.Empty;
       }
 
-      var iter = this.getIterator();
+      var self = this;
+
       return new Collection(regeneratorRuntime.mark(function _callee13() {
         var i, _iteratorNormalCompletion11, _didIteratorError11, _iteratorError11, _iterator11, _step11, _val4;
 
@@ -1850,7 +1853,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError11 = false;
                 _iteratorError11 = undefined;
                 _context14.prev = 4;
-                _iterator11 = iter[Symbol.iterator]();
+                _iterator11 = self.getIterator()[Symbol.iterator]();
 
               case 6:
                 if (_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done) {
@@ -1978,7 +1981,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(predicate);
 
-      var _self = this;
+      var self = this;
 
       var result = new Collection(regeneratorRuntime.mark(function _callee14() {
         var index, endTake, _iteratorNormalCompletion12, _didIteratorError12, _iteratorError12, _iterator12, _step12, _val5;
@@ -1993,7 +1996,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError12 = false;
                 _iteratorError12 = undefined;
                 _context15.prev = 5;
-                _iterator12 = _self.getIterator()[Symbol.iterator]();
+                _iterator12 = self.getIterator()[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done) {
@@ -2142,7 +2145,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
       __assertFunction(predicate);
 
-      var _self = this;
+      var self = this;
 
       return new Collection(regeneratorRuntime.mark(function _callee15() {
         var index, endSkip, _iteratorNormalCompletion13, _didIteratorError13, _iteratorError13, _iterator13, _step13, _val6;
@@ -2157,7 +2160,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError13 = false;
                 _iteratorError13 = undefined;
                 _context16.prev = 5;
-                _iterator13 = _self.getIterator()[Symbol.iterator]();
+                _iterator13 = self.getIterator()[Symbol.iterator]();
 
               case 7:
                 if (_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done) {
@@ -2886,7 +2889,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return x;
       };
 
-      var iter = this.getIterator();
+      var self = this;
 
       var index = 0;
 
@@ -2901,7 +2904,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                 _didIteratorError15 = false;
                 _iteratorError15 = undefined;
                 _context17.prev = 3;
-                _iterator15 = iter[Symbol.iterator]();
+                _iterator15 = self.getIterator()[Symbol.iterator]();
 
               case 5:
                 if (_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done) {
@@ -3576,18 +3579,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
     /* src/ordered-collection.js */
 
-    /*
-     * Ordered linq collection.
+    /**
+     * OrderedCollection - Represents an ordered collection of iterable values
+     * providing additional methods to order an already ordered collection a second time keeping the order of non-equal elements
+     *
+     * @class
+     * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
      */
     var OrderedCollection = function () {
-
-      /**
-       * Creates a new ordered linq collection using the given comparator and heap for sorting.
-       *
-       * @param {Iterable<T>}       iterable        Datasource for this collection.
-       * @param {(T, T) => boolean} comparator      Comparator for sorting.
-       * @param {any}               <T>             Element type.
-       */
       function OrderedCollection(iterableOrGenerator, comparator) {
         __assertFunction(comparator);
 
@@ -3597,12 +3597,56 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
       }
 
       /**
-       * Specifies further sorting by the given comparator for equal elements.
+       * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+       * The default comparator is used to compare values.
        *
-       * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
-       * @param {any}               <T>                  Element type.
-       * @return {OrderedCollection<T>} Created ordered linq collection.
-       */
+       * @method
+       * @memberof OrderedCollection
+       * @instance
+       * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenby(v=vs.110).aspx
+       * @example
+      const pets = [
+      {
+       Name: 'Barley',
+       Age: 8,
+      },
+      {
+       Name: 'Boots',
+       Age: 1,
+      },
+      {
+       Name: 'Whiskers',
+       Age: 1,
+      },
+      {
+       Name: 'Fluffy',
+       Age: 2,
+      },
+      {
+       Name: 'Donald',
+       Age: 4,
+      },
+      {
+       Name: 'Snickers',
+       Age: 13,
+      }
+      ]
+      pets.OrderBy(x => x.Name.length).ThenBy(x => x.Age).Select(x => x.Name).ToArray()
+      // -> ["Boots", "Fluffy", "Donald", "Barley", "Whiskers", "Snickers"]
+       * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+       * @return {OrderedCollection} Ordered collection.
+       */ /**
+          * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+          * A custom comparator is used to compare values.
+          *
+          * @method
+          * @memberof OrderedCollection
+          * @instance
+          * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenby(v=vs.110).aspx
+          * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+          * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+          * @return {OrderedCollection} Ordered collection.
+          */
       OrderedCollection.prototype.ThenBy = function (keySelector) {
         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
@@ -3624,6 +3668,57 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         return new OrderedCollection(this.getIterator(), newComparator);
       };
 
+      /**
+       * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
+       * The default comparator is used to compare values.
+       *
+       * @method
+       * @memberof OrderedCollection
+       * @instance
+       * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
+       * @example
+      const pets = [
+      {
+       Name: 'Barley',
+       Age: 8,
+      },
+      {
+       Name: 'Boots',
+       Age: 1,
+      },
+      {
+       Name: 'Whiskers',
+       Age: 1,
+      },
+      {
+       Name: 'Fluffy',
+       Age: 2,
+      },
+      {
+       Name: 'Donald',
+       Age: 4,
+      },
+      {
+       Name: 'Snickers',
+       Age: 13,
+      }
+      ]
+      pets.OrderBy(x => x.Name.length).ThenBy(x => x.Age).Select(x => x.Name).ToArray()
+      // -> ["Boots", "Barley", "Donald", "Fluffy", "Snickers", "Whiskers"]
+       * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+       * @return {OrderedCollection} Ordered collection.
+       */ /**
+          * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
+          * A custom comparator is used to compare values.
+          *
+          * @method
+          * @memberof OrderedCollection
+          * @instance
+          * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
+          * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+          * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+          * @return {OrderedCollection} Ordered collection.
+          */
       OrderedCollection.prototype.ThenByDescending = function (keySelector) {
         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
@@ -3688,7 +3783,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     [1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
     
     // -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
-     * @return {Collection} Ordered collection.
+     * @return {OrderedCollection} Ordered collection.
      */ /**
         * Orders the sequence by the numeric representation of the values ascending.
         * A custom comparator is used to compare values.
@@ -3697,7 +3792,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @memberof Collection
         * @instance
         * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
-        * @return {Collection} Ordered collection.
+        * @return {OrderedCollection} Ordered collection.
         */
     function Order() {
       var comparator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultComparator;
@@ -3718,7 +3813,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     [1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
     
     // -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
-     * @return {Collection} Ordered collection.
+     * @return {OrderedCollection} Ordered collection.
      */ /**
         * Orders the sequence by the numeric representation of the values descending.
         * A custom comparator is used to compare values.
@@ -3727,7 +3822,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @memberof Collection
         * @instance
         * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
-        * @return {Collection} Ordered collection.
+        * @return {OrderedCollection} Ordered collection.
         */
     function OrderDescending() {
       var comparator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultComparator;
@@ -3763,7 +3858,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     pets.OrderBy(x => x.Age).ToArray()
     // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
      * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
-     * @return {Collection} Ordered collection.
+     * @return {OrderedCollection} Ordered collection.
      */ /**
         * Orders the sequence by the appropriate property selected by keySelector ascending.
         * A custom comparator is used to compare values.
@@ -3773,7 +3868,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
         * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
         * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
-        * @return {Collection} Ordered collection.
+        * @return {OrderedCollection} Ordered collection.
         */
     function OrderBy(keySelector) {
       var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
@@ -3809,7 +3904,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
     pets.OrderByDescending(x => x.Age).ToArray()
     // -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
      * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
-     * @return {Collection} Ordered collection.
+     * @return {OrderedCollection} Ordered collection.
      */ /**
         * Orders the sequence by the appropriate property selected by keySelector ascending.
         * A custom comparator is used to compare values.
@@ -3819,7 +3914,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
         * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
         * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
         * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
-        * @return {Collection} Ordered collection.
+        * @return {OrderedCollection} Ordered collection.
         */
     function OrderByDescending(keySelector) {
       var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;

@@ -23,10 +23,9 @@
 function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
   __assertFunction(equalityCompareFn)
 
-  const iter = this.getIterator()
   let i = 0
 
-  for (let val of iter) {
+  for (let val of this.getIterator()) {
     if (equalityCompareFn(val, element)) {
       return i
     }
@@ -62,11 +61,10 @@ function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
 function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
   __assertFunction(equalityCompareFn)
 
-  const iter = this.getIterator()
   let i = 0
   let lastIndex = -1
 
-  for (let val of iter) {
+  for (let val of  this.getIterator()) {
     if (equalityCompareFn(val, element)) {
       lastIndex = i
     }
@@ -131,12 +129,12 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this.getIterator()
+  const self = this
 
   const result = new Collection(function * () {
     let index = 0
 
-    for (let val of iter) {
+    for (let val of self.getIterator()) {
       if (predicate(val, index)) {
         yield val
       }
@@ -202,12 +200,14 @@ function ConditionalWhere(condition, predicate) {
  * @return {Number}
  */
 function Count (predicate = elem => true) {
-  let count = 0;
-  let filtered = this.Where(predicate);
+  let count = 0
+  let filtered = this.Where(predicate)
+
   while (!filtered.next().done) {
-    count++;
+    count++
   }
-  return count;
+
+  return count
 }
 
  /**
@@ -247,7 +247,7 @@ function Any (predicate) {
     return true
   }
 
-  return !this.Where(predicate).next().done;
+  return !this.Where(predicate).next().done
 }
 
 /**

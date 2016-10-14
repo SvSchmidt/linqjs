@@ -90,7 +90,7 @@ function Max (mapFn = x => x) {
 // -> 20
   * @return {Number}
  */
-function Sum(mapFn = x => x) {
+function Sum (mapFn = x => x) {
   __assertNotEmpty(this)
 
   return this.Select(mapFn).Aggregate(0, (prev, curr) => prev + curr)

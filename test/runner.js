@@ -22,4 +22,5 @@ describe("linqjs", function () {
     run('test/order.js')
     run('test/search.js')
     run('test/transformation.js')
+    run('test/generic/iteration.js')
 });

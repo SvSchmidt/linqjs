@@ -44,8 +44,8 @@ let Collection = (function () {
   }
 
   Collection.prototype = (function () {
-    function next () {
-      if (!this.started) {
+    function next (reset = false) {
+      if (reset || !this.started) {
         this.started = true
         this.iterator = this.getIterator()
       }
@@ -205,7 +205,7 @@ function defaultComparator (a, b) {
   function __assert (condition, ...args) {
     if (!condition) {
       if (args.length === 1) {
-        throw new Error(msg);
+        throw new Error(args[0]);
       } else if (args.length === 2) {
         throw new AssertionError(...args)
       }
@@ -268,7 +268,7 @@ function defaultComparator (a, b) {
 
   function isEmpty (coll) {
     if (isCollection(coll)) {
-      return isEmpty(coll.Take(1).ToArray())
+      return coll.next(true).done
     }
 
     return coll.length === 0
@@ -495,7 +495,7 @@ function Max (mapFn = x => x) {
 // -> 20
   * @return {Number}
  */
-function Sum(mapFn = x => x) {
+function Sum (mapFn = x => x) {
   __assertNotEmpty(this)
 
   return this.Select(mapFn).Aggregate(0, (prev, curr) => prev + curr)
@@ -777,10 +777,9 @@ function Zip (inner, resultSelectorFn) {
 function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
   __assertFunction(equalityCompareFn)
 
-  const iter = this.getIterator()
   let i = 0
 
-  for (let val of iter) {
+  for (let val of this.getIterator()) {
     if (equalityCompareFn(val, element)) {
       return i
     }
@@ -816,11 +815,10 @@ function IndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
 function LastIndexOf(element, equalityCompareFn = defaultEqualityCompareFn) {
   __assertFunction(equalityCompareFn)
 
-  const iter = this.getIterator()
   let i = 0
   let lastIndex = -1
 
-  for (let val of iter) {
+  for (let val of  this.getIterator()) {
     if (equalityCompareFn(val, element)) {
       lastIndex = i
     }
@@ -885,12 +883,12 @@ function Contains (elem, equalityCompareFn = defaultEqualityCompareFn) {
 function Where (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const iter = this.getIterator()
+  const self = this
 
   const result = new Collection(function * () {
     let index = 0
 
-    for (let val of iter) {
+    for (let val of self.getIterator()) {
       if (predicate(val, index)) {
         yield val
       }
@@ -956,12 +954,14 @@ function ConditionalWhere(condition, predicate) {
  * @return {Number}
  */
 function Count (predicate = elem => true) {
-  let count = 0;
-  let filtered = this.Where(predicate);
+  let count = 0
+  let filtered = this.Where(predicate)
+
   while (!filtered.next().done) {
-    count++;
+    count++
   }
-  return count;
+
+  return count
 }
 
  /**
@@ -1001,7 +1001,7 @@ function Any (predicate) {
     return true
   }
 
-  return !this.Where(predicate).next().done;
+  return !this.Where(predicate).next().done
 }
 
 /**
@@ -1095,10 +1095,11 @@ function Take (count = 0) {
     return Collection.Empty
   }
 
-  const iter = this.getIterator()
+  const self = this
+
   return new Collection(function * () {
     let i = 0
-    for (let val of iter) {
+    for (let val of self.getIterator()) {
       yield val
 
       if (++i === count) {
@@ -1161,13 +1162,13 @@ function Skip (count = 0) {
 function TakeWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const _self = this
+  const self = this
 
   const result = new Collection(function * () {
     let index = 0
     let endTake = false
 
-    for (let val of _self.getIterator()) {
+    for (let val of self.getIterator()) {
       if (!endTake && predicate(val, index++)) {
         yield val
         continue
@@ -1245,13 +1246,13 @@ numbers.SkipWhile(x => x % 2 === 1).ToArray()
 function SkipWhile (predicate = (elem, index) => true) {
   __assertFunction(predicate)
 
-  const _self = this
+  const self = this
 
   return new Collection(function * () {
     let index = 0
     let endSkip = false
 
-    for (let val of _self.getIterator()) {
+    for (let val of self.getIterator()) {
       if (!endSkip && predicate(val, index++)) {
         continue
       }
@@ -1859,12 +1860,12 @@ petOwners.Select(x => x.Name).ToArray()
 * @return {Collection}
 */
 function Select (mapFn = x => x) {
-  const iter = this.getIterator()
+  const self = this
 
   let index = 0
 
   return new Collection(function * () {
-    for (let val of iter) {
+    for (let val of self.getIterator()) {
       yield mapFn(val, index)
       index ++
     }
@@ -2263,18 +2264,15 @@ function Remove (value) {
 
 /* src/ordered-collection.js */
 
-/*
- * Ordered linq collection.
+/**
+ * OrderedCollection - Represents an ordered collection of iterable values
+ * providing additional methods to order an already ordered collection a second time keeping the order of non-equal elements
+ *
+ * @class
+ * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
+ * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
  */
 let OrderedCollection = (function () {
-
-    /**
-     * Creates a new ordered linq collection using the given comparator and heap for sorting.
-     *
-     * @param {Iterable<T>}       iterable        Datasource for this collection.
-     * @param {(T, T) => boolean} comparator      Comparator for sorting.
-     * @param {any}               <T>             Element type.
-     */
     function OrderedCollection (iterableOrGenerator, comparator) {
         __assertFunction(comparator)
 
@@ -2284,11 +2282,56 @@ let OrderedCollection = (function () {
     }
 
     /**
-     * Specifies further sorting by the given comparator for equal elements.
+     * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+     * The default comparator is used to compare values.
      *
-     * @param {(T, T) => boolean} additionalComparator Comparator for sorting.
-     * @param {any}               <T>                  Element type.
-     * @return {OrderedCollection<T>} Created ordered linq collection.
+     * @method
+     * @memberof OrderedCollection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenby(v=vs.110).aspx
+     * @example
+const pets = [
+   {
+     Name: 'Barley',
+     Age: 8,
+   },
+   {
+     Name: 'Boots',
+     Age: 1,
+   },
+   {
+     Name: 'Whiskers',
+     Age: 1,
+   },
+   {
+     Name: 'Fluffy',
+     Age: 2,
+   },
+   {
+     Name: 'Donald',
+     Age: 4,
+   },
+   {
+     Name: 'Snickers',
+     Age: 13,
+   }
+ ]
+
+ pets.OrderBy(x => x.Name.length).ThenBy(x => x.Age).Select(x => x.Name).ToArray()
+ // -> ["Boots", "Fluffy", "Donald", "Barley", "Whiskers", "Snickers"]
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @return {OrderedCollection} Ordered collection.
+     *//**
+     * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+     * A custom comparator is used to compare values.
+     *
+     * @method
+     * @memberof OrderedCollection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenby(v=vs.110).aspx
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+     * @return {OrderedCollection} Ordered collection.
      */
     OrderedCollection.prototype.ThenBy = function (keySelector, comparator = defaultComparator) {
       const currentComparator = this.__comparator
@@ -2309,6 +2352,58 @@ let OrderedCollection = (function () {
       return new OrderedCollection(this.getIterator(), newComparator)
     };
 
+    /**
+     * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
+     * The default comparator is used to compare values.
+     *
+     * @method
+     * @memberof OrderedCollection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
+     * @example
+const pets = [
+   {
+     Name: 'Barley',
+     Age: 8,
+   },
+   {
+     Name: 'Boots',
+     Age: 1,
+   },
+   {
+     Name: 'Whiskers',
+     Age: 1,
+   },
+   {
+     Name: 'Fluffy',
+     Age: 2,
+   },
+   {
+     Name: 'Donald',
+     Age: 4,
+   },
+   {
+     Name: 'Snickers',
+     Age: 13,
+   }
+ ]
+
+ pets.OrderBy(x => x.Name.length).ThenBy(x => x.Age).Select(x => x.Name).ToArray()
+ // -> ["Boots", "Barley", "Donald", "Fluffy", "Snickers", "Whiskers"]
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @return {OrderedCollection} Ordered collection.
+     *//**
+     * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
+     * A custom comparator is used to compare values.
+     *
+     * @method
+     * @memberof OrderedCollection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+     * @return {OrderedCollection} Ordered collection.
+     */
     OrderedCollection.prototype.ThenByDescending = function (keySelector, comparator = defaultComparator) {
       return this.ThenBy(keySelector, (a, b) => comparator(b, a))
     }
@@ -2357,7 +2452,7 @@ function GetComparatorFromKeySelector(selector, comparator = defaultComparator) 
 [1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
 
 // -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  *//**
  * Orders the sequence by the numeric representation of the values ascending.
  * A custom comparator is used to compare values.
@@ -2366,7 +2461,7 @@ function GetComparatorFromKeySelector(selector, comparator = defaultComparator) 
  * @memberof Collection
  * @instance
  * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  */
 function Order(comparator = defaultComparator) {
   return this.OrderBy(x => x, comparator);
@@ -2383,7 +2478,7 @@ function Order(comparator = defaultComparator) {
 [1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
 
 // -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  *//**
  * Orders the sequence by the numeric representation of the values descending.
  * A custom comparator is used to compare values.
@@ -2392,7 +2487,7 @@ function Order(comparator = defaultComparator) {
  * @memberof Collection
  * @instance
  * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  */
 function OrderDescending(comparator = defaultComparator) {
   return this.OrderByDescending(x => x, comparator);
@@ -2424,7 +2519,7 @@ const pets = [
 pets.OrderBy(x => x.Age).ToArray()
 // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
  * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  *//**
  * Orders the sequence by the appropriate property selected by keySelector ascending.
  * A custom comparator is used to compare values.
@@ -2434,7 +2529,7 @@ pets.OrderBy(x => x.Age).ToArray()
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
  * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
  * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  */
 function OrderBy (keySelector, comparator = defaultComparator) {
   __assertFunction(comparator)
@@ -2468,7 +2563,7 @@ const pets = [
 pets.OrderByDescending(x => x.Age).ToArray()
 // -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
  * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  *//**
  * Orders the sequence by the appropriate property selected by keySelector ascending.
  * A custom comparator is used to compare values.
@@ -2478,7 +2573,7 @@ pets.OrderByDescending(x => x.Age).ToArray()
  * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
  * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
  * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
- * @return {Collection} Ordered collection.
+ * @return {OrderedCollection} Ordered collection.
  */
 function OrderByDescending (keySelector, comparator = defaultComparator)  {
     return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, (a, b) => comparator(b, a)))
