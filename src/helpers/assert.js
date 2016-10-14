@@ -7,7 +7,7 @@
   function __assert (condition, ...args) {
     if (!condition) {
       if (args.length === 1) {
-        throw new Error(msg);
+        throw new Error(args[0]);
       } else if (args.length === 2) {
         throw new AssertionError(...args)
       }
