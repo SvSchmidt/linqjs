@@ -140,9 +140,11 @@ Collection.Range(0, 5).ToArray()
 ```
 
 
-See [the documentation]](https://svschmidt.github.io/linqjs/Collection.html) for tips and every available method.
+See [the documentation](https://svschmidt.github.io/linqjs/Collection.html) for tips and an overview of available methods and signatures.
 
 ## Install
+
+[![NPM](https://nodei.co/npm/linq.js.png)](https://npmjs.org/package/linq.js)
 
 With [npm](https://npmjs.org/) installed, run
 
