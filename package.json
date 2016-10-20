@@ -1,5 +1,5 @@
 {
-  "name": "linqjs",
+  "name": "linq.js",
   "version": "0.0.0",
   "description": "Perform queries on collections in the manner of C#s System.Linq in JavaScript",
   "main": "index.js",

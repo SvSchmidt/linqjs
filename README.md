@@ -1,4 +1,4 @@
-# linqjs [![Build Status](https://api.travis-ci.org/SvSchmidt/linqjs.png)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg)](https://coveralls.io/github/SvSchmidt/linqjs)
+# linq.js [![Build Status](https://api.travis-ci.org/SvSchmidt/linqjs.png)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg)](https://coveralls.io/github/SvSchmidt/linqjs)
 
 > Perform queries on collections in the manner of C#s System.Linq in JavaScript
 
@@ -6,11 +6,11 @@ Collections of values are common objects to deal with in JavaScript. The most wi
 
 Common tasks a JavaScript developer performs on those Collections are accessing specific indizes, checking weather or not a value is included, aggregating the values (sum, average, minimum etc.), split the Collection into parts or even grouping the values according to specific attributes.
 
-System.Linq in C# is a great way to deal with operations alike. Unfortunately, JavaScript developers don't have tools such that. That's why you should start using linqjs starting today.
+System.Linq in C# is a great way to deal with operations alike. Unfortunately, JavaScript developers don't have tools such that. That's why you should start using linq.js starting today.
 
 ## Usage
 
-Let's see a (very basic) example of what is possible by querying collections using linqjs:
+Let's see a (very basic) example of what is possible by querying collections using linq.js:
 
 ```js
 const Collection = require('linqjs')
@@ -58,7 +58,7 @@ This will yield
  Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, `GroupBy` allows you to use six different signatures.
 
  - #### Lazy-evaluation
- Most methods of C# Linq are lazy-evaluated and so are these methods in linqjs. For getting a idea of what that means and why it's useful, have a look at the example
+ Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js. For getting a idea of what that means and why it's useful, have a look at the example
 
   ```js
   const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
@@ -72,7 +72,7 @@ This will yield
     .Take(5)
     .ToArray()
   ```
-The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only log the numbers 0 to 4 to the console. That's because Select is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using ToArray). It is worth mentioning that linqjs can even handle infinite sequences:
+The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only log the numbers 0 to 4 to the console. That's because Select is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using ToArray). It is worth mentioning that linq.js can even handle infinite sequences:
 
   ```js   
   function * naturalNumbers () {
@@ -109,7 +109,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
 
 ## API
 
-Linqjs supports three szenarios for loading and using the module.
+linq.js supports three szenarios for loading and using the module.
 
 #### nodejs/commonjs
 ```js
@@ -140,14 +140,14 @@ Collection.Range(0, 5).ToArray()
 ```
 
 
-See [the documentation]](http://svschmidt.github.io/linqjs/docs/Collection.html) for tips and every available method.
+See [the documentation]](https://svschmidt.github.io/linqjs/Collection.html) for tips and every available method.
 
 ## Install
 
 With [npm](https://npmjs.org/) installed, run
 
 ```
-$ npm install linqjs
+$ npm install linq.js
 ```
 
 ## See Also
@@ -161,7 +161,7 @@ Please feel free to contribute!  If you haven't installed grunt yet, you may nee
 $ npm install -g grunt grunt-cli
 ```
 
-Then you can clone and build linqjs:
+Then you can clone and build linq.js:
 ```batch
 git clone https://github.com/SvSchmidt/linqjs linqjs
 cd linqjs
