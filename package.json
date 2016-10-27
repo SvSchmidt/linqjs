@@ -15,6 +15,11 @@
       "name": "Gerriet Hinrichs"
     }
   ],
+"repository" :
+  { 
+       "type" : "git",
+       "url" : "https://github.com/SvSchmidt/linqjs.git"
+  },
   "license": "MIT",
   "licenses": [
     {
