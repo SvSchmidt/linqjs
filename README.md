@@ -63,12 +63,20 @@ This will yield
 
  \* Not an original method of System.Linq but pretty awesome though
 
-
- - #### Including all possible methods/overloads:
+- #### Including all possible methods/overloads:
  Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, `GroupBy` allows you to use six different signatures.
 
- - #### Lazy-evaluation
- Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js. For getting a idea of what that means and why it's useful, have a look at the example
+- #### Lazy-evaluation
+  Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js.
+  In general all methods are as lazy as possible, meaning: Elements will only be evaluated if they are actually used somewhere.
+  Elements are accessed (and therefore evaluated) under following conditions:
+  - element values are returned (by e.g. `first`),
+  - non-lazy collections like arrays or dictionaries are generated (by e.g. `toArray`),
+  - json serialization of collections is performed,
+  - `reverse` is used (sadly it has to evaluate the collection),
+  - ordering is performed (the moment the first value is accessed from the ordered collection).
+ 
+  For getting a idea of what that means and why it's useful, have a look at the example
 
   ```js
   const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
@@ -93,7 +101,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   Collection.from(naturalNumbers).Take(5).ToArray()
   // -> [0, 1, 2, 3, 4]
   ```
-
+  
 - #### Short-handed syntax for well-known iterables
   ```js
   const numbers = [1, 2, 3, 4, 5]
@@ -115,8 +123,9 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   - String
   - Generator functions
   - ...
-- #### About 15kB minified, 5kB gzipped
 
+- #### About 15kB minified, 5kB gzipped
+  
 ## API
 
 linq.js supports three szenarios for loading and using the module.
