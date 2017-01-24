@@ -2,6 +2,16 @@
   "name": "linq.js",
   "version": "1.0.2",
   "description": "Perform queries on collections in the manner of C#s System.Linq in JavaScript",
+  "keywords": [
+    "linq",
+    "linqjs",
+    "collection",
+    "util",
+    "functional",
+    "array",
+    "iterable",
+    "lazy"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "echo 'Starting build...' && grunt dist && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
