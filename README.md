@@ -8,6 +8,16 @@ Common tasks a JavaScript developer performs on those Collections are accessing 
 
 System.Linq in C# is a great way to deal with operations alike. Unfortunately, JavaScript developers don't have tools such that. That's why you should start using linq.js starting today.
 
+## Install
+
+[![NPM](https://nodei.co/npm/linq.js.png)](https://npmjs.org/package/linq.js)
+
+With [npm](https://npmjs.org/) installed, run
+
+```
+$ npm install linq.js
+```
+
 ## Usage
 
 Let's see a (very basic) example of what is possible by querying collections using linq.js:
@@ -141,16 +151,6 @@ Collection.Range(0, 5).ToArray()
 
 
 See [the documentation](https://svschmidt.github.io/linqjs/Collection.html) for tips and an overview of available methods and signatures.
-
-## Install
-
-[![NPM](https://nodei.co/npm/linq.js.png)](https://npmjs.org/package/linq.js)
-
-With [npm](https://npmjs.org/) installed, run
-
-```
-$ npm install linq.js
-```
 
 ## See Also
 
