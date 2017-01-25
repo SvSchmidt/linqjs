@@ -58,15 +58,15 @@ This will yield
 
 ## Features
 
-- #### 59 Methods:
+- *59 Methods*
  Aggregate, All, Add, Any, Average, Concat, ConditionalWhere\*, Contains, Count, DefaultIfEmpty, Distinct, ElementAt, ElementAtOrDefault, Empty, Except, First, FirstOrDefault, Flatten\*, ForEach, From, GroupBy, GroupJoin, IndexOf\*, Insert, Intersect, Join, Last, LastIndexOf, LastOrDefault, Max, Min, OrderBy, OrderByDescending, Range, Remove, Repeat, Reverse, Select, SelectMany, SequenceEqual, Shuffle, Single, SingleOrDefault, Skip, SkipWhile, SkipUntil\*, Sum, Take, TakeWhile, TakeUntil\*, ThenBy, ThenByDescending, ToArray, ToDictionary, ToJSON\*, ToLookup, Union, Where, Zip
 
  \* Not an original method of System.Linq but pretty awesome though
 
-- #### Including all possible methods/overloads:
+- *Including all possible methods/overloads*
  Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, `GroupBy` allows you to use six different signatures.
 
-- #### Lazy-evaluation
+- *Lazy-evaluation*
   Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js.
   In general all methods are as lazy as possible, meaning: Elements will only be evaluated if they are actually used somewhere.
   Elements are accessed (and therefore evaluated) under following conditions:
@@ -102,7 +102,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   // -> [0, 1, 2, 3, 4]
   ```
   
-- #### Short-handed syntax for well-known iterables
+- *Short-handed syntax for well-known iterables*
   ```js
   const numbers = [1, 2, 3, 4, 5]
   const m = new Map([['a', ['Abraham', 'Alabama']], ['s', ['Sven']]])
@@ -116,7 +116,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   Collection.from(m).Select(x => x[1]).Flatten().ToArray()
   ```
 
-- #### Working with any kind of iterables
+- *Working with any kind of iterables*
   - Array
   - Set
   - Map
@@ -124,7 +124,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   - Generator functions
   - ...
 
-- #### About 15kB minified, 5kB gzipped
+- *About 15kB minified, 5kB gzipped*
   
 ## API
 
@@ -174,9 +174,10 @@ $ npm install -g grunt grunt-cli
 
 Then you can clone and build linq.js:
 ```batch
-git clone https://github.com/SvSchmidt/linqjs linqjs
-cd linqjs
-grunt
+$ git clone https://github.com/SvSchmidt/linqjs linqjs
+$ cd linqjs
+$ npm install
+$ grunt
 ```
 
 See the [issues page](https://github.com/SvSchmidt/linqjs/issues) for bugs and project goals. I also invite you to start a discussion.
