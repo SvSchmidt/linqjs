@@ -1,6 +1,6 @@
 {
   "name": "linq.js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Perform queries on collections in the manner of C#s System.Linq in JavaScript",
   "keywords": [
     "linq",
