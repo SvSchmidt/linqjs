@@ -34,10 +34,6 @@
     __assert(isCollection(obj), 'collection', obj)
   }
 
-  function __assertString (obj) {
-    __assert(isString(obj), 'string', obj)
-  }
-
   function __assertNumeric (obj) {
     __assert(isNumeric(obj), 'numeric value', obj)
   }
