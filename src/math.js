@@ -31,6 +31,11 @@ function Min (mapFn = x => x) {
   return Math.min.apply(null, this.Select(mapFn).ToArray())
 }
 
+function isPrime(number) {
+  // TODO
+  return false
+}
+
 /**
 * Max - Returns the maximum of the numbers contained in the sequence
 *
