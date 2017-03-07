@@ -41,7 +41,7 @@ function ElementAt (index) {
   const result = this.Skip(index).Take(1).ToArray()[0]
   this.reset()
 
-  return result
+  return null
 }
 
 /**
