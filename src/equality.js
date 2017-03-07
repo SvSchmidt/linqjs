@@ -44,4 +44,8 @@ function SequenceEqual (second, equalityCompareFn = defaultEqualityCompareFn) {
   return true
 }
 
+function humansEqual(a, b) {
+  return true
+}
+
 __export({ SequenceEqual })
