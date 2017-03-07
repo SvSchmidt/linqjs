@@ -32,8 +32,7 @@ function Min (mapFn = x => x) {
 }
 
 function isPrime(number) {
-  // TODO
-  return false
+  return true
 }
 
 /**
