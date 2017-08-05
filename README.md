@@ -24,26 +24,12 @@ Let's see a (very basic) example of what is possible by querying collections usi
 
 ```js
 const Collection = require('linqjs')
-
 const pets = [
-  {
-    Name: 'Barley',
-    Age: 8,
-  },
-  {
-    Name: 'Boots',
-    Age: 1,
-  },
-  {
-    Name: 'Whiskers',
-    Age: 1,
-  },
-  {
-    Name: 'Fluffy',
-    Age: 2,
-  },
+  { Name: 'Barley',     Age: 8, },
+  { Name: 'Boots',      Age: 1, },
+  { Name: 'Whiskers',   Age: 1, },
+  { Name: 'Fluffy',     Age: 2, },
 ]
-
 Collection.from(pets)
   .OrderByDescending(p => p.Age)
   .Take(2)
@@ -75,7 +61,7 @@ This will yield
   - json serialization of collections is performed,
   - `reverse` is used (sadly it has to evaluate the collection),
   - ordering is performed (the moment the first value is accessed from the ordered collection).
- 
+
   For getting a idea of what that means and why it's useful, have a look at the example
 
   ```js
@@ -92,7 +78,7 @@ This will yield
   ```
 The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only log the numbers 0 to 4 to the console. That's because Select is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using ToArray). It is worth mentioning that linq.js can even handle infinite sequences:
 
-  ```js   
+  ```js
   function * naturalNumbers () {
     let i = 0
     while (true) yield i++
@@ -101,7 +87,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   Collection.from(naturalNumbers).Take(5).ToArray()
   // -> [0, 1, 2, 3, 4]
   ```
-  
+
 - *Short-handed syntax for well-known iterables*
   ```js
   const numbers = [1, 2, 3, 4, 5]
@@ -125,7 +111,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   - ...
 
 - *About 15kB minified, 5kB gzipped*
-  
+
 ## API
 
 linq.js supports three szenarios for loading and using the module.
