@@ -3,3 +3,8 @@ package.json~
 /tmp/
 /coverage/
 npm-debug.log
+
+# idea stuff
+.idea/
+*.iml
+

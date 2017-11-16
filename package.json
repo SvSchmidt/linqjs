@@ -65,6 +65,7 @@
     "jsdoc": "^3.4.1",
     "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.0.2",
-    "mocha-lcov-reporter": "^1.2.0"
+    "mocha-lcov-reporter": "^1.2.0",
+    "typescript": "2.6.1"
   }
 }
