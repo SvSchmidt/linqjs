@@ -89,3 +89,15 @@ export function __getParameterCount(fn: Function): number {
 
     return fn.length
 }
+
+export function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = defaultComparator): (a: T, b: T) => number {
+    if (isFunction(selector)) {
+        return new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector);
+    } else if (isString(selector)) {
+        if (!(selector.startsWith('[') || selector.startsWith('.'))) {
+            selector = `.${selector}`;
+        }
+
+        return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, comparator);
+    }
+}
