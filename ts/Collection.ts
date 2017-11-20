@@ -1,16 +1,14 @@
-import {__isEmpty, __isFunction, __isGenerator, __isIterable, __isPredicate} from "./helper/is";
+import {__isEmpty, __isGenerator, __isIterable, __isPredicate} from "./helper/is";
 import {
-    __assert, __assertFunction, __assertIndexInRange, __assertIterable, __assertNotEmpty,
+    __assert, __assertFunction, __assertIndexInRange, __assertIterable, __assertNotEmpty, __assertNumberBetween,
     __assertNumeric
 } from "./helper/assert";
-import {__getDefault, __isNative, __removeFromArray} from "./helper/utils";
-import {__defaultEqualityCompareFn} from "./helper/default";
+import {__getDefault, __removeFromArray} from "./helper/utils";
+import {__defaultComparator, __defaultEqualityCompareFn} from "./helper/default";
+import {OrderedCollection} from "./OrderedCollection";
 
 /**
- * Collection - Represents a collection of iterable values
- *
- * @class
- * @param  {Iterable|GeneratorFunction} iterableOrGenerator A iterable to create a collection of, e.g. an array or a generator function
+ * Represents a collection of iterable values.
  */
 export class Collection<T> implements Iterable<T> {
 
@@ -25,7 +23,7 @@ export class Collection<T> implements Iterable<T> {
 
     //#region Iterable
 
-    private __iterable: Iterable<T> | (() => Iterator<T>) = null;
+    protected __iterable: Iterable<T> | (() => Iterator<T>) = null;
 
     public [Symbol.iterator](): Iterator<T> {
         const iterable: Iterable<T> | (() => Iterator<T>) = this.__iterable;
@@ -71,11 +69,11 @@ export class Collection<T> implements Iterable<T> {
     }
 
     /**
-     *  ElementAt - Returns the element at the given index
+     *  Returns the element at the given index.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
-     * @param {number} index
-     * @returns {T} The element at the given index
+     * @param {number} index Element index.
+     * @returns {T} The element at the given index.
      */
     public ElementAt(index: number): T {
         __assertIndexInRange(this, index);
@@ -1303,7 +1301,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Min(mapFn: (x: T) => number): number;
-    public Min(mapFn: Function = x => x): number {
+    public Min(mapFn: Function = (x: any) => x): number {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
@@ -1339,7 +1337,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Max(mapFn: (x: T) => number): number;
-    public Max(mapFn: Function = x => x): number {
+    public Max(mapFn: Function = (x: any) => x): number {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
@@ -1375,7 +1373,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Sum(mapFn: (x: T) => number): number;
-    public Sum(mapFn: Function = x => x): number {
+    public Sum(mapFn: Function = (x: any) => x): number {
         __assertNotEmpty(this);
 
         return this.Select(mapFn).Aggregate(0, (prev, curr) => prev + curr);
@@ -1410,7 +1408,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Average(mapFn: (x: T) => number): number;
-    public Average(mapFn: Function = x => x): number {
+    public Average(mapFn: Function = (x: any) => x): number {
         __assertNotEmpty(this);
 
         return this.Sum(mapFn) / this.Count();
@@ -1418,5 +1416,982 @@ export class Collection<T> implements Iterable<T> {
 
     //#endregion
 
+    //#region Ordering
 
+    /**
+     * Orders the sequence by the numeric representation of the values ascending.
+     * The default comparator is used to compare values.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
+
+     // -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public Order(): OrderedCollection<T>;
+    /**
+     * Orders the sequence by the numeric representation of the values ascending.
+     * A custom comparator is used to compare values.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public Order(comparator: (a: T, b: T) => number): OrderedCollection<T>;
+    public Order(comparator: Function = __defaultComparator): OrderedCollection<T> {
+        return this.OrderBy(x => x, comparator);
+    }
+
+    /**
+     * Orders the sequence by the numeric representation of the values descending.
+     * The default comparator is used to compare values.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
+
+     // -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public OrderDescending(): OrderedCollection<T>;
+    /**
+     * Orders the sequence by the numeric representation of the values descending.
+     * A custom comparator is used to compare values.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public OrderDescending(comparator: (a: T, b: T) => number): OrderedCollection<T>;
+    public OrderDescending(comparator: Function = __defaultComparator): OrderedCollection<T> {
+        return this.OrderByDescending(x => x, comparator);
+    }
+
+    /**
+     * Orders the sequence by the appropriate property selected by keySelector ascending.
+     * The default comparator is used to compare values.
+     * @method
+     * @memberof Collection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+     * @example
+     const pets = [
+     {
+       Name: 'Barley',
+       Age: 8,
+     },
+     {
+       Name: 'Booots',
+       Age: 4,
+     },
+     {
+       Name: 'Whiskers',
+       Age: 1,
+     }
+     ]
+
+     pets.OrderBy(x => x.Age).ToArray()
+     // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public OrderBy<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
+
+    /**
+     * Orders the sequence by the appropriate property selected by keySelector ascending.
+     * A custom comparator is used to compare values.
+     * @method
+     * @memberof Collection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public OrderBy<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
+    public OrderBy(keySelector: Function | string, comparator: Function = defaultComparator): OrderedCollection<T> {
+        __assertFunction(comparator);
+
+        return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MinHeap);
+    }
+
+    /**
+     * Orders the sequence by the appropriate property selected by keySelector ascending.
+     * The default comparator is used to compare values.
+     * @method
+     * @memberof Collection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+     * @example
+     const pets = [
+     {
+       Name: 'Barley',
+       Age: 8,
+     },
+     {
+       Name: 'Booots',
+       Age: 4,
+     },
+     {
+       Name: 'Whiskers',
+       Age: 1,
+     }
+     ]
+
+     pets.OrderByDescending(x => x.Age).ToArray()
+     // -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public OrderByDescending<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
+    /**
+     * Orders the sequence by the appropriate property selected by keySelector ascending.
+     * A custom comparator is used to compare values.
+     * @method
+     * @memberof Collection
+     * @instance
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+     * @param {Function|String} keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     * @param {Function} comparator A comparator of the form (a, b) => number to compare two values
+     * @return {OrderedCollection} Ordered collection.
+     */
+    public OrderByDescending<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
+    public OrderByDescending(keySelector: Function | string, comparator: Function = defaultComparator): OrderedCollection<T> {
+        return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, (a, b) => comparator(b, a)));
+    }
+
+    /**
+     * Shuffle - Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection
+     *
+     * @instance
+     * @memberof Collection
+     * @method
+     * @return {Collection}
+     */
+    public Shuffle(): Collection<T> {
+        return this.OrderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
+    }
+
+    //#endregioning
+
+    //#region Search
+
+    /**
+     * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3].IndexOf(2)
+     // -> 1
+     [1, 2, 3].IndexOf(4)
+     // -> -1
+     * @return {Number}
+     */
+    public IndexOf(element: T): number;
+    /**
+     * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
+     * A provided equality compare function is used to specify equality.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+     * @return {Number}
+     */
+    public IndexOf(element: T, equalityCompareFn: (a: T, b: T) => boolean): number;
+    public IndexOf(element: T, equalityCompareFn: Function = defaultEqualityCompareFn): number {
+        __assertFunction(equalityCompareFn);
+
+        let i = 0;
+
+        for (let val of this.getIterator()) {
+            if (equalityCompareFn(val, element)) {
+                return i;
+            }
+
+            i++;
+        }
+
+        return -1;
+    }
+
+    /**
+     * LastIndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3, 1, 4, 7, 1].LastIndexOf(1)
+     // -> 6
+     [1, 2, 3].LastIndexOf(4)
+     // -> -1
+     * @return {Number}
+     */
+    public LastIndexOf(element: T): number;
+    /**
+     * IndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+     * A provided equality compare function is used to specify equality.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+     * @return {Number}
+     */
+    public LastIndexOf(element: T, equalityCompareFn: (a: T, b: T) => boolean): number;
+    public LastIndexOf(element: T, equalityCompareFn: Function = defaultEqualityCompareFn): number {
+        __assertFunction(equalityCompareFn);
+
+        let i = 0;
+        let lastIndex = -1;
+
+        for (let val of  this.getIterator()) {
+            if (equalityCompareFn(val, element)) {
+                lastIndex = i;
+            }
+
+            i++;
+        }
+
+        return lastIndex;
+    }
+
+    /**
+     * Contains - Returns true if the sequence contains the specified element, false if not.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3].Contains(2)
+     // -> true
+     [1, 2, 3].Contains(4)
+     // -> false
+     * @param {any} elem The element to check
+     * @return {Boolean}
+     */
+    public Contains(element: T): boolean;
+    /**
+     * Contains - Returns true if the sequence contains the specified element, false if not.
+     * A provided equality compare function is used to specify equality.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @param {any} elem The element to check
+     * @param {Function} equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
+     * @return {Boolean}
+     */
+    public Contains(element: T, equalityCompareFn: (a: T, b: T) => boolean): boolean;
+    public Contains(elem: T, equalityCompareFn: Function = defaultEqualityCompareFn): boolean {
+        return !!~this.IndexOf(elem, equalityCompareFn);
+    }
+
+    /**
+     * Where - Filters a sequence based on a predicate function
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @variation (elem => boolean)
+     * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
+     * @return {Collection} The filtered collection
+     */
+    public Where(predicate: (e: T) => boolean): Collection<T>;
+    /**
+     * Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @variation ((elem, index) => boolean)
+     * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+     * @return {Collection} The filtered collection
+     */
+    public Where(predicate: (element: T, index: number) => boolean): Collection<T>;
+    public Where(predicate: Function = (elem, index) => true): Collection<T> {
+        __assertFunction(predicate);
+
+        const self = this;
+
+        return new Collection(function* () {
+            let index = 0;
+
+            for (let val of self.getIterator()) {
+                if (predicate(val, index)) {
+                    yield val;
+                }
+
+                index++;
+            }
+        });
+    }
+
+    /**
+     * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @variation (condition, elem => bool)
+     * @param {Boolean} condition A condition to get checked before filtering the sequence
+     * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
+     * @return {Collection} The filtered collection or the original sequence if condition was falsy
+     */
+    public ConditionalWhere(condition: boolean, predicate: (e: T) => boolean): Collection<T>;
+    /**
+     * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
+     *
+     * @method
+     * @memberof Collection
+     * @instance
+     * @variation (condition, (elem, index) => bool)
+     * @param {Boolean} condition A condition to get checked before filtering the sequence
+     * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
+     * @return {Collection} The filtered collection or the original sequence if condition was falsy
+     */
+    public ConditionalWhere(condition: boolean, predicate: (element: T, index: number) => boolean): Collection<T>;
+    public ConditionalWhere(condition: boolean, predicate: Function) {
+        if (condition) {
+            return this.Where(predicate);
+        } else {
+            return this;
+        }
+    }
+
+    /**
+     * Count - Returns the length of the sequence
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3, 4, 5].Count()
+     // -> 5
+     * @return {Number}
+     */
+    public Count(): number;
+    /**
+     * Count - Returns the number of elements in the sequence matching the predicate
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3, 4, 5].Count(x => x > 2)
+     // -> 3
+     * @param  {Function} predicate The predicate of the form elem => boolean
+     * @return {Number}
+     */
+    public Count(predicate: (e: T) => boolean): number;
+    public Count(predicate: Function = elem => true): number {
+        let count = 0;
+        let filtered = this.Where(predicate);
+
+        while (!filtered.next().done) {
+            count++;
+        }
+
+        return count;
+    }
+
+    /**
+     * Any - Returns true if the sequence contains at least one element, false if it is empty
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3].Any()
+     // -> true
+     * @return {Boolean}
+     */
+    public Any(): boolean;
+    /**
+     * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+     * @method
+     * @variation (predicate)
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3].Any(x => x > 1)
+     // -> true
+     [1, 2, 3].Any(x => x > 5)
+     // -> false
+     * @param  {Function} predicate A predicate function to test elements against: elem => boolean
+     * @return {Boolean}
+     */
+    public Any(predicate: (e: T) => boolean): boolean;
+    public Any(predicate: Function): boolean {
+        if (isEmpty(this)) {
+            return false;
+        }
+
+        if (!predicate) {
+            // since we checked before that the sequence is not empty
+            return true;
+        }
+
+        return !this.Where(predicate).next().done;
+    }
+
+    /**
+     * All - Returns true if all elements in the sequence match the predicate
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx
+     * @method
+     * @memberof Collection
+     * @instance
+     * @example
+     [1, 2, 3, 4, 5, 6].All(x => x > 3)
+     // -> false
+     [2, 4, 6, 8, 10, 12].All(x => x % 2 === 0)
+     // -> true
+     * @param  {Function} predicate
+     * @return {Boolean}
+     */
+    public All(predicate: ((e: T) => boolean) = elem => true): boolean {
+        __assertFunction(predicate);
+
+        // All is equal to the question if there's no element which does not match the predicate
+        // 'all fruits are yellow' -> 'there is no fruit which is not yellow'
+        return !this.Any(x => !predicate(x));
+    }
+
+    //#endregion
+
+    //#region Transformation
+
+    /**
+     * Aggregate - applies a accumulator function to a sequence
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation (accumulator)
+     * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+     * @example
+     const sentence = "the quick brown fox jumps over the lazy dog"
+     const words = sentence.split(' ')
+     const reversed = words.Aggregate((workingSentence, next) => next + " " + workingSentence)
+     // --> "dog lazy the over jumps fox brown quick the"
+     * @return {any} the result of the accumulation
+     */
+    public Aggregate(accumulator: (accumulated: T, next: T) => T): T;
+    /**
+     * Aggregate - applies a accumulator function to a sequence. Starts with seed.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation (seed, accumulator)
+     * @param {any} seed The starting value of the accumulation
+     * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+     * @example
+     [1, 2, 3].Aggregate(0, (prev, curr) => prev + curr)
+     // -> 6 (this example is equal to [1, 2, 3].Sum())
+     * @return {any} the result of the accumulation
+     */
+    public Aggregate<V>(seed: V, accumulator: (accumulated: V, next: T) => V): V;
+    /**
+     * Aggregate - applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation (seed, accumulator, resultTransformFn)
+     * @param {any} seed The starting value of the accumulation
+     * @param {Function} accumulator The accumulator function of the form (prev, current) => any
+     * @param {Function} resultTransformFn A function to transform the result
+     * @example
+     const fruits = ["apple", "mango", "orange", "passionfruit", "grape"]
+     const longestName = fruits.Aggregate('banana',
+     (longest, next) => next.length > longest.length ? next : longest,
+     fruit => fruit.toUpperCase())
+     // -> "PASSIONFRUIT"
+     * @return {any} the result of the accumulation
+     */
+    public Aggregate<V, R>(seed: V, accumulator: (accumulated: V, next: T) => V, resultTransformFn: (v: V) => R): R;
+    public Aggregate(seedOrAccumulator: Function | any, accumulator: Function, resultTransformFn: Function): any {
+        const values = this.ToArray();
+
+        if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
+            return aggregateCollection(values.slice(1, values.length), values.slice(0, 1)[0], seedOrAccumulator, elem => elem);
+        } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
+            return aggregateCollection(values, seedOrAccumulator, accumulator, elem => elem);
+        } else {
+            return aggregateCollection(values, seedOrAccumulator, accumulator, resultTransformFn);
+        }
+    }
+
+
+    /**
+     * Select - Projects each member of the sequence into a new form
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation (elem => any)
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+     * @example
+     const petOwners = [
+     { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+     { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+     { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+     ]
+
+     petOwners.Select(x => x.Name).ToArray()
+     // -> ['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette']
+     * @return {Collection}
+     */
+    public Select<V>(mapFn: (e: T) => V): Collection<V>;
+    /**
+     * Select - Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation ((elem, index) => any)
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+     * @example
+     [1, 2, 3].Select((x, i) => x + i).ToArray()
+     // -> [1, 3, 5]
+     * @return {Collection}
+     */
+    public Select<V>(mapFn: (element: T, index: number) => V): Collection<V>;
+    public Select(mapFn: Function = x => x): Collection<any> {
+        const self = this;
+
+        let index = 0;
+
+        return new Collection(function* () {
+            for (let val of self) {
+                yield mapFn(val, index);
+                index++;
+            }
+        });
+    }
+
+    /**
+     * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+     *
+     * @memberof Collection
+     * @instance
+     * @method
+     * @example
+     [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
+     // -> [1, 2, 3, 4, 5, 6,]
+     * @return {Collection}  A new, flattened Collection
+     */
+    public Flatten(): Collection<any> {
+        return this.SelectMany(x => x);
+    }
+
+    /**
+     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation (elem => any)
+     * @example
+     const petOwners = [
+     { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+     { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+     { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+     ]
+
+     const pets = petOwners.SelectMany(petOwner => petOwner.Pets).ToArray())
+     // -> ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+     * @return {Collection}
+     */
+    public SelectMany<V>(mapFn: (element: T) => Array<V> | V): Collection<V>;
+
+    /**
+     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * The index of the source element can be used in the mapFn.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation ((elem, index) => any)
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+     * @return {Collection}
+     */
+    public SelectMany<V>(mapFn: (element: T, index: number) => Array<V> | V): Collection<V>;
+
+    /**
+     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * Invokes a resultSelector function on each element of the sequence.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation (elem => any, resultSelector)
+     * @example
+     const petOwners = [
+     { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+     { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+     { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+     ]
+     petOwners.SelectMany(
+     petOwner => petOwner.Pets,
+     (owner, petName) => ({ owner, petName })
+     ).Select(ownerAndPet => ({
+     owner: ownerAndPet.owner.Name,
+     pet: ownerAndPet.petName,
+  }))
+     .Take(2)
+     .ToArray()
+
+     // -> [
+     //  { owner: "Higa, Sidney", pet: "Scruffy"},
+     //  { owner: "Higa, Sidney", pet: "Sam"}
+     // ]
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form elem => any
+     * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+     * @return {Collection}
+     */
+    public SelectMany<V, R>(mapFn: (element: T) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
+
+    /**
+     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @variation ((elem, index) => any, resultSelector)
+     * @param {Function} mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
+     * @param {Function} resultSelector a function of the form (sourceElement, element) => any to map the result Value
+     * @return {Collection}
+     */
+    public SelectMany<V, R>(mapFn: (element: T, index: number) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
+    public SelectMany(mapFn: Function, resultSelector: Function = (x, y) => y): Collection<any> {
+        __assertFunction(mapFn);
+        __assertFunction(resultSelector);
+
+        const iter = this.getIterator();
+
+        return new Collection(function* () {
+            let index = 0;
+
+            for (let current of iter) {
+                let mappedEntry = mapFn(current, index);
+                let newIter = mappedEntry;
+
+                if (!isIterable(mappedEntry)) {
+                    newIter = [mappedEntry];
+                } else {
+                    newIter = mappedEntry;
+                }
+
+                for (let val of newIter[Symbol.iterator]()) {
+                    yield resultSelector(current, val);
+                }
+
+                index++;
+            }
+        });
+    }
+
+    /**
+     * Distinct - Returns the distinct elemens from a sequence using the default equality compare function
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @example
+     [1, 2, 3, 3, 4, 7, 9, 9, 12].Distinct().ToArray()
+     // -> [1, 2, 3, 4, 7, 9, 12]
+     * @return {Collection}
+     */
+    public Distinct(): Collection<T>;
+    /**
+     * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @param {Function} equalityCompareFn The function of the form (first, second) => boolean determining if the values are equal
+     * @return {Collection}
+     */
+    public Distinct(equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
+    public Distinct(equalityCompareFn: Function = defaultEqualityCompareFn): Collection<T> {
+        __assertFunction(equalityCompareFn);
+
+        return removeDuplicates(this, equalityCompareFn);
+    }
+
+    /**
+     * ToArray - Enforces immediate evaluation of the whole Collection and returns an array of the result
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb298736(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @return {Array}
+     */
+    public ToArray(): Array<T> {
+        return [...this];
+    }
+
+    /**
+     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * The key is defined by the keySelector.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @param {Function} keySelector The function to use to retrieve the key from the Collection
+     * @return {Map}
+     */
+    public ToDictionary<K>(keySelector: (e: T) => K): Map<K, T>;
+
+    /**
+     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * The key is defined by the keySelector and each element is transformed using the elementSelector.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @example
+     const pets = [
+     { name: 'miez', species: 'cat' },
+     { name: 'wuff', species: 'dog' },
+     { name: 'leo', species: 'cat' },
+     { name: 'flipper', species: 'dolphin' }
+     ]
+     pets.ToDictionary(pet => pet.name, pet => pet.species)
+     // -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}
+     * @param {Function} keySelector The function to use to retrieve the key from the Collection
+     * @param {Function} elementSelector A function to map each element to a specific value, e.g. to properties
+     * @return {Map}
+     */
+    public ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V): Map<K, V>;
+    /**
+     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * The key is defined by the keySelector. The keys are compared using the keyComparer. Duplicate keys throw an error.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @example
+     const pets = [
+     { name: 'miez', species: 'cat' },
+     { name: 'wuff', species: 'dog' },
+     { name: 'leo', species: 'cat' },
+     { name: 'flipper', species: 'dolphin' }
+     ]
+     pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
+     // -> error since cat and dog have 3 chars each and considered equal
+     * @param {Function} keySelector The function to use to retrieve the key from the Collection
+     * @param {Function} keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
+     * @return {Map}
+     */
+    public ToDictionary<K>(keySelector: (e: T) => K, keyComparer: (a: K, b: K) => boolean): Map<K, T>;
+    /**
+     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * The key is defined by the keySelector and each element is transformed using the elementSelector.
+     * The keys are compared using the keyComparer. Duplicate keys throw an error.
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @memberof Collection
+     * @instance
+     * @method
+     * @param {Function} keySelector The function to use to retrieve the key from the Collection
+     * @param {Function} elementSelector A function to map each element to a specific value, e.g. to properties
+     * @param {Function} keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
+     * @return {Map}
+     */
+    public ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, keyComparer: (a: K, b: K) => boolean): Map<K, V>;
+    public ToDictionary(keySelector: Function, elementSelectorOrKeyComparer: Function, keyComparer: Function): Map<any, any> {
+        __assertFunction(keySelector);
+
+        if (!elementSelectorOrKeyComparer && !keyComparer) {
+            // ToDictionary(keySelector)
+            return this.ToDictionary(keySelector, elem => elem, defaultEqualityCompareFn);
+        } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 1) {
+            // ToDictionary(keySelector, elementSelector)
+            return this.ToDictionary(keySelector, elementSelectorOrKeyComparer, defaultEqualityCompareFn);
+        } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 2) {
+            // ToDictionary(keySelector, keyComparer)
+            return this.ToDictionary(keySelector, elem => elem, elementSelectorOrKeyComparer);
+        }
+
+        // ToDictionary(keySelector, elementSelector, keyComparer)
+
+        __assertFunction(keyComparer);
+        __assertFunction(elementSelectorOrKeyComparer);
+
+        let usedKeys = [];
+        let result = new Map();
+        const input = this.ToArray();
+        const elementSelector = elementSelectorOrKeyComparer;
+
+        for (let value of input) {
+            let key = keySelector(value);
+            let elem = elementSelector(value);
+
+            __assert(key != null, 'Key is not allowed to be null!');
+            __assert(!usedKeys.Any(x => keyComparer(x, key)), `Key '${key}' is already in use!`);
+
+            usedKeys.push(key);
+            result.set(key, elem);
+        }
+
+        return result;
+    }
+
+    /**
+     * ToJSON - Returns the representation of the sequence in javascript object notation (JSON)
+     *
+     * @instance
+     * @method
+     * @memberof Collection
+     * @return {string}
+     */
+    public ToJSON(): string {
+        return toJSON(this.ToArray());
+    }
+
+    /**
+     * Reverse - Returns a new sequence with the elements of the original one in reverse order
+     * This method should be considered inperformant since the collection must get enumerated once
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb358497(v=vs.110).aspx
+     * @method
+     * @instance
+     * @memberof Collection
+     * @return {Collection}
+     */
+    public Reverse(): Collection<T> {
+        const arr = this.ToArray();
+
+        return new Collection(function* () {
+            for (let i = arr.length - 1; i >= 0; i--) {
+                yield arr[i];
+            }
+        });
+    }
+
+    /**
+     * ForEach - Invokes a function for each value of the Collection
+     *
+     * @method
+     * @instance
+     * @memberof Collection
+     * @example
+     [1, 2, 3].ForEach(x => console.log(x))
+     // Output:
+     1
+     2
+     3
+     * @param  {Function} fn
+     * @return {void}
+     */
+    public ForEach(fn: (e: T) => void): void {
+        __assertFunction(fn);
+
+        for (let val of this) {
+            fn(val);
+        }
+    }
+
+    //#endregion
+
+    //#region Static
+
+    /**
+     * Same as new Collection()
+     * @function Collection.From
+     * @memberof Collection
+     * @static
+     * @return {Collection}
+     */
+    public static From(iterable: Iterable<T>): Collection<T> {
+        return new Collection(iterable);
+    }
+
+    /**
+     * Creates a sequence of count values starting with start including
+     * @function Range
+     * @memberof Collection
+     * @static
+     * @param  {Number} start The value to start with, e.g. 1
+     * @param  {Number} count The amount of numbers to generate from start
+     * @return {Collection}       A new collection with the number range
+     */
+    public static Range(start: number, count: number): Collection<number> {
+        __assertNumberBetween(count, 0, Infinity);
+
+        return new Collection(function* () {
+            let i = start;
+            while (i != count + start) {
+                yield i++;
+            }
+        });
+    }
+
+    /**
+     * Repeat - Generates a sequence that consists of count times val
+     *
+     * @see https://msdn.microsoft.com/de-de/library/bb348899(v=vs.110).aspx
+     * @static
+     * @memberof Collection
+     * @method
+     * @example
+     Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!'
+     // -> 'na na na na na na na na na na BATMAN!'
+     * @param  {any} val The value to repeat
+     * @param  {Number} count
+     * @return {Collection}
+     */
+    public static Repeat<T>(val: T, count: number): Collection<T> {
+        __assertNumberBetween(count, 0, Infinity);
+
+        return new Collection(function* () {
+            for (let i = 0; i < count; i++) {
+                yield val;
+            }
+        });
+    }
+
+    //#endregion
 }
