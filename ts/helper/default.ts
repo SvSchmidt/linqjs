@@ -1,7 +1,7 @@
 import {__toJSON} from "./utils";
 
 export function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
-    return __toJSON(first) === __toJSON(second)
+    return __toJSON(first) === __toJSON(second);
 }
 
 /**

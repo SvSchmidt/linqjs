@@ -3,7 +3,7 @@ import {Collection} from "../Collection";
 import {__defaultEqualityCompareFn} from "./default";
 
 export function __toJSON(obj: any): string {
-    return JSON.stringify(obj)
+    return JSON.stringify(obj);
 }
 
 export function __assign<T, S>(target: T, source: S): T & S {
@@ -13,7 +13,7 @@ export function __assign<T, S>(target: T, source: S): T & S {
 export function __paramOrValue<P, V>(param: P, value: V): P | V {
     return typeof param === 'undefined'
         ? value
-        : param
+        : param;
 }
 
 export function __aggregateCollection<T, V, R>(coll: Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
@@ -21,7 +21,7 @@ export function __aggregateCollection<T, V, R>(coll: Collection<T>, seed: V, acc
     __assertFunction(resultTransformFn);
     __assertNotEmpty(coll);
 
-    return resultTransformFn([<any>seed].concat(coll).reduce(accumulator))
+    return resultTransformFn([<any>seed].concat(coll).reduce(accumulator));
 }
 
 export function __removeDuplicates<T>(coll: Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = __defaultEqualityCompareFn): Collection<T> {
@@ -40,9 +40,9 @@ export function __removeDuplicates<T>(coll: Collection<T>, equalityCompareFn: (a
 
             previous.push(val);
 
-            yield val
+            yield val;
         }
-    })
+    });
 }
 
 export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
@@ -54,7 +54,7 @@ export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
 
     // remove all elements from the array (shift) and push them into a temporary variable until the desired element was found
     while ((current = arr.shift()) && !(elementFound = __defaultEqualityCompareFn(current, value))) {
-        elementsBefore.push(current)
+        elementsBefore.push(current);
     }
 
     // add the temporary values back to the array (to the front)
@@ -67,7 +67,7 @@ export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
 const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
 
 export function __isNative(obj: any): boolean {
-    return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj)
+    return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
 }
 
 export function __getDefault(constructorOrValue: any = Object): any {
@@ -75,19 +75,19 @@ export function __getDefault(constructorOrValue: any = Object): any {
         let defaultValue = constructorOrValue();
 
         if (defaultValue instanceof Object || constructorOrValue === Date) {
-            return null
+            return null;
         } else {
-            return defaultValue
+            return defaultValue;
         }
     }
 
-    return constructorOrValue
+    return constructorOrValue;
 }
 
 export function __getParameterCount(fn: Function): number {
     __assertFunction(fn);
 
-    return fn.length
+    return fn.length;
 }
 
 export function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = defaultComparator): (a: T, b: T) => number {
