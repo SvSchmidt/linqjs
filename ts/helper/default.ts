@@ -1,5 +1,8 @@
 import {__toJSON} from "./utils";
 
+/**
+ * @internal
+ */
 export function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
     return __toJSON(first) === __toJSON(second);
 }
@@ -8,9 +11,9 @@ export function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
  * Default comparator implementation that uses the "<" operator.
  * Returns values as specified by the comparator function fir Array.sort().
  *
+ * @internal
  * @param {T} a Element "a" to be compared.
  * @param {T} b Element "b" to be compared.
- *
  * @return {number} Returns -1 if "a" is smaller than "b",
  *                  returns  1 if "b" is smaller than "a",
  *                  returns  0 if they are equal.

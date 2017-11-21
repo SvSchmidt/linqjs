@@ -1,21 +1,35 @@
-import {__assertArray, __assertFunction, __assertIterable, __assertNotEmpty} from "./assert";
+import {__assertArray, __assertFunction, __assertIterable, __assertNotEmpty, AssertionError} from "./assert";
 import {Collection} from "../Collection";
 import {__defaultEqualityCompareFn} from "./default";
+import {__isFunction, __isString} from "./is";
+import {__defaultComparator} from "../../build/declaration/helper/default";
 
+/**
+ * @internal
+ */
 export function __toJSON(obj: any): string {
     return JSON.stringify(obj);
 }
 
+/**
+ * @internal
+ */
 export function __assign<T, S>(target: T, source: S): T & S {
     return Object.assign({}, target, source);
 }
 
+/**
+ * @internal
+ */
 export function __paramOrValue<P, V>(param: P, value: V): P | V {
     return typeof param === 'undefined'
         ? value
         : param;
 }
 
+/**
+ * @internal
+ */
 export function __aggregateCollection<T, V, R>(coll: Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
@@ -24,6 +38,9 @@ export function __aggregateCollection<T, V, R>(coll: Collection<T>, seed: V, acc
     return resultTransformFn([<any>seed].concat(coll).reduce(accumulator));
 }
 
+/**
+ * @internal
+ */
 export function __removeDuplicates<T>(coll: Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = __defaultEqualityCompareFn): Collection<T> {
     __assertIterable(coll);
     __assertFunction(equalityCompareFn);
@@ -45,6 +62,9 @@ export function __removeDuplicates<T>(coll: Collection<T>, equalityCompareFn: (a
     });
 }
 
+/**
+ * @internal
+ */
 export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
     __assertArray(arr);
 
@@ -64,12 +84,21 @@ export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
     return elementFound;
 }
 
+/**
+ * @internal
+ */
 const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
 
+/**
+ * @internal
+ */
 export function __isNative(obj: any): boolean {
     return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
 }
 
+/**
+ * @internal
+ */
 export function __getDefault(constructorOrValue: any = Object): any {
     if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         let defaultValue = constructorOrValue();
@@ -84,20 +113,28 @@ export function __getDefault(constructorOrValue: any = Object): any {
     return constructorOrValue;
 }
 
+/**
+ * @internal
+ */
 export function __getParameterCount(fn: Function): number {
     __assertFunction(fn);
 
     return fn.length;
 }
 
-export function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = defaultComparator): (a: T, b: T) => number {
-    if (isFunction(selector)) {
-        return new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector);
-    } else if (isString(selector)) {
+/**
+ * @internal
+ */
+export function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = __defaultComparator): (a: T, b: T) => number {
+    if (__isFunction(selector)) {
+        return <any>(new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
+    } else if (__isString(selector)) {
         if (!(selector.startsWith('[') || selector.startsWith('.'))) {
             selector = `.${selector}`;
         }
 
-        return new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, comparator);
+        return <any>(new Function('comparator', 'a', 'b', `return comparator(a${selector}, b${selector})`).bind(null, comparator));
     }
+
+    throw new AssertionError("string or function", selector);
 }
