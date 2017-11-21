@@ -17,7 +17,7 @@ export class OrderedCollection<T> extends Collection<T> {
     /**
      * @internal
      */
-    protected constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>), comparator: (a: T, b: T) => number) {
+    public constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>), comparator: (a: T, b: T) => number) {
         __assertFunction(comparator);
         super(iterableOrGenerator);
         this.__comparator = comparator;
@@ -148,7 +148,7 @@ export class OrderedCollection<T> extends Collection<T> {
     /**
      * @internal
      */
-    public ThenByDescending(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
+    public ThenByDescending(keySelector: any, comparator = __defaultComparator) {
         return this.ThenBy(keySelector, (a, b) => comparator(b, a));
     }
 

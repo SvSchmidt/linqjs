@@ -1,9 +1,16 @@
-import {__isEmpty, __isGenerator, __isIterable, __isPredicate} from "./helper/is";
+import {
+    __isCollection, __isEmpty, __isFunction, __isGenerator, __isIterable, __isPredicate,
+    __isUndefined
+} from "./helper/is";
 import {
     __assert, __assertFunction, __assertIndexInRange, __assertIterable, __assertNotEmpty, __assertNumberBetween,
     __assertNumeric
 } from "./helper/assert";
-import {__getDefault, __removeFromArray} from "./helper/utils";
+import {
+    __aggregateCollection, __getComparatorFromKeySelector, __getDefault, __getParameterCount, __removeDuplicates,
+    __removeFromArray,
+    __toJSON
+} from "./helper/utils";
 import {__defaultComparator, __defaultEqualityCompareFn} from "./helper/default";
 import {OrderedCollection} from "./OrderedCollection";
 
@@ -14,6 +21,9 @@ export class Collection<T> implements Iterable<T> {
 
     //#region Constructor
 
+    /**
+     * @internal
+     */
     public constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>)) {
         __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
         this.__iterable = iterableOrGenerator;
@@ -23,6 +33,9 @@ export class Collection<T> implements Iterable<T> {
 
     //#region Iterable
 
+    /**
+     * @internal
+     */
     protected __iterable: Iterable<T> | (() => Iterator<T>) = null;
 
     public [Symbol.iterator](): Iterator<T> {
@@ -41,7 +54,10 @@ export class Collection<T> implements Iterable<T> {
 
     //#region Access
 
-    private __resultOrDefault(originalFn: (p: ((v: T) => boolean)) => T, predicateOrDefault: ((v: T) => boolean) | T = x => true, fallback: T = <any>Object): T {
+    /**
+     * @internal
+     */
+    private __resultOrDefault<V>(originalFn: (p: ((v: T) => boolean)) => T, predicateOrDefault: ((v: T) => boolean) | V = x => true, fallback: V = <any>Object): T | V {
         let predicate: (v: T) => boolean;
 
         if (__isPredicate(predicateOrDefault)) {
@@ -123,7 +139,7 @@ export class Collection<T> implements Iterable<T> {
             return this;
         }
 
-        return this.SkipWhile((elem, index) => index < count);
+        return this.SkipWhile((elem: T, index: number) => index < count);
     }
 
     /**
@@ -152,7 +168,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public TakeWhile(predicate: (elem: T, index: number) => boolean): Collection<T>;
-    public TakeWhile(predicate: Function = (elem: T, index: number) => true): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public TakeWhile(predicate = (elem: T, index: number) => true) {
         __assertFunction(predicate);
 
         const self: this = this;
@@ -186,6 +206,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public TakeUntil(predicate: (elem: T) => boolean): Collection<T>;
+
     /**
      * TakeUntil - Takes elements from the beginning of a sequence until the predicate yields true. The index of the element can be used in the logic of the predicate function.
      * TakeUntil behaves like calling TakeWhile with a negated predicate.
@@ -194,7 +215,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public TakeUntil(predicate: (elem: T, index: number) => boolean): Collection<T>;
-    public TakeUntil(predicate: Function = (elem: T, index: number) => false): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public TakeUntil(predicate = (elem: T, index: number) => false) {
         return this.TakeWhile((elem: T, index: number) => !predicate(elem, index))
     }
 
@@ -211,6 +236,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public SkipWhile(predicate: (elem: T) => boolean): Collection<T>;
+
     /**
      * SkipWhile - Skips elements in the sequence while the predicate yields true and returns the remaining sequence. The index of the element
      * can be used in the logic of the predicate function.
@@ -220,7 +246,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public SkipWhile(predicate: (elem: T, index: number) => boolean): Collection<T>;
-    public SkipWhile(predicate: Function = (elem: T, index: number) => true): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public SkipWhile(predicate = (elem: T, index: number) => true) {
         __assertFunction(predicate);
 
         const self: this = this;
@@ -258,6 +288,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public SkipUntil(predicate: (elem: T) => boolean): Collection<T>;
+
     /**
      * SkipUntil - Takes elements from the beginning of a sequence until the predicate yields true. The index of the element can be used in the logic of the predicate function.
      * SkipUntil behaves like calling SkipWhile with a negated predicate.
@@ -266,7 +297,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public SkipUntil(predicate: (elem: T, index: number) => boolean): Collection<T>;
-    public SkipUntil(predicate: Function = (elem: T, index: number) => false): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public SkipUntil(predicate = (elem: T, index: number) => false) {
         return this.SkipWhile((elem: T, index: number) => !predicate(elem, index))
     }
 
@@ -284,6 +319,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public First(): T;
+
     /**
      * First - Returns the first element in a sequence that matches the given predicate
      *
@@ -299,7 +335,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public First(predicate: (v: T) => boolean): T;
-    public First(predicate: Function = (x: T) => true): T {
+
+    /**
+     * @internal
+     */
+    public First(predicate = (x: T) => true): T {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
@@ -322,6 +362,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public FirstOrDefault(): T | null;
+
     /**
      * FirstOrDefault - Returns the first element in a sequence or a default value if the sequence is empty.
      * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
@@ -338,6 +379,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public FirstOrDefault<V>(constructor: V): T | V;
+
     /**
      * FirstOrDefault - Returns the first element in a sequence that matches the predicate or a default value if no such element is found.
      * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
@@ -355,6 +397,10 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public FirstOrDefault<V>(predicate: (e: T) => boolean, constructor: V): T | V;
+
+    /**
+     * @internal
+     */
     public FirstOrDefault<V>(predicateOrConstructor: ((e: T) => boolean) | T = (x: T) => true, constructor: V = <any>Object): T | V {
         return this.__resultOrDefault(this.First, predicateOrConstructor, <any>constructor);
     }
@@ -370,6 +416,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public Last(): T;
+
     /**
      * Last - Returns the last element in a sequence that matches the given predicate
      *
@@ -382,7 +429,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public Last(predicate: (e: T) => boolean): T;
-    public Last(predicate: Function = x => true): T {
+
+    /**
+     * @internal
+     */
+    public Last(predicate = (x: any) => true): T {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
@@ -402,6 +453,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public LastOrDefault(): T | null;
+
     /**
      * LastOrDefault - Returns the last element in a sequence or a default value if the sequence is empty.
      * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
@@ -415,6 +467,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public LastOrDefault<V>(constructor: V): T | V;
+
     /**
      * LastOrDefault - Returns the last element in a sequence that matches the predicate or a default value if no such element is found.
      * The default value is determined by a provided constructor (e.g. Number) or the value itself (e.g. an object, a value...)
@@ -429,8 +482,12 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public LastOrDefault<V>(predicate: (e: T) => boolean, constructor: V): T | V;
-    public LastOrDefault<V>(predicateOrConstructor: Function | V = x => true, constructor: V = Object): T | V {
-        return resultOrDefault(this, Last, predicateOrConstructor, constructor);
+
+    /**
+     * @internal
+     */
+    public LastOrDefault<V>(predicateOrConstructor = (x: any) => true, constructor: V = <any>Object): T | V {
+        return this.__resultOrDefault(this.Last, predicateOrConstructor, constructor);
     }
 
     /**
@@ -449,6 +506,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public Single(): T;
+
     /**
      * Single - Returns a single, specific value of a sequence matching the predicate. Throws an error if there's not exactly one such element.
      *
@@ -465,15 +523,19 @@ export class Collection<T> implements Iterable<T> {
      * @param  {Function} predicate The predicate of the form elem => Boolean
      * @return {any}
      */
-    public Single(predicate = (e: T) => boolean): T;
-    public Single(predicate: Function = x => true): T {
+    public Single(predicate: (e: T) => boolean): T;
+
+    /**
+     * @internal
+     */
+    public Single(predicate = (x: any) => true): T {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
         let index: number = 0;
         let result: T;
 
-        for (let val of this.__getIterator()) {
+        for (let val of this) {
             if (predicate(val)) {
                 result = val;
                 break;
@@ -482,7 +544,7 @@ export class Collection<T> implements Iterable<T> {
             index++;
         }
 
-        if (this.First(elem => predicate(elem) && !defaultEqualityCompareFn(elem, result))) {
+        if (this.First(elem => predicate(elem) && !__defaultEqualityCompareFn(elem, result))) {
             throw new Error('Sequence contains more than one element');
         }
 
@@ -506,6 +568,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public SingleOrDefault(): T | null;
+
     /**
      * SingleOrDefault - Returns a single element of a sequence or a default value if the sequence is empty.
      * Will throw an error if there's more than one element.
@@ -523,6 +586,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public SingleOrDefault<V>(constructor: V): T | V;
+
     /**
      * SingleOrDefault - Returns a single, specific element of a sequence matching the predicate or a default value if no such element is found.
      * Will throw an error if there's more than one such element.
@@ -543,8 +607,12 @@ export class Collection<T> implements Iterable<T> {
      * @return {any}
      */
     public SingleOrDefault<V>(predicate: (e: T) => boolean, constructor: V): T | V;
-    public SingleOrDefault<V>(predicateOrConstructor: Function | V = x => true, constructor: V = Object): T | V {
-        return resultOrDefault(this, Single, predicateOrConstructor, constructor);
+
+    /**
+     * @internal
+     */
+    public SingleOrDefault<V>(predicateOrConstructor: any = (x: any) => true, constructor: V = <any>Object): T | V {
+        return this.__resultOrDefault(this.Single, predicateOrConstructor, constructor);
     }
 
     /**
@@ -559,11 +627,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public DefaultIfEmpty<V>(constructor: V): this | Collection<V> {
-        if (!isEmpty(this)) {
-            return this
+        if (!__isEmpty(this)) {
+            return this;
         }
 
-        return [getDefault(constructor)]
+        return new Collection([__getDefault(constructor)]);
     }
 
     //#endregion
@@ -589,7 +657,7 @@ export class Collection<T> implements Iterable<T> {
         const outer = this;
 
         return new Collection(function* () {
-            yield* outer.getIterator();
+            yield* outer;
             yield* inner;
         });
     }
@@ -608,6 +676,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collction}
      */
     public Union(inner: Iterable<T>): Collection<T>;
+
     /**
      * Union - Concatenates two sequences and removes duplicate values (produces the set union).
      * A custom equality comparator is used to compare values for equality.
@@ -619,7 +688,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Union(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
-    public Union(inner: Iterable<T>, equalityCompareFn: Function = defaultEqualityCompareFn): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public Union(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): Collection<T> {
         __assertIterable(inner);
 
         return this.Concat(inner).Distinct(equalityCompareFn);
@@ -640,6 +713,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}                      A new collection of the resulting pairs
      */
     public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V): Collection<V>;
+
     /**
      * Join - Correlates the elements of two sequences based on matching keys
      *
@@ -655,7 +729,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}                      A new collection of the resulting pairs
      */
     public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn: (a: K, b: K) => boolean): Collection<V>;
-    public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn: Function = __defaultEqualityCompareFn): Collection<V> {
+
+    /**
+     * @internal
+     */
+    public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn = __defaultEqualityCompareFn): Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -665,10 +743,10 @@ export class Collection<T> implements Iterable<T> {
         const outer = this;
 
         return new Collection(function* () {
-            for (let outerValue of outer.getIterator()) {
+            for (let outerValue of outer) {
                 const outerKey = outerKeySelector(outerValue);
 
-                for (let innerValue of inner[Symbol.iterator]()) {
+                for (let innerValue of inner) {
                     const innerKey = innerKeySelector(innerValue);
 
                     if (keyEqualityCompareFn(outerKey, innerKey)) {
@@ -700,15 +778,15 @@ export class Collection<T> implements Iterable<T> {
     public Except(inner: Iterable<T>): Collection<T> {
         __assertIterable(inner);
 
-        if (!isCollection(inner)) {
+        if (!__isCollection(inner)) {
             inner = new Collection(inner);
         }
 
         const outer = this;
 
         return new Collection(function* () {
-            for (let val of outer.getIterator()) {
-                if (!inner.Contains(val)) {
+            for (let val of outer) {
+                if (!(<Collection<T>>inner).Contains(val)) {
                     yield val;
                 }
             }
@@ -770,6 +848,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public Intersect(inner: Iterable<T>): Collection<T>;
+
     /**
      * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
      *
@@ -782,15 +861,21 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public Intersect(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
-    public Intersect(inner: Iterable<T>, equalityCompareFn: Function = defaultEqualityCompareFn): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public Intersect(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): Collection<T> {
         __assertIterable(inner);
         __assertFunction(equalityCompareFn);
 
-        return new Collection(function* () {
-            const innerIter = [...inner];
+        const self = this;
 
-            for (let val of this) {
-                if (innerIter.Any(elem => equalityCompareFn(val, elem))) {
+        return new Collection(function* () {
+            const innerCollection = Collection.From(inner);
+
+            for (let val of self) {
+                if (innerCollection.Any((elem: any) => equalityCompareFn(val, elem))) {
                     yield val;
                 }
             }
@@ -813,6 +898,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Boolean}
      */
     public SequenceEqual(second: Iterable<T>): boolean;
+
     /**
      * SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
      * returns true for each element in the sequence in correct order. A custom comparator function is provided.
@@ -826,21 +912,25 @@ export class Collection<T> implements Iterable<T> {
      * @return {Boolean}
      */
     public SequenceEqual(second: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): boolean;
-    public SequenceEqual(second: Iterable<T>, equalityCompareFn: Function = defaultEqualityCompareFn): boolean {
-        if (!isIterable(second)) {
+
+    /**
+     * @internal
+     */
+    public SequenceEqual(second: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
+        if (!__isIterable(second)) {
             return false;
         }
 
-        const first = this.ToArray();
-        second = second.ToArray();
+        const first: Array<T> = this.ToArray();
+        second = Collection.From(second).ToArray();
 
-        if (first.length !== second.length) {
+        if (first.length !== (<Array<T>>second).length) {
             return false;
         }
 
         for (let i = 0; i < first.length; i++) {
             let firstVal = first[i];
-            let secondVal = second[i];
+            let secondVal = (<Array<T>>second)[i];
 
             if (!equalityCompareFn(firstVal, secondVal)) {
                 return false;
@@ -856,6 +946,8 @@ export class Collection<T> implements Iterable<T> {
 
     /**
      * __getEqualKey - Get the matching key in the group for a given key and a keyComparer or return the parameter itself if the key is not present yet
+     *
+     * @internal
      */
     private __getEqualKey<V>(groups: Map<V, T>, key: V, keyComparer: (a: V, b: V) => boolean): V {
         for (let groupKey of groups.keys()) {
@@ -934,7 +1026,7 @@ export class Collection<T> implements Iterable<T> {
      * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
      * @return {Collection} The grouped sequence with projected results as a new Collection
      */
-    public GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V): Map<K, V>;
+    public GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V): Collection<V>;
 
     /**
      * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
@@ -950,7 +1042,7 @@ export class Collection<T> implements Iterable<T> {
      * @param {Function} keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
      * @return {Collection} The grouped sequence with projected results as a new Collection
      */
-    public GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Map<K, V>;
+    public GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Collection<V>;
 
     /**
      * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
@@ -983,7 +1075,7 @@ export class Collection<T> implements Iterable<T> {
      * @param {Function} resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
      * @return {Collection} The grouped sequence with projected results as a new Collection
      */
-    public GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V): Map<K, V>;
+    public GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V): Collection<V>;
 
     /**
      * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using the keyComparer.
@@ -1002,15 +1094,21 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection} The grouped sequence with projected results as a new Collection
      * @
      */
-    public GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Map<K, V>;
-    public GroupBy<K>(keySelector: (e: T) => K, ...args: Array<Function>): Map<K, any> {
+    public GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Collection<V>;
+
+    /**
+     * @internal
+     */
+    public GroupBy<K>(keySelector: (e: T) => K, ...args: Array<Function>): any {
+
+        const self = this;
 
         /**
          * isKeyComparer - Checks whether or not a function is a keyComparer. We need to differentiate between the keyComparer and the resultSelector
          * since both take two arguments.
          */
         function isKeyComparer(arg: Function): arg is (a: K, b: K) => boolean {
-            let result = getParameterCount(arg) === 2;
+            let result = __getParameterCount(arg) === 2;
             try {
                 // if this is a key comparer, it must return truthy values for equal values and falsy ones if they're different
                 result = result && arg(1, 1) && !arg(1, 2);
@@ -1026,7 +1124,7 @@ export class Collection<T> implements Iterable<T> {
         GroupBy(keySelector)
         */
         function groupByOneArgument<K>(keySelector: (e: T) => K): Map<K, Array<T>> {
-            return groupBy(keySelector, elem => elem, undefined, defaultEqualityCompareFn);
+            return groupBy(keySelector, elem => elem, undefined, __defaultEqualityCompareFn);
         }
 
         /*
@@ -1039,9 +1137,9 @@ export class Collection<T> implements Iterable<T> {
 
             if (isKeyComparer(inner)) {
                 keyComparer = inner;
-                elementSelector = elem => elem;
+                elementSelector = (elem: any) => elem;
             } else {
-                keyComparer = defaultEqualityCompareFn;
+                keyComparer = __defaultEqualityCompareFn;
                 elementSelector = inner;
             }
 
@@ -1062,38 +1160,38 @@ export class Collection<T> implements Iterable<T> {
                 resultSelector = third;
             }
 
-            if (getParameterCount(inner) === 2) {
+            if (__getParameterCount(inner) === 2) {
                 resultSelector = inner;
             } else {
                 elementSelector = inner;
             }
 
             if (!keyComparer) {
-                keyComparer = defaultEqualityCompareFn;
+                keyComparer = __defaultEqualityCompareFn;
             }
 
             if (!elementSelector) {
-                elementSelector = elem => elem;
+                elementSelector = (elem: any) => elem;
             }
 
-            return groupBy(keySelector, elementSelector, resultSelector, keyComparer);
+            return groupBy(keySelector, <any>elementSelector, <any>resultSelector, <any>keyComparer);
         }
 
         /**
          * This is the "basic" function to use. The others just transform their parameters to be used with this one.
          */
-        function groupBy<k, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Map<K, V> {
+        function groupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): any {
             __assertFunction(keySelector);
             __assertFunction(elementSelector);
-            __assert(isUndefined(resultSelector) || isFunction(resultSelector), 'resultSelector must be undefined or function!');
+            __assert(__isUndefined(resultSelector) || __isFunction(resultSelector), 'resultSelector must be undefined or function!');
             __assertFunction(keyComparer);
 
             let groups = new Map();
             let result;
 
-            for (let val of this) {
+            for (let val of self) {
                 // Instead of checking groups.has we use our custom function since we want to treat some keys as equal even if they aren't for the Map
-                const key = this.__getEqualKey(groups, keySelector(val), keyComparer);
+                const key = self.__getEqualKey(groups, keySelector(val), keyComparer);
                 const elem = elementSelector(val);
 
                 if (groups.has(key)) {
@@ -1105,7 +1203,7 @@ export class Collection<T> implements Iterable<T> {
 
             if (resultSelector) {
                 // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
-                result = groups.ToArray().Select(g => resultSelector(...g));
+                result = Collection.From(groups).Select((g: any) => (<Function>resultSelector)(...g));
             } else {
                 // our result is just the grouos -> return the Map
                 result = groups;
@@ -1116,7 +1214,7 @@ export class Collection<T> implements Iterable<T> {
 
         // the outer parameter of GroupBy is always the keySelector, so we have to differentiate the following arguments
         // and select the appropriate function
-        let fn;
+        let fn: Function;
         switch (args.length) {
             case 0:
                 fn = groupByOneArgument;
@@ -1168,8 +1266,12 @@ export class Collection<T> implements Iterable<T> {
      * @param {Function} keyComparer A function of the form (first, second) => bool to compare keys for equality
      * @return {any}
      */
-    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparer: (a: K, b: k) => boolean): Collection<V>;
-    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn: Function = defaultEqualityCompareFn): Collection<V> {
+    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Collection<V>;
+
+    /**
+     * @internal
+     */
+    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -1178,11 +1280,11 @@ export class Collection<T> implements Iterable<T> {
         let groups = new Map();
         const outer = this;
 
-        for (let outerVal of outer.getIterator()) {
+        for (let outerVal of outer) {
             const outerKey = outerKeySelector(outerVal);
 
             groups.set(outerVal, new Collection(function* () {
-                for (let innerVal of inner[Symbol.iterator]()) {
+                for (let innerVal of inner) {
                     if (equalityCompareFn(outerKey, innerKeySelector(innerVal))) {
                         yield innerVal;
                     }
@@ -1237,7 +1339,7 @@ export class Collection<T> implements Iterable<T> {
 
         const oldIter = this.ToArray();
 
-        this.iterable = function* () {
+        this.__iterable = function* () {
             yield* oldIter.slice(0, index);
             yield value;
             yield* oldIter.slice(index, oldIter.length);
@@ -1261,7 +1363,7 @@ export class Collection<T> implements Iterable<T> {
             return false;
         }
 
-        this.iterable = function* () {
+        this.__iterable = function* () {
             yield* values;
         };
 
@@ -1286,6 +1388,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Min(): number;
+
     /**
      * Min - Returns the minimum of the numbers contained in the sequence
      *
@@ -1301,7 +1404,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Min(mapFn: (x: T) => number): number;
-    public Min(mapFn: Function = (x: any) => x): number {
+
+    /**
+     * @internal
+     */
+    public Min(mapFn = (x: any) => x): number {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
@@ -1322,6 +1429,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Max(): number;
+
     /**
      * Max - Returns the max of the numbers contained in the sequence. Transforms the values using a map function before.
      *
@@ -1337,7 +1445,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Max(mapFn: (x: T) => number): number;
-    public Max(mapFn: Function = (x: any) => x): number {
+
+    /**
+     * @internal
+     */
+    public Max(mapFn = (x: any) => x): number {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
@@ -1358,6 +1470,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Sum(): number;
+
     /**
      * Sum - Returns the sum of the numbers contained in the sequence. Transforms the values using a map function before.
      *
@@ -1373,7 +1486,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Sum(mapFn: (x: T) => number): number;
-    public Sum(mapFn: Function = (x: any) => x): number {
+
+    /**
+     * @internal
+     */
+    public Sum(mapFn = (x: any) => x): number {
         __assertNotEmpty(this);
 
         return this.Select(mapFn).Aggregate(0, (prev, curr) => prev + curr);
@@ -1393,6 +1510,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Average(): number;
+
     /**
      * Average - Returns the average of the numbers contained in the sequence. Transforms the values using a map function before.
      *
@@ -1408,7 +1526,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Average(mapFn: (x: T) => number): number;
-    public Average(mapFn: Function = (x: any) => x): number {
+
+    /**
+     * @internal
+     */
+    public Average(mapFn = (x: any) => x): number {
         __assertNotEmpty(this);
 
         return this.Sum(mapFn) / this.Count();
@@ -1432,6 +1554,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public Order(): OrderedCollection<T>;
+
     /**
      * Orders the sequence by the numeric representation of the values ascending.
      * A custom comparator is used to compare values.
@@ -1443,7 +1566,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public Order(comparator: (a: T, b: T) => number): OrderedCollection<T>;
-    public Order(comparator: Function = __defaultComparator): OrderedCollection<T> {
+
+    /**
+     * @internal
+     */
+    public Order(comparator: any = __defaultComparator): OrderedCollection<T> {
         return this.OrderBy(x => x, comparator);
     }
 
@@ -1461,6 +1588,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public OrderDescending(): OrderedCollection<T>;
+
     /**
      * Orders the sequence by the numeric representation of the values descending.
      * A custom comparator is used to compare values.
@@ -1472,7 +1600,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public OrderDescending(comparator: (a: T, b: T) => number): OrderedCollection<T>;
-    public OrderDescending(comparator: Function = __defaultComparator): OrderedCollection<T> {
+
+    /**
+     * @internal
+     */
+    public OrderDescending(comparator: any = __defaultComparator): OrderedCollection<T> {
         return this.OrderByDescending(x => x, comparator);
     }
 
@@ -1518,10 +1650,14 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public OrderBy<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
-    public OrderBy(keySelector: Function | string, comparator: Function = defaultComparator): OrderedCollection<T> {
+
+    /**
+     * @internal
+     */
+    public OrderBy(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
         __assertFunction(comparator);
 
-        return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, comparator), MinHeap);
+        return new OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
     }
 
     /**
@@ -1553,6 +1689,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public OrderByDescending<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
+
     /**
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * A custom comparator is used to compare values.
@@ -1565,8 +1702,12 @@ export class Collection<T> implements Iterable<T> {
      * @return {OrderedCollection} Ordered collection.
      */
     public OrderByDescending<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
-    public OrderByDescending(keySelector: Function | string, comparator: Function = defaultComparator): OrderedCollection<T> {
-        return new OrderedCollection(this, GetComparatorFromKeySelector(keySelector, (a, b) => comparator(b, a)));
+
+    /**
+     * @internal
+     */
+    public OrderByDescending(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
+        return new OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
     }
 
     /**
@@ -1599,6 +1740,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public IndexOf(element: T): number;
+
     /**
      * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
      * A provided equality compare function is used to specify equality.
@@ -1610,12 +1752,16 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public IndexOf(element: T, equalityCompareFn: (a: T, b: T) => boolean): number;
-    public IndexOf(element: T, equalityCompareFn: Function = defaultEqualityCompareFn): number {
+
+    /**
+     * @internal
+     */
+    public IndexOf(element: T, equalityCompareFn: any = __defaultEqualityCompareFn): number {
         __assertFunction(equalityCompareFn);
 
         let i = 0;
 
-        for (let val of this.getIterator()) {
+        for (let val of this) {
             if (equalityCompareFn(val, element)) {
                 return i;
             }
@@ -1640,6 +1786,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public LastIndexOf(element: T): number;
+
     /**
      * IndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
      * A provided equality compare function is used to specify equality.
@@ -1651,13 +1798,17 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public LastIndexOf(element: T, equalityCompareFn: (a: T, b: T) => boolean): number;
-    public LastIndexOf(element: T, equalityCompareFn: Function = defaultEqualityCompareFn): number {
+
+    /**
+     * @internal
+     */
+    public LastIndexOf(element: T, equalityCompareFn: any = __defaultEqualityCompareFn): number {
         __assertFunction(equalityCompareFn);
 
         let i = 0;
         let lastIndex = -1;
 
-        for (let val of  this.getIterator()) {
+        for (let val of this) {
             if (equalityCompareFn(val, element)) {
                 lastIndex = i;
             }
@@ -1684,6 +1835,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Boolean}
      */
     public Contains(element: T): boolean;
+
     /**
      * Contains - Returns true if the sequence contains the specified element, false if not.
      * A provided equality compare function is used to specify equality.
@@ -1697,7 +1849,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Boolean}
      */
     public Contains(element: T, equalityCompareFn: (a: T, b: T) => boolean): boolean;
-    public Contains(elem: T, equalityCompareFn: Function = defaultEqualityCompareFn): boolean {
+
+    /**
+     * @internal
+     */
+    public Contains(elem: T, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
         return !!~this.IndexOf(elem, equalityCompareFn);
     }
 
@@ -1713,6 +1869,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection} The filtered collection
      */
     public Where(predicate: (e: T) => boolean): Collection<T>;
+
     /**
      * Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
      *
@@ -1725,7 +1882,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection} The filtered collection
      */
     public Where(predicate: (element: T, index: number) => boolean): Collection<T>;
-    public Where(predicate: Function = (elem, index) => true): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public Where(predicate = (elem: any, index: number) => true): Collection<T> {
         __assertFunction(predicate);
 
         const self = this;
@@ -1733,7 +1894,7 @@ export class Collection<T> implements Iterable<T> {
         return new Collection(function* () {
             let index = 0;
 
-            for (let val of self.getIterator()) {
+            for (let val of self) {
                 if (predicate(val, index)) {
                     yield val;
                 }
@@ -1755,6 +1916,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection} The filtered collection or the original sequence if condition was falsy
      */
     public ConditionalWhere(condition: boolean, predicate: (e: T) => boolean): Collection<T>;
+
     /**
      * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
      *
@@ -1767,7 +1929,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection} The filtered collection or the original sequence if condition was falsy
      */
     public ConditionalWhere(condition: boolean, predicate: (element: T, index: number) => boolean): Collection<T>;
-    public ConditionalWhere(condition: boolean, predicate: Function) {
+
+    /**
+     * @internal
+     */
+    public ConditionalWhere(condition: boolean, predicate: any) {
         if (condition) {
             return this.Where(predicate);
         } else {
@@ -1788,6 +1954,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Count(): number;
+
     /**
      * Count - Returns the number of elements in the sequence matching the predicate
      *
@@ -1802,11 +1969,15 @@ export class Collection<T> implements Iterable<T> {
      * @return {Number}
      */
     public Count(predicate: (e: T) => boolean): number;
-    public Count(predicate: Function = elem => true): number {
+
+    /**
+     * @internal
+     */
+    public Count(predicate = (elem: any) => true): number {
         let count = 0;
         let filtered = this.Where(predicate);
 
-        while (!filtered.next().done) {
+        while (!filtered[Symbol.iterator]().next().done) {
             count++;
         }
 
@@ -1826,6 +1997,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Boolean}
      */
     public Any(): boolean;
+
     /**
      * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
      *
@@ -1843,8 +2015,12 @@ export class Collection<T> implements Iterable<T> {
      * @return {Boolean}
      */
     public Any(predicate: (e: T) => boolean): boolean;
-    public Any(predicate: Function): boolean {
-        if (isEmpty(this)) {
+
+    /**
+     * @internal
+     */
+    public Any(predicate: any = null): boolean {
+        if (__isEmpty(this)) {
             return false;
         }
 
@@ -1853,7 +2029,7 @@ export class Collection<T> implements Iterable<T> {
             return true;
         }
 
-        return !this.Where(predicate).next().done;
+        return !this.Where(predicate)[Symbol.iterator]().next().done;
     }
 
     /**
@@ -1900,6 +2076,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any} the result of the accumulation
      */
     public Aggregate(accumulator: (accumulated: T, next: T) => T): T;
+
     /**
      * Aggregate - applies a accumulator function to a sequence. Starts with seed.
      *
@@ -1916,6 +2093,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {any} the result of the accumulation
      */
     public Aggregate<V>(seed: V, accumulator: (accumulated: V, next: T) => V): V;
+
     /**
      * Aggregate - applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
      *
@@ -1936,18 +2114,21 @@ export class Collection<T> implements Iterable<T> {
      * @return {any} the result of the accumulation
      */
     public Aggregate<V, R>(seed: V, accumulator: (accumulated: V, next: T) => V, resultTransformFn: (v: V) => R): R;
-    public Aggregate(seedOrAccumulator: Function | any, accumulator: Function, resultTransformFn: Function): any {
+
+    /**
+     * @internal
+     */
+    public Aggregate(seedOrAccumulator: any, accumulator: any = null, resultTransformFn: any = null): any {
         const values = this.ToArray();
 
         if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
-            return aggregateCollection(values.slice(1, values.length), values.slice(0, 1)[0], seedOrAccumulator, elem => elem);
+            return __aggregateCollection(Collection.From(values.slice(1, values.length)), values.slice(0, 1)[0], seedOrAccumulator, (elem: any) => elem);
         } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
-            return aggregateCollection(values, seedOrAccumulator, accumulator, elem => elem);
+            return __aggregateCollection(Collection.From(values), seedOrAccumulator, accumulator, (elem: any) => elem);
         } else {
-            return aggregateCollection(values, seedOrAccumulator, accumulator, resultTransformFn);
+            return __aggregateCollection(Collection.From(values), seedOrAccumulator, accumulator, resultTransformFn);
         }
     }
-
 
     /**
      * Select - Projects each member of the sequence into a new form
@@ -1970,6 +2151,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public Select<V>(mapFn: (e: T) => V): Collection<V>;
+
     /**
      * Select - Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
      *
@@ -1985,7 +2167,11 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public Select<V>(mapFn: (element: T, index: number) => V): Collection<V>;
-    public Select(mapFn: Function = x => x): Collection<any> {
+
+    /**
+     * @internal
+     */
+    public Select(mapFn: any = (x: any) => x): Collection<any> {
         const self = this;
 
         let index = 0;
@@ -2098,20 +2284,24 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public SelectMany<V, R>(mapFn: (element: T, index: number) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
-    public SelectMany(mapFn: Function, resultSelector: Function = (x, y) => y): Collection<any> {
+
+    /**
+     * @internal
+     */
+    public SelectMany(mapFn: any, resultSelector = (x: any, y: any) => y): Collection<any> {
         __assertFunction(mapFn);
         __assertFunction(resultSelector);
 
-        const iter = this.getIterator();
+        const self = this;
 
         return new Collection(function* () {
             let index = 0;
 
-            for (let current of iter) {
+            for (let current of self) {
                 let mappedEntry = mapFn(current, index);
                 let newIter = mappedEntry;
 
-                if (!isIterable(mappedEntry)) {
+                if (!__isIterable(mappedEntry)) {
                     newIter = [mappedEntry];
                 } else {
                     newIter = mappedEntry;
@@ -2139,6 +2329,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public Distinct(): Collection<T>;
+
     /**
      * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
      *
@@ -2150,10 +2341,14 @@ export class Collection<T> implements Iterable<T> {
      * @return {Collection}
      */
     public Distinct(equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
-    public Distinct(equalityCompareFn: Function = defaultEqualityCompareFn): Collection<T> {
+
+    /**
+     * @internal
+     */
+    public Distinct(equalityCompareFn: any = __defaultEqualityCompareFn): Collection<T> {
         __assertFunction(equalityCompareFn);
 
-        return removeDuplicates(this, equalityCompareFn);
+        return __removeDuplicates(this, equalityCompareFn);
     }
 
     /**
@@ -2204,6 +2399,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Map}
      */
     public ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V): Map<K, V>;
+
     /**
      * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
      * The key is defined by the keySelector. The keys are compared using the keyComparer. Duplicate keys throw an error.
@@ -2226,6 +2422,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {Map}
      */
     public ToDictionary<K>(keySelector: (e: T) => K, keyComparer: (a: K, b: K) => boolean): Map<K, T>;
+
     /**
      * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
      * The key is defined by the keySelector and each element is transformed using the elementSelector.
@@ -2241,16 +2438,20 @@ export class Collection<T> implements Iterable<T> {
      * @return {Map}
      */
     public ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, keyComparer: (a: K, b: K) => boolean): Map<K, V>;
-    public ToDictionary(keySelector: Function, elementSelectorOrKeyComparer: Function, keyComparer: Function): Map<any, any> {
+
+    /**
+     * @internal
+     */
+    public ToDictionary(keySelector: any, elementSelectorOrKeyComparer: any = null, keyComparer: any = null): Map<any, any> {
         __assertFunction(keySelector);
 
         if (!elementSelectorOrKeyComparer && !keyComparer) {
             // ToDictionary(keySelector)
-            return this.ToDictionary(keySelector, elem => elem, defaultEqualityCompareFn);
-        } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 1) {
+            return this.ToDictionary(keySelector, elem => elem, __defaultEqualityCompareFn);
+        } else if (!keyComparer && __getParameterCount(elementSelectorOrKeyComparer) === 1) {
             // ToDictionary(keySelector, elementSelector)
-            return this.ToDictionary(keySelector, elementSelectorOrKeyComparer, defaultEqualityCompareFn);
-        } else if (!keyComparer && getParameterCount(elementSelectorOrKeyComparer) === 2) {
+            return this.ToDictionary(keySelector, elementSelectorOrKeyComparer, __defaultEqualityCompareFn);
+        } else if (!keyComparer && __getParameterCount(elementSelectorOrKeyComparer) === 2) {
             // ToDictionary(keySelector, keyComparer)
             return this.ToDictionary(keySelector, elem => elem, elementSelectorOrKeyComparer);
         }
@@ -2263,14 +2464,12 @@ export class Collection<T> implements Iterable<T> {
         let usedKeys = [];
         let result = new Map();
         const input = this.ToArray();
-        const elementSelector = elementSelectorOrKeyComparer;
-
         for (let value of input) {
             let key = keySelector(value);
-            let elem = elementSelector(value);
+            let elem = elementSelectorOrKeyComparer(value);
 
             __assert(key != null, 'Key is not allowed to be null!');
-            __assert(!usedKeys.Any(x => keyComparer(x, key)), `Key '${key}' is already in use!`);
+            __assert(!Collection.From(usedKeys).Any((x: any) => keyComparer(x, key)), `Key '${key}' is already in use!`);
 
             usedKeys.push(key);
             result.set(key, elem);
@@ -2288,7 +2487,7 @@ export class Collection<T> implements Iterable<T> {
      * @return {string}
      */
     public ToJSON(): string {
-        return toJSON(this.ToArray());
+        return __toJSON(this.ToArray());
     }
 
     /**
@@ -2345,7 +2544,7 @@ export class Collection<T> implements Iterable<T> {
      * @static
      * @return {Collection}
      */
-    public static From(iterable: Iterable<T>): Collection<T> {
+    public static From<T>(iterable: Iterable<T>): Collection<T> {
         return new Collection(iterable);
     }
 
@@ -2391,6 +2590,15 @@ export class Collection<T> implements Iterable<T> {
                 yield val;
             }
         });
+    }
+
+    /**
+     * Empty collection.
+     *
+     * @returns {Collection<any>}
+     */
+    public static get Empty(): Collection<any> {
+        return new Collection([]);
     }
 
     //#endregion

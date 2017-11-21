@@ -1,8 +1,7 @@
 import {__assertArray, __assertFunction, __assertIterable, __assertNotEmpty, AssertionError} from "./assert";
 import {Collection} from "../Collection";
-import {__defaultEqualityCompareFn} from "./default";
+import {__defaultEqualityCompareFn, __defaultComparator} from "./default";
 import {__isFunction, __isString} from "./is";
-import {__defaultComparator} from "../../build/declaration/helper/default";
 
 /**
  * @internal
