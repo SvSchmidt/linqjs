@@ -3,6 +3,7 @@ package.json~
 /tmp/
 /coverage/
 npm-debug.log
+/build/
 
 # idea stuff
 .idea/
