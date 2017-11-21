@@ -1,14 +1,26 @@
 import {__assertArray, __assertFunction} from "./helper/assert";
+import {__defaultComparator} from "./helper/default";
 
 /**
  * HeapElement class that also provides the element index for sorting.
+ *
+ * @internal
  */
 class HeapElement<T> {
 
+    /**
+     * @internal
+     */
     public __index: number;
 
+    /**
+     * @internal
+     */
     public __value: T;
 
+    /**
+     * @internal
+     */
     public constructor(index: number, value: T) {
         this.__index = index;
         this.__value = value;
@@ -18,13 +30,14 @@ class HeapElement<T> {
      * Creates or returns a heap element from the given data.
      * If obj is a HeapElement obj is returned, creates a HeapElement otherwise.
      *
+     * @internal
      * @param {number}           index Current element index.
      * @param {HeapElement<T> | T} obj   Element.
      * @return {HeapElement<T>} Created heap element or obj if it already is a heap object.
      */
-    public static CreateHeapElement<T>(index: number, obj: HeapElement<T> | T): HeapElement<T> {
+    public static __createHeapElement<T>(index: number, obj: HeapElement<T> | T): HeapElement<T> {
         if (obj === undefined || obj instanceof HeapElement) {
-            return obj;
+            return <HeapElement<T>>obj;
         }
         return new HeapElement(index, obj);
     }
@@ -35,9 +48,15 @@ class HeapElement<T> {
  */
 export class MinHeap<T> implements Iterable<T> {
 
+    /**
+     * @internal
+     */
     private __elements: Array<HeapElement<T>>;
 
-    private __comparator: (a: T, b: T) => number;
+    /**
+     * @internal
+     */
+    private __comparator: (a: HeapElement<T>, b: HeapElement<T>) => number;
 
     /**
      * Creates the heap from the array of elements with the given comparator function.
@@ -45,7 +64,7 @@ export class MinHeap<T> implements Iterable<T> {
      * @param {Array<T>} elements Array with elements to create the heap from. Will be modified in place for heap logic.
      * @param {(a: T, b: T) => number} comparator Comparator function (same as the one for Array.sort()).
      */
-    public constructor(elements: Array<T>, comparator: (a: T, b: T) => number = defaultComparator) {
+    public constructor(elements: Array<T>, comparator: (a: T, b: T) => number = __defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -60,7 +79,7 @@ export class MinHeap<T> implements Iterable<T> {
                 return res;
             }
 
-            return defaultComparator(a.__index, b.__index);
+            return __defaultComparator(a.__index, b.__index);
         };
 
         // create heap ordering
@@ -70,28 +89,29 @@ export class MinHeap<T> implements Iterable<T> {
     /**
      * Places the element at the given position into the correct position within the heap.
      *
-     * @param {Array<T>} elements Array with elements used for the heap.
-     * @param {(a: T, b: T) => number} comparator Comparator function (same as the one for Array.sort()).
+     * @internal
+     * @param {Array<HeapElement<T>> | Array<T>} elements Array with elements used for the heap.
+     * @param {(a: HeapElement<T>, b: HeapElement<T>) => number} comparator Comparator function (same as the one for Array.sort()).
      * @param {number} i Index of the element that will be placed to the correct position.
      */
-    private __heapify(elements: Array<T>, comparator: (a: T, b: T) => number, i: number): void {
+    private __heapify(elements: Array<HeapElement<T>> | Array<T>, comparator: (a: HeapElement<T>, b: HeapElement<T>) => number, i: number): void {
         let right = 2 * (i + 1);
         let left = right - 1;
         let bestIndex = i;
 
         // wrap elements the moment we encouter them first
-        elements[bestIndex] = HeapElement.CreateHeapElement(bestIndex, elements[bestIndex]);
+        elements[bestIndex] = HeapElement.__createHeapElement(bestIndex, elements[bestIndex]);
 
         // check if the element is currently misplaced
         if (left < elements.length) {
-            elements[left] = HeapElement.CreateHeapElement(left, elements[left]);
-            if (comparator(elements[left], elements[bestIndex]) < 0) {
+            elements[left] = HeapElement.__createHeapElement(left, elements[left]);
+            if (comparator(<any>elements[left], <any>elements[bestIndex]) < 0) {
                 bestIndex = left;
             }
         }
         if (right < elements.length) {
-            elements[right] = HeapElement.CreateHeapElement(right, elements[right]);
-            if (comparator(elements[right], elements[bestIndex]) < 0) {
+            elements[right] = HeapElement.__createHeapElement(right, elements[right]);
+            if (comparator(<any>elements[right], <any>elements[bestIndex]) < 0) {
                 bestIndex = right;
             }
         }
@@ -103,17 +123,18 @@ export class MinHeap<T> implements Iterable<T> {
             elements[bestIndex] = tmp;
 
             // let misplaced elements "bubble up" to get heap properties
-            heapify(elements, comparator, bestIndex);
+            this.__heapify(elements, comparator, bestIndex);
         }
     }
 
     /**
      * Creates a heap from the given array using the given comparator.
      *
-     * @param {Array<T>} elements Array with elements used for the heap. Will be modified in place for heap logic.
-     * @param {(a: T, b: T) => number} comparator Comparator function (same as the one for Array.sort()).
+     * @internal
+     * @param {Array<HeapElement<T>> | Array<T>} elements Array with elements used for the heap. Will be modified in place for heap logic.
+     * @param {(a: HeapElement<T>, b: HeapElement<T>) => number} comparator Comparator function (same as the one for Array.sort()).
      */
-    private __createHeap(elements: Array<T>, comparator: (a: T, b: T) => number): void {
+    private __createHeap(elements: Array<HeapElement<T>> | Array<T>, comparator: (a: HeapElement<T>, b: HeapElement<T>) => number): void {
 
         // special case: empty array
         if (elements.length === 0) {
@@ -129,10 +150,16 @@ export class MinHeap<T> implements Iterable<T> {
         }
     }
 
+    /**
+     * @internal
+     */
     private __hasTopElement(): boolean {
-        return this.elements.length > 0;
+        return this.__elements.length > 0;
     }
 
+    /**
+     * @internal
+     */
     private __getTopElement(): T {
 
         // special case: only one element left
@@ -147,14 +174,14 @@ export class MinHeap<T> implements Iterable<T> {
         this.__heapify(this.__elements, this.__comparator, 0);
 
         return topElement.__value;
-    };
+    }
 
     public [Symbol.iterator](): Iterator<T> {
 
         // keep matching heap instance
         let heap = this;
         return {
-            next: function () {
+            next: function (): IteratorResult<T> {
                 if (heap.__hasTopElement()) {
                     return {
                         done: false,
@@ -162,7 +189,8 @@ export class MinHeap<T> implements Iterable<T> {
                     };
                 }
                 return {
-                    done: true
+                    done: true,
+                    value: undefined
                 };
             }
         }
