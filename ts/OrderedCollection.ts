@@ -2,15 +2,22 @@ import {Collection} from "./Collection";
 import {__assertFunction} from "./helper/assert";
 import {MinHeap} from "./MinHeap";
 import {__getComparatorFromKeySelector} from "./helper/utils";
+import {__defaultComparator} from "./helper/default";
 
 /**
  * Ordered collection of iterable values.
  */
 export class OrderedCollection<T> extends Collection<T> {
 
+    /**
+     * @internal
+     */
     private __comparator: (a: T, b: T) => number;
 
-    public constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>), comparator: (a: T, b: T) => number) {
+    /**
+     * @internal
+     */
+    protected constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>), comparator: (a: T, b: T) => number) {
         __assertFunction(comparator);
         super(iterableOrGenerator);
         this.__comparator = comparator;
@@ -68,13 +75,13 @@ export class OrderedCollection<T> extends Collection<T> {
     public ThenBy<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
 
     /**
-     * @private
+     * @internal
      */
-    public ThenBy<K>(keySelector: Function, comparator: Function = defaultComparator): OrderedCollection<T> {
+    public ThenBy(keySelector: any, comparator = __defaultComparator) {
         const currentComparator = this.__comparator;
         const additionalComparator = __getComparatorFromKeySelector(keySelector, comparator);
 
-        const newComparator = (a, b) => {
+        const newComparator = (a: any, b: any) => {
             const res = currentComparator(a, b);
 
             if (res !== 0) {
@@ -139,9 +146,9 @@ export class OrderedCollection<T> extends Collection<T> {
     public ThenByDescending<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
 
     /**
-     * @private
+     * @internal
      */
-    public ThenByDescending(keySelector: Function | string, comparator: Function = defaultComparator): OrderedCollection<T> {
+    public ThenByDescending(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
         return this.ThenBy(keySelector, (a, b) => comparator(b, a));
     }
 
