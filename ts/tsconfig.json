@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "module": "amd",
+    "module": "es6",
     "target": "es6",
-    "sourceMap": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "stripInternal": true,
     "declaration": true,
-    "outFile": "../build/linq.amd.js"
+    "outDir": "../build",
+    "declarationDir": "../build"
   },
   "exclude": [
     "node_modules"
