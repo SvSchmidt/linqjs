@@ -8,7 +8,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Returns the element at the given index.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb299233(v=vs.110).aspx
      *
      * @param index Element index.
      * @return The element at the given index.
@@ -18,7 +18,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Returns count elements of the sequence starting from the beginning as a new Collection.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb503062(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb503062(v=vs.110).aspx
      *
      * @param count Number of elements to be returned.
      * @return Collection with the first <code>count</code> elements.
@@ -28,7 +28,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Skips count elements of the sequence and returns the remaining sequence.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb358985(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb358985(v=vs.110).aspx
      *
      * @param count Number of elements to skip.
      * @return Collection without the first <code>count</code> elements.
@@ -50,7 +50,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [ { name: 'Julia', isHot: true },  { name: 'Sarah', isHot: true } ]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.takewhile(v=vs.110).aspx
      *
      * @param predicate The predicate.
      * @return The filtered collection.
@@ -61,7 +61,7 @@ interface Collection<T> extends Iterable<T> {
      * Takes elements from the beginning of a sequence while the predicate yields true.
      * The index of the element can be used in the logic of the predicate function.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.takewhile(v=vs.110).aspx
      *
      * @param  predicate The predicate.
      * @return The filtered collection.
@@ -109,7 +109,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [12, 13, 14, 15]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
      *
      * @param predicate The predicate function.
      * @return The filtered collection.
@@ -120,7 +120,7 @@ interface Collection<T> extends Iterable<T> {
      * Skips elements in the sequence while the predicate yields true and returns the remaining sequence.
      * The index of the element can be used in the logic of the predicate function.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.skipwhile(v=vs.110).aspx
      *
      * @param predicate The predicate function.
      * @return The filtered collection.
@@ -169,7 +169,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 1
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.first(v=vs.110).aspx
      *
      * @throws Will throw an error if the sequence is empty.
      * @return The first element of the collection.
@@ -185,7 +185,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 2
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.first(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.first(v=vs.110).aspx
      *
      * @throws Will throw an error if the sequence is empty.
      * @param predicate The predicate function.
@@ -203,7 +203,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> null
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
      *
      * @return The first element or a default value.
      */
@@ -219,7 +219,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 0
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
      *
      * @param constructor Default value type.
      * @return The first element or a default value.
@@ -238,7 +238,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 6
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.firstordefault(v=vs.110).aspx
      *
      * @param predicate The predicate function.
      * @param constructor Default value type.
@@ -255,7 +255,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 3
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.last(v=vs.110).aspx
      *
      * @throws Will throw an error if the sequence is empty.
      * @return The last element from the collection.
@@ -271,7 +271,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 4
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.last(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.last(v=vs.110).aspx
      *
      * @throws Will throw an error if the sequence is empty.
      * @param predicate The predicate function.
@@ -289,7 +289,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> null
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
      *
      * @return The last element of the collection or a default value.
      */
@@ -305,7 +305,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 0
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
      *
      * @param constructor Default value type.
      * @return The last element of the collection or a default value.
@@ -324,7 +324,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 6
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.lastordefault(v=vs.110).aspx
      *
      * @param predicate The predicate function.
      * @param constructor Default value type.
@@ -344,7 +344,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 1
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.single(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.single(v=vs.110).aspx
      *
      * @throws Will throw an error if the sequence is empty or there's more than one element.
      * @return The first and only element of the collection.
@@ -363,7 +363,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> Error
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.single(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.single(v=vs.110).aspx
      *
      * @throws Will throw an error if the sequence is empty or there's more than one element matching the predicate.
      * @param  predicate The predicate function.
@@ -384,7 +384,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> null
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
      *
      * @return The first and only value of the collection or a default value.
      */
@@ -403,7 +403,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 1
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
      *
      * @param constructor Default value type.
      * @return The first and only value of the collection or a default value.
@@ -425,7 +425,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> Error
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.singleordefault(v=vs.110).aspx
      *
      * @param predicate The predicate function.
      * @param constructor Default value type.
@@ -436,7 +436,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Returns the sequence or a new sequence containing the provided default value if it is empty.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.defaultifempty(v=vs.110).aspx
      *
      * @param constructor The default value type.
      * @return This collection or a new one containing a default value of the given type.
@@ -456,7 +456,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [1, 2, 3, 4, 5, 6]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb302894(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb302894(v=vs.110).aspx
      *
      * @param inner The inner sequence to concat with the outer one.
      * @return A new collection with elements from both collections.
@@ -472,7 +472,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [1, 2, 3, 4, 5, 6]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.union(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.union(v=vs.110).aspx
      *
      * @param inner The sequence to create the set union with.
      * @return The set union of the two collections.
@@ -492,7 +492,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Correlates the elements of two sequences based on matching keys.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb534675(v=vs.110).aspx
      *
      * @param inner The inner sequence to join with the outer one.
      * @param outerKeySelector A selector fn to extract the key from the outer sequence.
@@ -505,7 +505,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Correlates the elements of two sequences based on matching keys.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb534675(v=vs.110).aspx
      *
      * @param inner The inner sequence to join with the outer one.
      * @param outerKeySelector A selector fn to extract the key from the outer sequence.
@@ -530,7 +530,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb300779(v=vs.110).aspx
      *
      * @param inner The second sequence to get exceptions from.
      * @return A new Collection with the values of outer without the ones in inner.
@@ -553,7 +553,7 @@ interface Collection<T> extends Iterable<T> {
      * // "3 three"
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/dd267698(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/dd267698(v=vs.110).aspx
      *
      * @param inner The collection to zip with.
      * @param resultSelectorFn A function to produce the output sequence.
@@ -570,7 +570,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [26, 30]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
      *
      * @param inner The sequence to get the intersection from.
      * @return A collection containing the intersection.
@@ -580,7 +580,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
      *
      * @param inner The sequence to get the intersection from.
      * @param equalityCompareFn A function to compare the values.
@@ -596,7 +596,7 @@ interface Collection<T> extends Iterable<T> {
      * Compares two sequences for equality. Returns true if they have equal length and the equality compare function
      * returns true for each element in the sequence in correct order. The default equality comparator is used.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
      *
      * @param second The sequence to compare with.
      * @return If the two sequences are equal.
@@ -607,7 +607,7 @@ interface Collection<T> extends Iterable<T> {
      * Compares two sequences for equality. Returns true if they have equal length and the equality compare function
      * returns true for each element in the sequence in correct order. A custom comparator function is provided.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
      *
      * @param second The sequence to compare with.
      * @param equalityCompareFn A function to compare the values.
@@ -624,7 +624,7 @@ interface Collection<T> extends Iterable<T> {
      * // Map {"S" => ["Sven"], "M" => ["Mouse"]}
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @return The grouped sequence as a Map.
@@ -641,7 +641,7 @@ interface Collection<T> extends Iterable<T> {
      * // Map {"4" => ["4", 4], "5" => ["5"]}
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param keyComparator A function if keys are considered equal.
@@ -659,7 +659,7 @@ interface Collection<T> extends Iterable<T> {
      * // Map {23 => ["Sven"], 20 => ["jon"]}
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param elementSelector A function to map each group member to a specific value.
@@ -681,7 +681,7 @@ interface Collection<T> extends Iterable<T> {
      * // [ { age:23, persons: "Sven&julia" }, { age: 20, persons: "jon" } ]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param resultSelector A function to select a final result from each group.
@@ -693,7 +693,7 @@ interface Collection<T> extends Iterable<T> {
      * Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparator.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param resultSelector A function of the form (key, groupMembers) => any to select a final result from each group.
@@ -706,7 +706,7 @@ interface Collection<T> extends Iterable<T> {
      * Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparator.
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param elementSelector A function to map each group member to a specific value.
@@ -720,7 +720,7 @@ interface Collection<T> extends Iterable<T> {
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param elementSelector A function to map each group member to a specific value.
@@ -734,7 +734,7 @@ interface Collection<T> extends Iterable<T> {
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupby(v=vs.110).aspx
      *
      * @param keySelector A function to select grouping keys from the sequence members.
      * @param elementSelector A function to map each group member to a specific value.
@@ -749,7 +749,7 @@ interface Collection<T> extends Iterable<T> {
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The default equality comparator is used to compare keys.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
      *
      * @param inner The values to join with this Collection.
      * @param outerKeySelector A function to extract the grouping keys from the outer Collection.
@@ -763,7 +763,7 @@ interface Collection<T> extends Iterable<T> {
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The provided custom keyComparator is used to compare keys.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
      *
      * @param inner The values to join with this Collection.
      * @param outerKeySelector A function to extract the grouping keys from the outer Collection.
@@ -781,7 +781,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Adds an element to the end of the sequence.
      *
-     * @see https://msdn.microsoft.com/de-de/library/3wcytfd1(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/3wcytfd1(v=vs.110).aspx
      *
      * @param value The value to add to the sequence.
      */
@@ -799,7 +799,7 @@ interface Collection<T> extends Iterable<T> {
      * coll.ToArray(); // [4, 1, 2, 3]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/sey5k5z4(v=vs.110).aspx
      *
      * @param value The value to add.
      * @param index The index to add the value to.
@@ -827,7 +827,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 1
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.min(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.min(v=vs.110).aspx
      *
      * @throws Throws an error if the sequence is empty.
      * @return The minimum number of the sequence.
@@ -843,7 +843,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 4
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.min(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.min(v=vs.110).aspx
      *
      * @throws Throws an error if the sequence is empty.
      * @param mapFn A function to use to transform each value before getting the minimum.
@@ -860,7 +860,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 3
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.max(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.max(v=vs.110).aspx
      *
      * @throws Throws an error if the sequence is empty.
      * @return The maximum number of the sequence.
@@ -876,7 +876,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 10
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.max(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.max(v=vs.110).aspx
      *
      * @throws Throws an error if the sequence is empty.
      * @param mapFn A function to use to transform each value before getting the maximum.
@@ -893,7 +893,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 6
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sum(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sum(v=vs.110).aspx
      *
      * @return The sum of all numbers in the sequence.
      */
@@ -908,7 +908,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 20
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sum(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.sum(v=vs.110).aspx
      *
      * @throws Throws an error if the sequence is empty.
      * @param mapFn A function to use to transform each value before calculating the sum.
@@ -925,7 +925,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 2
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.average(v=vs.110).aspx
      *
      * @throws Throws an error if the sequence is empty.
      * @return The average of the sequence.
@@ -941,7 +941,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 6.666666667
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.average(v=vs.110).aspx
      * @throws Throws an error if the sequence is empty.
      * @param mapFn A function to use to transform each value before calculating the average.
      * @return The average of the sequence.
@@ -1022,7 +1022,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Boots", Age: 4}, { Name: "Barley", Age: 8 } ]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.orderby(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
@@ -1033,7 +1033,7 @@ interface Collection<T> extends Iterable<T> {
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * A custom comparator is used to compare values.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.orderby(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @param comparator A comparator to compare two values.
@@ -1065,7 +1065,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [ { Name: "Barley", Age: 8 }, { Name: "Boots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
@@ -1076,7 +1076,7 @@ interface Collection<T> extends Iterable<T> {
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * A custom comparator is used to compare values.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @param comparator A comparator to compare two values.
@@ -1158,7 +1158,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> false
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.contains(v=vs.110).aspx
      *
      * @param element The element to check.
      * @return If the given element is contained.
@@ -1169,7 +1169,7 @@ interface Collection<T> extends Iterable<T> {
      * Contains - Returns true if the sequence contains the specified element, false if not.
      * A provided equality compare function is used to specify equality.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.contains(v=vs.110).aspx
      *
      * @param element The element to check.
      * @param equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
@@ -1180,7 +1180,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Filters a sequence based on a predicate function.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.where(v=vs.110).aspx
      *
      * @param predicate A function to filter the sequence.
      * @return The filtered collection.
@@ -1190,7 +1190,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.where(v=vs.110).aspx
      *
      * @param predicate A function to filter the sequence.
      * @return The filtered collection.
@@ -1224,7 +1224,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 5
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.count(v=vs.110).aspx
      *
      * @return Number of elements in this collection.
      */
@@ -1239,7 +1239,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 3
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.count(v=vs.110).aspx
      *
      * @param predicate The predicate.
      * @return Number of elements in this collection.
@@ -1255,7 +1255,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> true
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb337697(v=vs.110).aspx
      *
      * @return If the collection contains any elements.
      */
@@ -1272,7 +1272,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> false
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb337697(v=vs.110).aspx
      *
      * @param predicate A predicate function to test elements against.
      * @return If the collection contains any elements that match the given predicate.
@@ -1290,7 +1290,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> true
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb548541(v=vs.110).aspx
 
      * @param predicate A predicate function to test elements against.
      * @return If all elements in the collection match the given predicate.
@@ -1312,7 +1312,7 @@ interface Collection<T> extends Iterable<T> {
      * // --> "dog lazy the over jumps fox brown quick the"
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aggregate(v=vs.110).aspx
      *
      * @param accumulator The accumulator function.
      * @return The result of the accumulation.
@@ -1328,7 +1328,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> 6 (this example is equal to [1, 2, 3].Sum())
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aggregate(v=vs.110).aspx
      *
      * @param seed The starting value of the accumulation.
      * @param accumulator The accumulator function.
@@ -1348,7 +1348,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> "PASSIONFRUIT"
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.aggregate(v=vs.110).aspx
      *
      * @param seed The starting value of the accumulation.
      * @param accumulator The accumulator function.
@@ -1372,7 +1372,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> ['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette']
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.select(v=vs.110).aspx
      *
      * @param mapFn The function to use to map each element of the sequence.
      * @return A new collection with mapped values.
@@ -1388,7 +1388,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [1, 3, 5]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.select(v=vs.110).aspx
      *
      * @param mapFn The function to use to map each element of the sequence.
      * @return A new collection with mapped values.
@@ -1423,7 +1423,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.selectmany(v=vs.110).aspx
      *
      * @param mapFn The function to use to map each element of the sequence.
      * @return The mapped and flattened collection.
@@ -1434,7 +1434,7 @@ interface Collection<T> extends Iterable<T> {
      * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
      * The index of the source element can be used in the mapFn.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.selectmany(v=vs.110).aspx
      *
      * @param mapFn The function to use to map each element of the sequence.
      * @return The mapped and flattened collection.
@@ -1468,7 +1468,7 @@ interface Collection<T> extends Iterable<T> {
      * // ]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.selectmany(v=vs.110).aspx
      *
      * @param mapFn The function to use to map each element of the sequence.
      * @param resultSelector a function to map the result Value.
@@ -1480,7 +1480,7 @@ interface Collection<T> extends Iterable<T> {
      * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
      * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.selectmany(v=vs.110).aspx
      *
      * @param mapFn The function to use to map each element of the sequence.
      * @param resultSelector a function to map the result Value.
@@ -1497,7 +1497,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> [1, 2, 3, 4, 7, 9, 12]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.distinct(v=vs.110).aspx
      *
      * @return A new collection with distinct elements.
      */
@@ -1506,7 +1506,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Returns the distinct elements from a sequence using a provided equality compare function.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.distinct(v=vs.110).aspx
      *
      * @param equalityCompareFn The function determining if the values are equal.
      * @return A new collection with distinct elements.
@@ -1516,7 +1516,7 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Enforces immediate evaluation of the whole Collection and returns an array of the result.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb298736(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb298736(v=vs.110).aspx
      *
      * @return An array containing the elements from the collection.
      */
@@ -1526,7 +1526,7 @@ interface Collection<T> extends Iterable<T> {
      * Enforces immediate evaluation of the whole Collection and returns a Map (dictionary) of the results.
      * The key is defined by the keySelector.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.todictionary(v=vs.110).aspx
      *
      * @param keySelector The function to use to retrieve the key from the Collection.
      * @return The created dictionary.
@@ -1549,7 +1549,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.todictionary(v=vs.110).aspx
      *
      * @param keySelector The function to use to retrieve the key from the Collection.
      * @param elementSelector A function to map each element to a specific value, e.g. to properties.
@@ -1573,7 +1573,7 @@ interface Collection<T> extends Iterable<T> {
      * // -> error since cat and dog have 3 chars each and considered equal
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.todictionary(v=vs.110).aspx
      *
      * @param keySelector The function to use to retrieve the key from the Collection.
      * @param keyComparator A function specifying whether or not two keys are equal.
@@ -1586,7 +1586,7 @@ interface Collection<T> extends Iterable<T> {
      * The key is defined by the keySelector and each element is transformed using the elementSelector.
      * The keys are compared using the keyComparator. Duplicate keys throw an error.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.todictionary(v=vs.110).aspx
      *
      * @param keySelector The function to use to retrieve the key from the Collection.
      * @param elementSelector A function to map each element to a specific value, e.g. to properties.
@@ -1606,7 +1606,7 @@ interface Collection<T> extends Iterable<T> {
      * Returns a new sequence with the elements of the original one in reverse order
      * This method should be considered slow since the collection must get enumerated once.
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb358497(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb358497(v=vs.110).aspx
      *
      * @return A new collection in reversed order.
      */
@@ -1658,7 +1658,7 @@ interface CollectionStatic {
      * // -> 'na na na na na na na na na na BATMAN!'
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/bb348899(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/bb348899(v=vs.110).aspx
      *
      * @param val The value to repeat.
      * @param count Number of repetitions.

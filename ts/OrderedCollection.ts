@@ -40,7 +40,7 @@ interface OrderedCollection<T> extends Collection<T> {
      * // -> ["Boots", "Fluffy", "Donald", "Barley", "Whiskers", "Snickers"]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.thenby(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
@@ -51,7 +51,7 @@ interface OrderedCollection<T> extends Collection<T> {
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
      * A custom comparator is used to compare values.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenby(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.thenby(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @param comparator A comparator function.
@@ -96,7 +96,7 @@ interface OrderedCollection<T> extends Collection<T> {
      * // -> ["Boots", "Barley", "Donald", "Fluffy", "Snickers", "Whiskers"]
      * </pre>
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
@@ -107,7 +107,7 @@ interface OrderedCollection<T> extends Collection<T> {
      * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
      * A custom comparator is used to compare values.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
+     * @see https://msdn.microsoft.com/en-us/library/system.linq.enumerable.thenbydescending(v=vs.110).aspx
      *
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @param comparator A comparator function.
