@@ -9,6 +9,7 @@ interface Collection<T> extends Iterable<T> {
      * Returns the element at the given index.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb299233(v=vs.110).aspx
+     *
      * @param index Element index.
      * @return The element at the given index.
      */
@@ -28,6 +29,7 @@ interface Collection<T> extends Iterable<T> {
      * Skips count elements of the sequence and returns the remaining sequence.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb358985(v=vs.110).aspx
+     *
      * @param count Number of elements to skip.
      * @return Collection without the first <code>count</code> elements.
      */
@@ -49,6 +51,7 @@ interface Collection<T> extends Iterable<T> {
      * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+     *
      * @param predicate The predicate.
      * @return The filtered collection.
      */
@@ -59,6 +62,7 @@ interface Collection<T> extends Iterable<T> {
      * The index of the element can be used in the logic of the predicate function.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.takewhile(v=vs.110).aspx
+     *
      * @param  predicate The predicate.
      * @return The filtered collection.
      */
@@ -441,125 +445,146 @@ interface Collection<T> extends Iterable<T> {
 
     //#endregion
 
-    // TODO @gerriet-hinrichs: Rework documentation below
-
     //#region Concatenation
 
     /**
-     * Concat - Concatenates two sequences
+     * Concatenates two sequences.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Concat([4, 5, 6]).ToArray();
+     * // -> [1, 2, 3, 4, 5, 6]
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/bb302894(v=vs.110).aspx
-     * @example
-     [1, 2, 3].Concat([4, 5, 6]).ToArray()
-     // -> [1, 2, 3, 4, 5, 6]
-     * @param  {Iterable<T>} inner               The inner sequence to concat with the outer one
-     * @return                      A new collection of the resulting pairs
+     *
+     * @param inner The inner sequence to concat with the outer one.
+     * @return A new collection with elements from both collections.
      */
     Concat(inner: Iterable<T>): Collection<T>;
 
     /**
-     * Union - Concatenates two sequences and removes duplicate values (produces the set union).
+     * Concatenates two sequences and removes duplicate values (produces the set union).
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Union([1, 4, 5, 6]).ToArray();
+     * // -> [1, 2, 3, 4, 5, 6]
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.union(v=vs.110).aspx
-     * @example
-     [1, 2, 3].Union([1, 4, 5, 6]).ToArray()
-     // -> [1, 2, 3, 4, 5, 6]
-     * @param inner The sequence to create the set union with
-     * @return
+     *
+     * @param inner The sequence to create the set union with.
+     * @return The set union of the two collections.
      */
     Union(inner: Iterable<T>): Collection<T>;
 
     /**
-     * Union - Concatenates two sequences and removes duplicate values (produces the set union).
+     * Concatenates two sequences and removes duplicate values (produces the set union).
      * A custom equality comparator is used to compare values for equality.
      *
-     * @param inner
-     * @param equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
-     * @return
+     * @param inner The sequence to create the set union with.
+     * @param equalityCompareFn A function to determine whether or not two values are considered equal.
+     * @return The set union of the two collections.
      */
     Union(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
 
     /**
-     * Join - Correlates the elements of two sequences based on matching keys
+     * Correlates the elements of two sequences based on matching keys.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
-     * @param  {Iterable<U>} inner               The inner sequence to join with the outer one
-     * @param  {(e: T) => K} outerKeySelector     A selector fn to extract the key from the outer sequence
-     * @param  {(e: U) => K} innerKeySelector    A selector fn to extract the key from the inner sequence
-     * @param  { (a: T, b: U) => V} resultSelectorFn     A fn to transform the pairings into the result
-     * @return                      A new collection of the resulting pairs
+     *
+     * @param inner The inner sequence to join with the outer one.
+     * @param outerKeySelector A selector fn to extract the key from the outer sequence.
+     * @param innerKeySelector A selector fn to extract the key from the inner sequence.
+     * @param resultSelectorFn A fn to transform the pairings into the result
+     * @return A new collection with the results.
      */
     Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V): Collection<V>;
 
     /**
-     * Join - Correlates the elements of two sequences based on matching keys
+     * Correlates the elements of two sequences based on matching keys.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb534675(v=vs.110).aspx
-     * @param  {Iterable<U>} inner               The inner sequence to join with the outer one
-     * @param  {(e: T) => K} outerKeySelector     A selector fn to extract the key from the outer sequence
-     * @param  {(e: U) => K} innerKeySelector    A selector fn to extract the key from the inner sequence
-     * @param  {(a: T, b: U) => V} resultSelectorFn     A fn to transform the pairings into the result
-     * @param  {(a: K, b: K) => boolean} keyEqualityCompareFn Optional fn to compare the keys
-     * @return                      A new collection of the resulting pairs
+     *
+     * @param inner The inner sequence to join with the outer one.
+     * @param outerKeySelector A selector fn to extract the key from the outer sequence.
+     * @param innerKeySelector A selector fn to extract the key from the inner sequence.
+     * @param resultSelectorFn A function to transform the pairings into the result.
+     * @param keyEqualityCompareFn Optional fn to compare the keys.
+     * @return A new collection with the results.
      */
     Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn: (a: K, b: K) => boolean): Collection<V>;
 
     /**
-     * Except - Returns the element of the sequence that do not appear in inner
+     * Returns the element of the sequence that do not appear in inner.
+     *
+     * Example:
+     * <pre>
+     * const people = [
+     *   'Sven', 'Julia', 'Tobi', 'Sarah', 'George', 'Jorge', 'Jon'
+     * ];
+     * const peopleIHate = ['George', 'Jorge'];
+     * const peopleILike = people.Except(peopleIHate);
+     * peopleILike.ToArray();
+     * // -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/bb300779(v=vs.110).aspx
-     * @example
-     const people = [
-     'Sven', 'Julia', 'Tobi', 'Sarah', 'George', 'Jorge', 'Jon'
-     ]
-     const peopleIHate = ['George', 'Jorge']
-     const peopleILike = people.Except(peopleIHate)
-     peopleILike.ToArray()
-     // -> ['Sven', 'Julia', 'Tobi', 'Sarah', 'Jon']
-     * @param  {Iterable<T>} inner The second sequence to get exceptions from
-     * @return new Collection with the values of outer without the ones in inner
+     *
+     * @param inner The second sequence to get exceptions from.
+     * @return A new Collection with the values of outer without the ones in inner.
      */
     Except(inner: Iterable<T>): Collection<T>;
 
     /**
-     * Zip - Applies a function to the elements of two sequences, producing a sequence of the results
+     * Applies a function to the elements of two sequences, producing a sequence of the results.
+     *
+     * Example:
+     * <pre>
+     * const numbers = [1, 2, 3, 4];
+     * const words = ["one", "two", "three"];
+     *
+     * const numbersAndWords = numbers.Zip(words, (outer, inner) => outer + " " + inner);
+     * numbersAndWords.ForEach(x => console.log(x));
+     * // Outputs:
+     * // "1 one"
+     * // "2 two"
+     * // "3 three"
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/dd267698(v=vs.110).aspx
-     * @example
-     const numbers = [ 1, 2, 3, 4 ]
-     const words = [ "one", "two", "three" ]
-
-     const numbersAndWords = numbers.Zip(words, (outer, inner) => outer + " " + inner)
-     numbersAndWords.ForEach(x => console.log(x))
-     // Outputs:
-     // "1 one"
-     // "2 two"
-     // "3 three"
-     * @param  {Iterable<U>} inner
-     * @param  {(a: T, b: U) => V} resultSelectorFn A function of the form (outerValue, innerValue) => any to produce the output sequence
-     * @return
+     *
+     * @param inner The collection to zip with.
+     * @param resultSelectorFn A function to produce the output sequence.
+     * @return A new collection with the results.
      */
     Zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): Collection<V>;
 
     /**
-     * Intersect - Produces the set intersection of two sequences. The default equality comparator is used to compare values.
+     * Produces the set intersection of two sequences. The default equality comparator is used to compare values.
+     *
+     * Example:
+     * <pre>
+     * [44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray();
+     * // -> [26, 30]
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
-     * @example
-     [44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()
-     // -> [26, 30]
-     * @param  {Iterable<T>} inner The sequence to get the intersection from
-     * @return
+     *
+     * @param inner The sequence to get the intersection from.
+     * @return A collection containing the intersection.
      */
     Intersect(inner: Iterable<T>): Collection<T>;
 
     /**
-     * Intersect - Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
+     * Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
-     * @param  {Iterable<T>} inner The sequence to get the intersection from
-     * @param equalityCompareFn A function of the form (outer, inner) => boolean to compare the values
-     * @return
+     *
+     * @param inner The sequence to get the intersection from.
+     * @param equalityCompareFn A function to compare the values.
+     * @return A collection containing the intersection.
      */
     Intersect(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
 
@@ -568,245 +593,224 @@ interface Collection<T> extends Iterable<T> {
     //#region Equality
 
     /**
-     * SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
+     * Compares two sequences for equality. Returns true if they have equal length and the equality compare function
      * returns true for each element in the sequence in correct order. The default equality comparator is used.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param  {Iterable} second The sequence to compare with
-     * @return
+     *
+     * @param second The sequence to compare with.
+     * @return If the two sequences are equal.
      */
     SequenceEqual(second: Iterable<T>): boolean;
 
     /**
-     * SequenceEqual - Compares two sequences for equality. Returns true if they have equal length and the equality compare function
+     * Compares two sequences for equality. Returns true if they have equal length and the equality compare function
      * returns true for each element in the sequence in correct order. A custom comparator function is provided.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sequenceequal(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param  {Iterable} second The sequence to compare with
-     * @param equalityCompareFn A function of the form (first, second) => boolean to compare the values
-     * @return
+     *
+     * @param second The sequence to compare with.
+     * @param equalityCompareFn A function to compare the values.
+     * @return If the two sequences are equal.
      */
     SequenceEqual(second: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): boolean;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector
+     * Groups a sequence using the keys selected from the members using the keySelector.
+     *
+     * Example:
+     * <pre>
+     * ['Sven', 'Mouse'].GroupBy(x => x[0]);
+     * // Map {"S" => ["Sven"], "M" => ["Mouse"]}
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector)
-     * @example
-     * // Map {"S" => ["Sven"], "M" => ["Mauz"]}
-     * ['Sven', 'Mauz'].GroupBy(x => x[0])
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @return The grouped sequence as a Map
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @return The grouped sequence as a Map.
      */
     GroupBy<V>(keySelector: (e: T) => V): Map<V, Array<T>>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using keyComparer.
+     * Groups a sequence using the keys selected from the members using the keySelector.
+     * The keys are compared using keyComparator.
+     *
+     * Example:
+     * <pre>
+     * ['4', 4, '5'].GroupBy(x => x, (outer, inner) => parseInt(outer) === parseInt(inner));
+     * // Map {"4" => ["4", 4], "5" => ["5"]}
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, keyComparer)
-     * @example
-     * // Map {"4" => ["4", 4], "5" => ["5"]}
-     * ['4', 4, '5'].GroupBy(x => x, (outer, inner) => parseInt(outer) === parseInt(inner))
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
-     * @return The grouped sequence as a Map
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param keyComparator A function if keys are considered equal.
+     * @return The grouped sequence as a Map.
      */
-    GroupBy<V>(keySelector: (e: T) => V, keyComparer: (a: V, b: V) => boolean): Map<V, Array<T>>;
+    GroupBy<V>(keySelector: (e: T) => V, keyComparator: (a: V, b: V) => boolean): Map<V, Array<T>>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+     * Groups a sequence using the keys selected from the members using the keySelector.
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, elementSelector)
-     * @example
+     * Example:
+     * <pre>
+     * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name);
      * // Map {23 => ["Sven"], 20 => ["jon"]}
-     * [{ name: 'Sven', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, x => x.name)
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param elementSelector A function to map each group member to a specific value
-     * @return The grouped sequence as a Map
+     * </pre>
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param elementSelector A function to map each group member to a specific value.
+     * @return The grouped sequence as a Map.
      */
     GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V): Map<K, Array<V>>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+     * Groups a sequence using the keys selected from the members using the keySelector.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
-     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, resultSelector)
-     * @example
+     * Example:
+     * <pre>
+     * [
+     *   { name: 'Sven', age: 23 },
+     *   { name: 'julia', age: 23 },
+     *   { name: 'jon', age: 20 }
+     * ].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&') })).ToArray();
      * // [ { age:23, persons: "Sven&julia" }, { age: 20, persons: "jon" } ]
-     * [{ name: 'Sven', age: 23 }, { name: 'julia', age: 23 }, { name: 'jon', age: 20 }].GroupBy(x => x.age, (age, persons) => ({ age, persons: persons.map(p => p.name).join('&') })).ToArray()
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
-     * @return The grouped sequence with projected results as a new Collection
+     * </pre>
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param resultSelector A function to select a final result from each group.
+     * @return The grouped sequence with projected results as a new Collection.
      */
     GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V): Collection<V>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+     * Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparator.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, resultSelector, keyComparer)
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
-     * @param keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
-     * @return The grouped sequence with projected results as a new Collection
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param resultSelector A function of the form (key, groupMembers) => any to select a final result from each group.
+     * @param keyComparator A function of the form (outer, inner) => bool to check if keys are considered equal.
+     * @return The grouped sequence with projected results as a new Collection.
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Collection<V>;
+    GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): Collection<V>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparer.
+     * Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparator.
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, elementSelector, keyComparer)
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param elementSelector A function to map each group member to a specific value
-     * @param keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
-     * @return The grouped sequence as a Map
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param elementSelector A function to map each group member to a specific value.
+     * @param keyComparator A function to check if keys are considered equal.
+     * @return The grouped sequence as a Map.
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, keyComparer: (a: K, b: K) => boolean): Map<K, Array<V>>;
+    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, keyComparator: (a: K, b: K) => boolean): Map<K, Array<V>>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector.
+     * Groups a sequence using the keys selected from the members using the keySelector.
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, elementSelector, resultSelector)
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param elementSelector A function to map each group member to a specific value
-     * @param resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
-     * @return The grouped sequence with projected results as a new Collection
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param elementSelector A function to map each group member to a specific value.
+     * @param resultSelector A function to select a final result from each group.
+     * @return The grouped sequence with projected results as a new Collection.
      */
     GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V): Collection<V>;
 
     /**
-     * GroupBy - Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using the keyComparer.
+     * Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using the keyComparator.
      * Each group member is projected to a single value (e.g. a property) using the elementSelector.
      * The resultSelector is used to project each resulting group to a single value (e.g. an object with aggregated properties).
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupby(v=vs.110).aspx
-     * @instance
-     * @memberof Collection
-     * @method
-     * @variation (keySelector, elementSelector, resultSelector, keyComparer)
-     * @param keySelector A function to select grouping keys from the sequence members
-     * @param elementSelector A function to map each group member to a specific value
-     * @param resultSelector A function of the form (key, groupMembers) => any to select a final result from each group
-     * @param keyComparer A function of the form (outer, inner) => bool to check if keys are considered equal
-     * @return The grouped sequence with projected results as a new Collection
+     *
+     * @param keySelector A function to select grouping keys from the sequence members.
+     * @param elementSelector A function to map each group member to a specific value.
+     * @param resultSelector A function to select a final result from each group.
+     * @param keyComparator A function to check if keys are considered equal.
+     * @return The grouped sequence with projected results as a new Collection.
      * @
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Collection<V>;
+    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): Collection<V>;
 
     /**
-     * GroupJoin - Correlates the elements of two sequences based on equality of keys and groups the results.
-     * The default equality comparer is used to compare keys.
+     * Correlates the elements of two sequences based on equality of keys and groups the results.
+     * The default equality comparator is used to compare keys.
      *
-     * @instance
-     * @memberof Collection
-     * @method
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
-     * @param  {Iterable} inner The values to join with this Collection
-     * @param  {Function} outerKeySelector A function to extract the grouping keys from the outer Collection
-     * @param  {Function} innerKeySelector A function to extract the grouping keys from the inner Collection
-     * @param  {Function} resultSelector A function of the form (key, values) => any to select the final result from each grouping
-     * @return
+     *
+     * @param inner The values to join with this Collection.
+     * @param outerKeySelector A function to extract the grouping keys from the outer Collection.
+     * @param innerKeySelector A function to extract the grouping keys from the inner Collection.
+     * @param resultSelector A function of the form (key, values) => any to select the final result from each grouping.
+     * @return A collection with the grouped values.
      */
     GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V): Collection<V>;
 
     /**
-     * GroupJoin - Correlates the elements of two sequences based on equality of keys and groups the results.
-     * The provided custom keyComparer is used to compare keys.
+     * Correlates the elements of two sequences based on equality of keys and groups the results.
+     * The provided custom keyComparator is used to compare keys.
      *
-     * @instance
-     * @memberof Collection
-     * @method
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.groupjoin(v=vs.110).aspx
-     * @param  {Iterable} inner The values to join with this Collection
-     * @param  {Function} outerKeySelector A function to extract the grouping keys from the outer Collection
-     * @param  {Function} innerKeySelector A function to extract the grouping keys from the inner Collection
-     * @param  {Function} resultSelector A function of the form (key, values) => any to select the final result from each grouping
-     * @param keyComparer A function of the form (first, second) => bool to compare keys for equality
-     * @return
+     *
+     * @param inner The values to join with this Collection.
+     * @param outerKeySelector A function to extract the grouping keys from the outer Collection.
+     * @param innerKeySelector A function to extract the grouping keys from the inner Collection.
+     * @param resultSelector A function to select the final result from each grouping.
+     * @param keyComparator A function to compare keys for equality.
+     * @return A collection with the grouped values.
      */
-    GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparer: (a: K, b: K) => boolean): Collection<V>;
+    GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): Collection<V>;
 
     //#endregion
 
     //#region Insert & Remove
 
     /**
-     * Add - Adds an element to the end of the sequence
+     * Adds an element to the end of the sequence.
      *
      * @see https://msdn.microsoft.com/de-de/library/3wcytfd1(v=vs.110).aspx
-     * @instance
-     * @method
-     * @memberof Collection
-     * @param  {any} value The value to add to the sequence
-     * @return
+     *
+     * @param value The value to add to the sequence.
      */
     Add(value: T): void;
 
     /**
-     * Insert - Inserts an element to the specified index of the sequence
+     * Inserts an element to the specified index of the sequence.
+     *
+     * Example:
+     * <pre>
+     * let coll = Collection.from([1, 2, 3]);
+     * coll.Contains(4); // -> false
+     * coll.Insert(4, 0);
+     * coll.Contains(4); // -> true
+     * coll.ToArray(); // [4, 1, 2, 3]
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/sey5k5z4(v=vs.110).aspx
-     * @instance
-     * @method
-     * @memberof Collection
-     * @example
-     let coll = Collection.from([1, 2, 3])
-     coll.Contains(4) // -> false
-     coll.Insert(4, 0)
-     coll.Contains(4) // -> true
-     coll.ToArray() // [4, 1, 2, 3]
-     * @param  {any}         value The value to add
-     * @param  {Number}      index The index to add the value to
-     * @return
+     *
+     * @param value The value to add.
+     * @param index The index to add the value to.
      */
     Insert(value: T, index: number): void;
 
     /**
-     * Remove - Removes an element from the sequence
+     * Removes an element from the sequence.
      *
-     * @instance
-     * @method
-     * @memberof Collection
-     * @param  {any} value The value to remove
-     * @return True if the element was removed, false if not (or the element was not found)
+     * @param value The value to remove.
+     * @return True if the element was removed, false if not (or the element was not found).
      */
     Remove(value: T): boolean;
 
@@ -815,126 +819,132 @@ interface Collection<T> extends Iterable<T> {
     //#region Math
 
     /**
-     * Min - Returns the minimum of the numbers contained in the sequence. Transforms the values using a map function before.
+     * Returns the minimum of the numbers contained in the sequence. Transforms the values using a map function before.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Min();
+     * // -> 1
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.min(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @example
-     [1, 2, 3].Min()
-     // -> 1
-     * @return
+     *
+     * @throws Throws an error if the sequence is empty.
+     * @return The minimum number of the sequence.
      */
     Min(): number;
 
     /**
-     * Min - Returns the minimum of the numbers contained in the sequence
+     * Returns the minimum of the numbers contained in the sequence.
+     *
+     * Example:
+     * <pre>
+     * [2, 3, 5].Min(x => x * 2);
+     * // -> 4
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.min(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @param mapFn A function to use to transform each value before getting the minimum
-     * @example
-     [2, 3, 5].Min(x => x * 2)
-     // -> 4
-     * @return
+     *
+     * @throws Throws an error if the sequence is empty.
+     * @param mapFn A function to use to transform each value before getting the minimum.
+     * @return The minimum number of the sequence.
      */
     Min(mapFn: (x: T) => number): number;
 
     /**
-     * Max - Returns the maximum of the numbers contained in the sequence
+     * Returns the maximum of the numbers contained in the sequence.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Max();
+     * // -> 3
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.max(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @example
-     [1, 2, 3].Max()
-     // -> 3
-     * @return
+     *
+     * @throws Throws an error if the sequence is empty.
+     * @return The maximum number of the sequence.
      */
     Max(): number;
 
     /**
-     * Max - Returns the max of the numbers contained in the sequence. Transforms the values using a map function before.
+     * Returns the max of the numbers contained in the sequence. Transforms the values using a map function before.
+     *
+     * Example:
+     * <pre>
+     * [2, 3, 5].Max(x => x * 2)
+     * // -> 10
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.max(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @param mapFn A function to use to transform each value before getting the maximum
-     * @example
-     [2, 3, 5].Max(x => x * 2)
-     // -> 10
-     * @return
+     *
+     * @throws Throws an error if the sequence is empty.
+     * @param mapFn A function to use to transform each value before getting the maximum.
+     * @return The maximum number of the sequence.
      */
     Max(mapFn: (x: T) => number): number;
 
     /**
-     * Sum - Returns the sum of the numbers contained in the sequence
+     * Returns the sum of the numbers contained in the sequence.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Sum();
+     * // -> 6
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sum(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @example
-     [1, 2, 3].Sum()
-     // -> 6
-     * @return
+     *
+     * @return The sum of all numbers in the sequence.
      */
     Sum(): number;
 
     /**
-     * Sum - Returns the sum of the numbers contained in the sequence. Transforms the values using a map function before.
+     * Returns the sum of the numbers contained in the sequence. Transforms the values using a map function before.
+     *
+     * Example:
+     * <pre>
+     * [2, 3, 5].Sum(x => x * 2);
+     * // -> 20
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.sum(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @param mapFn A function to use to transform each value before calculating the sum
-     * @example
-     [2, 3, 5].Sum(x => x * 2)
-     // -> 20
-     * @return
+     *
+     * @throws Throws an error if the sequence is empty.
+     * @param mapFn A function to use to transform each value before calculating the sum.
+     * @return The sum of all numbers in the sequence.
      */
     Sum(mapFn: (x: T) => number): number;
 
     /**
-     * Average - Returns the average of the numbers contained in the sequence
+     * Returns the average of the numbers contained in the sequence.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Average();
+     * // -> 2
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @example
-     [1, 2, 3].Average()
-     // -> 2
-     * @return
+     *
+     * @throws Throws an error if the sequence is empty.
+     * @return The average of the sequence.
      */
     Average(): number;
 
     /**
-     * Average - Returns the average of the numbers contained in the sequence. Transforms the values using a map function before.
+     * Returns the average of the numbers contained in the sequence. Transforms the values using a map function before.
      *
-     * @see hhttps://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @throws Throws an error if the sequence is empty
-     * @param mapFn A function to use to transform each value before calculating the average
-     * @example
-     [2, 3, 5].Average(x => x * 2)
-     // -> 6.666666667
-     * @return
+     * Example:
+     * <pre>
+     * [2, 3, 5].Average(x => x * 2);
+     * // -> 6.666666667
+     * </pre>
+     *
+     * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.average(v=vs.110).aspx
+     * @throws Throws an error if the sequence is empty.
+     * @param mapFn A function to use to transform each value before calculating the average.
+     * @return The average of the sequence.
      */
     Average(mapFn: (x: T) => number): number;
 
@@ -946,13 +956,12 @@ interface Collection<T> extends Iterable<T> {
      * Orders the sequence by the numeric representation of the values ascending.
      * The default comparator is used to compare values.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray()
-
-     // -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
+     * Example:
+     * <pre>
+     * [1,7,9234,132,345,12,356,1278,809953,345,2].Order().ToArray();
+     * // -> [1, 2, 7, 12, 132, 345, 345, 356, 1278, 9234, 809953]
+     * </pre>
+     *
      * @return Ordered collection.
      */
     Order(): OrderedCollection<T>;
@@ -961,10 +970,7 @@ interface Collection<T> extends Iterable<T> {
      * Orders the sequence by the numeric representation of the values ascending.
      * A custom comparator is used to compare values.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param comparator A comparator of the form (a, b) => number to compare two values
+     * @param comparator A comparator to compare two values.
      * @return Ordered collection.
      */
     Order(comparator: (a: T, b: T) => number): OrderedCollection<T>;
@@ -973,13 +979,12 @@ interface Collection<T> extends Iterable<T> {
      * Orders the sequence by the numeric representation of the values descending.
      * The default comparator is used to compare values.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray()
-
-     // -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
+     * Example:
+     * <pre>
+     * [1,7,9234,132,345,12,356,1278,809953,345,2].OrderDescending().ToArray();
+     * // -> [809953, 9234, 1278, 356, 345, 345, 132, 12, 7, 2, 1]
+     * </pre>
+     *
      * @return Ordered collection.
      */
     OrderDescending(): OrderedCollection<T>;
@@ -988,10 +993,7 @@ interface Collection<T> extends Iterable<T> {
      * Orders the sequence by the numeric representation of the values descending.
      * A custom comparator is used to compare values.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param comparator A comparator of the form (a, b) => number to compare two values
+     * @param comparator A comparator to compare two values.
      * @return Ordered collection.
      */
     OrderDescending(comparator: (a: T, b: T) => number): OrderedCollection<T>;
@@ -999,29 +1001,30 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * The default comparator is used to compare values.
-     * @method
-     * @memberof Collection
-     * @instance
+     *
+     * Example:
+     * <pre>
+     * const pets = [
+     *   {
+     *     Name: 'Barley',
+     *     Age: 8,
+     *   },
+     *   {
+     *     Name: 'Boots',
+     *     Age: 4,
+     *   },
+     *   {
+     *     Name: 'Whiskers',
+     *     Age: 1,
+     *   }
+     * ];
+     * pets.OrderBy(x => x.Age).ToArray();
+     * // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Boots", Age: 4}, { Name: "Barley", Age: 8 } ]
+     * </pre>
+     *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
-     * @example
-     const pets = [
-     {
-       Name: 'Barley',
-       Age: 8,
-     },
-     {
-       Name: 'Booots',
-       Age: 4,
-     },
-     {
-       Name: 'Whiskers',
-       Age: 1,
-     }
-     ]
-
-     pets.OrderBy(x => x.Age).ToArray()
-     // -> [ { Name: "Whiskers", "Age": 1 }, { Name: "Booots", Age: 4}, { Name: "Barley", Age: 8 } ]
-     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     *
+     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
      */
     OrderBy<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
@@ -1029,12 +1032,11 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * A custom comparator is used to compare values.
-     * @method
-     * @memberof Collection
-     * @instance
+     *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderby(v=vs.110).aspx
-     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
-     * @param comparator A comparator of the form (a, b) => number to compare two values
+     *
+     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
+     * @param comparator A comparator to compare two values.
      * @return Ordered collection.
      */
     OrderBy<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
@@ -1042,29 +1044,30 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * The default comparator is used to compare values.
-     * @method
-     * @memberof Collection
-     * @instance
+     *
+     * Example:
+     * <pre>
+     * const pets = [
+     *   {
+     *     Name: 'Barley',
+     *     Age: 8,
+     *   },
+     *   {
+     *     Name: 'Boots',
+     *     Age: 4,
+     *   },
+     *   {
+     *     Name: 'Whiskers',
+     *     Age: 1,
+     *   }
+     * ];
+     * pets.OrderByDescending(x => x.Age).ToArray();
+     * // -> [ { Name: "Barley", Age: 8 }, { Name: "Boots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
+     * </pre>
+     *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
-     * @example
-     const pets = [
-     {
-       Name: 'Barley',
-       Age: 8,
-     },
-     {
-       Name: 'Booots',
-       Age: 4,
-     },
-     {
-       Name: 'Whiskers',
-       Age: 1,
-     }
-     ]
-
-     pets.OrderByDescending(x => x.Age).ToArray()
-     // -> [ { Name: "Barley", Age: 8 }, { Name: "Booots", Age: 4}, { Name: "Whiskers", "Age": 1 }, ]
-     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
+     *
+     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
      */
     OrderByDescending<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
@@ -1072,23 +1075,19 @@ interface Collection<T> extends Iterable<T> {
     /**
      * Orders the sequence by the appropriate property selected by keySelector ascending.
      * A custom comparator is used to compare values.
-     * @method
-     * @memberof Collection
-     * @instance
+     *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.orderbydescending(v=vs.110).aspx
-     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string
-     * @param comparator A comparator of the form (a, b) => number to compare two values
+     *
+     * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
+     * @param comparator A comparator to compare two values.
      * @return Ordered collection.
      */
     OrderByDescending<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
 
     /**
-     * Shuffle - Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection
+     * Orders a sequence by random (produces a possible permutation of the sequence) and returns the shuffled elements as a new collection.
      *
-     * @instance
-     * @memberof Collection
-     * @method
-     * @return
+     * @return The shuffled collection.
      */
     Shuffle(): Collection<T>;
 
@@ -1097,73 +1096,72 @@ interface Collection<T> extends Iterable<T> {
     //#region Search
 
     /**
-     * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
+     * Returns the index of the first occurrence of the given element in the sequence or -1 if it was not found.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3].IndexOf(2)
-     // -> 1
-     [1, 2, 3].IndexOf(4)
-     // -> -1
-     * @return
+     * Example:
+     * <pre>
+     * [1, 2, 3].IndexOf(2);
+     * // -> 1
+     * [1, 2, 3].IndexOf(4);
+     * // -> -1
+     * </pre>
+     *
+     * @param element The element to get the index for.
+     * @return Index of the given element.
      */
     IndexOf(element: T): number;
 
     /**
-     * IndexOf - Returns the index of the first occurence of the given element in the sequence or -1 if it was not found.
+     * Returns the index of the first occurrence of the given element in the sequence or -1 if it was not found.
      * A provided equality compare function is used to specify equality.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
-     * @return
+     * @param element The element to get the index for.
+     * @param equalityCompareFn A function to determine whether or not two values are considered equal.
+     * @return Index of the given element.
      */
     IndexOf(element: T, equalityCompareFn: (a: T, b: T) => boolean): number;
 
     /**
-     * LastIndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+     * Returns the index of the last occurrence of the given element in the sequence or -1 if it was not found.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3, 1, 4, 7, 1].LastIndexOf(1)
-     // -> 6
-     [1, 2, 3].LastIndexOf(4)
-     // -> -1
-     * @return
+     * Example:
+     * <pre>
+     * [1, 2, 3, 1, 4, 7, 1].LastIndexOf(1);
+     * // -> 6
+     * [1, 2, 3].LastIndexOf(4);
+     * // -> -1
+     * </pre>
+     *
+     * @param element The element to get the last index for.
+     * @return Last index of the given element.
      */
     LastIndexOf(element: T): number;
 
     /**
-     * IndexOf - Returns the index of the last occurence of the given element in the sequence or -1 if it was not found.
+     * Returns the index of the last occurrence of the given element in the sequence or -1 if it was not found.
      * A provided equality compare function is used to specify equality.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
-     * @return
+     * @param element The element to get the last index for.
+     * @param equalityCompareFn A function to determine whether or not two values are considered equal.
+     * @return Last index of the given element.
      */
     LastIndexOf(element: T, equalityCompareFn: (a: T, b: T) => boolean): number;
 
     /**
-     * Contains - Returns true if the sequence contains the specified element, false if not.
+     * Returns true if the sequence contains the specified element, false if not.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Contains(2);
+     * // -> true
+     * [1, 2, 3].Contains(4);
+     * // -> false
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3].Contains(2)
-     // -> true
-     [1, 2, 3].Contains(4)
-     // -> false
-     * @param elem The element to check
-     * @return
+     *
+     * @param element The element to check.
+     * @return If the given element is contained.
      */
     Contains(element: T): boolean;
 
@@ -1172,142 +1170,130 @@ interface Collection<T> extends Iterable<T> {
      * A provided equality compare function is used to specify equality.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.contains(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @param elem The element to check
+     *
+     * @param element The element to check.
      * @param equalityCompareFn A function of the form (first, second) => Boolean to determine whether or not two values are considered equal
-     * @return
+     * @return If the given element is contained.
      */
     Contains(element: T, equalityCompareFn: (a: T, b: T) => boolean): boolean;
 
     /**
-     * Where - Filters a sequence based on a predicate function
+     * Filters a sequence based on a predicate function.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @variation (elem => boolean)
-     * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
-     * @return The filtered collection
+     *
+     * @param predicate A function to filter the sequence.
+     * @return The filtered collection.
      */
     Where(predicate: (e: T) => boolean): Collection<T>;
 
     /**
-     * Where - Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
+     * Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.where(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @variation ((elem, index) => boolean)
-     * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
-     * @return The filtered collection
+     *
+     * @param predicate A function to filter the sequence.
+     * @return The filtered collection.
      */
     Where(predicate: (element: T, index: number) => boolean): Collection<T>;
 
     /**
-     * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true.
+     * Filters a sequence based on a predicate function if the condition is true.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @variation (condition, elem => bool)
-     * @param condition A condition to get checked before filtering the sequence
-     * @param  {Function} predicate A function of the form elem => boolean to filter the sequence
-     * @return The filtered collection or the original sequence if condition was falsy
+     * @param condition A condition to get checked before filtering the sequence.
+     * @param predicate A function to filter the sequence.
+     * @return The filtered collection or the original sequence if condition was falsy.
      */
     ConditionalWhere(condition: boolean, predicate: (e: T) => boolean): Collection<T>;
 
     /**
-     * ConditionalWhere - Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
+     * Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
      *
-     * @method
-     * @memberof Collection
-     * @instance
-     * @variation (condition, (elem, index) => bool)
-     * @param condition A condition to get checked before filtering the sequence
-     * @param  {Function} predicate A function of the form (elem, index) => boolean to filter the sequence
-     * @return The filtered collection or the original sequence if condition was falsy
+     * @param condition A condition to get checked before filtering the sequence.
+     * @param predicate A function to filter the sequence.
+     * @return The filtered collection or the original sequence if condition was falsy.
      */
     ConditionalWhere(condition: boolean, predicate: (element: T, index: number) => boolean): Collection<T>;
 
     /**
-     * Count - Returns the length of the sequence
+     * Returns the length of the sequence.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3, 4, 5].Count();
+     * // -> 5
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3, 4, 5].Count()
-     // -> 5
-     * @return
+     *
+     * @return Number of elements in this collection.
      */
     Count(): number;
 
     /**
-     * Count - Returns the number of elements in the sequence matching the predicate
+     * Returns the number of elements in the sequence matching the predicate.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3, 4, 5].Count(x => x > 2);
+     * // -> 3
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.count(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3, 4, 5].Count(x => x > 2)
-     // -> 3
-     * @param  {Function} predicate The predicate of the form elem => boolean
-     * @return
+     *
+     * @param predicate The predicate.
+     * @return Number of elements in this collection.
      */
     Count(predicate: (e: T) => boolean): number;
 
     /**
-     * Any - Returns true if the sequence contains at least one element, false if it is empty
+     * Returns true if the sequence contains at least one element, false if it is empty.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Any();
+     * // -> true
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3].Any()
-     // -> true
-     * @return
+     *
+     * @return If the collection contains any elements.
      */
     Any(): boolean;
 
     /**
-     * Any - Returns true if at least one element of the sequence matches the predicate or false if no element matches
+     * Returns true if at least one element of the sequence matches the predicate or false if no element matches.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Any(x => x > 1);
+     * // -> true
+     * [1, 2, 3].Any(x => x > 5);
+     * // -> false
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/bb337697(v=vs.110).aspx
-     * @method
-     * @variation (predicate)
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3].Any(x => x > 1)
-     // -> true
-     [1, 2, 3].Any(x => x > 5)
-     // -> false
-     * @param  {Function} predicate A predicate function to test elements against: elem => boolean
-     * @return
+     *
+     * @param predicate A predicate function to test elements against.
+     * @return If the collection contains any elements that match the given predicate.
      */
     Any(predicate: (e: T) => boolean): boolean;
 
     /**
-     * All - Returns true if all elements in the sequence match the predicate
+     * Returns true if all elements in the sequence match the predicate.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3, 4, 5, 6].All(x => x > 3);
+     * // -> false
+     * [2, 4, 6, 8, 10, 12].All(x => x % 2 === 0);
+     * // -> true
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/bb548541(v=vs.110).aspx
-     * @method
-     * @memberof Collection
-     * @instance
-     * @example
-     [1, 2, 3, 4, 5, 6].All(x => x > 3)
-     // -> false
-     [2, 4, 6, 8, 10, 12].All(x => x % 2 === 0)
-     // -> true
-     * @param  {Function} predicate
-     * @return
+
+     * @param predicate A predicate function to test elements against.
+     * @return If all elements in the collection match the given predicate.
      */
     All(predicate: ((e: T) => boolean)): boolean;
 
@@ -1316,346 +1302,329 @@ interface Collection<T> extends Iterable<T> {
     //#region Transformation
 
     /**
-     * Aggregate - applies a accumulator function to a sequence
+     * Applies a accumulator function to a sequence.
+     *
+     * Example:
+     * <pre>
+     * const sentence = "the quick brown fox jumps over the lazy dog";
+     * const words = sentence.split(' ');
+     * const reversed = words.Aggregate((workingSentence, next) => next + " " + workingSentence);
+     * // --> "dog lazy the over jumps fox brown quick the"
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation (accumulator)
-     * @param accumulator The accumulator function of the form (prev, current) => any
-     * @example
-     const sentence = "the quick brown fox jumps over the lazy dog"
-     const words = sentence.split(' ')
-     const reversed = words.Aggregate((workingSentence, next) => next + " " + workingSentence)
-     // --> "dog lazy the over jumps fox brown quick the"
-     * @return the result of the accumulation
+     *
+     * @param accumulator The accumulator function.
+     * @return The result of the accumulation.
      */
     Aggregate(accumulator: (accumulated: T, next: T) => T): T;
 
     /**
-     * Aggregate - applies a accumulator function to a sequence. Starts with seed.
+     * Applies a accumulator function to a sequence. Starts with seed.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Aggregate(0, (prev, curr) => prev + curr);
+     * // -> 6 (this example is equal to [1, 2, 3].Sum())
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation (seed, accumulator)
-     * @param seed The starting value of the accumulation
-     * @param accumulator The accumulator function of the form (prev, current) => any
-     * @example
-     [1, 2, 3].Aggregate(0, (prev, curr) => prev + curr)
-     // -> 6 (this example is equal to [1, 2, 3].Sum())
-     * @return the result of the accumulation
+     *
+     * @param seed The starting value of the accumulation.
+     * @param accumulator The accumulator function.
+     * @return The result of the accumulation.
      */
     Aggregate<V>(seed: V, accumulator: (accumulated: V, next: T) => V): V;
 
     /**
-     * Aggregate - applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
+     * Applies a accumulator function to a sequence. Starts with seed and transforms the result using resultTransformFn.
+     *
+     * Example:
+     * <pre>
+     * const fruits = ["apple", "mango", "orange", "passionfruit", "grape"];
+     * const longestName = fruits.Aggregate('banana',
+     *     (longest, next) => next.length > longest.length ? next : longest,
+     *     fruit => fruit.toUpperCase());
+     * // -> "PASSIONFRUIT"
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.aggregate(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation (seed, accumulator, resultTransformFn)
-     * @param seed The starting value of the accumulation
-     * @param accumulator The accumulator function of the form (prev, current) => any
-     * @param resultTransformFn A function to transform the result
-     * @example
-     const fruits = ["apple", "mango", "orange", "passionfruit", "grape"]
-     const longestName = fruits.Aggregate('banana',
-     (longest, next) => next.length > longest.length ? next : longest,
-     fruit => fruit.toUpperCase())
-     // -> "PASSIONFRUIT"
-     * @return the result of the accumulation
+     *
+     * @param seed The starting value of the accumulation.
+     * @param accumulator The accumulator function.
+     * @param resultTransformFn A function to transform the result.
+     * @return The result of the accumulation.
      */
     Aggregate<V, R>(seed: V, accumulator: (accumulated: V, next: T) => V, resultTransformFn: (v: V) => R): R;
 
     /**
-     * Select - Projects each member of the sequence into a new form
+     * Projects each member of the sequence into a new form.
+     *
+     * Example:
+     * <pre>
+     * const petOwners = [
+     *   { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+     *   { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+     *   { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+     * ];
+     *
+     * petOwners.Select(x => x.Name).ToArray();
+     * // -> ['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette']
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation (elem => any)
-     * @param mapFn The function to use to map each element of the sequence, has the form elem => any
-     * @example
-     const petOwners = [
-     { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
-     { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
-     { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
-     ]
-
-     petOwners.Select(x => x.Name).ToArray()
-     // -> ['Higa, Sidney', 'Ashkenazi, Ronen', 'Price, Vernette']
-     * @return
+     *
+     * @param mapFn The function to use to map each element of the sequence.
+     * @return A new collection with mapped values.
      */
     Select<V>(mapFn: (e: T) => V): Collection<V>;
 
     /**
-     * Select - Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
+     * Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3].Select((x, i) => x + i).ToArray();
+     * // -> [1, 3, 5]
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.select(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation ((elem, index) => any)
-     * @param mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
-     * @example
-     [1, 2, 3].Select((x, i) => x + i).ToArray()
-     // -> [1, 3, 5]
-     * @return
+     *
+     * @param mapFn The function to use to map each element of the sequence.
+     * @return A new collection with mapped values.
      */
     Select<V>(mapFn: (element: T, index: number) => V): Collection<V>;
 
     /**
-     * Flatten - Flattens a sequence meaning reducing the level of nesting by one
+     * Flattens a sequence meaning reducing the level of nesting by one.
      *
-     * @memberof Collection
-     * @instance
-     * @method
-     * @example
-     [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray()
-     // -> [1, 2, 3, 4, 5, 6,]
-     * @return  A new, flattened Collection
+     * Example:
+     * <pre>
+     * [1, 2, 3, [4, 5, 6,]]].Flatten().ToArray();
+     * // -> [1, 2, 3, 4, 5, 6,]
+     * </pre>
+     *
+     * @return A new, flattened Collection.
      */
     Flatten(): Collection<any>;
 
     /**
-     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     *
+     * Example:
+     * <pre>
+     * const petOwners = [
+     *   { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+     *   { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+     *   { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+     * ];
+     *
+     * const pets = petOwners.SelectMany(petOwner => petOwner.Pets).ToArray());
+     * // -> ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation (elem => any)
-     * @example
-     const petOwners = [
-     { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
-     { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
-     { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
-     ]
-
-     const pets = petOwners.SelectMany(petOwner => petOwner.Pets).ToArray())
-     // -> ['Scruffy', 'Sam', 'Walker', 'Sugar', 'Scratches', 'Diesel']
-     * @param mapFn The function to use to map each element of the sequence, has the form elem => any
-     * @return
+     *
+     * @param mapFn The function to use to map each element of the sequence.
+     * @return The mapped and flattened collection.
      */
     SelectMany<V>(mapFn: (element: T) => Array<V> | V): Collection<V>;
 
     /**
-     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
      * The index of the source element can be used in the mapFn.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation ((elem, index) => any)
-     * @param mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
-     * @return
+     *
+     * @param mapFn The function to use to map each element of the sequence.
+     * @return The mapped and flattened collection.
      */
     SelectMany<V>(mapFn: (element: T, index: number) => Array<V> | V): Collection<V>;
 
     /**
-     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
      * Invokes a resultSelector function on each element of the sequence.
      *
+     * Example:
+     * <pre>
+     * const petOwners = [
+     *   { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
+     *   { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
+     *   { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
+     * ];
+     * petOwners.SelectMany(
+     *     petOwner => petOwner.Pets,
+     *     (owner, petName) => ({ owner, petName })
+     *   ).Select(ownerAndPet => ({
+     *     owner: ownerAndPet.owner.Name,
+     *     pet: ownerAndPet.petName,
+     *   }))
+     *   .Take(2)
+     *   .ToArray();
+     *
+     * // -> [
+     * //  { owner: "Higa, Sidney", pet: "Scruffy"},
+     * //  { owner: "Higa, Sidney", pet: "Sam"}
+     * // ]
+     * </pre>
+     *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation (elem => any, resultSelector)
-     * @example
-     const petOwners = [
-     { Name: 'Higa, Sidney', Pets: ['Scruffy', 'Sam'] },
-     { Name: 'Ashkenazi, Ronen', Pets: ['Walker', 'Sugar'] },
-     { Name: 'Price, Vernette', Pets: ['Scratches', 'Diesel'] },
-     ]
-     petOwners.SelectMany(
-     petOwner => petOwner.Pets,
-     (owner, petName) => ({ owner, petName })
-     ).Select(ownerAndPet => ({
-     owner: ownerAndPet.owner.Name,
-     pet: ownerAndPet.petName,
-  }))
-     .Take(2)
-     .ToArray()
-
-     // -> [
-     //  { owner: "Higa, Sidney", pet: "Scruffy"},
-     //  { owner: "Higa, Sidney", pet: "Sam"}
-     // ]
-     * @param mapFn The function to use to map each element of the sequence, has the form elem => any
-     * @param resultSelector a function of the form (sourceElement, element) => any to map the result Value
-     * @return
+     *
+     * @param mapFn The function to use to map each element of the sequence.
+     * @param resultSelector a function to map the result Value.
+     * @return The mapped and flattened collection.
      */
     SelectMany<V, R>(mapFn: (element: T) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
 
     /**
-     * SelectMany - Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
+     * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
      * Invokes a resultSelector function on each element of the sequence. The index of the source element can be used in the mapFn.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.selectmany(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @variation ((elem, index) => any, resultSelector)
-     * @param mapFn The function to use to map each element of the sequence, has the form (elem, index) => any
-     * @param resultSelector a function of the form (sourceElement, element) => any to map the result Value
-     * @return
+     *
+     * @param mapFn The function to use to map each element of the sequence.
+     * @param resultSelector a function to map the result Value.
+     * @return The mapped and flattened collection.
      */
     SelectMany<V, R>(mapFn: (element: T, index: number) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
 
     /**
-     * Distinct - Returns the distinct elemens from a sequence using the default equality compare function
+     * Returns the distinct elements from a sequence using the default equality compare function.
+     *
+     * Example:
+     * <pre>
+     * [1, 2, 3, 3, 4, 7, 9, 9, 12].Distinct().ToArray();
+     * // -> [1, 2, 3, 4, 7, 9, 12]
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @example
-     [1, 2, 3, 3, 4, 7, 9, 9, 12].Distinct().ToArray()
-     // -> [1, 2, 3, 4, 7, 9, 12]
-     * @return
+     *
+     * @return A new collection with distinct elements.
      */
     Distinct(): Collection<T>;
 
     /**
-     * Distinct - Returns the distinct elemens from a sequence using a provided equality compare function
+     * Returns the distinct elements from a sequence using a provided equality compare function.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.distinct(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @param equalityCompareFn The function of the form (first, second) => boolean determining if the values are equal
-     * @return
+     *
+     * @param equalityCompareFn The function determining if the values are equal.
+     * @return A new collection with distinct elements.
      */
     Distinct(equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
 
     /**
-     * ToArray - Enforces immediate evaluation of the whole Collection and returns an array of the result
+     * Enforces immediate evaluation of the whole Collection and returns an array of the result.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb298736(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @return
+     *
+     * @return An array containing the elements from the collection.
      */
     ToArray(): Array<T>;
 
     /**
-     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * Enforces immediate evaluation of the whole Collection and returns a Map (dictionary) of the results.
      * The key is defined by the keySelector.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @param keySelector The function to use to retrieve the key from the Collection
-     * @return
+     *
+     * @param keySelector The function to use to retrieve the key from the Collection.
+     * @return The created dictionary.
      */
     ToDictionary<K>(keySelector: (e: T) => K): Map<K, T>;
 
     /**
-     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * Enforces immediate evaluation of the whole Collection and returns a Map (dictionary) of the results.
      * The key is defined by the keySelector and each element is transformed using the elementSelector.
      *
+     * Example:
+     * <pre>
+     * const pets = [
+     *   { name: 'miez', species: 'cat' },
+     *   { name: 'wuff', species: 'dog' },
+     *   { name: 'leo', species: 'cat' },
+     *   { name: 'flipper', species: 'dolphin' }
+     * ];
+     * pets.ToDictionary(pet => pet.name, pet => pet.species);
+     * // -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}
+     * </pre>
+     *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @example
-     const pets = [
-     { name: 'miez', species: 'cat' },
-     { name: 'wuff', species: 'dog' },
-     { name: 'leo', species: 'cat' },
-     { name: 'flipper', species: 'dolphin' }
-     ]
-     pets.ToDictionary(pet => pet.name, pet => pet.species)
-     // -> Map {"miez" => "cat", "wuff" => "dog", "leo" => "cat", "flipper" => "dolphin"}
-     * @param keySelector The function to use to retrieve the key from the Collection
-     * @param elementSelector A function to map each element to a specific value, e.g. to properties
-     * @return
+     *
+     * @param keySelector The function to use to retrieve the key from the Collection.
+     * @param elementSelector A function to map each element to a specific value, e.g. to properties.
+     * @return The created dictionary.
      */
     ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V): Map<K, V>;
 
     /**
-     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
-     * The key is defined by the keySelector. The keys are compared using the keyComparer. Duplicate keys throw an error.
+     * Enforces immediate evaluation of the whole Collection and returns a Map (dictionary) of the results.
+     * The key is defined by the keySelector. The keys are compared using the keyComparator. Duplicate keys throw an error.
+     *
+     * Example:
+     * <pre>
+     * const pets = [
+     *   { name: 'miez', species: 'cat' },
+     *   { name: 'wuff', species: 'dog' },
+     *   { name: 'leo', species: 'cat' },
+     *   { name: 'flipper', species: 'dolphin' }
+     * ];
+     * pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length);
+     * // -> error since cat and dog have 3 chars each and considered equal
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @example
-     const pets = [
-     { name: 'miez', species: 'cat' },
-     { name: 'wuff', species: 'dog' },
-     { name: 'leo', species: 'cat' },
-     { name: 'flipper', species: 'dolphin' }
-     ]
-     pets.ToDictionary(p => p.name, p => p.species, (a, b) => a.length === b.length)
-     // -> error since cat and dog have 3 chars each and considered equal
-     * @param keySelector The function to use to retrieve the key from the Collection
-     * @param keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
-     * @return
+     *
+     * @param keySelector The function to use to retrieve the key from the Collection.
+     * @param keyComparator A function specifying whether or not two keys are equal.
+     * @return The created dictionary.
      */
-    ToDictionary<K>(keySelector: (e: T) => K, keyComparer: (a: K, b: K) => boolean): Map<K, T>;
+    ToDictionary<K>(keySelector: (e: T) => K, keyComparator: (a: K, b: K) => boolean): Map<K, T>;
 
     /**
-     * ToDictionary - Enforces immediate evaluation of the whole Collcetion and returns a Map (dictionary) of the results.
+     * Enforces immediate evaluation of the whole Collection and returns a Map (dictionary) of the results.
      * The key is defined by the keySelector and each element is transformed using the elementSelector.
-     * The keys are compared using the keyComparer. Duplicate keys throw an error.
+     * The keys are compared using the keyComparator. Duplicate keys throw an error.
      *
      * @see https://msdn.microsoft.com/de-de/library/system.linq.enumerable.todictionary(v=vs.110).aspx
-     * @memberof Collection
-     * @instance
-     * @method
-     * @param keySelector The function to use to retrieve the key from the Collection
-     * @param elementSelector A function to map each element to a specific value, e.g. to properties
-     * @param keyComparer A function of the form (a, b) => bool specifying whether or not two keys are equal
-     * @return
+     *
+     * @param keySelector The function to use to retrieve the key from the Collection.
+     * @param elementSelector A function to map each element to a specific value, e.g. to properties.
+     * @param keyComparator A function of the form (a, b) => bool specifying whether or not two keys are equal.
+     * @return The created dictionary.
      */
-    ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, keyComparer: (a: K, b: K) => boolean): Map<K, V>;
+    ToDictionary<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, keyComparator: (a: K, b: K) => boolean): Map<K, V>;
 
     /**
-     * ToJSON - Returns the representation of the sequence in javascript object notation (JSON)
+     * Returns the representation of the sequence in javascript object notation (JSON).
      *
-     * @instance
-     * @method
-     * @memberof Collection
-     * @return
+     * @return The JSON string.
      */
     ToJSON(): string;
 
     /**
-     * Reverse - Returns a new sequence with the elements of the original one in reverse order
-     * This method should be considered inperformant since the collection must get enumerated once
+     * Returns a new sequence with the elements of the original one in reverse order
+     * This method should be considered slow since the collection must get enumerated once.
      *
      * @see https://msdn.microsoft.com/de-de/library/bb358497(v=vs.110).aspx
-     * @method
-     * @instance
-     * @memberof Collection
-     * @return
+     *
+     * @return A new collection in reversed order.
      */
     Reverse(): Collection<T>;
 
     /**
-     * ForEach - Invokes a function for each value of the Collection
+     * Invokes a function for each value of the Collection.
      *
-     * @method
-     * @instance
-     * @memberof Collection
-     * @example
-     [1, 2, 3].ForEach(x => console.log(x))
-     // Output:
-     1
-     2
-     3
-     * @param  {Function} fn
-     * @return
+     * Example:
+     * <pre>
+     * [1, 2, 3].ForEach(x => console.log(x));
+     * // Output:
+     * // 1
+     * // 2
+     * // 3
+     * </pre>
+     *
+     * @param fn Function to be invoked.
      */
     ForEach(fn: (e: T) => void): void;
 
@@ -1665,45 +1634,40 @@ interface Collection<T> extends Iterable<T> {
 interface CollectionStatic {
 
     /**
-     * Same as new Collection()
-     * @function Collection.From
-     * @memberof Collection
-     * @static
-     * @return
+     * Creates a new collection from the given iterable.
+     *
+     * @return The created collection.
      */
     From<T>(iterable: Iterable<T>): Collection<T>;
 
     /**
-     * Creates a sequence of count values starting with start including
-     * @function Range
-     * @memberof Collection
-     * @static
-     * @param  {Number} start The value to start with, e.g. 1
-     * @param  {Number} count The amount of numbers to generate from start
-     * @return       A new collection with the number range
+     * Creates a sequence of count values starting with start including.
+     *
+     * @param start The value to start with, e.g. 1.
+     * @param count The amount of numbers to generate from start.
+     * @return A new collection with the number range.
      */
     Range(start: number, count: number): Collection<number>;
 
     /**
-     * Repeat - Generates a sequence that consists of count times val
+     * Generates a sequence that consists of count times val.
+     *
+     * Example:
+     * <pre>
+     * Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!';
+     * // -> 'na na na na na na na na na na BATMAN!'
+     * </pre>
      *
      * @see https://msdn.microsoft.com/de-de/library/bb348899(v=vs.110).aspx
-     * @static
-     * @memberof Collection
-     * @method
-     * @example
-     Collection.Repeat('na', 10).ToArray().join(' ') + ' BATMAN!'
-     // -> 'na na na na na na na na na na BATMAN!'
-     * @param  {any} val The value to repeat
-     * @param  {Number} count
-     * @return
+     *
+     * @param val The value to repeat.
+     * @param count Number of repetitions.
+     * @return The created collection.
      */
     Repeat<T>(val: T, count: number): Collection<T>;
 
     /**
      * Empty collection.
-     *
-     * @return {Collection<any>}
      */
     Empty: Collection<any>;
 }
