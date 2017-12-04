@@ -8,8 +8,8 @@
     "alwaysStrict": true,
     "stripInternal": true,
     "declaration": true,
-    "outDir": "../build",
-    "declarationDir": "../build"
+    "outDir": "../build/tsc",
+    "declarationDir": "../build/tsc"
   },
   "exclude": [
     "node_modules"
