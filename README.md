@@ -1,4 +1,4 @@
-# linq.js [![Build Status](https://api.travis-ci.org/SvSchmidt/linqjs.png)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg)](https://coveralls.io/github/SvSchmidt/linqjs)
+# linq.js [![Build Status](https://travis-ci.org/SvSchmidt/linqjs.svg?branch=masterg)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg)](https://coveralls.io/github/SvSchmidt/linqjs)
 
 > Perform queries on collections in the manner of C#s System.Linq in JavaScript
 
