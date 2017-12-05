@@ -1,4 +1,4 @@
-const Collection = require(process.env.TEST_MIN ? '../dist/linq.min' : '../dist/linq')
+const Collection = require(process.env.TEST_MIN ? '../dist/linq.commonjs.min' : '../dist/linq.commonjs')
 const expect = require('chai').expect
 const fs = require('fs')
 

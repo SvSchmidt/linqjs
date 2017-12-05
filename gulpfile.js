@@ -6,6 +6,7 @@ const concat = require("gulp-concat");
 const uglify = require("gulp-uglify-es").default;
 const filter = require("gulp-filter");
 const babel = require("gulp-babel");
+const exec = require("child_process").exec;
 
 /*
  * Clean tasks
@@ -129,6 +130,19 @@ gulp.task("declaration", () => {
         .pipe(project())
         .pipe(filter("**/*.d.ts"))
         .pipe(gulp.dest("./dist"));
+});
+
+/*
+ * Execute test
+ */
+gulp.task("coverage", cb => {
+    exec('node ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive',
+        (err, stdout, stderr) => {
+            console.log(stdout);
+            console.log(stderr);
+            cb(err);
+        }
+    );
 });
 
 /*
