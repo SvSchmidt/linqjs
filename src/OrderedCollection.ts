@@ -1,7 +1,7 @@
 /**
  * Ordered collection of iterable values.
  */
-interface OrderedCollection<T> extends Collection<T> {
+export interface OrderedCollection<T> extends BasicCollection<T> {
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.

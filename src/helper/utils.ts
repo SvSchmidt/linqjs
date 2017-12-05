@@ -2,7 +2,7 @@ function __toJSON(obj: any): string {
     return JSON.stringify(obj);
 }
 
-function __aggregateCollection<T, V, R>(coll: Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
+function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
     __assertNotEmpty(coll);
@@ -10,7 +10,7 @@ function __aggregateCollection<T, V, R>(coll: Collection<T>, seed: V, accumulato
     return resultTransformFn([<any>seed].concat(coll).reduce(accumulator));
 }
 
-function __removeDuplicates<T>(coll: Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = __defaultEqualityCompareFn): Collection<T> {
+function __removeDuplicates<T>(coll: __Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = __defaultEqualityCompareFn): __Collection<T> {
     __assertIterable(coll);
     __assertFunction(equalityCompareFn);
 

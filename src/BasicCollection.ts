@@ -1,7 +1,7 @@
 /**
  * Represents a collection of iterable values.
  */
-interface Collection<T> extends Iterable<T> {
+export interface BasicCollection<T> extends Iterable<T> {
 
     //#region Access
 
@@ -23,7 +23,7 @@ interface Collection<T> extends Iterable<T> {
      * @param count Number of elements to be returned.
      * @return Collection with the first <code>count</code> elements.
      */
-    Take(count: number): Collection<T>;
+    Take(count: number): BasicCollection<T>;
 
     /**
      * Skips count elements of the sequence and returns the remaining sequence.
@@ -33,7 +33,7 @@ interface Collection<T> extends Iterable<T> {
      * @param count Number of elements to skip.
      * @return Collection without the first <code>count</code> elements.
      */
-    Skip(count: number): Collection<T>;
+    Skip(count: number): BasicCollection<T>;
 
     /**
      * Takes elements from the beginning of a sequence while the predicate yields true.
@@ -55,7 +55,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate The predicate.
      * @return The filtered collection.
      */
-    TakeWhile(predicate: (elem: T) => boolean): Collection<T>;
+    TakeWhile(predicate: (elem: T) => boolean): BasicCollection<T>;
 
     /**
      * Takes elements from the beginning of a sequence while the predicate yields true.
@@ -66,7 +66,7 @@ interface Collection<T> extends Iterable<T> {
      * @param  predicate The predicate.
      * @return The filtered collection.
      */
-    TakeWhile(predicate: (elem: T, index: number) => boolean): Collection<T>;
+    TakeWhile(predicate: (elem: T, index: number) => boolean): BasicCollection<T>;
 
     /**
      * Takes elements from the beginning of a sequence until the predicate yields true.
@@ -87,7 +87,7 @@ interface Collection<T> extends Iterable<T> {
      * @param  predicate The predicate of the form elem => boolean
      * @return The filtered collection.
      */
-    TakeUntil(predicate: (elem: T) => boolean): Collection<T>;
+    TakeUntil(predicate: (elem: T) => boolean): BasicCollection<T>;
 
     /**
      * Takes elements from the beginning of a sequence until the predicate yields true.
@@ -97,7 +97,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate The predicate function.
      * @return The filtered collection.
      */
-    TakeUntil(predicate: (elem: T, index: number) => boolean): Collection<T>;
+    TakeUntil(predicate: (elem: T, index: number) => boolean): BasicCollection<T>;
 
     /**
      * Skips elements in the sequence while the predicate yields true and returns the remaining sequence.
@@ -114,7 +114,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate The predicate function.
      * @return The filtered collection.
      */
-    SkipWhile(predicate: (elem: T) => boolean): Collection<T>;
+    SkipWhile(predicate: (elem: T) => boolean): BasicCollection<T>;
 
     /**
      * Skips elements in the sequence while the predicate yields true and returns the remaining sequence.
@@ -125,7 +125,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate The predicate function.
      * @return The filtered collection.
      */
-    SkipWhile(predicate: (elem: T, index: number) => boolean): Collection<T>;
+    SkipWhile(predicate: (elem: T, index: number) => boolean): BasicCollection<T>;
 
     /**
      * Skips elements from the beginning of a sequence until the predicate yields true.
@@ -148,7 +148,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate The predicate function.
      * @return The filtered collection.
      */
-    SkipUntil(predicate: (elem: T) => boolean): Collection<T>;
+    SkipUntil(predicate: (elem: T) => boolean): BasicCollection<T>;
 
     /**
      * Takes elements from the beginning of a sequence until the predicate yields true.
@@ -158,7 +158,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate The predicate function.
      * @return The filtered collection.
      */
-    SkipUntil(predicate: (elem: T, index: number) => boolean): Collection<T>;
+    SkipUntil(predicate: (elem: T, index: number) => boolean): BasicCollection<T>;
 
     /**
      * Returns the first element in a sequence.
@@ -441,7 +441,7 @@ interface Collection<T> extends Iterable<T> {
      * @param constructor The default value type.
      * @return This collection or a new one containing a default value of the given type.
      */
-    DefaultIfEmpty<V>(constructor: V): this | Collection<V>;
+    DefaultIfEmpty<V>(constructor: V): this | BasicCollection<V>;
 
     //#endregion
 
@@ -461,7 +461,7 @@ interface Collection<T> extends Iterable<T> {
      * @param inner The inner sequence to concat with the outer one.
      * @return A new collection with elements from both collections.
      */
-    Concat(inner: Iterable<T>): Collection<T>;
+    Concat(inner: Iterable<T>): BasicCollection<T>;
 
     /**
      * Concatenates two sequences and removes duplicate values (produces the set union).
@@ -477,7 +477,7 @@ interface Collection<T> extends Iterable<T> {
      * @param inner The sequence to create the set union with.
      * @return The set union of the two collections.
      */
-    Union(inner: Iterable<T>): Collection<T>;
+    Union(inner: Iterable<T>): BasicCollection<T>;
 
     /**
      * Concatenates two sequences and removes duplicate values (produces the set union).
@@ -487,7 +487,7 @@ interface Collection<T> extends Iterable<T> {
      * @param equalityCompareFn A function to determine whether or not two values are considered equal.
      * @return The set union of the two collections.
      */
-    Union(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
+    Union(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): BasicCollection<T>;
 
     /**
      * Correlates the elements of two sequences based on matching keys.
@@ -500,7 +500,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelectorFn A fn to transform the pairings into the result
      * @return A new collection with the results.
      */
-    Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V): Collection<V>;
+    Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V): BasicCollection<V>;
 
     /**
      * Correlates the elements of two sequences based on matching keys.
@@ -514,7 +514,7 @@ interface Collection<T> extends Iterable<T> {
      * @param keyEqualityCompareFn Optional fn to compare the keys.
      * @return A new collection with the results.
      */
-    Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn: (a: K, b: K) => boolean): Collection<V>;
+    Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn: (a: K, b: K) => boolean): BasicCollection<V>;
 
     /**
      * Returns the element of the sequence that do not appear in inner.
@@ -535,7 +535,7 @@ interface Collection<T> extends Iterable<T> {
      * @param inner The second sequence to get exceptions from.
      * @return A new Collection with the values of outer without the ones in inner.
      */
-    Except(inner: Iterable<T>): Collection<T>;
+    Except(inner: Iterable<T>): BasicCollection<T>;
 
     /**
      * Applies a function to the elements of two sequences, producing a sequence of the results.
@@ -559,7 +559,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelectorFn A function to produce the output sequence.
      * @return A new collection with the results.
      */
-    Zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): Collection<V>;
+    Zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): BasicCollection<V>;
 
     /**
      * Produces the set intersection of two sequences. The default equality comparator is used to compare values.
@@ -575,7 +575,7 @@ interface Collection<T> extends Iterable<T> {
      * @param inner The sequence to get the intersection from.
      * @return A collection containing the intersection.
      */
-    Intersect(inner: Iterable<T>): Collection<T>;
+    Intersect(inner: Iterable<T>): BasicCollection<T>;
 
     /**
      * Produces the set intersection of two sequences. A provided equality comparator is used to compare values.
@@ -586,7 +586,7 @@ interface Collection<T> extends Iterable<T> {
      * @param equalityCompareFn A function to compare the values.
      * @return A collection containing the intersection.
      */
-    Intersect(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
+    Intersect(inner: Iterable<T>, equalityCompareFn: (a: T, b: T) => boolean): BasicCollection<T>;
 
     //#endregion
 
@@ -687,7 +687,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelector A function to select a final result from each group.
      * @return The grouped sequence with projected results as a new Collection.
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V): Collection<V>;
+    GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V): BasicCollection<V>;
 
     /**
      * Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparator.
@@ -700,7 +700,7 @@ interface Collection<T> extends Iterable<T> {
      * @param keyComparator A function of the form (outer, inner) => bool to check if keys are considered equal.
      * @return The grouped sequence with projected results as a new Collection.
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): Collection<V>;
+    GroupBy<K, V>(keySelector: (e: T) => K, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
 
     /**
      * Groups a sequence using the keys selected from the members using the keySelector. Keys are compared using the specified keyComparator.
@@ -727,7 +727,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelector A function to select a final result from each group.
      * @return The grouped sequence with projected results as a new Collection.
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V): Collection<V>;
+    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V): BasicCollection<V>;
 
     /**
      * Groups a sequence using the keys selected from the members using the keySelector. The keys are compared using the keyComparator.
@@ -743,7 +743,7 @@ interface Collection<T> extends Iterable<T> {
      * @return The grouped sequence with projected results as a new Collection.
      * @
      */
-    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): Collection<V>;
+    GroupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
@@ -757,7 +757,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelector A function of the form (key, values) => any to select the final result from each grouping.
      * @return A collection with the grouped values.
      */
-    GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V): Collection<V>;
+    GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V): BasicCollection<V>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
@@ -772,7 +772,7 @@ interface Collection<T> extends Iterable<T> {
      * @param keyComparator A function to compare keys for equality.
      * @return A collection with the grouped values.
      */
-    GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): Collection<V>;
+    GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
 
     //#endregion
 
@@ -1089,7 +1089,7 @@ interface Collection<T> extends Iterable<T> {
      *
      * @return The shuffled collection.
      */
-    Shuffle(): Collection<T>;
+    Shuffle(): BasicCollection<T>;
 
     //#endregioning
 
@@ -1185,7 +1185,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate A function to filter the sequence.
      * @return The filtered collection.
      */
-    Where(predicate: (e: T) => boolean): Collection<T>;
+    Where(predicate: (e: T) => boolean): BasicCollection<T>;
 
     /**
      * Filters a sequence based on a predicate function. The index of the element is used in the predicate function.
@@ -1195,7 +1195,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate A function to filter the sequence.
      * @return The filtered collection.
      */
-    Where(predicate: (element: T, index: number) => boolean): Collection<T>;
+    Where(predicate: (element: T, index: number) => boolean): BasicCollection<T>;
 
     /**
      * Filters a sequence based on a predicate function if the condition is true.
@@ -1204,7 +1204,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate A function to filter the sequence.
      * @return The filtered collection or the original sequence if condition was falsy.
      */
-    ConditionalWhere(condition: boolean, predicate: (e: T) => boolean): Collection<T>;
+    ConditionalWhere(condition: boolean, predicate: (e: T) => boolean): BasicCollection<T>;
 
     /**
      * Filters a sequence based on a predicate function if the condition is true. The index of the element is used in the predicate function.
@@ -1213,7 +1213,7 @@ interface Collection<T> extends Iterable<T> {
      * @param predicate A function to filter the sequence.
      * @return The filtered collection or the original sequence if condition was falsy.
      */
-    ConditionalWhere(condition: boolean, predicate: (element: T, index: number) => boolean): Collection<T>;
+    ConditionalWhere(condition: boolean, predicate: (element: T, index: number) => boolean): BasicCollection<T>;
 
     /**
      * Returns the length of the sequence.
@@ -1377,7 +1377,7 @@ interface Collection<T> extends Iterable<T> {
      * @param mapFn The function to use to map each element of the sequence.
      * @return A new collection with mapped values.
      */
-    Select<V>(mapFn: (e: T) => V): Collection<V>;
+    Select<V>(mapFn: (e: T) => V): BasicCollection<V>;
 
     /**
      * Projects each member of the sequence into a new form. The index of the source element can be used in the mapFn.
@@ -1393,7 +1393,7 @@ interface Collection<T> extends Iterable<T> {
      * @param mapFn The function to use to map each element of the sequence.
      * @return A new collection with mapped values.
      */
-    Select<V>(mapFn: (element: T, index: number) => V): Collection<V>;
+    Select<V>(mapFn: (element: T, index: number) => V): BasicCollection<V>;
 
     /**
      * Flattens a sequence meaning reducing the level of nesting by one.
@@ -1406,7 +1406,7 @@ interface Collection<T> extends Iterable<T> {
      *
      * @return A new, flattened Collection.
      */
-    Flatten(): Collection<any>;
+    Flatten(): BasicCollection<any>;
 
     /**
      * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
@@ -1428,7 +1428,7 @@ interface Collection<T> extends Iterable<T> {
      * @param mapFn The function to use to map each element of the sequence.
      * @return The mapped and flattened collection.
      */
-    SelectMany<V>(mapFn: (element: T) => Array<V> | V): Collection<V>;
+    SelectMany<V>(mapFn: (element: T) => Array<V> | V): BasicCollection<V>;
 
     /**
      * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
@@ -1439,7 +1439,7 @@ interface Collection<T> extends Iterable<T> {
      * @param mapFn The function to use to map each element of the sequence.
      * @return The mapped and flattened collection.
      */
-    SelectMany<V>(mapFn: (element: T, index: number) => Array<V> | V): Collection<V>;
+    SelectMany<V>(mapFn: (element: T, index: number) => Array<V> | V): BasicCollection<V>;
 
     /**
      * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
@@ -1474,7 +1474,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelector a function to map the result Value.
      * @return The mapped and flattened collection.
      */
-    SelectMany<V, R>(mapFn: (element: T) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
+    SelectMany<V, R>(mapFn: (element: T) => Array<V> | V, resultSelector: (v: V) => R): BasicCollection<R>;
 
     /**
      * Projects each element of a sequence using mapFn and flattens the resulting sequences into one sequence.
@@ -1486,7 +1486,7 @@ interface Collection<T> extends Iterable<T> {
      * @param resultSelector a function to map the result Value.
      * @return The mapped and flattened collection.
      */
-    SelectMany<V, R>(mapFn: (element: T, index: number) => Array<V> | V, resultSelector: (v: V) => R): Collection<R>;
+    SelectMany<V, R>(mapFn: (element: T, index: number) => Array<V> | V, resultSelector: (v: V) => R): BasicCollection<R>;
 
     /**
      * Returns the distinct elements from a sequence using the default equality compare function.
@@ -1501,7 +1501,7 @@ interface Collection<T> extends Iterable<T> {
      *
      * @return A new collection with distinct elements.
      */
-    Distinct(): Collection<T>;
+    Distinct(): BasicCollection<T>;
 
     /**
      * Returns the distinct elements from a sequence using a provided equality compare function.
@@ -1511,7 +1511,7 @@ interface Collection<T> extends Iterable<T> {
      * @param equalityCompareFn The function determining if the values are equal.
      * @return A new collection with distinct elements.
      */
-    Distinct(equalityCompareFn: (a: T, b: T) => boolean): Collection<T>;
+    Distinct(equalityCompareFn: (a: T, b: T) => boolean): BasicCollection<T>;
 
     /**
      * Enforces immediate evaluation of the whole Collection and returns an array of the result.
@@ -1610,7 +1610,7 @@ interface Collection<T> extends Iterable<T> {
      *
      * @return A new collection in reversed order.
      */
-    Reverse(): Collection<T>;
+    Reverse(): BasicCollection<T>;
 
     /**
      * Invokes a function for each value of the Collection.
@@ -1631,14 +1631,14 @@ interface Collection<T> extends Iterable<T> {
     //#endregion
 }
 
-interface CollectionStatic {
+export interface CollectionStatic {
 
     /**
      * Creates a new collection from the given iterable.
      *
      * @return The created collection.
      */
-    From<T>(iterable: Iterable<T>): Collection<T>;
+    From<T>(iterable: Iterable<T>): BasicCollection<T>;
 
     /**
      * Creates a sequence of count values starting with start including.
@@ -1647,7 +1647,7 @@ interface CollectionStatic {
      * @param count The amount of numbers to generate from start.
      * @return A new collection with the number range.
      */
-    Range(start: number, count: number): Collection<number>;
+    Range(start: number, count: number): BasicCollection<number>;
 
     /**
      * Generates a sequence that consists of count times val.
@@ -1664,10 +1664,10 @@ interface CollectionStatic {
      * @param count Number of repetitions.
      * @return The created collection.
      */
-    Repeat<T>(val: T, count: number): Collection<T>;
+    Repeat<T>(val: T, count: number): BasicCollection<T>;
 
     /**
      * Empty collection.
      */
-    Empty: Collection<any>;
+    Empty: BasicCollection<any>;
 }

@@ -1,4 +1,4 @@
-class __Collection<T> implements Collection<T> {
+class __Collection<T> implements BasicCollection<T> {
 
     //#region Constructor
 
@@ -62,7 +62,7 @@ class __Collection<T> implements Collection<T> {
         return this.Skip(index).Take(1).ToArray()[0];
     }
 
-    public Take(count: number = 0): Collection<T> {
+    public Take(count: number = 0): __Collection<T> {
         __assertNumeric(count);
 
         if (count <= 0) {
@@ -83,7 +83,7 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public Skip(count: number = 0): Collection<T> {
+    public Skip(count: number = 0): __Collection<T> {
         __assertNumeric(count);
 
         if (count <= 0) {
@@ -188,7 +188,7 @@ class __Collection<T> implements Collection<T> {
         return this.__resultOrDefault(this.Single, predicateOrConstructor, constructor);
     }
 
-    public DefaultIfEmpty<V>(constructor: V): this | Collection<V> {
+    public DefaultIfEmpty<V>(constructor: V): this | __Collection<V> {
         if (!__isEmpty(this)) {
             return this;
         }
@@ -200,7 +200,7 @@ class __Collection<T> implements Collection<T> {
 
     //#region Concatenation
 
-    public Concat(inner: Iterable<T>): Collection<T> {
+    public Concat(inner: Iterable<T>): __Collection<T> {
         __assertIterable(inner);
 
         const outer = this;
@@ -211,13 +211,13 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public Union(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): Collection<T> {
+    public Union(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertIterable(inner);
 
         return this.Concat(inner).Distinct(equalityCompareFn);
     }
 
-    public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn = __defaultEqualityCompareFn): Collection<V> {
+    public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -241,7 +241,7 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public Except(inner: Iterable<T>): Collection<T> {
+    public Except(inner: Iterable<T>): __Collection<T> {
         __assertIterable(inner);
 
         if (!__isCollection(inner)) {
@@ -252,14 +252,14 @@ class __Collection<T> implements Collection<T> {
 
         return new __Collection(function* () {
             for (let val of outer) {
-                if (!(<Collection<T>>inner).Contains(val)) {
+                if (!(<__Collection<T>>inner).Contains(val)) {
                     yield val;
                 }
             }
         });
     }
 
-    public Zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): Collection<V> {
+    public Zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(resultSelectorFn);
 
@@ -280,7 +280,7 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public Intersect(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): Collection<T> {
+    public Intersect(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertIterable(inner);
         __assertFunction(equalityCompareFn);
 
@@ -491,7 +491,7 @@ class __Collection<T> implements Collection<T> {
         return fn(keySelector, ...args);
     }
 
-    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): Collection<V> {
+    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -575,7 +575,7 @@ class __Collection<T> implements Collection<T> {
     public Sum(mapFn = (x: any) => x): number {
         __assertNotEmpty(this);
 
-        return this.Select(mapFn).Aggregate(0, (prev, curr) => prev + curr);
+        return this.Select(mapFn).Aggregate(0, (prev: any, curr: any) => prev + curr);
     }
 
     public Average(mapFn = (x: any) => x): number {
@@ -606,8 +606,8 @@ class __Collection<T> implements Collection<T> {
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
     }
 
-    public Shuffle(): Collection<T> {
-        return this.OrderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
+    public Shuffle(): __Collection<T> {
+        return <any>this.OrderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
     }
 
     //#endregioning
@@ -651,7 +651,7 @@ class __Collection<T> implements Collection<T> {
         return !!~this.IndexOf(elem, equalityCompareFn);
     }
 
-    public Where(predicate = (elem: any, index: number) => true): Collection<T> {
+    public Where(predicate = (elem: any, index: number) => true): __Collection<T> {
         __assertFunction(predicate);
 
         const self = this;
@@ -726,7 +726,7 @@ class __Collection<T> implements Collection<T> {
         }
     }
 
-    public Select(mapFn: any = (x: any) => x): Collection<any> {
+    public Select(mapFn: any = (x: any) => x): __Collection<any> {
         const self = this;
 
         let index = 0;
@@ -739,11 +739,11 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public Flatten(): Collection<any> {
+    public Flatten(): __Collection<any> {
         return this.SelectMany((x: any) => x);
     }
 
-    public SelectMany(mapFn: any, resultSelector = (x: any, y: any) => y): Collection<any> {
+    public SelectMany(mapFn: any, resultSelector = (x: any, y: any) => y): __Collection<any> {
         __assertFunction(mapFn);
         __assertFunction(resultSelector);
 
@@ -771,7 +771,7 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public Distinct(equalityCompareFn: any = __defaultEqualityCompareFn): Collection<T> {
+    public Distinct(equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertFunction(equalityCompareFn);
 
         return __removeDuplicates(this, equalityCompareFn);
@@ -824,7 +824,7 @@ class __Collection<T> implements Collection<T> {
         return __toJSON(this.ToArray());
     }
 
-    public Reverse(): Collection<T> {
+    public Reverse(): __Collection<T> {
         const arr = this.ToArray();
 
         return new __Collection(function* () {
@@ -846,11 +846,11 @@ class __Collection<T> implements Collection<T> {
 
     //#region Static
 
-    public static From<T>(iterable: Iterable<T>): Collection<T> {
+    public static From<T>(iterable: Iterable<T>): __Collection<T> {
         return new __Collection(iterable);
     }
 
-    public static Range(start: number, count: number): Collection<number> {
+    public static Range(start: number, count: number): __Collection<number> {
         __assertNumberBetween(count, 0, Infinity);
 
         return new __Collection(function* () {
@@ -861,7 +861,7 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public static Repeat<T>(val: T, count: number): Collection<T> {
+    public static Repeat<T>(val: T, count: number): __Collection<T> {
         __assertNumberBetween(count, 0, Infinity);
 
         return new __Collection(function* () {
@@ -871,7 +871,7 @@ class __Collection<T> implements Collection<T> {
         });
     }
 
-    public static get Empty(): Collection<any> {
+    public static get Empty(): __Collection<any> {
         return new __Collection([]);
     }
 

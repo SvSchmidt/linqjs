@@ -30,7 +30,7 @@ function __assertIterable<T>(obj: Iterable<T>): void {
     __assert(__isIterable(obj), 'iterable', obj);
 }
 
-function __assertCollection<T>(obj: Collection<T>): void {
+function __assertCollection<T>(obj: __Collection<T>): void {
     __assert(__isCollection(obj), 'collection', obj);
 }
 
@@ -43,7 +43,7 @@ function __assertNumberBetween(num: number, min: number, max: number = Infinity)
     __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`);
 }
 
-function __assertIndexInRange<T>(self: Collection<T>, index: number): void {
+function __assertIndexInRange<T>(self: __Collection<T>, index: number): void {
     __assertCollection(self);
     __assert(__isNumeric(index), 'number', index);
     __assert(index >= 0 && index < self.Count(), 'Index is out of bounds');

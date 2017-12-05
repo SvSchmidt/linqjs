@@ -22,7 +22,7 @@ function __isString(obj: any): obj is string {
     return typeof obj === 'string';
 }
 
-function __isCollection<T>(obj: Collection<T> | any): obj is Collection<T> {
+function __isCollection<T>(obj: __Collection<T> | any): obj is __Collection<T> {
     return obj instanceof __Collection;
 }
 
