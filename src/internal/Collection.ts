@@ -599,11 +599,11 @@ class __Collection<T> implements Collection<T> {
     public OrderBy(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
         __assertFunction(comparator);
 
-        return new __OrderedCollectionImpl(this, __getComparatorFromKeySelector(keySelector, comparator));
+        return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
     }
 
     public OrderByDescending(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
-        return new __OrderedCollectionImpl(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
+        return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
     }
 
     public Shuffle(): Collection<T> {

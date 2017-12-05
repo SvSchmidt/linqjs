@@ -1,4 +1,4 @@
-class __OrderedCollectionImpl<T> extends __Collection<T> implements OrderedCollection<T> {
+class __OrderedCollection<T> extends __Collection<T> implements OrderedCollection<T> {
 
     private __comparator: (a: T, b: T) => number;
 
@@ -22,7 +22,7 @@ class __OrderedCollectionImpl<T> extends __Collection<T> implements OrderedColle
             return additionalComparator(a, b);
         };
 
-        return new __OrderedCollectionImpl(this.__iterable, newComparator);
+        return new __OrderedCollection(this.__iterable, newComparator);
     };
 
     public ThenByDescending(keySelector: any, comparator = __defaultComparator) {
