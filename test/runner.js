@@ -2,6 +2,11 @@ const Collection = require(process.env.TEST_MIN ? '../dist/linq.commonjs.min' : 
 const expect = require('chai').expect
 const fs = require('fs')
 
+// patch prototypes
+Collection.extendIterablePrototype(Array.prototype);
+Collection.extendIterablePrototype(Map.prototype);
+Collection.extendIterablePrototype(Set.prototype);
+
 function run (path) {
   let source = fs.readFileSync(path, 'utf8')
   source = `(function () { ${source} }())`

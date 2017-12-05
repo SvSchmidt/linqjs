@@ -7,6 +7,7 @@ const uglify = require("gulp-uglify-es").default;
 const filter = require("gulp-filter");
 const babel = require("gulp-babel");
 const exec = require("child_process").exec;
+const mocha = require("gulp-mocha");
 
 /*
  * Clean tasks
@@ -133,7 +134,15 @@ gulp.task("declaration", () => {
 });
 
 /*
- * Execute test
+ * Test
+ */
+gulp.task("test", () => {
+    return gulp.src("./test/runner.js", {read: false})
+        .pipe(mocha({reporter: "nyan"}));
+});
+
+/*
+ * Test with coverage
  */
 gulp.task("coverage", cb => {
     exec('node ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive',
@@ -146,11 +155,11 @@ gulp.task("coverage", cb => {
 });
 
 /*
- * Combined tasks
+ * Combined build task
  */
-gulp.task("all", ["declaration", "compile", "docs"]);
+gulp.task("build", ["declaration", "compile", "docs"]);
 
 /*
  * Default task
  */
-gulp.task("default", ["declaration", "compile"]);
+gulp.task("default", ["compile:commonjs", "test"]);

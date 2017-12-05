@@ -7,8 +7,8 @@ export default Collection;
  * @param prototype Prototype to be patched.
  */
 export function extendIterablePrototype(prototype: any): void {
-    for (let key of Object.keys((<any>Collection).prototype)) {
-        if (!key.startsWith('_') && __isFunction((<any>Collection).prototype[key])) {
+    for (let key of Object.getOwnPropertyNames(Object.getPrototypeOf(Collection.Empty))) {
+        if (!key.startsWith('_') && __isFunction((<any>Collection.Empty)[key])) {
             prototype[key] = function (...args: any[]): any {
                 let collection: any = Collection.From(this);
                 return collection[key].call(collection, ...args);
