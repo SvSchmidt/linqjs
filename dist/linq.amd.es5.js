@@ -15,10 +15,10 @@ define(["require", "exports"], function (require, exports) {
      */
     function __assert(condition, ...args) {
         if (!condition) {
-            if (args.length === 1) {
-                throw new Error(args[0]);
-            } else if (args.length === 2) {
+            if (args.length === 2) {
                 throw new __AssertionError(args[0], args[1]);
+            } else {
+                throw new Error(args[0]);
             }
         }
     }
