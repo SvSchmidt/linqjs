@@ -1,5 +1,7 @@
 /**
  * HeapElement class that also provides the element index for sorting.
+ *
+ * @private
  */
 class __HeapElement<T> {
 
@@ -30,6 +32,8 @@ class __HeapElement<T> {
 
 /**
  * Partially sorted heap that contains the smallest element within root position.
+ *
+ * @private
  */
 class __MinHeap<T> implements Iterable<T> {
 

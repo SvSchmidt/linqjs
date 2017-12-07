@@ -1,3 +1,6 @@
+/**
+ * @private
+ */
 function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
     return __toJSON(first) === __toJSON(second);
 }
@@ -5,6 +8,8 @@ function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
 /**
  * Default comparator implementation that uses the "<" operator.
  * Returns values as specified by the comparator function fir Array.sort().
+ *
+ * @private
  *
  * @param a Element "a" to be compared.
  * @param b Element "b" to be compared.

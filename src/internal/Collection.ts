@@ -1,3 +1,6 @@
+/**
+ * @private
+ */
 class __Collection<T> implements BasicCollection<T> {
 
     //#region Constructor

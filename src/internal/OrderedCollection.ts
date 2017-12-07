@@ -1,3 +1,6 @@
+/**
+ * @private
+ */
 class __OrderedCollection<T> extends __Collection<T> implements OrderedCollection<T> {
 
     private __comparator: (a: T, b: T) => number;

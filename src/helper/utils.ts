@@ -1,7 +1,13 @@
+/**
+ * @private
+ */
 function __toJSON(obj: any): string {
     return JSON.stringify(obj);
 }
 
+/**
+ * @private
+ */
 function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
@@ -10,6 +16,9 @@ function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumula
     return resultTransformFn([<any>seed].concat(coll).reduce(accumulator));
 }
 
+/**
+ * @private
+ */
 function __removeDuplicates<T>(coll: __Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = __defaultEqualityCompareFn): __Collection<T> {
     __assertIterable(coll);
     __assertFunction(equalityCompareFn);
@@ -31,6 +40,9 @@ function __removeDuplicates<T>(coll: __Collection<T>, equalityCompareFn: (a: T, 
     });
 }
 
+/**
+ * @private
+ */
 function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
     __assertArray(arr);
 
@@ -50,12 +62,9 @@ function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
     return elementFound;
 }
 
-const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
-
-function __isNative(obj: any): boolean {
-    return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
-}
-
+/**
+ * @private
+ */
 function __getDefault(constructorOrValue: any = Object): any {
     if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         let defaultValue = constructorOrValue();
@@ -70,12 +79,18 @@ function __getDefault(constructorOrValue: any = Object): any {
     return constructorOrValue;
 }
 
+/**
+ * @private
+ */
 function __getParameterCount(fn: Function): number {
     __assertFunction(fn);
 
     return fn.length;
 }
 
+/**
+ * @private
+ */
 function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = __defaultComparator): (a: T, b: T) => number {
     if (__isFunction(selector)) {
         return <any>(new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
