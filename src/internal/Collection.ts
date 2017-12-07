@@ -6,7 +6,7 @@ class __Collection<T> implements BasicCollection<T> {
     //#region Constructor
 
     public constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>)) {
-        __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
+        __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
         this.__iterable = iterableOrGenerator;
     }
 
