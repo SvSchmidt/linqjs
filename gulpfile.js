@@ -8,6 +8,7 @@ const filter = require("gulp-filter");
 const babel = require("gulp-babel");
 const exec = require("child_process").exec;
 const mocha = require("gulp-mocha");
+const runSequence = require("gulp-sequence");
 
 /*
  * Clean tasks
@@ -15,7 +16,7 @@ const mocha = require("gulp-mocha");
 gulp.task("clean:dist", () => del("./dist/**", {force: true}));
 gulp.task("clean:build", () => del("./build/**", {force: true}));
 gulp.task("clean:docs", () => del("./docs/**", {force: true}));
-gulp.task("clean", ["clean:dist", "clean:build", "clean:docs"]);
+gulp.task("clean", cb => runSequence("clean:dist", "clean:build", "clean:docs", cb));
 
 /*
  * Merge sources
@@ -115,9 +116,9 @@ for (let module of supportedModules) {
 
     taskName = "compile:" + moduleLower;
     buildTasks.push(taskName);
-    gulp.task(taskName, moduleBuildTasks);
+    gulp.task(taskName, cb => runSequence(...moduleBuildTasks, cb));
 }
-gulp.task("compile", buildTasks);
+gulp.task("compile", cb => runSequence(...buildTasks, cb));
 
 /*
  * Declaration
@@ -157,9 +158,24 @@ gulp.task("coverage", cb => {
 /*
  * Combined build task
  */
-gulp.task("build", ["declaration", "compile", "docs"]);
+gulp.task("build", cb => runSequence("declaration", "compile", "docs", cb));
+
+/*
+ * Compile and test task
+ */
+gulp.task("check", cb => runSequence("compile:commonjs", "test", cb));
+
+/*
+ * Build all task
+ */
+gulp.task("all", cb => runSequence("clean", "build", "test", cb));
 
 /*
  * Default task
  */
-gulp.task("default", ["compile:commonjs", "test"]);
+gulp.task("default", () => {
+    return gulp.watch(
+        ["./src/**/*.ts", "./test/**/*.js", "./gulpfile.js"],
+        ["check"]
+    );
+});
