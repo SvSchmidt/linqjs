@@ -48,7 +48,6 @@ describe('Concatenation', function () {
                       person => person,
                       pet => pet.Owner,
                       (person, pet) => { return { OwnerName: person.Name, Pet: pet.Name } })
-
       const expectedResults = [
         'Hedlund, Magnus - Daisy',
         'Adams, Terry - Barley',
@@ -56,12 +55,32 @@ describe('Concatenation', function () {
         'Weiss, Charlotte - Whiskers',
       ]
 
+      const query2 =
+          pets.Join(people,
+                    pet => pet.Owner,
+                    person => person,
+                    (pet, person) => { return { OwnerName: person.Name, Pet: pet.Name } })
+
+      const expectedResults2 = [
+        'Adams, Terry - Barley',
+        'Adams, Terry - Boots',
+        'Weiss, Charlotte - Whiskers',
+        'Hedlund, Magnus - Daisy',
+      ]
+
       expect(query.Count()).to.be.equal(4)
+      expect(query2.Count()).to.be.equal(4)
 
       let index = 0
       for (let pair of query) {
         expect(`${pair.OwnerName} - ${pair.Pet}`).to.be.deep.equal(expectedResults[index])
         index++
+      }
+
+      index = 0
+      for (let pair of query2) {
+          expect(`${pair.OwnerName} - ${pair.Pet}`).to.be.deep.equal(expectedResults2[index])
+          index++
       }
     })
 

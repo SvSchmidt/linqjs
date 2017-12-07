@@ -98,7 +98,9 @@ function __getParameterCount(fn: Function): number {
 function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = defaultComparator): (a: T, b: T) => number {
     if (__isFunction(selector)) {
         return <any>(new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
-    } else if (__isString(selector)) {
+    }
+
+    if (__isString(selector)) {
         if (!(selector.startsWith('[') || selector.startsWith('.'))) {
             selector = `.${selector}`;
         }

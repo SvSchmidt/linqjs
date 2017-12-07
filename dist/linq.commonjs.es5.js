@@ -251,7 +251,8 @@ function __getParameterCount(fn) {
 function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
     if (__isFunction(selector)) {
         return new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector);
-    } else if (__isString(selector)) {
+    }
+    if (__isString(selector)) {
         if (!(selector.startsWith('[') || selector.startsWith('.'))) {
             selector = `.${selector}`;
         }
