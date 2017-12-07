@@ -41,7 +41,7 @@ function typescriptSource() {
 gulp.task("docs", () => {
     return typescriptSource()
         .pipe(typeDoc({
-            module: "ES6",
+            module: "commonjs",
             target: "ES6",
             out: "./docs",
             name: "linq.js",
