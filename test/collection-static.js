@@ -11,6 +11,15 @@ describe('Collection static methods', function () {
     })
   })
 
+  describe('Collection.From(any)', function () {
+    it('should throw an error for non-iterable arguments', function () {
+      expect(() => Collection.From(1)).to.throw(Error)
+      expect(() => Collection.From({})).to.throw(Error)
+      expect(() => Collection.From(undefined)).to.throw(Error)
+      expect(() => Collection.From(true).to.throw(Error))
+    })
+  })
+
   describe('Collection.Range(start, count)', function () {
     it('should return a new Collection of count numbers from start including', function () {
       expect(Collection.Range(1,5).ToArray()).to.be.deep.equal([1,2,3,4,5])
