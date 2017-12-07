@@ -1,66 +1,284 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="default no-js">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Home - Documentation</title>
-
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>linq.js</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">linq.js</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> linq.js</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="linq-js-build-status-https-api-travis-ci-org-svschmidt-linqjs-png-https-travis-ci-org-svschmidt-linqjs-coverage-status-https-coveralls-io-repos-github-svschmidt-linqjs-badge-svg-https-coveralls-io-github-svschmidt-linqjs-">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://api.travis-ci.org/SvSchmidt/linqjs.png" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg" alt="Coverage Status"></a></h1>
+				<blockquote>
+					<p>Perform queries on collections in the manner of C#s System.Linq in JavaScript</p>
+				</blockquote>
+				<p>Collections of values are common objects to deal with in JavaScript. The most widespread Collection is by far the Array, allowing us to store data in an easy manner: <code>[1, 2, &#39;hello world&#39;, new Date()]</code>. Now, with ES6 we got the <em>iterable</em> interface, which enables even Strings to get iterated over (interpreted as an array of chars). Additionally, we were gifted with new ways of storing data: <em>Maps</em> and <em>Sets</em> are two of them.</p>
+				<p>Common tasks a JavaScript developer performs on those Collections are accessing specific indices, checking weather or not a value is included, aggregating the values (sum, average, minimum etc.), split the Collection into parts or even grouping the values according to specific attributes.</p>
+				<p>System.Linq in C# is a great way to deal with operations alike. Unfortunately, JavaScript developers don&#39;t have tools such that. That&#39;s why you should start using linq.js starting today.</p>
+				<h2 id="install">Install</h2>
+				<p><a href="https://npmjs.org/package/linq.js"><img src="https://nodei.co/npm/linq.js.png" alt="NPM"></a></p>
+				<p>With <a href="https://npmjs.org/">npm</a> installed, run</p>
+				<pre><code><span class="hljs-meta">$</span><span class="bash"> npm install linq.js</span>
+</code></pre><h2 id="usage">Usage</h2>
+				<p>Let&#39;s see a (very basic) example of what is possible by querying collections using linq.js:</p>
+				<pre><code class="lang-js"><span class="hljs-keyword">const</span> Collection = <span class="hljs-built_in">require</span>(<span class="hljs-string">'linqjs'</span>);
+<span class="hljs-keyword">const</span> pets = [
+  { <span class="hljs-attr">Name</span>: <span class="hljs-string">'Barley'</span>,     <span class="hljs-attr">Age</span>: <span class="hljs-number">8</span>, },
+  { <span class="hljs-attr">Name</span>: <span class="hljs-string">'Boots'</span>,      <span class="hljs-attr">Age</span>: <span class="hljs-number">1</span>, },
+  { <span class="hljs-attr">Name</span>: <span class="hljs-string">'Whiskers'</span>,   <span class="hljs-attr">Age</span>: <span class="hljs-number">1</span>, },
+  { <span class="hljs-attr">Name</span>: <span class="hljs-string">'Fluffy'</span>,     <span class="hljs-attr">Age</span>: <span class="hljs-number">2</span>, },
+];
+Collection.from(pets)
+  .OrderByDescending(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.Age)
+  .Take(<span class="hljs-number">2</span>)
+  .Sum(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.Age);
+</code></pre>
+				<p>This will yield</p>
+				<pre><code><span class="hljs-number">10</span>
+</code></pre><h2 id="features">Features</h2>
+				<ul>
+					<li><p><em>59 Methods</em>
+						Aggregate, All, Add, Any, Average, Concat, ConditionalWhere*, Contains, Count, DefaultIfEmpty, Distinct, ElementAt, ElementAtOrDefault, Empty, Except, First, FirstOrDefault, Flatten*, ForEach, From, GroupBy, GroupJoin, IndexOf*, Insert, Intersect, Join, Last, LastIndexOf, LastOrDefault, Max, Min, OrderBy, OrderByDescending, Range, Remove, Repeat, Reverse, Select, SelectMany, SequenceEqual, Shuffle, Single, SingleOrDefault, Skip, SkipWhile, SkipUntil*, Sum, Take, TakeWhile, TakeUntil*, ThenBy, ThenByDescending, ToArray, ToDictionary, ToJSON*, ToLookup, Union, Where, Zip</p>
+						<p>* Not an original method of System.Linq but pretty awesome though</p>
+					</li>
+					<li><p><em>Including all possible methods/overloads</em>
+						Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, <code>GroupBy</code> allows you to use six different signatures.</p>
+					</li>
+					<li><p><em>Lazy-evaluation</em>
+							Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js.
+							In general all methods are as lazy as possible, meaning: Elements will only be evaluated if they are actually used somewhere.
+						Elements are accessed (and therefore evaluated) under following conditions:</p>
+						<ul>
+							<li>element values are returned (by e.g. <code>first</code>),</li>
+							<li>non-lazy collections like arrays or dictionaries are generated (by e.g. <code>toArray</code>),</li>
+							<li>json serialization of collections is performed,</li>
+							<li><code>reverse</code> is used (sadly it has to evaluate the collection),</li>
+							<li>ordering is performed (the moment the first value is accessed from the ordered collection).</li>
+						</ul>
+						<p>For getting a idea of what that means and why it&#39;s useful, have a look at the example</p>
+						<pre><code class="lang-js"><span class="hljs-keyword">const</span> numbers = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-number">12</span>, <span class="hljs-number">13</span>, <span class="hljs-number">14</span>, <span class="hljs-number">15</span>];
 
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
+Collection.from(numbers)
+  .Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(n);
 
-<label for="nav-trigger" class="overlay"></label>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * n;
+  })
+  .Take(<span class="hljs-number">5</span>)
+  .ToArray();
+</code></pre>
+						<p>The code will output <code>[0, 2, 4, 6, 8]</code>, but, what&#39;s more interesting, will only log the numbers 0 to 4 to the console. That&#39;s because Select is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using ToArray). It is worth mentioning that linq.js can even handle infinite sequences:</p>
+						<pre><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">naturalNumbers</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) <span class="hljs-keyword">yield</span> i++;
+}
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a><ul class='methods'><li data-type='method'><a href="Collection.html#.From">From (static)</a></li><li data-type='method'><a href="Collection.html#.Range">Range (static)</a></li><li data-type='method'><a href="Collection.html#.Repeat">Repeat (static)</a></li><li data-type='method'><a href="Collection.html#Add">Add</a></li><li data-type='method'><a href="Collection.html#Aggregateaccumulator">Aggregate(accumulator)</a></li><li data-type='method'><a href="Collection.html#Aggregateseed,accumulator">Aggregate(seed, accumulator)</a></li><li data-type='method'><a href="Collection.html#Aggregateseed,accumulator,resultTransformFn">Aggregate(seed, accumulator, resultTransformFn)</a></li><li data-type='method'><a href="Collection.html#All">All</a></li><li data-type='method'><a href="Collection.html#Any">Any</a></li><li data-type='method'><a href="Collection.html#Anypredicate">Any(predicate)</a></li><li data-type='method'><a href="Collection.html#Average">Average()</a></li><li data-type='method'><a href="Collection.html#AveragemapFn">Average(mapFn)</a></li><li data-type='method'><a href="Collection.html#Concat">Concat</a></li><li data-type='method'><a href="Collection.html#ConditionalWherecondition,(elem,index)=%253Ebool">ConditionalWhere(condition, (elem, index) => bool)</a></li><li data-type='method'><a href="Collection.html#ConditionalWherecondition,elem=%253Ebool">ConditionalWhere(condition, elem => bool)</a></li><li data-type='method'><a href="Collection.html#Containselem">Contains(elem)</a></li><li data-type='method'><a href="Collection.html#Containselem,equalityCompareFn">Contains(elem, equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#Count">Count()</a></li><li data-type='method'><a href="Collection.html#Countpredicate">Count(predicate)</a></li><li data-type='method'><a href="Collection.html#DefaultIfEmptyconstructor">DefaultIfEmpty(constructor)</a></li><li data-type='method'><a href="Collection.html#DefaultIfEmptydefaultValue">DefaultIfEmpty(defaultValue)</a></li><li data-type='method'><a href="Collection.html#Distinct">Distinct()</a></li><li data-type='method'><a href="Collection.html#DistinctequalityCompareFn">Distinct(equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#ElementAt">ElementAt</a></li><li data-type='method'><a href="Collection.html#Except">Except</a></li><li data-type='method'><a href="Collection.html#First">First()</a></li><li data-type='method'><a href="Collection.html#Firstpredicate">First(predicate)</a></li><li data-type='method'><a href="Collection.html#FirstOrDefault">FirstOrDefault()</a></li><li data-type='method'><a href="Collection.html#FirstOrDefaultpredicate">FirstOrDefault(predicate)</a></li><li data-type='method'><a href="Collection.html#Flatten">Flatten</a></li><li data-type='method'><a href="Collection.html#ForEach">ForEach</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector">GroupBy(keySelector)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,elementSelector">GroupBy(keySelector, elementSelector)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,elementSelector,keyComparer">GroupBy(keySelector, elementSelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,elementSelector,resultSelector">GroupBy(keySelector, elementSelector, resultSelector)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,elementSelector,resultSelector,keyComparer">GroupBy(keySelector, elementSelector, resultSelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,keyComparer">GroupBy(keySelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,resultSelector">GroupBy(keySelector, resultSelector)</a></li><li data-type='method'><a href="Collection.html#GroupBykeySelector,resultSelector,keyComparer">GroupBy(keySelector, resultSelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#GroupJoininner,outerKeySelector,innerKeySelector,resultSelector">GroupJoin(inner, outerKeySelector, innerKeySelector, resultSelector)</a></li><li data-type='method'><a href="Collection.html#GroupJoininner,outerKeySelector,innerKeySelector,resultSelector,keyComparer">GroupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#IndexOf">IndexOf()</a></li><li data-type='method'><a href="Collection.html#IndexOfequalityCompareFn">IndexOf(equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#Insert">Insert</a></li><li data-type='method'><a href="Collection.html#Intersectinner">Intersect(inner)</a></li><li data-type='method'><a href="Collection.html#Intersectinner,equalityCompareFn">Intersect(inner, equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#Join">Join</a></li><li data-type='method'><a href="Collection.html#Last">Last()</a></li><li data-type='method'><a href="Collection.html#Lastpredicate">Last(predicate)</a></li><li data-type='method'><a href="Collection.html#LastIndexOf">LastIndexOf()</a></li><li data-type='method'><a href="Collection.html#LastIndexOfequalityCompareFn">LastIndexOf(equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#LastOrDefault">LastOrDefault()</a></li><li data-type='method'><a href="Collection.html#LastOrDefaultpredicate">LastOrDefault(predicate)</a></li><li data-type='method'><a href="Collection.html#Max">Max()</a></li><li data-type='method'><a href="Collection.html#MaxmapFn">Max(mapFn)</a></li><li data-type='method'><a href="Collection.html#Min">Min()</a></li><li data-type='method'><a href="Collection.html#MinmapFn">Min(mapFn)</a></li><li data-type='method'><a href="Collection.html#Order">Order()</a></li><li data-type='method'><a href="Collection.html#Ordercomparator">Order(comparator)</a></li><li data-type='method'><a href="Collection.html#OrderBykeySelector">OrderBy(keySelector)</a></li><li data-type='method'><a href="Collection.html#OrderBykeySelector,comparator">OrderBy(keySelector, comparator)</a></li><li data-type='method'><a href="Collection.html#OrderByDescendingkeySelector">OrderByDescending(keySelector)</a></li><li data-type='method'><a href="Collection.html#OrderByDescendingkeySelector,comparator">OrderByDescending(keySelector, comparator)</a></li><li data-type='method'><a href="Collection.html#OrderDescending">OrderDescending()</a></li><li data-type='method'><a href="Collection.html#OrderDescendingcomparator">OrderDescending(comparator)</a></li><li data-type='method'><a href="Collection.html#Remove">Remove</a></li><li data-type='method'><a href="Collection.html#Reverse">Reverse</a></li><li data-type='method'><a href="Collection.html#Select(elem,index)=%253Eany">Select((elem, index) => any)</a></li><li data-type='method'><a href="Collection.html#Selectelem=%253Eany">Select(elem => any)</a></li><li data-type='method'><a href="Collection.html#SelectMany(elem,index)=%253Eany">SelectMany((elem, index) => any)</a></li><li data-type='method'><a href="Collection.html#SelectMany(elem,index)=%253Eany,resultSelector">SelectMany((elem, index) => any, resultSelector)</a></li><li data-type='method'><a href="Collection.html#SelectManyelem=%253Eany">SelectMany(elem => any)</a></li><li data-type='method'><a href="Collection.html#SelectManyelem=%253Eany,resultSelector">SelectMany(elem => any, resultSelector)</a></li><li data-type='method'><a href="Collection.html#SequenceEqualsecond">SequenceEqual(second)</a></li><li data-type='method'><a href="Collection.html#SequenceEqualsecond,equalityCompareFn">SequenceEqual(second, equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#Shuffle">Shuffle</a></li><li data-type='method'><a href="Collection.html#Single">Single()</a></li><li data-type='method'><a href="Collection.html#Singlepredicate">Single(predicate)</a></li><li data-type='method'><a href="Collection.html#SingleOrDefault">SingleOrDefault()</a></li><li data-type='method'><a href="Collection.html#SingleOrDefaultpredicate">SingleOrDefault(predicate)</a></li><li data-type='method'><a href="Collection.html#Skip">Skip</a></li><li data-type='method'><a href="Collection.html#SkipUntil(elem,index)=%253Eboolean">SkipUntil((elem, index) => boolean)</a></li><li data-type='method'><a href="Collection.html#SkipUntilelem=%253Eboolean">SkipUntil(elem => boolean)</a></li><li data-type='method'><a href="Collection.html#SkipWhile(elem,index)=%253Eboolean">SkipWhile((elem, index) => boolean)</a></li><li data-type='method'><a href="Collection.html#SkipWhileelem=%253Eboolean">SkipWhile(elem => boolean)</a></li><li data-type='method'><a href="Collection.html#Sum">Sum()</a></li><li data-type='method'><a href="Collection.html#SummapFn">Sum(mapFn)</a></li><li data-type='method'><a href="Collection.html#Take">Take</a></li><li data-type='method'><a href="Collection.html#TakeUntil(elem,index)=%253Eboolean">TakeUntil((elem, index) => boolean)</a></li><li data-type='method'><a href="Collection.html#TakeUntilelem=%253Eboolean">TakeUntil(elem => boolean)</a></li><li data-type='method'><a href="Collection.html#TakeWhile(elem,index)=%253Eboolean">TakeWhile((elem, index) => boolean)</a></li><li data-type='method'><a href="Collection.html#TakeWhileelem=%253Eboolean">TakeWhile(elem => boolean)</a></li><li data-type='method'><a href="Collection.html#ToArray">ToArray</a></li><li data-type='method'><a href="Collection.html#ToDictionarykeySelector">ToDictionary(keySelector)</a></li><li data-type='method'><a href="Collection.html#ToDictionarykeySelector,elementSelector">ToDictionary(keySelector, elementSelector)</a></li><li data-type='method'><a href="Collection.html#ToDictionarykeySelector,elementSelector,keyComparer">ToDictionary(keySelector, elementSelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#ToDictionarykeySelector,keyComparer">ToDictionary(keySelector, keyComparer)</a></li><li data-type='method'><a href="Collection.html#ToJSON">ToJSON</a></li><li data-type='method'><a href="Collection.html#UnionequalityCompareFn">Union(equalityCompareFn)</a></li><li data-type='method'><a href="Collection.html#Unioninner">Union(inner)</a></li><li data-type='method'><a href="Collection.html#Where(elem,index)=%253Eboolean">Where((elem, index) => boolean)</a></li><li data-type='method'><a href="Collection.html#Whereelem=%253Eboolean">Where(elem => boolean)</a></li><li data-type='method'><a href="Collection.html#Zip">Zip</a></li></ul></li><li><a href="OrderedCollection.html">OrderedCollection</a><ul class='methods'><li data-type='method'><a href="OrderedCollection.html#ThenBykeySelector">ThenBy(keySelector)</a></li><li data-type='method'><a href="OrderedCollection.html#ThenBykeySelector,comparator">ThenBy(keySelector, comparator)</a></li><li data-type='method'><a href="OrderedCollection.html#ThenByDescendingkeySelector">ThenByDescending(keySelector)</a></li><li data-type='method'><a href="OrderedCollection.html#ThenByDescendingkeySelector,comparator">ThenByDescending(keySelector, comparator)</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#defaultComparator">defaultComparator</a></li><li><a href="global.html#GetComparatorFromKeySelector">GetComparatorFromKeySelector</a></li><li><a href="global.html#getEqualKey">getEqualKey</a></li><li><a href="global.html#HeapElement">HeapElement</a></li><li><a href="global.html#paramOrValue">paramOrValue</a></li></ul>
-</nav>
+Collection.from(naturalNumbers).Take(<span class="hljs-number">5</span>).ToArray();
+<span class="hljs-comment">// -&gt; [0, 1, 2, 3, 4]</span>
+</code></pre>
+					</li>
+					<li><p><em>Short-handed syntax for well-known iterables</em></p>
+						<pre><code class="lang-js"><span class="hljs-keyword">const</span> numbers = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
+<span class="hljs-keyword">const</span> m = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[<span class="hljs-string">'a'</span>, [<span class="hljs-string">'Abraham'</span>, <span class="hljs-string">'Alabama'</span>]], [<span class="hljs-string">'s'</span>, [<span class="hljs-string">'Sven'</span>]]]);
 
-<div id="main">
-    
+<span class="hljs-comment">// These are equal</span>
+Collection.from(numbers).Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-number">2</span> * n).ToArray();
+numbers.Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-number">2</span> * n).ToArray();
 
-    
-
-
-
-    
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
+<span class="hljs-comment">// So are those</span>
+m.Select(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">1</span>]).Flatten().ToArray();
+Collection.from(m).Select(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">1</span>]).Flatten().ToArray();
+</code></pre>
+					</li>
+					<li><p><em>Working with any kind of iterables</em></p>
+						<ul>
+							<li>Array</li>
+							<li>Set</li>
+							<li>Map</li>
+							<li>String</li>
+							<li>Generator functions</li>
+							<li>...</li>
+						</ul>
+					</li>
+					<li><p><em>About 15kB minified, 5kB gzipped</em></p>
+					</li>
+				</ul>
+				<h2 id="api">API</h2>
+				<p>linq.js supports a few scenarios for loading and using the module:</p>
+				<ul>
+					<li>ES6 Module</li>
+					<li>AMD / RequireJS</li>
+					<li>NodeJs / CommonJs</li>
+					<li>SystemJs</li>
+				</ul>
+				<p>See <a href="https://svschmidt.github.io/linqjs/modules/_linq_.html">the documentation</a> for tips and an overview of available methods and signatures.</p>
+				<h2 id="breaking-changes">Breaking changes</h2>
+				<h3 id="version-1-x-rarr-2-x">Version 1.x &rarr; 2.x</h3>
+				<ul>
+					<li>Restructured linq.js module loading:<ul>
+							<li>Files in <code>./dist</code> now have an updated naming scheme.</li>
+							<li>Script-Tag loading is no longer supported (use ES6 modules or one of the supported loaders).</li>
+						</ul>
+					</li>
+					<li>Global prototypes are no longer patched on default (use the <a href="https://svschmidt.github.io/linqjs/modules/_linq_.html#extenditerableprototype"><code>extendIterablePrototype</code></a> Method for manual prototype patching).</li>
+				</ul>
+				<h2 id="see-also">See Also</h2>
+				<ul>
+					<li><a href="https://github.com/noffle/common-readme"><code>noffle/common-readme</code></a></li>
+					<li><a href="https://msdn.microsoft.com/en-us/library/system.linq(v=vs.111).aspx">https://msdn.microsoft.com/en-us/library/system.linq(v=vs.111).aspx</a></li>
+				</ul>
+				<h2 id="contribution">Contribution</h2>
+				<p>Please feel free to contribute!  If you haven&#39;t installed gulp yet, you may need to install it by running</p>
+				<pre><code class="lang-batch">$ npm install -g gulp gulp-cli
+</code></pre>
+				<p>Then you can clone and build linq.js:</p>
+				<pre><code class="lang-batch">$ git clone https://github.com/SvSchmidt/linqjs linqjs
+$ cd linqjs
+$ npm install
+$ gulp
+</code></pre>
+				<p>See the <a href="https://github.com/SvSchmidt/linqjs/issues">issues page</a> for bugs and project goals. I also invite you to start a discussion.</p>
+				<p>I would be grateful if every new or changed code includes associated tests and appropriate jsdoc notation. Thank you!</p>
+				<h2 id="license">License</h2>
+				<p>MIT</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_linq_.html">"linq"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
 </div>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a> on Fri Oct 14 2016 14:06:56 GMT+0200 (CEST) using the Minami theme.
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
 </footer>
-
-<script>prettyPrint();</script>
-<script src="scripts/linenumber.js"></script>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
