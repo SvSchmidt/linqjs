@@ -26,8 +26,7 @@ describe('heap.js', function () {
                 [function (a) {}, function (a,b) {}],
             ];
         it('should produce the same results as the "<", ">" & "==" operators', function () {
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
+            const defaultComparator = linq.defaultComparator;
 
             for (var values of tests) {
                 var a = values[0];
@@ -51,8 +50,8 @@ describe('heap.js', function () {
 
     describe('MinHeap', function () {
         it ('should sort the array in descending order', function () {
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
+            const MinHeap = linq.__MinHeap;
+            const defaultComparator = linq.defaultComparator;
 
             for (var i; i < maxRepeat; i++) {
                 const list = generateRandomNumberList();
@@ -64,8 +63,8 @@ describe('heap.js', function () {
             }
         });
         it ('should order "equal" elements by original index', function () {
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
+            const MinHeap = linq.__MinHeap;
+            const defaultComparator = linq.defaultComparator;
 
             const testComparator = (a, b) => defaultComparator(a.a, b.a);
             const tests = [
@@ -83,14 +82,14 @@ describe('heap.js', function () {
             }
         });
         it ('should return the empty array', function () {
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
+            const MinHeap = linq.__MinHeap;
+            const defaultComparator = linq.defaultComparator;
 
             expect([...(new MinHeap([], defaultComparator))]).to.be.deep.equal([]);
         });
         it ('should return the array with one element', function () {
-            const MinHeap = Collection.prototype.MinHeap;
-            const defaultComparator = Collection.prototype.defaultComparator;
+            const MinHeap = linq.__MinHeap;
+            const defaultComparator = linq.defaultComparator;
 
             expect([...(new MinHeap([42], defaultComparator))]).to.be.deep.equal([42]);
         });

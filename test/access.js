@@ -188,16 +188,16 @@ describe('access', function () {
 
   describe('DefaultIfEmpty', function () {
     it('should return the default of the provided constructor in a new sequence if sequence is empty', function () {
-      expect([].DefaultIfEmpty(Boolean)).to.be.deep.equal([false])
-      expect([].DefaultIfEmpty(Object)).to.be.deep.equal([null])
-      expect([].DefaultIfEmpty()).to.be.deep.equal([null])
+      expect([].DefaultIfEmpty(Boolean).ToArray()).to.be.deep.equal([false])
+      expect([].DefaultIfEmpty(Object).ToArray()).to.be.deep.equal([null])
+      expect([].DefaultIfEmpty().ToArray()).to.be.deep.equal([null])
     })
 
     it('should return the specified default in a new sequence if the sequence is empty', function () {
       const defaultPet = { Name: "Default Pet", Age: 0 }
       const pets = []
-      expect(pets.DefaultIfEmpty(defaultPet).length).to.be.equal(1)
-      expect(pets.DefaultIfEmpty(defaultPet)).to.be.deep.equal([defaultPet])
+      expect(pets.DefaultIfEmpty(defaultPet).Count()).to.be.equal(1)
+      expect(pets.DefaultIfEmpty(defaultPet).ToArray()).to.be.deep.equal([defaultPet])
     })
 
     it('should return the sequence itself if it is not empty', function () {
