@@ -39,6 +39,9 @@ describe('order', function () {
       it('should also accept the keySelector as a string', function () {
         expect(pets.OrderBy('Age').Select(x => x.Age).ToArray()).to.be.deep.equal(pets.OrderBy(x => x.Age).Select(x => x.Age).ToArray())
       })
+      it('should throw an assertion error for the invalid keySelector', function () {
+        expect(() => pets.OrderBy({foo: "bar"}).Select(x => x.Age).ToArray()).to.throw(Error);
+      })
     })
   })
 
@@ -50,6 +53,9 @@ describe('order', function () {
 
       it('should also accept the keySelector as a string', function () {
         expect(pets.OrderByDescending('Age').Select(x => x.Age).ToArray()).to.be.deep.equal(pets.OrderByDescending(x => x.Age).Select(x => x.Age).ToArray())
+      })
+      it('should throw an assertion error for the invalid keySelector', function () {
+        expect(() => pets.OrderByDescending({foo: "bar"}).Select(x => x.Age).ToArray()).to.throw(Error);
       })
     })
   })
@@ -72,6 +78,10 @@ describe('order', function () {
         expect(res.Select(x => x.Age).ToArray()).to.be.deep.equal([1, 13, 2, 4, 8, 1])
       })
     })
+
+    it('should throw an assertion error for the invalid keySelector', function () {
+      expect(() => pets.OrderByDescending(x => x.NameLength).ThenBy({foo: "bar"}).Select(x => x.Age).ToArray()).to.throw(Error);
+    })
   })
 
   describe('ThenByDescending', function () {
@@ -91,6 +101,10 @@ describe('order', function () {
         expect(res.Select(x => x.NameLength).ToArray()).to.be.deep.equal([8, 8, 6, 6, 6, 5])
         expect(res.Select(x => x.Age).ToArray()).to.be.deep.equal([13, 1, 8, 4, 2, 1])
       })
+    })
+
+    it('should throw an assertion error for the invalid keySelector', function () {
+      expect(() => pets.OrderByDescending(x => x.NameLength).ThenByDescending({foo: "bar"}).Select(x => x.Age).ToArray()).to.throw(Error);
     })
   })
 
