@@ -35,7 +35,8 @@ class __HeapElement<T> {
  *
  * @private
  */
-class __MinHeap<T> implements Iterable<T> {
+// only exported for testing
+export class __MinHeap<T> implements Iterable<T> {
 
     private __elements: Array<__HeapElement<T>>;
 
@@ -47,7 +48,7 @@ class __MinHeap<T> implements Iterable<T> {
      * @param elements Array with elements to create the heap from. Will be modified in place for heap logic.
      * @param comparator Comparator function (same as the one for Array.sort()).
      */
-    public constructor(elements: Array<T>, comparator: (a: T, b: T) => number = __defaultComparator) {
+    public constructor(elements: Array<T>, comparator: (a: T, b: T) => number = defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
@@ -62,7 +63,7 @@ class __MinHeap<T> implements Iterable<T> {
                 return res;
             }
 
-            return __defaultComparator(a.__index, b.__index);
+            return defaultComparator(a.__index, b.__index);
         };
 
         // create heap ordering

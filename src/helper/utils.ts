@@ -13,7 +13,11 @@ function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumula
     __assertFunction(resultTransformFn);
     __assertNotEmpty(coll);
 
-    return resultTransformFn([<any>seed].concat(coll).reduce(accumulator));
+    let value = seed;
+    for (let element of coll) {
+        value = accumulator(value, element);
+    }
+    return resultTransformFn(value);
 }
 
 /**
@@ -91,7 +95,7 @@ function __getParameterCount(fn: Function): number {
 /**
  * @private
  */
-function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = __defaultComparator): (a: T, b: T) => number {
+function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = defaultComparator): (a: T, b: T) => number {
     if (__isFunction(selector)) {
         return <any>(new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
     } else if (__isString(selector)) {

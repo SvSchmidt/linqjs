@@ -290,7 +290,7 @@ class __Collection<T> implements BasicCollection<T> {
         const self = this;
 
         return new __Collection(function* () {
-            const innerCollection = __Collection.From(inner);
+            const innerCollection = __Collection.from(inner);
 
             for (let val of self) {
                 if (innerCollection.Any((elem: any) => equalityCompareFn(val, elem))) {
@@ -310,7 +310,7 @@ class __Collection<T> implements BasicCollection<T> {
         }
 
         const first: Array<T> = this.ToArray();
-        second = __Collection.From(second).ToArray();
+        second = __Collection.from(second).ToArray();
 
         if (first.length !== (<Array<T>>second).length) {
             return false;
@@ -461,7 +461,7 @@ class __Collection<T> implements BasicCollection<T> {
             if (resultSelector) {
 
                 // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
-                result = __Collection.From(groups).Select((g: any) => (<Function>resultSelector)(...g));
+                result = __Collection.from(groups).Select((g: any) => (<Function>resultSelector)(...g));
             } else {
 
                 // our result is just the groups -> return the Map
@@ -591,21 +591,21 @@ class __Collection<T> implements BasicCollection<T> {
 
     //#region Ordering
 
-    public Order(comparator: any = __defaultComparator): OrderedCollection<T> {
+    public Order(comparator: any = defaultComparator): OrderedCollection<T> {
         return this.OrderBy((x: any) => x, comparator);
     }
 
-    public OrderDescending(comparator: any = __defaultComparator): OrderedCollection<T> {
+    public OrderDescending(comparator: any = defaultComparator): OrderedCollection<T> {
         return this.OrderByDescending((x: any) => x, comparator);
     }
 
-    public OrderBy(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
+    public OrderBy(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
         __assertFunction(comparator);
 
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
     }
 
-    public OrderByDescending(keySelector: any, comparator = __defaultComparator): OrderedCollection<T> {
+    public OrderByDescending(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
     }
 
@@ -684,7 +684,8 @@ class __Collection<T> implements BasicCollection<T> {
         let count = 0;
         let filtered = this.Where(predicate);
 
-        while (!filtered[Symbol.iterator]().next().done) {
+        let iterator = filtered[Symbol.iterator]();
+        while (!iterator.next().done) {
             count++;
         }
 
@@ -718,14 +719,12 @@ class __Collection<T> implements BasicCollection<T> {
     //#region Transformation
 
     public Aggregate(seedOrAccumulator: any, accumulator: any = null, resultTransformFn: any = null): any {
-        const values = this.ToArray();
-
-        if (typeof seedOrAccumulator === 'function' && !accumulator && !resultTransformFn) {
-            return __aggregateCollection(__Collection.From(values.slice(1, values.length)), values.slice(0, 1)[0], seedOrAccumulator, (elem: any) => elem);
-        } else if (typeof seedOrAccumulator !== 'function' && typeof accumulator === 'function' && !resultTransformFn) {
-            return __aggregateCollection(__Collection.From(values), seedOrAccumulator, accumulator, (elem: any) => elem);
+        if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
+            return __aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, (elem: any) => elem);
+        } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
+            return __aggregateCollection(this, seedOrAccumulator, accumulator, (elem: any) => elem);
         } else {
-            return __aggregateCollection(__Collection.From(values), seedOrAccumulator, accumulator, resultTransformFn);
+            return __aggregateCollection(this, seedOrAccumulator, accumulator, resultTransformFn);
         }
     }
 
@@ -814,7 +813,7 @@ class __Collection<T> implements BasicCollection<T> {
             let elem = elementSelectorOrKeyComparator(value);
 
             __assert(key != null, 'Key is not allowed to be null!');
-            __assert(!__Collection.From(usedKeys).Any((x: any) => keyComparator(x, key)), `Key '${key}' is already in use!`);
+            __assert(!__Collection.from(usedKeys).Any((x: any) => keyComparator(x, key)), `Key '${key}' is already in use!`);
 
             usedKeys.push(key);
             result.set(key, elem);
@@ -849,9 +848,11 @@ class __Collection<T> implements BasicCollection<T> {
 
     //#region Static
 
-    public static From<T>(iterable: Iterable<T>): __Collection<T> {
+    public static from<T>(iterable: Iterable<T>): __Collection<T> {
         return new __Collection(iterable);
     }
+
+    public static From = __Collection.from;
 
     public static Range(start: number, count: number): __Collection<number> {
         __assertNumberBetween(count, 0, Infinity);

@@ -2,7 +2,7 @@
  * @private
  */
 function __isArray<T>(obj: Array<T> | any): obj is Array<T> {
-    return obj instanceof ([]).constructor;
+    return obj instanceof Array;
 }
 
 /**

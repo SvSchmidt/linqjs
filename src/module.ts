@@ -10,7 +10,7 @@ export function extendIterablePrototype(prototype: any): void {
     for (let key of Object.getOwnPropertyNames(Object.getPrototypeOf(Collection.Empty))) {
         if (!key.startsWith('_') && __isFunction((<any>Collection.Empty)[key])) {
             prototype[key] = function (...args: any[]): any {
-                let collection: any = Collection.From(this);
+                let collection: any = Collection.from(this);
                 return collection[key].call(collection, ...args);
             }
         }

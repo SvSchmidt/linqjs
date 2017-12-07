@@ -1638,6 +1638,13 @@ export interface CollectionStatic {
      *
      * @return The created collection.
      */
+    from<T>(iterable: Iterable<T>): BasicCollection<T>;
+
+    /**
+     * Creates a new collection from the given iterable.
+     *
+     * @return The created collection.
+     */
     From<T>(iterable: Iterable<T>): BasicCollection<T>;
 
     /**

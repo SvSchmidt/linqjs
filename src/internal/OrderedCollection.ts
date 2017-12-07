@@ -11,7 +11,7 @@ class __OrderedCollection<T> extends __Collection<T> implements OrderedCollectio
         this.__comparator = comparator;
     }
 
-    public ThenBy(keySelector: any, comparator = __defaultComparator) {
+    public ThenBy(keySelector: any, comparator = defaultComparator) {
         const currentComparator = this.__comparator;
         const additionalComparator = __getComparatorFromKeySelector(keySelector, comparator);
 
@@ -28,15 +28,15 @@ class __OrderedCollection<T> extends __Collection<T> implements OrderedCollectio
         return new __OrderedCollection(this.__iterable, newComparator);
     };
 
-    public ThenByDescending(keySelector: any, comparator = __defaultComparator) {
+    public ThenByDescending(keySelector: any, comparator = defaultComparator) {
         return this.ThenBy(keySelector, (a, b) => comparator(b, a));
     }
 
     public [Symbol.iterator]() {
-        const self = this;
-
+        let self = this;
+        let parentIterator = super[Symbol.iterator].bind(this);
         return function* () {
-            yield* new __MinHeap(self.ToArray(), self.__comparator);
+            yield* new __MinHeap([...{[Symbol.iterator]: parentIterator}], self.__comparator);
         }();
     }
 }
