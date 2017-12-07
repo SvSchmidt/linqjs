@@ -270,7 +270,7 @@ class __Collection {
         //#endregion
         //#region Iterable
         this.__iterable = null;
-        __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'Parameter must be iterable or generator!');
+        __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
         this.__iterable = iterableOrGenerator;
     }
     [Symbol.iterator]() {
