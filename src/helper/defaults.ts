@@ -2,7 +2,7 @@
  * @private
  */
 function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
-    return __toJSON(first) === __toJSON(second);
+    return first === second;
 }
 
 /**

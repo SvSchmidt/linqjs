@@ -59,17 +59,17 @@ class __Collection<T> implements BasicCollection<T> {
         return result;
     }
 
-    public ElementAt(index: number): T {
+    public elementAt(index: number): T {
         __assertIndexInRange(this, index);
 
-        return this.Skip(index).Take(1).ToArray()[0];
+        return this.skip(index).take(1).toArray()[0];
     }
 
-    public Take(count: number = 0): __Collection<T> {
+    public take(count: number = 0): __Collection<T> {
         __assertNumeric(count);
 
         if (count <= 0) {
-            return __Collection.Empty;
+            return __Collection.empty;
         }
 
         const self: this = this;
@@ -86,17 +86,17 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public Skip(count: number = 0): __Collection<T> {
+    public skip(count: number = 0): __Collection<T> {
         __assertNumeric(count);
 
         if (count <= 0) {
             return this;
         }
 
-        return this.SkipWhile((elem: T, index: number) => index < count);
+        return this.skipWhile((elem: T, index: number) => index < count);
     }
 
-    public TakeWhile(predicate: any = (elem: T, index: number) => true) {
+    public takeWhile(predicate: any = (elem: T, index: number) => true) {
         __assertFunction(predicate);
 
         const self: this = this;
@@ -114,11 +114,11 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public TakeUntil(predicate = (elem: T, index: number) => false) {
-        return this.TakeWhile((elem: T, index: number) => !predicate(elem, index))
+    public takeUntil(predicate = (elem: T, index: number) => false) {
+        return this.takeWhile((elem: T, index: number) => !predicate(elem, index))
     }
 
-    public SkipWhile(predicate = (elem: T, index: number) => true) {
+    public skipWhile(predicate = (elem: T, index: number) => true) {
         __assertFunction(predicate);
 
         const self: this = this;
@@ -138,33 +138,33 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public SkipUntil(predicate = (elem: T, index: number) => false) {
-        return this.SkipWhile((elem: T, index: number) => !predicate(elem, index))
+    public skipUntil(predicate = (elem: T, index: number) => false) {
+        return this.skipWhile((elem: T, index: number) => !predicate(elem, index))
     }
 
-    public First(predicate = (x: T) => true): T {
+    public first(predicate = (x: T) => true): T {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
-        return this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0];
+        return this.skipWhile(elem => !predicate(elem)).take(1).toArray()[0];
     }
 
-    public FirstOrDefault<V>(predicateOrConstructor: ((e: T) => boolean) | T = (x: T) => true, constructor: V = <any>Object): T | V {
-        return this.__resultOrDefault(this.First, predicateOrConstructor, <any>constructor);
+    public firstOrDefault<V>(predicateOrConstructor: ((e: T) => boolean) | T = (x: T) => true, constructor: V = <any>Object): T | V {
+        return this.__resultOrDefault(this.first, predicateOrConstructor, <any>constructor);
     }
 
-    public Last(predicate = (x: any) => true): T {
+    public last(predicate = (x: any) => true): T {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
-        return this.Reverse().First(predicate);
+        return this.reverse().first(predicate);
     }
 
-    public LastOrDefault<V>(predicateOrConstructor = (x: any) => true, constructor: V = <any>Object): T | V {
-        return this.__resultOrDefault(this.Last, predicateOrConstructor, constructor);
+    public lastOrDefault<V>(predicateOrConstructor = (x: any) => true, constructor: V = <any>Object): T | V {
+        return this.__resultOrDefault(this.last, predicateOrConstructor, constructor);
     }
 
-    public Single(predicate = (x: any) => true): T {
+    public single(predicate = (x: any) => true): T {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
@@ -180,18 +180,18 @@ class __Collection<T> implements BasicCollection<T> {
             index++;
         }
 
-        if (this.First(elem => predicate(elem) && !__defaultEqualityCompareFn(elem, result))) {
+        if (this.first(elem => predicate(elem) && !__defaultEqualityCompareFn(elem, result))) {
             throw new Error('Sequence contains more than one element');
         }
 
         return result;
     }
 
-    public SingleOrDefault<V>(predicateOrConstructor: any = (x: any) => true, constructor: V = <any>Object): T | V {
-        return this.__resultOrDefault(this.Single, predicateOrConstructor, constructor);
+    public singleOrDefault<V>(predicateOrConstructor: any = (x: any) => true, constructor: V = <any>Object): T | V {
+        return this.__resultOrDefault(this.single, predicateOrConstructor, constructor);
     }
 
-    public DefaultIfEmpty<V>(constructor: V): this | __Collection<V> {
+    public defaultIfEmpty<V>(constructor: V): this | __Collection<V> {
         if (!__isEmpty(this)) {
             return this;
         }
@@ -203,7 +203,7 @@ class __Collection<T> implements BasicCollection<T> {
 
     //#region Concatenation
 
-    public Concat(inner: Iterable<T>): __Collection<T> {
+    public concat(inner: Iterable<T>): __Collection<T> {
         __assertIterable(inner);
 
         const outer = this;
@@ -214,13 +214,13 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public Union(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
+    public union(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertIterable(inner);
 
-        return this.Concat(inner).Distinct(equalityCompareFn);
+        return this.concat(inner).distinct(equalityCompareFn);
     }
 
-    public Join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
+    public join<U, K, V>(inner: Iterable<U>, outerKeySelector: (e: T) => K, innerKeySelector: (e: U) => K, resultSelectorFn: (a: T, b: U) => V, keyEqualityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -244,7 +244,7 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public Except(inner: Iterable<T>): __Collection<T> {
+    public except(inner: Iterable<T>): __Collection<T> {
         __assertIterable(inner);
 
         if (!__isCollection(inner)) {
@@ -255,14 +255,14 @@ class __Collection<T> implements BasicCollection<T> {
 
         return new __Collection(function* () {
             for (let val of outer) {
-                if (!(<__Collection<T>>inner).Contains(val)) {
+                if (!(<__Collection<T>>inner).contains(val)) {
                     yield val;
                 }
             }
         });
     }
 
-    public Zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): __Collection<V> {
+    public zip<U, V>(inner: Iterable<U>, resultSelectorFn: (a: T, b: U) => V): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(resultSelectorFn);
 
@@ -283,7 +283,7 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public Intersect(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
+    public intersect(inner: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertIterable(inner);
         __assertFunction(equalityCompareFn);
 
@@ -293,7 +293,7 @@ class __Collection<T> implements BasicCollection<T> {
             const innerCollection = __Collection.from(inner);
 
             for (let val of self) {
-                if (innerCollection.Any((elem: any) => equalityCompareFn(val, elem))) {
+                if (innerCollection.any((elem: any) => equalityCompareFn(val, elem))) {
                     yield val;
                 }
             }
@@ -304,13 +304,13 @@ class __Collection<T> implements BasicCollection<T> {
 
     //#region Equality
 
-    public SequenceEqual(second: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
+    public sequenceEqual(second: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
         if (!__isIterable(second)) {
             return false;
         }
 
-        const first: Array<T> = this.ToArray();
-        second = __Collection.from(second).ToArray();
+        const first: Array<T> = this.toArray();
+        second = __Collection.from(second).toArray();
 
         if (first.length !== (<Array<T>>second).length) {
             return false;
@@ -350,7 +350,7 @@ class __Collection<T> implements BasicCollection<T> {
         return key;
     }
 
-    public GroupBy<K>(keySelector: (e: T) => K, ...args: Array<Function>): any {
+    public groupBy<K>(keySelector: (e: T) => K, ...args: Array<Function>): any {
 
         const self = this;
 
@@ -461,7 +461,7 @@ class __Collection<T> implements BasicCollection<T> {
             if (resultSelector) {
 
                 // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
-                result = __Collection.from(groups).Select((g: any) => (<Function>resultSelector)(...g));
+                result = __Collection.from(groups).select((g: any) => (<Function>resultSelector)(...g));
             } else {
 
                 // our result is just the groups -> return the Map
@@ -494,7 +494,7 @@ class __Collection<T> implements BasicCollection<T> {
         return fn(keySelector, ...args);
     }
 
-    public GroupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
+    public groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -517,7 +517,7 @@ class __Collection<T> implements BasicCollection<T> {
 
         return new __Collection(function* () {
             for (let [key, values] of groups) {
-                yield resultSelector(key, values.ToArray());
+                yield resultSelector(key, values.toArray());
             }
         });
     }
@@ -526,14 +526,14 @@ class __Collection<T> implements BasicCollection<T> {
 
     //#region Insert & Remove
 
-    public Add(value: T): void {
-        this.Insert(value, this.Count());
+    public add(value: T): void {
+        this.insert(value, this.count());
     }
 
-    public Insert(value: T, index: number): void {
-        __assert(index >= 0 && index <= this.Count(), 'Index is out of bounds!');
+    public insert(value: T, index: number): void {
+        __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
 
-        const oldValues = this.ToArray();
+        const oldValues = this.toArray();
 
         this.__iterable = function* () {
             yield* oldValues.slice(0, index);
@@ -542,8 +542,8 @@ class __Collection<T> implements BasicCollection<T> {
         };
     }
 
-    public Remove(value: T): boolean {
-        let values = this.ToArray();
+    public remove(value: T): boolean {
+        let values = this.toArray();
         const result = __removeFromArray(values, value);
 
         if (!result) {
@@ -561,63 +561,63 @@ class __Collection<T> implements BasicCollection<T> {
 
     //#region Math
 
-    public Min(mapFn = (x: any) => x): number {
+    public min(mapFn = (x: any) => x): number {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
-        return Math.min.apply(null, this.Select(mapFn).ToArray());
+        return Math.min.apply(null, this.select(mapFn).toArray());
     }
 
-    public Max(mapFn = (x: any) => x): number {
+    public max(mapFn = (x: any) => x): number {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
-        return Math.max.apply(null, this.Select(mapFn).ToArray());
+        return Math.max.apply(null, this.select(mapFn).toArray());
     }
 
-    public Sum(mapFn = (x: any) => x): number {
+    public sum(mapFn = (x: any) => x): number {
         __assertNotEmpty(this);
 
-        return this.Select(mapFn).Aggregate(0, (prev: any, curr: any) => prev + curr);
+        return this.select(mapFn).aggregate(0, (prev: any, curr: any) => prev + curr);
     }
 
-    public Average(mapFn = (x: any) => x): number {
+    public average(mapFn = (x: any) => x): number {
         __assertNotEmpty(this);
 
-        return this.Sum(mapFn) / this.Count();
+        return this.sum(mapFn) / this.count();
     }
 
     //#endregion
 
     //#region Ordering
 
-    public Order(comparator: any = defaultComparator): OrderedCollection<T> {
-        return this.OrderBy((x: any) => x, comparator);
+    public order(comparator: any = defaultComparator): OrderedCollection<T> {
+        return this.orderBy((x: any) => x, comparator);
     }
 
-    public OrderDescending(comparator: any = defaultComparator): OrderedCollection<T> {
-        return this.OrderByDescending((x: any) => x, comparator);
+    public orderDescending(comparator: any = defaultComparator): OrderedCollection<T> {
+        return this.orderByDescending((x: any) => x, comparator);
     }
 
-    public OrderBy(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
+    public orderBy(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
         __assertFunction(comparator);
 
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
     }
 
-    public OrderByDescending(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
+    public orderByDescending(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
     }
 
-    public Shuffle(): __Collection<T> {
-        return <any>this.OrderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
+    public shuffle(): __Collection<T> {
+        return <any>this.orderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
     }
 
     //#endregioning
 
     //#region Search
 
-    public IndexOf(element: T, equalityCompareFn: any = __defaultEqualityCompareFn): number {
+    public indexOf(element: T, equalityCompareFn: any = __defaultEqualityCompareFn): number {
         __assertFunction(equalityCompareFn);
 
         let i = 0;
@@ -633,7 +633,7 @@ class __Collection<T> implements BasicCollection<T> {
         return -1;
     }
 
-    public LastIndexOf(element: T, equalityCompareFn: any = __defaultEqualityCompareFn): number {
+    public lastIndexOf(element: T, equalityCompareFn: any = __defaultEqualityCompareFn): number {
         __assertFunction(equalityCompareFn);
 
         let i = 0;
@@ -650,11 +650,11 @@ class __Collection<T> implements BasicCollection<T> {
         return lastIndex;
     }
 
-    public Contains(elem: T, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
-        return !!~this.IndexOf(elem, equalityCompareFn);
+    public contains(elem: T, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
+        return !!~this.indexOf(elem, equalityCompareFn);
     }
 
-    public Where(predicate = (elem: any, index: number) => true): __Collection<T> {
+    public where(predicate = (elem: any, index: number) => true): __Collection<T> {
         __assertFunction(predicate);
 
         const self = this;
@@ -672,17 +672,17 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public ConditionalWhere(condition: boolean, predicate: any) {
+    public conditionalWhere(condition: boolean, predicate: any) {
         if (condition) {
-            return this.Where(predicate);
+            return this.where(predicate);
         } else {
             return this;
         }
     }
 
-    public Count(predicate = (elem: any) => true): number {
+    public count(predicate = (elem: any) => true): number {
         let count = 0;
-        let filtered = this.Where(predicate);
+        let filtered = this.where(predicate);
 
         let iterator = filtered[Symbol.iterator]();
         while (!iterator.next().done) {
@@ -692,7 +692,7 @@ class __Collection<T> implements BasicCollection<T> {
         return count;
     }
 
-    public Any(predicate: any = null): boolean {
+    public any(predicate: any = null): boolean {
         if (__isEmpty(this)) {
             return false;
         }
@@ -703,24 +703,24 @@ class __Collection<T> implements BasicCollection<T> {
             return true;
         }
 
-        return !this.Where(predicate)[Symbol.iterator]().next().done;
+        return !this.where(predicate)[Symbol.iterator]().next().done;
     }
 
-    public All(predicate: ((e: T) => boolean) = elem => true): boolean {
+    public all(predicate: ((e: T) => boolean) = elem => true): boolean {
         __assertFunction(predicate);
 
         // All is equal to the question if there's no element which does not match the predicate
         // 'all fruits are yellow' -> 'there is no fruit which is not yellow'
-        return !this.Any((x: any) => !predicate(x));
+        return !this.any((x: any) => !predicate(x));
     }
 
     //#endregion
 
     //#region Transformation
 
-    public Aggregate(seedOrAccumulator: any, accumulator: any = null, resultTransformFn: any = null): any {
+    public aggregate(seedOrAccumulator: any, accumulator: any = null, resultTransformFn: any = null): any {
         if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
-            return __aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, (elem: any) => elem);
+            return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, (elem: any) => elem);
         } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
             return __aggregateCollection(this, seedOrAccumulator, accumulator, (elem: any) => elem);
         } else {
@@ -728,7 +728,7 @@ class __Collection<T> implements BasicCollection<T> {
         }
     }
 
-    public Select(mapFn: any = (x: any) => x): __Collection<any> {
+    public select(mapFn: any = (x: any) => x): __Collection<any> {
         const self = this;
 
         let index = 0;
@@ -741,11 +741,11 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public Flatten(): __Collection<any> {
-        return this.SelectMany((x: any) => x);
+    public flatten(): __Collection<any> {
+        return this.selectMany((x: any) => x);
     }
 
-    public SelectMany(mapFn: any, resultSelector = (x: any, y: any) => y): __Collection<any> {
+    public selectMany(mapFn: any, resultSelector = (x: any, y: any) => y): __Collection<any> {
         __assertFunction(mapFn);
         __assertFunction(resultSelector);
 
@@ -773,31 +773,31 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public Distinct(equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
+    public distinct(equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertFunction(equalityCompareFn);
 
         return __removeDuplicates(this, equalityCompareFn);
     }
 
-    public ToArray(): Array<T> {
+    public toArray(): Array<T> {
         return [...this];
     }
 
-    public ToDictionary(keySelector: any, elementSelectorOrKeyComparator: any = null, keyComparator: any = null): Map<any, any> {
+    public toDictionary(keySelector: any, elementSelectorOrKeyComparator: any = null, keyComparator: any = null): Map<any, any> {
         __assertFunction(keySelector);
 
         if (!elementSelectorOrKeyComparator && !keyComparator) {
 
             // ToDictionary(keySelector)
-            return this.ToDictionary(keySelector, (elem: any) => elem, __defaultEqualityCompareFn);
+            return this.toDictionary(keySelector, (elem: any) => elem, __defaultEqualityCompareFn);
         } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 1) {
 
             // ToDictionary(keySelector, elementSelector)
-            return this.ToDictionary(keySelector, elementSelectorOrKeyComparator, __defaultEqualityCompareFn);
+            return this.toDictionary(keySelector, elementSelectorOrKeyComparator, __defaultEqualityCompareFn);
         } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 2) {
 
             // ToDictionary(keySelector, keyComparator)
-            return this.ToDictionary(keySelector, (elem: any) => elem, elementSelectorOrKeyComparator);
+            return this.toDictionary(keySelector, (elem: any) => elem, elementSelectorOrKeyComparator);
         }
 
         // ToDictionary(keySelector, elementSelector, keyComparator)
@@ -807,13 +807,13 @@ class __Collection<T> implements BasicCollection<T> {
 
         let usedKeys = [];
         let result = new Map();
-        const input = this.ToArray();
+        const input = this.toArray();
         for (let value of input) {
             let key = keySelector(value);
             let elem = elementSelectorOrKeyComparator(value);
 
             __assert(key != null, 'Key is not allowed to be null!');
-            __assert(!__Collection.from(usedKeys).Any((x: any) => keyComparator(x, key)), `Key '${key}' is already in use!`);
+            __assert(!__Collection.from(usedKeys).any((x: any) => keyComparator(x, key)), `Key '${key}' is already in use!`);
 
             usedKeys.push(key);
             result.set(key, elem);
@@ -822,12 +822,8 @@ class __Collection<T> implements BasicCollection<T> {
         return result;
     }
 
-    public ToJSON(): string {
-        return __toJSON(this.ToArray());
-    }
-
-    public Reverse(): __Collection<T> {
-        const arr = this.ToArray();
+    public reverse(): __Collection<T> {
+        const arr = this.toArray();
 
         return new __Collection(function* () {
             for (let i = arr.length - 1; i >= 0; i--) {
@@ -836,7 +832,7 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public ForEach(fn: (e: T) => void): void {
+    public forEach(fn: (e: T) => void): void {
         __assertFunction(fn);
 
         for (let val of this) {
@@ -852,9 +848,7 @@ class __Collection<T> implements BasicCollection<T> {
         return new __Collection(iterable);
     }
 
-    public static From = __Collection.from;
-
-    public static Range(start: number, count: number): __Collection<number> {
+    public static range(start: number, count: number): __Collection<number> {
         __assertNumberBetween(count, 0, Infinity);
 
         return new __Collection(function* () {
@@ -865,7 +859,7 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public static Repeat<T>(val: T, count: number): __Collection<T> {
+    public static repeat<T>(val: T, count: number): __Collection<T> {
         __assertNumberBetween(count, 0, Infinity);
 
         return new __Collection(function* () {
@@ -875,7 +869,7 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public static get Empty(): __Collection<any> {
+    public static get empty(): __Collection<any> {
         return new __Collection([]);
     }
 

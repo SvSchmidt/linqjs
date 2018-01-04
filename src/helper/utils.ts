@@ -1,13 +1,6 @@
 /**
  * @private
  */
-function __toJSON(obj: any): string {
-    return JSON.stringify(obj);
-}
-
-/**
- * @private
- */
 function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);

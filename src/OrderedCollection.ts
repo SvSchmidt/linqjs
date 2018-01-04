@@ -36,7 +36,7 @@ export interface OrderedCollection<T> extends BasicCollection<T> {
      *   }
      * ];
      *
-     * pets.OrderBy(x => x.Name.length).ThenBy(x => x.Age).Select(x => x.Name).ToArray();
+     * pets.orderBy(x => x.Name.length).thenBy(x => x.Age).select(x => x.Name).toArray();
      * // -> ["Boots", "Fluffy", "Donald", "Barley", "Whiskers", "Snickers"]
      * </pre>
      *
@@ -45,7 +45,7 @@ export interface OrderedCollection<T> extends BasicCollection<T> {
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
      */
-    ThenBy<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
+    thenBy<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
@@ -57,7 +57,7 @@ export interface OrderedCollection<T> extends BasicCollection<T> {
      * @param comparator A comparator function.
      * @return Ordered collection.
      */
-    ThenBy<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
+    thenBy<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
@@ -92,7 +92,7 @@ export interface OrderedCollection<T> extends BasicCollection<T> {
      *   }
      * ];
      *
-     * pets.OrderBy(x => x.Name.length).ThenBy(x => x.Age).Select(x => x.Name).ToArray();
+     * pets.orderBy(x => x.Name.length).thenBy(x => x.Age).select(x => x.Name).toArray();
      * // -> ["Boots", "Barley", "Donald", "Fluffy", "Snickers", "Whiskers"]
      * </pre>
      *
@@ -101,7 +101,7 @@ export interface OrderedCollection<T> extends BasicCollection<T> {
      * @param keySelector A function which maps to a property or value of the objects to be compared or the property selector as a string.
      * @return Ordered collection.
      */
-    ThenByDescending<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
+    thenByDescending<K>(keySelector: ((e: T) => K) | string): OrderedCollection<T>;
 
     /**
      * Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
@@ -113,5 +113,5 @@ export interface OrderedCollection<T> extends BasicCollection<T> {
      * @param comparator A comparator function.
      * @return Ordered collection.
      */
-    ThenByDescending<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
+    thenByDescending<K>(keySelector: ((e: T) => K) | string, comparator: (a: K, b: K) => number): OrderedCollection<T>;
 }

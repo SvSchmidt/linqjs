@@ -76,5 +76,5 @@ function __assertNumberBetween(num: number, min: number, max: number = Infinity)
 function __assertIndexInRange<T>(self: __Collection<T>, index: number): void {
     __assertCollection(self);
     __assert(__isNumeric(index), 'number', index);
-    __assert(index >= 0 && index < self.Count(), 'Index is out of bounds');
+    __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
 }
