@@ -6,11 +6,11 @@ const fs = require('fs')
 // patch prototypes
 linq.extendNativeTypes()
 
-function run (path) {
-  let source = fs.readFileSync(path, 'utf8')
-  source = `(function () { ${source} }())`
+function run(path) {
+    let source = fs.readFileSync(path, 'utf8')
+    source = `(function () { ${source} }())`
 
-  eval(source)
+    eval(source)
 }
 
 describe("linqjs", function () {
@@ -26,5 +26,6 @@ describe("linqjs", function () {
     run('test/order.js')
     run('test/search.js')
     run('test/transformation.js')
-    run('test/generic/iteration.js')
+    run('test/iteration.js')
+    run('test/module.js')
 });
