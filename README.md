@@ -45,12 +45,12 @@ This will yield
 ## Features
 
 - *59 Methods*
- Aggregate, All, Add, Any, Average, Concat, ConditionalWhere\*, Contains, Count, DefaultIfEmpty, Distinct, ElementAt, ElementAtOrDefault, Empty, Except, First, FirstOrDefault, Flatten\*, ForEach, From, GroupBy, GroupJoin, IndexOf\*, Insert, Intersect, Join, Last, LastIndexOf, LastOrDefault, Max, Min, OrderBy, OrderByDescending, Range, Remove, Repeat, Reverse, Select, SelectMany, SequenceEqual, Shuffle, Single, SingleOrDefault, Skip, SkipWhile, SkipUntil\*, Sum, Take, TakeWhile, TakeUntil\*, ThenBy, ThenByDescending, ToArray, ToDictionary, ToJSON\*, ToLookup, Union, Where, Zip
-
+ aggregate, all, add, any, average, concat, conditionalWhere\*, contains, count, defaultIfEmpty, distinct, elementAt, elementAtOrDefault, empty, except, first, firstOrDefault, flatten\*, forEach, from, groupBy, groupJoin, indexOf\*, insert, intersect, join, last, lastIndexOf, lastOrDefault, max, min, orderBy, orderByDescending, range, remove, repeat, reverse, select, selectMany, sequenceEqual, shuffle, single, singleOrDefault, skip, skipWhile, skipUntil\*, sum, take, takeWhile, takeUntil\*, thenBy, thenByDescending, toArray, toDictionary, toLookup, union, where, zip
+ 
  \* Not an original method of System.Linq but pretty awesome though
 
 - *Including all possible methods/overloads*
- Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, `GroupBy` allows you to use six different signatures.
+ Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, `groupBy` allows you to use six different signatures.
 
 - *Lazy-evaluation*
   Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js.
@@ -126,10 +126,14 @@ See [the documentation](https://svschmidt.github.io/linqjs/modules/_linq_.html) 
 
 ### Version 1.x &rarr; 2.x
 
+- Method names now follow the javascript naming scheme.
+- Removed the faulty `toJSON` method (use, e.g., `JSON.stringify(collection.toArray())`).
+- The internal default comparator no longer compares JSON representations but uses the `===` operator (use the custom comparator argument if a different behaviour is desired).
+- The internal heap implementation is no longer exported.
 - Restructured linq.js module loading:
   - Files in `./dist` now have an updated naming scheme.
   - Script-Tag loading is no longer supported (use ES6 modules or one of the supported loaders).
-- Global prototypes are no longer patched on default (use the [`extendIterablePrototype`](https://svschmidt.github.io/linqjs/modules/_linq_.html#extenditerableprototype) Method for manual prototype patching).
+- Global prototypes are no longer patched on default (use the [`extendIterablePrototype`](https://svschmidt.github.io/linqjs/modules/_linq_.html#extenditerableprototype) and [`extendNativeTypes`](https://svschmidt.github.io/linqjs/modules/_linq_.html#extendNativeTypes) Methods for manual prototype patching).
 
 ## See Also
 
