@@ -62,7 +62,7 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="linq-js-build-status-https-api-travis-ci-org-svschmidt-linqjs-png-https-travis-ci-org-svschmidt-linqjs-coverage-status-https-coveralls-io-repos-github-svschmidt-linqjs-badge-svg-https-coveralls-io-github-svschmidt-linqjs-">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://api.travis-ci.org/SvSchmidt/linqjs.png" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg" alt="Coverage Status"></a></h1>
+				<h1 id="linq-js-build-status-https-travis-ci-org-svschmidt-linqjs-svg-branch-master-https-travis-ci-org-svschmidt-linqjs-coverage-status-https-coveralls-io-repos-github-svschmidt-linqjs-badge-svg-branch-master-https-coveralls-io-github-svschmidt-linqjs-">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master" alt="Coverage Status"></a></h1>
 				<blockquote>
 					<p>Perform queries on collections in the manner of C#s System.Linq in JavaScript</p>
 				</blockquote>
@@ -92,11 +92,11 @@ Collection.from(pets)
 </code></pre><h2 id="features">Features</h2>
 				<ul>
 					<li><p><em>59 Methods</em>
-						Aggregate, All, Add, Any, Average, Concat, ConditionalWhere*, Contains, Count, DefaultIfEmpty, Distinct, ElementAt, ElementAtOrDefault, Empty, Except, First, FirstOrDefault, Flatten*, ForEach, From, GroupBy, GroupJoin, IndexOf*, Insert, Intersect, Join, Last, LastIndexOf, LastOrDefault, Max, Min, OrderBy, OrderByDescending, Range, Remove, Repeat, Reverse, Select, SelectMany, SequenceEqual, Shuffle, Single, SingleOrDefault, Skip, SkipWhile, SkipUntil*, Sum, Take, TakeWhile, TakeUntil*, ThenBy, ThenByDescending, ToArray, ToDictionary, ToJSON*, ToLookup, Union, Where, Zip</p>
+						aggregate, all, add, any, average, concat, conditionalWhere*, contains, count, defaultIfEmpty, distinct, elementAt, elementAtOrDefault, empty, except, first, firstOrDefault, flatten*, forEach, from, groupBy, groupJoin, indexOf*, insert, intersect, join, last, lastIndexOf, lastOrDefault, max, min, orderBy, orderByDescending, range, remove, repeat, reverse, select, selectMany, sequenceEqual, shuffle, single, singleOrDefault, skip, skipWhile, skipUntil*, sum, take, takeWhile, takeUntil*, thenBy, thenByDescending, toArray, toDictionary, toLookup, union, where, zip</p>
 						<p>* Not an original method of System.Linq but pretty awesome though</p>
 					</li>
 					<li><p><em>Including all possible methods/overloads</em>
-						Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, <code>GroupBy</code> allows you to use six different signatures.</p>
+						Our test cases include original examples taken from the System.Linq documentation, tending to support every edge case Linq does. For example, <code>groupBy</code> allows you to use six different signatures.</p>
 					</li>
 					<li><p><em>Lazy-evaluation</em>
 							Most methods of C# Linq are lazy-evaluated and so are these methods in linq.js.
@@ -169,12 +169,16 @@ Collection.from(m).Select(<span class="hljs-function"><span class="hljs-params">
 				<h2 id="breaking-changes">Breaking changes</h2>
 				<h3 id="version-1-x-rarr-2-x">Version 1.x &rarr; 2.x</h3>
 				<ul>
+					<li>Method names now follow the javascript naming scheme.</li>
+					<li>Removed the faulty <code>toJSON</code> method (use, e.g., <code>JSON.stringify(collection.toArray())</code>).</li>
+					<li>The internal default comparator no longer compares JSON representations but uses the <code>===</code> operator (use the custom comparator argument if a different behaviour is desired).</li>
+					<li>The internal heap implementation is no longer exported.</li>
 					<li>Restructured linq.js module loading:<ul>
 							<li>Files in <code>./dist</code> now have an updated naming scheme.</li>
 							<li>Script-Tag loading is no longer supported (use ES6 modules or one of the supported loaders).</li>
 						</ul>
 					</li>
-					<li>Global prototypes are no longer patched on default (use the <a href="https://svschmidt.github.io/linqjs/modules/_linq_.html#extenditerableprototype"><code>extendIterablePrototype</code></a> Method for manual prototype patching).</li>
+					<li>Global prototypes are no longer patched on default (use the <a href="https://svschmidt.github.io/linqjs/modules/_linq_.html#extenditerableprototype"><code>extendIterablePrototype</code></a> and <a href="https://svschmidt.github.io/linqjs/modules/_linq_.html#extendNativeTypes"><code>extendNativeTypes</code></a> Methods for manual prototype patching).</li>
 				</ul>
 				<h2 id="see-also">See Also</h2>
 				<ul>

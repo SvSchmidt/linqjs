@@ -70,13 +70,13 @@ function __assertNumberBetween(num, min, max = Infinity) {
 function __assertIndexInRange(self, index) {
     __assertCollection(self);
     __assert(__isNumeric(index), 'number', index);
-    __assert(index >= 0 && index < self.Count(), 'Index is out of bounds');
+    __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
 }
 /**
  * @private
  */
 function __defaultEqualityCompareFn(first, second) {
-    return __toJSON(first) === __toJSON(second);
+    return first === second;
 }
 /**
  * Default comparator implementation that uses the "<" operator.
@@ -168,12 +168,6 @@ const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
 function __isNative(obj) {
     return (/native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj)
     );
-}
-/**
- * @private
- */
-function __toJSON(obj) {
-    return JSON.stringify(obj);
 }
 /**
  * @private
@@ -302,14 +296,14 @@ class __Collection {
         }
         return result;
     }
-    ElementAt(index) {
+    elementAt(index) {
         __assertIndexInRange(this, index);
-        return this.Skip(index).Take(1).ToArray()[0];
+        return this.skip(index).take(1).toArray()[0];
     }
-    Take(count = 0) {
+    take(count = 0) {
         __assertNumeric(count);
         if (count <= 0) {
-            return __Collection.Empty;
+            return __Collection.empty;
         }
         const self = this;
         return new __Collection(function* () {
@@ -322,14 +316,14 @@ class __Collection {
             }
         });
     }
-    Skip(count = 0) {
+    skip(count = 0) {
         __assertNumeric(count);
         if (count <= 0) {
             return this;
         }
-        return this.SkipWhile((elem, index) => index < count);
+        return this.skipWhile((elem, index) => index < count);
     }
-    TakeWhile(predicate = (elem, index) => true) {
+    takeWhile(predicate = (elem, index) => true) {
         __assertFunction(predicate);
         const self = this;
         return new __Collection(function* () {
@@ -343,10 +337,10 @@ class __Collection {
             }
         });
     }
-    TakeUntil(predicate = (elem, index) => false) {
-        return this.TakeWhile((elem, index) => !predicate(elem, index));
+    takeUntil(predicate = (elem, index) => false) {
+        return this.takeWhile((elem, index) => !predicate(elem, index));
     }
-    SkipWhile(predicate = (elem, index) => true) {
+    skipWhile(predicate = (elem, index) => true) {
         __assertFunction(predicate);
         const self = this;
         return new __Collection(function* () {
@@ -361,26 +355,26 @@ class __Collection {
             }
         });
     }
-    SkipUntil(predicate = (elem, index) => false) {
-        return this.SkipWhile((elem, index) => !predicate(elem, index));
+    skipUntil(predicate = (elem, index) => false) {
+        return this.skipWhile((elem, index) => !predicate(elem, index));
     }
-    First(predicate = x => true) {
+    first(predicate = x => true) {
         __assertFunction(predicate);
         __assertNotEmpty(this);
-        return this.SkipWhile(elem => !predicate(elem)).Take(1).ToArray()[0];
+        return this.skipWhile(elem => !predicate(elem)).take(1).toArray()[0];
     }
-    FirstOrDefault(predicateOrConstructor = x => true, constructor = Object) {
-        return this.__resultOrDefault(this.First, predicateOrConstructor, constructor);
+    firstOrDefault(predicateOrConstructor = x => true, constructor = Object) {
+        return this.__resultOrDefault(this.first, predicateOrConstructor, constructor);
     }
-    Last(predicate = x => true) {
+    last(predicate = x => true) {
         __assertFunction(predicate);
         __assertNotEmpty(this);
-        return this.Reverse().First(predicate);
+        return this.reverse().first(predicate);
     }
-    LastOrDefault(predicateOrConstructor = x => true, constructor = Object) {
-        return this.__resultOrDefault(this.Last, predicateOrConstructor, constructor);
+    lastOrDefault(predicateOrConstructor = x => true, constructor = Object) {
+        return this.__resultOrDefault(this.last, predicateOrConstructor, constructor);
     }
-    Single(predicate = x => true) {
+    single(predicate = x => true) {
         __assertFunction(predicate);
         __assertNotEmpty(this);
         let index = 0;
@@ -392,15 +386,15 @@ class __Collection {
             }
             index++;
         }
-        if (this.First(elem => predicate(elem) && !__defaultEqualityCompareFn(elem, result))) {
+        if (this.first(elem => predicate(elem) && !__defaultEqualityCompareFn(elem, result))) {
             throw new Error('Sequence contains more than one element');
         }
         return result;
     }
-    SingleOrDefault(predicateOrConstructor = x => true, constructor = Object) {
-        return this.__resultOrDefault(this.Single, predicateOrConstructor, constructor);
+    singleOrDefault(predicateOrConstructor = x => true, constructor = Object) {
+        return this.__resultOrDefault(this.single, predicateOrConstructor, constructor);
     }
-    DefaultIfEmpty(constructor) {
+    defaultIfEmpty(constructor) {
         if (!__isEmpty(this)) {
             return this;
         }
@@ -408,7 +402,7 @@ class __Collection {
     }
     //#endregion
     //#region Concatenation
-    Concat(inner) {
+    concat(inner) {
         __assertIterable(inner);
         const outer = this;
         return new __Collection(function* () {
@@ -416,11 +410,11 @@ class __Collection {
             yield* inner;
         });
     }
-    Union(inner, equalityCompareFn = __defaultEqualityCompareFn) {
+    union(inner, equalityCompareFn = __defaultEqualityCompareFn) {
         __assertIterable(inner);
-        return this.Concat(inner).Distinct(equalityCompareFn);
+        return this.concat(inner).distinct(equalityCompareFn);
     }
-    Join(inner, outerKeySelector, innerKeySelector, resultSelectorFn, keyEqualityCompareFn = __defaultEqualityCompareFn) {
+    join(inner, outerKeySelector, innerKeySelector, resultSelectorFn, keyEqualityCompareFn = __defaultEqualityCompareFn) {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -439,7 +433,7 @@ class __Collection {
             }
         });
     }
-    Except(inner) {
+    except(inner) {
         __assertIterable(inner);
         if (!__isCollection(inner)) {
             inner = new __Collection(inner);
@@ -447,13 +441,13 @@ class __Collection {
         const outer = this;
         return new __Collection(function* () {
             for (let val of outer) {
-                if (!inner.Contains(val)) {
+                if (!inner.contains(val)) {
                     yield val;
                 }
             }
         });
     }
-    Zip(inner, resultSelectorFn) {
+    zip(inner, resultSelectorFn) {
         __assertIterable(inner);
         __assertFunction(resultSelectorFn);
         const outer = this;
@@ -468,14 +462,14 @@ class __Collection {
             }
         });
     }
-    Intersect(inner, equalityCompareFn = __defaultEqualityCompareFn) {
+    intersect(inner, equalityCompareFn = __defaultEqualityCompareFn) {
         __assertIterable(inner);
         __assertFunction(equalityCompareFn);
         const self = this;
         return new __Collection(function* () {
             const innerCollection = __Collection.from(inner);
             for (let val of self) {
-                if (innerCollection.Any(elem => equalityCompareFn(val, elem))) {
+                if (innerCollection.any(elem => equalityCompareFn(val, elem))) {
                     yield val;
                 }
             }
@@ -483,12 +477,12 @@ class __Collection {
     }
     //#endregion
     //#region Equality
-    SequenceEqual(second, equalityCompareFn = __defaultEqualityCompareFn) {
+    sequenceEqual(second, equalityCompareFn = __defaultEqualityCompareFn) {
         if (!__isIterable(second)) {
             return false;
         }
-        const first = this.ToArray();
-        second = __Collection.from(second).ToArray();
+        const first = this.toArray();
+        second = __Collection.from(second).toArray();
         if (first.length !== second.length) {
             return false;
         }
@@ -519,7 +513,7 @@ class __Collection {
         }
         return key;
     }
-    GroupBy(keySelector, ...args) {
+    groupBy(keySelector, ...args) {
         const self = this;
         /**
          * Checks whether or not a function is a key comparator.
@@ -608,7 +602,7 @@ class __Collection {
             }
             if (resultSelector) {
                 // If we want to select the final result with the resultSelector, we use the built-in Select function and retrieve a new Collection
-                result = __Collection.from(groups).Select(g => resultSelector(...g));
+                result = __Collection.from(groups).select(g => resultSelector(...g));
             } else {
                 // our result is just the groups -> return the Map
                 result = groups;
@@ -636,7 +630,7 @@ class __Collection {
         }
         return fn(keySelector, ...args);
     }
-    GroupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, equalityCompareFn = __defaultEqualityCompareFn) {
+    groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, equalityCompareFn = __defaultEqualityCompareFn) {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -655,26 +649,26 @@ class __Collection {
         }
         return new __Collection(function* () {
             for (let [key, values] of groups) {
-                yield resultSelector(key, values.ToArray());
+                yield resultSelector(key, values.toArray());
             }
         });
     }
     //#endregion
     //#region Insert & Remove
-    Add(value) {
-        this.Insert(value, this.Count());
+    add(value) {
+        this.insert(value, this.count());
     }
-    Insert(value, index) {
-        __assert(index >= 0 && index <= this.Count(), 'Index is out of bounds!');
-        const oldValues = this.ToArray();
+    insert(value, index) {
+        __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
+        const oldValues = this.toArray();
         this.__iterable = function* () {
             yield* oldValues.slice(0, index);
             yield value;
             yield* oldValues.slice(index, oldValues.length);
         };
     }
-    Remove(value) {
-        let values = this.ToArray();
+    remove(value) {
+        let values = this.toArray();
         const result = __removeFromArray(values, value);
         if (!result) {
             return false;
@@ -686,45 +680,45 @@ class __Collection {
     }
     //#endregion
     //#region Math
-    Min(mapFn = x => x) {
+    min(mapFn = x => x) {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
-        return Math.min.apply(null, this.Select(mapFn).ToArray());
+        return Math.min.apply(null, this.select(mapFn).toArray());
     }
-    Max(mapFn = x => x) {
+    max(mapFn = x => x) {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
-        return Math.max.apply(null, this.Select(mapFn).ToArray());
+        return Math.max.apply(null, this.select(mapFn).toArray());
     }
-    Sum(mapFn = x => x) {
+    sum(mapFn = x => x) {
         __assertNotEmpty(this);
-        return this.Select(mapFn).Aggregate(0, (prev, curr) => prev + curr);
+        return this.select(mapFn).aggregate(0, (prev, curr) => prev + curr);
     }
-    Average(mapFn = x => x) {
+    average(mapFn = x => x) {
         __assertNotEmpty(this);
-        return this.Sum(mapFn) / this.Count();
+        return this.sum(mapFn) / this.count();
     }
     //#endregion
     //#region Ordering
-    Order(comparator = defaultComparator) {
-        return this.OrderBy(x => x, comparator);
+    order(comparator = defaultComparator) {
+        return this.orderBy(x => x, comparator);
     }
-    OrderDescending(comparator = defaultComparator) {
-        return this.OrderByDescending(x => x, comparator);
+    orderDescending(comparator = defaultComparator) {
+        return this.orderByDescending(x => x, comparator);
     }
-    OrderBy(keySelector, comparator = defaultComparator) {
+    orderBy(keySelector, comparator = defaultComparator) {
         __assertFunction(comparator);
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
     }
-    OrderByDescending(keySelector, comparator = defaultComparator) {
+    orderByDescending(keySelector, comparator = defaultComparator) {
         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a, b) => comparator(b, a)));
     }
-    Shuffle() {
-        return this.OrderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
+    shuffle() {
+        return this.orderBy(() => Math.floor(Math.random() * 3) - 1 /* Returns -1, 0 or 1 */);
     }
     //#endregioning
     //#region Search
-    IndexOf(element, equalityCompareFn = __defaultEqualityCompareFn) {
+    indexOf(element, equalityCompareFn = __defaultEqualityCompareFn) {
         __assertFunction(equalityCompareFn);
         let i = 0;
         for (let val of this) {
@@ -735,7 +729,7 @@ class __Collection {
         }
         return -1;
     }
-    LastIndexOf(element, equalityCompareFn = __defaultEqualityCompareFn) {
+    lastIndexOf(element, equalityCompareFn = __defaultEqualityCompareFn) {
         __assertFunction(equalityCompareFn);
         let i = 0;
         let lastIndex = -1;
@@ -747,10 +741,10 @@ class __Collection {
         }
         return lastIndex;
     }
-    Contains(elem, equalityCompareFn = __defaultEqualityCompareFn) {
-        return !!~this.IndexOf(elem, equalityCompareFn);
+    contains(elem, equalityCompareFn = __defaultEqualityCompareFn) {
+        return !!~this.indexOf(elem, equalityCompareFn);
     }
-    Where(predicate = (elem, index) => true) {
+    where(predicate = (elem, index) => true) {
         __assertFunction(predicate);
         const self = this;
         return new __Collection(function* () {
@@ -763,23 +757,23 @@ class __Collection {
             }
         });
     }
-    ConditionalWhere(condition, predicate) {
+    conditionalWhere(condition, predicate) {
         if (condition) {
-            return this.Where(predicate);
+            return this.where(predicate);
         } else {
             return this;
         }
     }
-    Count(predicate = elem => true) {
+    count(predicate = elem => true) {
         let count = 0;
-        let filtered = this.Where(predicate);
+        let filtered = this.where(predicate);
         let iterator = filtered[Symbol.iterator]();
         while (!iterator.next().done) {
             count++;
         }
         return count;
     }
-    Any(predicate = null) {
+    any(predicate = null) {
         if (__isEmpty(this)) {
             return false;
         }
@@ -787,26 +781,26 @@ class __Collection {
             // since we checked before that the sequence is not empty
             return true;
         }
-        return !this.Where(predicate)[Symbol.iterator]().next().done;
+        return !this.where(predicate)[Symbol.iterator]().next().done;
     }
-    All(predicate = elem => true) {
+    all(predicate = elem => true) {
         __assertFunction(predicate);
         // All is equal to the question if there's no element which does not match the predicate
         // 'all fruits are yellow' -> 'there is no fruit which is not yellow'
-        return !this.Any(x => !predicate(x));
+        return !this.any(x => !predicate(x));
     }
     //#endregion
     //#region Transformation
-    Aggregate(seedOrAccumulator, accumulator = null, resultTransformFn = null) {
+    aggregate(seedOrAccumulator, accumulator = null, resultTransformFn = null) {
         if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
-            return __aggregateCollection(this.Skip(1), this.First(), seedOrAccumulator, elem => elem);
+            return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, elem => elem);
         } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
             return __aggregateCollection(this, seedOrAccumulator, accumulator, elem => elem);
         } else {
             return __aggregateCollection(this, seedOrAccumulator, accumulator, resultTransformFn);
         }
     }
-    Select(mapFn = x => x) {
+    select(mapFn = x => x) {
         const self = this;
         let index = 0;
         return new __Collection(function* () {
@@ -816,10 +810,10 @@ class __Collection {
             }
         });
     }
-    Flatten() {
-        return this.SelectMany(x => x);
+    flatten() {
+        return this.selectMany(x => x);
     }
-    SelectMany(mapFn, resultSelector = (x, y) => y) {
+    selectMany(mapFn, resultSelector = (x, y) => y) {
         __assertFunction(mapFn);
         __assertFunction(resultSelector);
         const self = this;
@@ -840,53 +834,50 @@ class __Collection {
             }
         });
     }
-    Distinct(equalityCompareFn = __defaultEqualityCompareFn) {
+    distinct(equalityCompareFn = __defaultEqualityCompareFn) {
         __assertFunction(equalityCompareFn);
         return __removeDuplicates(this, equalityCompareFn);
     }
-    ToArray() {
+    toArray() {
         return [...this];
     }
-    ToDictionary(keySelector, elementSelectorOrKeyComparator = null, keyComparator = null) {
+    toDictionary(keySelector, elementSelectorOrKeyComparator = null, keyComparator = null) {
         __assertFunction(keySelector);
         if (!elementSelectorOrKeyComparator && !keyComparator) {
             // ToDictionary(keySelector)
-            return this.ToDictionary(keySelector, elem => elem, __defaultEqualityCompareFn);
+            return this.toDictionary(keySelector, elem => elem, __defaultEqualityCompareFn);
         } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 1) {
             // ToDictionary(keySelector, elementSelector)
-            return this.ToDictionary(keySelector, elementSelectorOrKeyComparator, __defaultEqualityCompareFn);
+            return this.toDictionary(keySelector, elementSelectorOrKeyComparator, __defaultEqualityCompareFn);
         } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 2) {
             // ToDictionary(keySelector, keyComparator)
-            return this.ToDictionary(keySelector, elem => elem, elementSelectorOrKeyComparator);
+            return this.toDictionary(keySelector, elem => elem, elementSelectorOrKeyComparator);
         }
         // ToDictionary(keySelector, elementSelector, keyComparator)
         __assertFunction(keyComparator);
         __assertFunction(elementSelectorOrKeyComparator);
         let usedKeys = [];
         let result = new Map();
-        const input = this.ToArray();
+        const input = this.toArray();
         for (let value of input) {
             let key = keySelector(value);
             let elem = elementSelectorOrKeyComparator(value);
             __assert(key != null, 'Key is not allowed to be null!');
-            __assert(!__Collection.from(usedKeys).Any(x => keyComparator(x, key)), `Key '${key}' is already in use!`);
+            __assert(!__Collection.from(usedKeys).any(x => keyComparator(x, key)), `Key '${key}' is already in use!`);
             usedKeys.push(key);
             result.set(key, elem);
         }
         return result;
     }
-    ToJSON() {
-        return __toJSON(this.ToArray());
-    }
-    Reverse() {
-        const arr = this.ToArray();
+    reverse() {
+        const arr = this.toArray();
         return new __Collection(function* () {
             for (let i = arr.length - 1; i >= 0; i--) {
                 yield arr[i];
             }
         });
     }
-    ForEach(fn) {
+    forEach(fn) {
         __assertFunction(fn);
         for (let val of this) {
             fn(val);
@@ -897,7 +888,7 @@ class __Collection {
     static from(iterable) {
         return new __Collection(iterable);
     }
-    static Range(start, count) {
+    static range(start, count) {
         __assertNumberBetween(count, 0, Infinity);
         return new __Collection(function* () {
             let i = start;
@@ -906,7 +897,7 @@ class __Collection {
             }
         });
     }
-    static Repeat(val, count) {
+    static repeat(val, count) {
         __assertNumberBetween(count, 0, Infinity);
         return new __Collection(function* () {
             for (let i = 0; i < count; i++) {
@@ -914,11 +905,10 @@ class __Collection {
             }
         });
     }
-    static get Empty() {
+    static get empty() {
         return new __Collection([]);
     }
 }
-__Collection.From = __Collection.from;
 /**
  * HeapElement class that also provides the element index for sorting.
  *
@@ -1068,7 +1058,7 @@ class __OrderedCollection extends __Collection {
         super(iterableOrGenerator);
         this.__comparator = comparator;
     }
-    ThenBy(keySelector, comparator = defaultComparator) {
+    thenBy(keySelector, comparator = defaultComparator) {
         const currentComparator = this.__comparator;
         const additionalComparator = __getComparatorFromKeySelector(keySelector, comparator);
         const newComparator = (a, b) => {
@@ -1081,8 +1071,8 @@ class __OrderedCollection extends __Collection {
         return new __OrderedCollection(this.__iterable, newComparator);
     }
 
-    ThenByDescending(keySelector, comparator = defaultComparator) {
-        return this.ThenBy(keySelector, (a, b) => comparator(b, a));
+    thenByDescending(keySelector, comparator = defaultComparator) {
+        return this.thenBy(keySelector, (a, b) => comparator(b, a));
     }
     [Symbol.iterator]() {
         let self = this;
@@ -1095,18 +1085,72 @@ class __OrderedCollection extends __Collection {
 exports.Collection = __Collection;
 exports.default = exports.Collection;
 /**
- * Patches the given prototype to have quick access to all collection methods.
+ * Extends the given prototype to have quick access to all collection methods.
  *
  * @param prototype Prototype to be patched.
+ * @param exclude List of method names to exclude from patching.
+ * @throws Will throw an error if a method would be overwritten.
+ *
+ * @see {@link extendNativeTypes} to extend Javascript's native iterables.
  */
-function extendIterablePrototype(prototype) {
-    for (let key of Object.getOwnPropertyNames(Object.getPrototypeOf(exports.Collection.Empty))) {
-        if (!key.startsWith('_') && __isFunction(exports.Collection.Empty[key])) {
-            prototype[key] = function (...args) {
-                let collection = exports.Collection.from(this);
-                return collection[key].call(collection, ...args);
-            };
+function extendIterablePrototype(prototype, exclude = []) {
+    // always exclude the constructor
+    exclude.push("constructor");
+    let ex = exports.Collection.from(exclude);
+    // check for conflicts
+    let patchProperties = [];
+    for (let key of Object.getOwnPropertyNames(Object.getPrototypeOf(exports.Collection.empty))) {
+        if (!key.startsWith('_') && !ex.contains(key) && __isFunction(exports.Collection.empty[key])) {
+            if (key in prototype) {
+                throw new Error(`The method "${key}" already exists on the "${prototype.constructor && prototype.constructor.name}" prototype. ` + `Use the exclude parameter to patch without this method.`);
+            } else {
+                patchProperties.push(key);
+            }
         }
+    }
+    // path prototype
+    for (let key of patchProperties) {
+        prototype[key] = function (...args) {
+            let collection = exports.Collection.from(this);
+            return collection[key].call(collection, ...args);
+        };
     }
 }
 exports.extendIterablePrototype = extendIterablePrototype;
+/**
+ * Extends the native collections to have quick access to all collection methods.
+ *
+ * This method extends the prototypes of Array, Map and Set.
+ *
+ * @see {@link extendIterablePrototype} to extend custom iterables.
+ */
+function extendNativeTypes() {
+    extendIterablePrototype(Array.prototype, ["concat", "forEach", "indexOf", "join", "lastIndexOf", "reverse"]);
+    const originalJoin = Array.prototype.join;
+    Array.prototype.join = function (...args) {
+        if (args.length == 4 || args.length == 5) {
+            let collection = exports.Collection.from(this);
+            return collection.join.call(collection, ...args);
+        }
+        return originalJoin.call(this, ...args);
+    };
+    const originalIndexOf = Array.prototype.indexOf;
+    Array.prototype.indexOf = function (...args) {
+        if (args.length == 2 && __isFunction(args[1])) {
+            let collection = exports.Collection.from(this);
+            return collection.indexOf.call(collection, ...args);
+        }
+        return originalIndexOf.call(this, ...args);
+    };
+    const originalLastIndexOf = Array.prototype.lastIndexOf;
+    Array.prototype.lastIndexOf = function (...args) {
+        if (args.length == 2 && __isFunction(args[1])) {
+            let collection = exports.Collection.from(this);
+            return collection.lastIndexOf.call(collection, ...args);
+        }
+        return originalLastIndexOf.call(this, ...args);
+    };
+    extendIterablePrototype(Map.prototype, ["add", "forEach"]);
+    extendIterablePrototype(Set.prototype, ["add", "forEach"]);
+}
+exports.extendNativeTypes = extendNativeTypes;
