@@ -4,9 +4,7 @@ const expect = require('chai').expect
 const fs = require('fs')
 
 // patch prototypes
-linq.extendIterablePrototype(Array.prototype);
-linq.extendIterablePrototype(Map.prototype);
-linq.extendIterablePrototype(Set.prototype);
+linq.extendNativeTypes()
 
 function run (path) {
   let source = fs.readFileSync(path, 'utf8')

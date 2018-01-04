@@ -40,7 +40,7 @@ describe('collection.js', function () {
             ];
             it ('should properly generate an array', function () {
                 for (var array of arrays) {
-                    expect(Collection.from(array).ToArray()).to.be.deep.equal(array);
+                    expect(Collection.from(array).toArray()).to.be.deep.equal(array);
                 }
             })
         })

@@ -1,17 +1,17 @@
 describe('Concatenation', function () {
   describe('Concat', function () {
     it('should concatenate two arrays', function () {
-      expect([1, 2, 3].Concat([4, 5, 6]).ToArray()).to.be.deep.equal([1, 2, 3, 4, 5, 6])
+      expect([1, 2, 3].concat([4, 5, 6]).toArray()).to.be.deep.equal([1, 2, 3, 4, 5, 6])
     })
 
     it('should keep duplicates', function () {
-      expect([1, 2, 3].Concat([2, 3, 4]).ToArray()).to.be.deep.equal([1, 2, 3, 2, 3, 4])
+      expect([1, 2, 3].concat([2, 3, 4]).toArray()).to.be.deep.equal([1, 2, 3, 2, 3, 4])
     })
   })
 
   describe('Union', function () {
     it('should concatenate and remove duplicates', function () {
-      expect([1, 2, 3].Union([2, 3, 4]).ToArray()).to.be.deep.equal([1, 2, 3, 4])
+      expect([1, 2, 3].union([2, 3, 4]).toArray()).to.be.deep.equal([1, 2, 3, 4])
     })
 
     it('should accept a function to define which entries are equal', function () {
@@ -25,8 +25,8 @@ describe('Concatenation', function () {
         { name: 'flipper', specices: 'dolphin' }
       ];
 
-      expect(petsA.Union(petsB, (a, b) => a.species === b.species).Count()).to.be.equal(3) // miez and leo are assumed equal
-      expect([1,2,3,4].Union([6, 8, 9], (a, b) => a % 2 === b % 2).Count()).to.be.equal(2) // [1, 2]
+      expect(petsA.union(petsB, (a, b) => a.species === b.species).count()).to.be.equal(3) // miez and leo are assumed equal
+      expect([1,2,3,4].union([6, 8, 9], (a, b) => a % 2 === b % 2).count()).to.be.equal(2) // [1, 2]
     })
   })
 
@@ -44,7 +44,7 @@ describe('Concatenation', function () {
 
     it('should join two sequences and transform the pairs using a resultSelector', function () {
       const query =
-          people.Join(pets,
+          people.join(pets,
                       person => person,
                       pet => pet.Owner,
                       (person, pet) => { return { OwnerName: person.Name, Pet: pet.Name } })
@@ -56,7 +56,7 @@ describe('Concatenation', function () {
       ]
 
       const query2 =
-          pets.Join(people,
+          pets.join(people,
                     pet => pet.Owner,
                     person => person,
                     (pet, person) => { return { OwnerName: person.Name, Pet: pet.Name } })
@@ -68,8 +68,8 @@ describe('Concatenation', function () {
         'Hedlund, Magnus - Daisy',
       ]
 
-      expect(query.Count()).to.be.equal(4)
-      expect(query2.Count()).to.be.equal(4)
+      expect(query.count()).to.be.equal(4)
+      expect(query2.count()).to.be.equal(4)
 
       let index = 0
       for (let pair of query) {
@@ -88,7 +88,7 @@ describe('Concatenation', function () {
       const keyEqualityCompareFn = (a, b) => a === b
 
       const query =
-          people.Join(pets,
+          people.join(pets,
                       person => person,
                       pet => pet.Owner,
                       (person, pet) => { return { OwnerName: person.Name, Pet: pet.Name } },
@@ -114,9 +114,9 @@ describe('Concatenation', function () {
       const numbers1 = [ 2.0, 2.1, 2.2, 2.3, 2.4, 2.5 ]
       const numbers2 = [ 2.2 ]
 
-      const onlyInFirstSet = numbers1.Except(numbers2);
+      const onlyInFirstSet = numbers1.except(numbers2);
 
-      expect(onlyInFirstSet.ToArray()).to.be.deep.equal([2.0, 2.1, 2.3, 2.4, 2.5])
+      expect(onlyInFirstSet.toArray()).to.be.deep.equal([2.0, 2.1, 2.3, 2.4, 2.5])
     })
   })
 
@@ -125,11 +125,11 @@ describe('Concatenation', function () {
       const numbers = [ 1, 2, 3, 4 ]
       const words = [ "one", "two", "three" ]
 
-      const numbersAndWords = numbers.Zip(words, (first, second) => first + " " + second)
+      const numbersAndWords = numbers.zip(words, (first, second) => first + " " + second)
       const expectedResult = [ '1 one', '2 two', '3 three' ]
 
       let i = 0
-      for (let val of numbersAndWords.ToArray()) {
+      for (let val of numbersAndWords.toArray()) {
         expect(val).to.be.equal(expectedResult[i])
         i++
       }
@@ -138,13 +138,13 @@ describe('Concatenation', function () {
 
   describe('Intersect(second, equalityCompareFn)', function () {
     it('should produce the set intersection of two sequences', function () {
-      expect([44, 26, 92, 30, 71, 38].Intersect([39, 59, 83, 47, 26, 4, 30]).ToArray()).to.be.deep.equal([26, 30])
-      expect(Collection.from('hello world').Intersect(Collection.from('strawberry')).ToArray()).to.be.deep.equal(['e', 'w', 'r'])
+      expect([44, 26, 92, 30, 71, 38].intersect([39, 59, 83, 47, 26, 4, 30]).toArray()).to.be.deep.equal([26, 30])
+      expect(Collection.from('hello world').intersect(Collection.from('strawberry')).toArray()).to.be.deep.equal(['e', 'w', 'r'])
     })
 
     it('should accept a custom equality comparator', function () {
-      expect(['hello', 'world'].Intersect(['hallo', 'welt'],
-            (first, second) => first.length === second.length).ToArray()).to.be.deep.equal(["hello", "world"]) // I know, stupid example
+      expect(['hello', 'world'].intersect(['hallo', 'welt'],
+            (first, second) => first.length === second.length).toArray()).to.be.deep.equal(["hello", "world"]) // I know, stupid example
     })
   })
 })

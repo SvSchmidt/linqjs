@@ -42,12 +42,12 @@ describe('grouping', function () {
     ]
 
     it('should throw an error if called with more than 4 arguments', function () {
-      expect(function () { pets.GroupBy(pet => pet.Age, pet => pet.Age, 'foo', 'bar', 'baz') }).to.throw(Error)
+      expect(function () { pets.groupBy(pet => pet.Age, pet => pet.Age, 'foo', 'bar', 'baz') }).to.throw(Error)
     })
 
     describe('GroupBy(keySelector)', function () {
       it('should group the elements using the keySelector', function () {
-        const result = pets.GroupBy(pet => pet.Name[0])
+        const result = pets.groupBy(pet => pet.Name[0])
         const expected = new Map()
         expected.set('B', [
           {
@@ -79,7 +79,7 @@ describe('grouping', function () {
     describe('GroupBy(keySelector, elementSelector)', function () {
       it('should group the sequence using the key selector and project each element using the element selector', function () {
         const expected = new Map([[8, [8.3]], [4, [4.9, 4.3]], [1, [1.5]]])
-        const result = pets.GroupBy(pet => Math.floor(pet.Age), pet => pet.Age)
+        const result = pets.groupBy(pet => Math.floor(pet.Age), pet => pet.Age)
         expect(result).to.be.deep.equal(expected)
       })
     })
@@ -87,10 +87,10 @@ describe('grouping', function () {
     describe('GroupBy(keySelector, resultSelector)', function () {
       it('should group the sequence using the key selector and project each group using the result selector', function () {
         const result = pets
-          .GroupBy(
+          .groupBy(
             pet => Math.floor(pet.Age),
-            (key, pets) => ({ key, youngest: pets.First(p => p.Age === pets.Min(g => g.Age)).Name }))
-          .ToArray()
+            (key, pets) => ({ key, youngest: pets.first(p => p.Age === pets.min(g => g.Age)).Name }))
+          .toArray()
         const expected = [{"key":8,"youngest":"Barley"},{"key":4,"youngest":"Daisy"},{"key":1,"youngest":"Whiskers"}]
 
         expect(result).to.be.deep.equal(expected)
@@ -100,22 +100,22 @@ describe('grouping', function () {
     describe('GroupBy(keySelector, keyComparer)', function () {
       it('should group the sequence using the keySelector and compare keys using the keyComparer', function () {
         const expected = [[8.3,[{"Name":"Barley","Age":8.3}]],["4",[{"Name":"Boots","Age":"4"},{"Name":"Daisy","Age":4.3}]],[1.5,[{"Name":"Whiskers","Age":1.5}]]]
-        const result = petsKeyComparer.GroupBy(pet => pet.Age, keyComparer)
+        const result = petsKeyComparer.groupBy(pet => pet.Age, keyComparer)
 
-        expect(result.ToArray()).to.be.deep.equal(expected)
+        expect(result.toArray()).to.be.deep.equal(expected)
       })
     })
 
     describe('GroupBy(keySelector, elementSelector, resultSelector)', function () {
       it('should group the elements using the keyselector, map each group member using the elementSelector and fetch a result using the resultSelector', function () {
-        const query = pets.GroupBy(
+        const query = pets.groupBy(
             pet => Math.floor(pet.Age),
             pet => pet.Age,
             (baseAge, ages) => ({
                 Key: baseAge,
-                Count: ages.Count(),
-                Min: ages.Min(),
-                Max: ages.Max()
+                Count: ages.count(),
+                Min: ages.min(),
+                Max: ages.max()
             })
           );
 
@@ -140,14 +140,14 @@ describe('grouping', function () {
           }
         ]
 
-        expect(query.ToArray()).to.be.deep.equal(expected)
+        expect(query.toArray()).to.be.deep.equal(expected)
       })
     })
 
     describe('GroupBy(keySelector, elementSelector, keyComparer)', function () {
       it('should group a sequence using the keySelector, map each element using the elementSelector and compare keys using the keyComparer', function () {
         const expected = new Map([[8.3,[8.3]],["4",["4",4.3]],[1.5,[1.5]]])
-        const result = petsKeyComparer.GroupBy(pet => pet.Age, pet => pet.Age, keyComparer)
+        const result = petsKeyComparer.groupBy(pet => pet.Age, pet => pet.Age, keyComparer)
 
         expect(result).to.be.deep.equal(expected)
       })
@@ -156,25 +156,25 @@ describe('grouping', function () {
     describe('GroupBy(keySelector, resultSelector, keyComparer)', function () {
       it('should group a sequence using the keySelector, create a result from each group using the resultSelector and compare keys using the keyComparer', function () {
         const expected = [{"key":8.3,"pets":[{"Name":"Barley","Age":8.3}]},{"key":"4","pets":[{"Name":"Boots","Age":"4"},{"Name":"Daisy","Age":4.3}]},{"key":1.5,"pets":[{"Name":"Whiskers","Age":1.5}]}]
-        const result = petsKeyComparer.GroupBy(pet => pet.Age, (age, pets) => ({ key: age, pets }), keyComparer)
+        const result = petsKeyComparer.groupBy(pet => pet.Age, (age, pets) => ({ key: age, pets }), keyComparer)
 
-        expect(result.ToArray()).to.be.deep.equal(expected)
+        expect(result.toArray()).to.be.deep.equal(expected)
       })
     })
 
     describe('GroupBy(keySelector, elementSelector, resultSelector, keyComparer)', function () {
       it('should group the sequence using the keySelector, map each element using elementSelector, create a result of each group with the resultSelector and compare keys by keyComparer', function () {
         const expected = [{"key":8.3,"min":8.3,"max":8.3},{"key":"4","min":4,"max":4.3},{"key":1.5,"min":1.5,"max":1.5}]
-        const result = petsKeyComparer.GroupBy(pet => pet.Age,
+        const result = petsKeyComparer.groupBy(pet => pet.Age,
              pet => pet.Age,
              (baseAge, ages) => ({
                key: baseAge,
-               min: ages.Min(),
-               max: ages.Max(),
+               min: ages.min(),
+               max: ages.max(),
              }),
              (outer, inner) => Math.floor(parseFloat(outer)) === Math.floor(parseFloat(inner)))
 
-        expect(result.ToArray()).to.be.deep.equal(expected)
+        expect(result.toArray()).to.be.deep.equal(expected)
       })
     })
   })
@@ -194,13 +194,13 @@ describe('grouping', function () {
         const persons = [magnus, terry, charlotte]
         const pets = [barley, boots, whiskers, daisy]
 
-        const query = persons.GroupJoin(pets,
+        const query = persons.groupJoin(pets,
                              person => person,
                              pet => pet.Owner,
                              (person, petCollection) =>
                                  ({
                                      OwnerName: person.Name,
-                                     Pets: petCollection.Select(pet => pet.Name).ToArray(),
+                                     Pets: petCollection.select(pet => pet.Name).toArray(),
                                  }))
 
         const expected = [
@@ -218,7 +218,7 @@ describe('grouping', function () {
           },
         ]
 
-        expect(query.ToArray()).to.be.deep.equal(expected)
+        expect(query.toArray()).to.be.deep.equal(expected)
       })
     })
 
@@ -240,12 +240,12 @@ describe('grouping', function () {
           { KeyCode: 5, Product: 'Underwear' },
         ]
 
-        const query = customers.GroupJoin(orders,
+        const query = customers.groupJoin(orders,
                 c => c.Code,
                 o => o.KeyCode,
-                (customer, bought) => ({ customer: customer.Name, bought: bought.Select(b => b.Product).ToArray() }),
+                (customer, bought) => ({ customer: customer.Name, bought: bought.select(b => b.Product).toArray() }),
                 (a, b) => parseInt(a) === parseInt(b));
-        expect(query.First()).to.be.deep.equal({
+        expect(query.first()).to.be.deep.equal({
           customer: 'Sam',
           bought: ['Book', 'Game', 'Underwear']
         })
