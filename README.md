@@ -1,4 +1,4 @@
-# linq.js [![Build Status](https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master)](https://coveralls.io/github/SvSchmidt/linqjs)
+# linq.js [![Build Status](https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master)](https://coveralls.io/github/SvSchmidt/linqjs) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > Perform queries on collections in the manner of C#s System.Linq in JavaScript
 
@@ -31,9 +31,9 @@ const pets = [
   { Name: 'Fluffy',     Age: 2, },
 ];
 Collection.from(pets)
-  .OrderByDescending(p => p.Age)
-  .Take(2)
-  .Sum(p => p.Age);
+  .orderByDescending(p => p.Age)
+  .take(2)
+  .sum(p => p.Age);
 ```
 
 This will yield
@@ -58,7 +58,6 @@ This will yield
   Elements are accessed (and therefore evaluated) under following conditions:
   - element values are returned (by e.g. `first`),
   - non-lazy collections like arrays or dictionaries are generated (by e.g. `toArray`),
-  - json serialization of collections is performed,
   - `reverse` is used (sadly it has to evaluate the collection),
   - ordering is performed (the moment the first value is accessed from the ordered collection).
 
@@ -68,15 +67,15 @@ This will yield
   const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
   Collection.from(numbers)
-    .Select(n => {
+    .select(n => {
       console.log(n);
 
       return 2 * n;
     })
-    .Take(5)
-    .ToArray();
+    .take(5)
+    .toArray();
   ```
-The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only log the numbers 0 to 4 to the console. That's because Select is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using ToArray). It is worth mentioning that linq.js can even handle infinite sequences:
+The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only log the numbers 0 to 4 to the console. That's because `select` is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using `toArray`). It is worth mentioning that linq.js can even handle infinite sequences:
 
   ```js
   function * naturalNumbers () {
@@ -84,7 +83,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
     while (true) yield i++;
   }
 
-  Collection.from(naturalNumbers).Take(5).ToArray();
+  Collection.from(naturalNumbers).take(5).toArray();
   // -> [0, 1, 2, 3, 4]
   ```
 
@@ -94,12 +93,12 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   const m = new Map([['a', ['Abraham', 'Alabama']], ['s', ['Sven']]]);
 
   // These are equal
-  Collection.from(numbers).Select(n => 2 * n).ToArray();
-  numbers.Select(n => 2 * n).ToArray();
+  Collection.from(numbers).Select(n => 2 * n).toArray();
+  numbers.select(n => 2 * n).toArray();
 
   // So are those
-  m.Select(x => x[1]).Flatten().ToArray();
-  Collection.from(m).Select(x => x[1]).Flatten().ToArray();
+  m.select(x => x[1]).flatten().toArray();
+  Collection.from(m).select(x => x[1]).flatten().toArray();
   ```
 
 - *Working with any kind of iterables*
@@ -156,8 +155,4 @@ $ gulp
 
 See the [issues page](https://github.com/SvSchmidt/linqjs/issues) for bugs and project goals. I also invite you to start a discussion.
 
-I would be grateful if every new or changed code includes associated tests and appropriate jsdoc notation. Thank you!
-
-## License
-
-MIT
+I would be grateful if every new or changed code includes associated tests and appropriate [typedoc](http://typedoc.org/) notation. Thank you!
