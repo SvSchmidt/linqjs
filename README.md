@@ -110,7 +110,7 @@ The code will output `[0, 2, 4, 6, 8]`, but, what's more interesting, will only 
   - Generator functions
   - ...
 
-- *About 15kB minified, 5kB gzipped*
+- *About 14kB minified, 4kB gzipped*
 
 ## API
 
