@@ -14,7 +14,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "echo 'Starting build...' && gulp build && echo 'Starting tests...' && ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
+    "test": "echo 'Starting build...' && gulp build && echo 'Starting tests...' && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- ./test/runner.js --report spec --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage",
     "coverage": "gulp coverage",
     "build": "gulp",
     "generate-docs": "gulp docs"
@@ -37,20 +37,9 @@
     }
   ],
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-core": "^6.14.0",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-uglify": "^1.0.2",
-    "babel-polyfill": "^6.13.0",
-    "babel-preset-2017": "0.0.0",
-    "babel-preset-es2015": "^6.14.0",
-    "babel-preset-es2016": "^6.11.3",
-    "babel-preset-stage-0": "^6.5.0",
-    "babel-register": "^6.14.0",
-    "babelify": "^7.3.0",
+    "babel-preset-env": "^1.6.1",
     "chai": "^3.5.0",
     "coveralls": "^2.11.12",
-    "isparta": "4.0.0",
     "istanbul": "0.4.4",
     "jscoverage": "^0.6.0",
     "mocha": "^3.0.2",

@@ -65,6 +65,16 @@ function compileTypescript(module) {
 }
 
 const supportedModules = ["ES6", "CommonJS", "AMD", "System"];
+const babelConfig = {
+    presets: [[
+        require.resolve("babel-preset-env"),
+        {
+            targets: {
+                browsers: ["> 1%", "last 2 versions", "ie 10"]
+            }
+        }
+    ]],
+};
 let buildTasks = [];
 for (let module of supportedModules) {
     let moduleLower = module.toLowerCase();
@@ -98,7 +108,7 @@ for (let module of supportedModules) {
         moduleBuildTasks.push(taskName);
         gulp.task(taskName, () => {
             return compileTypescript(module)
-                .pipe(babel())
+                .pipe(babel(babelConfig))
                 .pipe(concat("linq." + moduleLower + ".es5.js"))
                 .pipe(gulp.dest("./dist"));
         });
@@ -108,7 +118,7 @@ for (let module of supportedModules) {
         moduleBuildTasks.push(taskName);
         gulp.task(taskName, () => {
             return compileTypescript(module)
-                .pipe(babel())
+                .pipe(babel(babelConfig))
                 .pipe(uglify())
                 .pipe(concat("linq." + moduleLower + ".es5.min.js"))
                 .pipe(gulp.dest("./dist"));
@@ -144,19 +154,6 @@ gulp.task("test", () => {
 });
 
 /*
- * Test with coverage
- */
-gulp.task("coverage", cb => {
-    exec('node ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter spec --recursive',
-        (err, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
-            cb(err);
-        }
-    );
-});
-
-/*
  * Combined build task
  */
 gulp.task("build", cb => runSequence("declaration", "compile", "docs", cb));
@@ -172,11 +169,16 @@ gulp.task("check", cb => runSequence("compile:commonjs", "test", cb));
 gulp.task("all", cb => runSequence("clean", "build", "test", cb));
 
 /*
- * Default task
+ * Watch task (run tests if a file changes)
  */
-gulp.task("default", () => {
+gulp.task("watch", () => {
     return gulp.watch(
         ["./src/**/*.ts", "./test/**/*.js", "./gulpfile.js"],
         ["check"]
     );
 });
+
+/*
+ * Default task
+ */
+gulp.task("default", cb => runSequence("check", "watch", cb));
