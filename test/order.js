@@ -39,6 +39,12 @@ describe('order', function () {
             it('should also accept the keySelector as a string', function () {
                 expect(pets.orderBy('Age').select(x => x.Age).toArray()).to.be.deep.equal(pets.orderBy(x => x.Age).select(x => x.Age).toArray())
             })
+            it('should accept the keySelector as a string with bracket notation', function () {
+                expect(pets.orderBy('["Age"]').select(x => x.Age).toArray()).to.be.deep.equal(pets.orderBy(x => x.Age).select(x => x.Age).toArray())
+            })
+            it('should accept the keySelector as a string starting with a dot', function () {
+                expect(pets.orderBy('.Age').select(x => x.Age).toArray()).to.be.deep.equal(pets.orderBy(x => x.Age).select(x => x.Age).toArray())
+            })
             it('should throw an assertion error for the invalid keySelector', function () {
                 expect(() => pets.orderBy({foo: "bar"}).select(x => x.Age).toArray()).to.throw(Error);
             })

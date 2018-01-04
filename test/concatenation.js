@@ -124,6 +124,15 @@ describe('Concatenation', function () {
 
             expect(onlyInFirstSet.toArray()).to.be.deep.equal([2.0, 2.1, 2.3, 2.4, 2.5])
         })
+
+        it('should also work with collections', function () {
+            const numbers1 = [2.0, 2.1, 2.2, 2.3, 2.4, 2.5]
+            const numbers2 = Collection.from([2.2])
+
+            const onlyInFirstSet = numbers1.except(numbers2);
+
+            expect(onlyInFirstSet.toArray()).to.be.deep.equal([2.0, 2.1, 2.3, 2.4, 2.5])
+        })
     })
 
     describe('Zip', function () {
