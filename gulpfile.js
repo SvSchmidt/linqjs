@@ -26,6 +26,7 @@ function typescriptSource() {
         "./src/helper/*.ts",
         "./src/BasicCollection.ts",
         "./src/OrderedCollection.ts",
+        "./src/CollectionStatic.ts",
         "./src/internal/Collection.ts",
         "./src/internal/MinHeap.ts",
         "./src/internal/OrderedCollection.ts",
@@ -146,7 +147,7 @@ gulp.task("test", () => {
  * Test with coverage
  */
 gulp.task("coverage", cb => {
-    exec('node ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter min --recursive',
+    exec('node ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/isparta cover ./node_modules/.bin/_mocha -- ./test/runner.js --reporter spec --recursive',
         (err, stdout, stderr) => {
             console.log(stdout);
             console.log(stderr);
