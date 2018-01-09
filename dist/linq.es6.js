@@ -526,9 +526,11 @@ class __Collection {
          */
         function isKeyComparator(arg) {
             let result = __getParameterCount(arg) === 2;
+            const first = self.first();
             try {
+                const key = keySelector(first);
                 // if this is a key comparator, it must return truthy values for equal values and falsy ones if they're different
-                result = result && arg(1, 1) && !arg(1, 2);
+                result = result && arg(key, key) && !arg(key, {});
             }
             catch (err) {
                 // if the function throws an error for values, it can't be a keyComparator
@@ -882,6 +884,25 @@ class __Collection {
             result.set(key, elem);
         }
         return result;
+    }
+    toLookup(keySelector, elementSelectorOrKeyComparator = null, keyComparator = null) {
+        __assertFunction(keySelector);
+        if (!elementSelectorOrKeyComparator && !keyComparator) {
+            // ToLookup(keySelector)
+            return this.groupBy(keySelector);
+        }
+        else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 1) {
+            // ToLookup(keySelector, elementSelector)
+            return this.groupBy(keySelector, elementSelectorOrKeyComparator);
+        }
+        else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 2) {
+            // ToLookup(keySelector, keyComparator)
+            return this.groupBy(keySelector, elementSelectorOrKeyComparator);
+        }
+        // ToLookup(keySelector, elementSelector, keyComparator)
+        __assertFunction(keyComparator);
+        __assertFunction(elementSelectorOrKeyComparator);
+        return this.groupBy(keySelector, elementSelectorOrKeyComparator, keyComparator);
     }
     reverse() {
         const arr = this.toArray();

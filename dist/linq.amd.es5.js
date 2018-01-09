@@ -1434,9 +1434,11 @@ define(["require", "exports"], function (require, exports) {
                  */
                 function isKeyComparator(arg) {
                     var result = __getParameterCount(arg) === 2;
+                    var first = self.first();
                     try {
+                        var key = keySelector(first);
                         // if this is a key comparator, it must return truthy values for equal values and falsy ones if they're different
-                        result = result && arg(1, 1) && !arg(1, 2);
+                        result = result && arg(key, key) && !arg(key, {});
                     } catch (err) {
                         // if the function throws an error for values, it can't be a keyComparator
                         result = false;
@@ -2476,6 +2478,28 @@ define(["require", "exports"], function (require, exports) {
                 }
 
                 return result;
+            }
+        }, {
+            key: "toLookup",
+            value: function toLookup(keySelector) {
+                var elementSelectorOrKeyComparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+                var keyComparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+                __assertFunction(keySelector);
+                if (!elementSelectorOrKeyComparator && !keyComparator) {
+                    // ToLookup(keySelector)
+                    return this.groupBy(keySelector);
+                } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 1) {
+                    // ToLookup(keySelector, elementSelector)
+                    return this.groupBy(keySelector, elementSelectorOrKeyComparator);
+                } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 2) {
+                    // ToLookup(keySelector, keyComparator)
+                    return this.groupBy(keySelector, elementSelectorOrKeyComparator);
+                }
+                // ToLookup(keySelector, elementSelector, keyComparator)
+                __assertFunction(keyComparator);
+                __assertFunction(elementSelectorOrKeyComparator);
+                return this.groupBy(keySelector, elementSelectorOrKeyComparator, keyComparator);
             }
         }, {
             key: "reverse",

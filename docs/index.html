@@ -62,7 +62,7 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="linq-js-build-status-https-travis-ci-org-svschmidt-linqjs-svg-branch-master-https-travis-ci-org-svschmidt-linqjs-coverage-status-https-coveralls-io-repos-github-svschmidt-linqjs-badge-svg-branch-master-https-coveralls-io-github-svschmidt-linqjs-">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master" alt="Coverage Status"></a></h1>
+				<h1 id="linq-js-build-status-https-travis-ci-org-svschmidt-linqjs-svg-branch-master-https-travis-ci-org-svschmidt-linqjs-coverage-status-https-coveralls-io-repos-github-svschmidt-linqjs-badge-svg-branch-master-https-coveralls-io-github-svschmidt-linqjs-license-mit-https-img-shields-io-badge-license-mit-yellow-svg-https-opensource-org-licenses-mit-">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></h1>
 				<blockquote>
 					<p>Perform queries on collections in the manner of C#s System.Linq in JavaScript</p>
 				</blockquote>
@@ -83,9 +83,9 @@
   { <span class="hljs-attr">Name</span>: <span class="hljs-string">'Fluffy'</span>,     <span class="hljs-attr">Age</span>: <span class="hljs-number">2</span>, },
 ];
 Collection.from(pets)
-  .OrderByDescending(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.Age)
-  .Take(<span class="hljs-number">2</span>)
-  .Sum(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.Age);
+  .orderByDescending(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.Age)
+  .take(<span class="hljs-number">2</span>)
+  .sum(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.Age);
 </code></pre>
 				<p>This will yield</p>
 				<pre><code><span class="hljs-number">10</span>
@@ -105,7 +105,6 @@ Collection.from(pets)
 						<ul>
 							<li>element values are returned (by e.g. <code>first</code>),</li>
 							<li>non-lazy collections like arrays or dictionaries are generated (by e.g. <code>toArray</code>),</li>
-							<li>json serialization of collections is performed,</li>
 							<li><code>reverse</code> is used (sadly it has to evaluate the collection),</li>
 							<li>ordering is performed (the moment the first value is accessed from the ordered collection).</li>
 						</ul>
@@ -113,21 +112,21 @@ Collection.from(pets)
 						<pre><code class="lang-js"><span class="hljs-keyword">const</span> numbers = [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">11</span>, <span class="hljs-number">12</span>, <span class="hljs-number">13</span>, <span class="hljs-number">14</span>, <span class="hljs-number">15</span>];
 
 Collection.from(numbers)
-  .Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
+  .select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(n);
 
     <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * n;
   })
-  .Take(<span class="hljs-number">5</span>)
-  .ToArray();
+  .take(<span class="hljs-number">5</span>)
+  .toArray();
 </code></pre>
-						<p>The code will output <code>[0, 2, 4, 6, 8]</code>, but, what&#39;s more interesting, will only log the numbers 0 to 4 to the console. That&#39;s because Select is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using ToArray). It is worth mentioning that linq.js can even handle infinite sequences:</p>
+						<p>The code will output <code>[0, 2, 4, 6, 8]</code>, but, what&#39;s more interesting, will only log the numbers 0 to 4 to the console. That&#39;s because <code>select</code> is implemented lazy; it will return a new Collection containing just the information of how to evaluate the values if requested (for instance using <code>toArray</code>). It is worth mentioning that linq.js can even handle infinite sequences:</p>
 						<pre><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> * <span class="hljs-title">naturalNumbers</span> (<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
   <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) <span class="hljs-keyword">yield</span> i++;
 }
 
-Collection.from(naturalNumbers).Take(<span class="hljs-number">5</span>).ToArray();
+Collection.from(naturalNumbers).take(<span class="hljs-number">5</span>).toArray();
 <span class="hljs-comment">// -&gt; [0, 1, 2, 3, 4]</span>
 </code></pre>
 					</li>
@@ -136,12 +135,12 @@ Collection.from(naturalNumbers).Take(<span class="hljs-number">5</span>).ToArray
 <span class="hljs-keyword">const</span> m = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[<span class="hljs-string">'a'</span>, [<span class="hljs-string">'Abraham'</span>, <span class="hljs-string">'Alabama'</span>]], [<span class="hljs-string">'s'</span>, [<span class="hljs-string">'Sven'</span>]]]);
 
 <span class="hljs-comment">// These are equal</span>
-Collection.from(numbers).Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-number">2</span> * n).ToArray();
-numbers.Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-number">2</span> * n).ToArray();
+Collection.from(numbers).Select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-number">2</span> * n).toArray();
+numbers.select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-number">2</span> * n).toArray();
 
 <span class="hljs-comment">// So are those</span>
-m.Select(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">1</span>]).Flatten().ToArray();
-Collection.from(m).Select(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">1</span>]).Flatten().ToArray();
+m.select(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">1</span>]).flatten().toArray();
+Collection.from(m).select(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x[<span class="hljs-number">1</span>]).flatten().toArray();
 </code></pre>
 					</li>
 					<li><p><em>Working with any kind of iterables</em></p>
@@ -196,9 +195,7 @@ $ npm install
 $ gulp
 </code></pre>
 				<p>See the <a href="https://github.com/SvSchmidt/linqjs/issues">issues page</a> for bugs and project goals. I also invite you to start a discussion.</p>
-				<p>I would be grateful if every new or changed code includes associated tests and appropriate jsdoc notation. Thank you!</p>
-				<h2 id="license">License</h2>
-				<p>MIT</p>
+				<p>I would be grateful if every new or changed code includes associated tests and appropriate <a href="http://typedoc.org/">typedoc</a> notation. Thank you!</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

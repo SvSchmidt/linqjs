@@ -824,6 +824,32 @@ class __Collection<T> implements BasicCollection<T> {
         return result;
     }
 
+    public toLookup(keySelector: any, elementSelectorOrKeyComparator: any = null, keyComparator: any = null): Map<any, Array<any>> {
+        __assertFunction(keySelector);
+
+        if (!elementSelectorOrKeyComparator && !keyComparator) {
+
+            // ToLookup(keySelector)
+            return this.groupBy(keySelector);
+        } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 1) {
+
+            // ToLookup(keySelector, elementSelector)
+            return this.groupBy(keySelector, elementSelectorOrKeyComparator);
+        } else if (!keyComparator && __getParameterCount(elementSelectorOrKeyComparator) === 2) {
+
+            // ToLookup(keySelector, keyComparator)
+            return this.groupBy(keySelector, elementSelectorOrKeyComparator);
+        }
+
+        // ToLookup(keySelector, elementSelector, keyComparator)
+
+        __assertFunction(keyComparator);
+        __assertFunction(elementSelectorOrKeyComparator);
+
+        return this.groupBy(keySelector, elementSelectorOrKeyComparator, keyComparator);
+    }
+
+
     public reverse(): __Collection<T> {
         const arr = this.toArray();
 

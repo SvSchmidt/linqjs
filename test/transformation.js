@@ -101,6 +101,62 @@ describe('Transformation', function () {
         })
     })
 
+    describe('ToLookup', function () {
+        const pets = [
+            {name: 'miez', species: 'cat'},
+            {name: 'wuff', species: 'dog'},
+            {name: 'leo', species: 'cat'},
+            {name: 'flipper', species: 'dolphin'}
+        ]
+
+        it('should have the overload ToLookup(keySelector)', function () {
+            const petLookup = pets.toLookup(p => p.species)
+            expect(petLookup instanceof Map).to.be.true
+            expect(petLookup.has('cat')).to.be.true
+            expect(petLookup.has('dog')).to.be.true
+            expect(petLookup.has('dolphin')).to.be.true
+
+            // each lookup value is a collection of all values with that key
+            expect(petLookup.get('cat') instanceof Collection);
+
+            expect(petLookup.get('dolphin').first()).to.be.deep.equal({name: 'flipper', species: 'dolphin'})
+
+            expect(petLookup.get('cat').count()).to.be.equal(2)
+        })
+
+        it('should have the overload ToLookup(keySelector, elementSelector)', function () {
+            const petLookup = pets.toLookup(p => p.species, p => p.name)
+
+            expect(petLookup.has('cat')).to.be.true
+            expect(petLookup.has('dog')).to.be.true
+            expect(petLookup.has('dolphin')).to.be.true
+
+            expect(petLookup.get('cat').count()).to.be.equal(2)
+
+            expect(petLookup.get('cat').toArray()).to.be.deep.equal(['miez', 'leo'])
+        })
+
+        it('should have the overload ToLookup(keySelector, keyComparer)', function () {
+            const petLookup = pets.toLookup(p => p.species, (a, b) => a.length === b.length)
+
+            // because of a.length === b.length 'cat' equals 'dog'
+            expect(petLookup.has('cat')).to.be.true
+            expect(petLookup.has('dog')).to.be.false
+            expect(petLookup.get('cat').count()).to.be.equal(3)
+        })
+
+        it('should have the overload ToLookup(keySelector, elementSelector, keyComparer)', function () {
+            const petLookup = pets.toLookup(p => p.species, p => p.name, (a, b) => a.length === b.length);
+
+            // because of a.length === b.length 'cat' equals 'dog'
+            expect(petLookup.has('cat')).to.be.true
+            expect(petLookup.has('dog')).to.be.false
+            expect(petLookup.get('cat').count()).to.be.equal(3)
+
+            expect(petLookup.get('cat').toArray()).to.be.deep.equal(['miez', 'wuff', 'leo'])
+        })
+    })
+
     describe('Reverse', function () {
         const pets = [
             {name: 'miez', species: 'cat'},
