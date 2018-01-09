@@ -363,12 +363,14 @@ class __Collection<T> implements BasicCollection<T> {
          */
         function isKeyComparator(arg: Function): arg is (a: K, b: K) => boolean {
             let result = __getParameterCount(arg) === 2;
+            const first = self.first();
+
             try {
+                const key = keySelector(first);
 
                 // if this is a key comparator, it must return truthy values for equal values and falsy ones if they're different
-                result = result && arg(1, 1) && !arg(1, 2);
+                result = result && arg(key, key) && !arg(key, {});
             } catch (err) {
-
                 // if the function throws an error for values, it can't be a keyComparator
                 result = false;
             }
