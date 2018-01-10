@@ -497,7 +497,7 @@ class __Collection<T> implements BasicCollection<T> {
         return fn(keySelector, ...args);
     }
 
-    public groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
+    public groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: BasicCollection<T>) => V, equalityCompareFn = __defaultEqualityCompareFn): __Collection<V> {
         __assertIterable(inner);
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
@@ -520,7 +520,7 @@ class __Collection<T> implements BasicCollection<T> {
 
         return new __Collection(function* () {
             for (let [key, values] of groups) {
-                yield resultSelector(key, values.toArray());
+                yield resultSelector(key, values);
             }
         });
     }

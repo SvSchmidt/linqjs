@@ -757,7 +757,7 @@ export interface BasicCollection<T> extends Iterable<T> {
      * @param resultSelector A function of the form (key, values) => any to select the final result from each grouping.
      * @return A collection with the grouped values.
      */
-    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V): BasicCollection<V>;
+    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: BasicCollection<T>) => V): BasicCollection<V>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
@@ -772,7 +772,7 @@ export interface BasicCollection<T> extends Iterable<T> {
      * @param keyComparator A function to compare keys for equality.
      * @return A collection with the grouped values.
      */
-    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
+    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: BasicCollection<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
 
     //#endregion
 
