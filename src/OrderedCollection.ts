@@ -1,3 +1,5 @@
+import {BasicCollection} from "./BasicCollection";
+
 /**
  * Ordered collection of iterable values.
  */

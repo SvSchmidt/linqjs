@@ -1,7 +1,16 @@
+import {BasicCollection} from "../BasicCollection";
+import {__aggregateCollection, __getComparatorFromKeySelector, __getDefault, __getParameterCount, __removeDuplicates, __removeFromArray} from "../helper/utils";
+import {__defaultEqualityCompareFn, defaultComparator} from "../helper/defaults";
+import {__isCollection, __isEmpty, __isFunction, __isGenerator, __isIterable, __isPredicate, __isUndefined} from "../helper/is";
+import {__assert, __assertFunction, __assertIndexInRange, __assertIterable, __assertNotEmpty, __assertNumberBetween, __assertNumeric} from "../helper/assert";
+import {OrderedCollection} from "../OrderedCollection";
+import {__OrderedCollection} from "./OrderedCollection";
+
 /**
  * @private
+ * @internal
  */
-class __Collection<T> implements BasicCollection<T> {
+export class __Collection<T> implements BasicCollection<T> {
 
     //#region Constructor
 
@@ -46,7 +55,7 @@ class __Collection<T> implements BasicCollection<T> {
 
         const defaultVal: T = __getDefault(fallback);
 
-        if (__isEmpty(this)) {
+        if (__isEmpty(<__Collection<T>>this)) {
             return defaultVal;
         }
 
@@ -60,7 +69,7 @@ class __Collection<T> implements BasicCollection<T> {
     }
 
     public elementAt(index: number): T {
-        __assertIndexInRange(this, index);
+        __assertIndexInRange(<__Collection<T>>this, index);
 
         return this.skip(index).first();
     }
@@ -72,7 +81,7 @@ class __Collection<T> implements BasicCollection<T> {
             return __Collection.empty;
         }
 
-        const self: this = this;
+        const self = this;
 
         return new __Collection(function* () {
             let i: number = 0;
@@ -90,7 +99,7 @@ class __Collection<T> implements BasicCollection<T> {
         __assertNumeric(count);
 
         if (count <= 0) {
-            return this;
+            return <__Collection<T>>this;
         }
 
         return this.skipWhile((elem: T, index: number) => index < count);
@@ -99,7 +108,7 @@ class __Collection<T> implements BasicCollection<T> {
     public takeWhile(predicate: any = (elem: T, index: number) => true) {
         __assertFunction(predicate);
 
-        const self: this = this;
+        const self = this;
 
         return new __Collection(function* () {
             let index: number = 0;
@@ -121,7 +130,7 @@ class __Collection<T> implements BasicCollection<T> {
     public skipWhile(predicate = (elem: T, index: number) => true) {
         __assertFunction(predicate);
 
-        const self: this = this;
+        const self = this;
 
         return new __Collection(function* () {
             let index = 0;
@@ -191,12 +200,12 @@ class __Collection<T> implements BasicCollection<T> {
         return this.__resultOrDefault(this.single, predicateOrConstructor, constructor);
     }
 
-    public defaultIfEmpty<V>(constructor: V): this | __Collection<V> {
-        if (!__isEmpty(this)) {
-            return this;
+    public defaultIfEmpty<V>(constructor: V): __Collection<T> | __Collection<V> {
+        if (!__isEmpty(<__Collection<T>>this)) {
+            return <__Collection<T>>this;
         }
 
-        return new __Collection([__getDefault(constructor)]);
+        return new __Collection([<V>__getDefault(constructor)]);
     }
 
     //#endregion
@@ -206,7 +215,7 @@ class __Collection<T> implements BasicCollection<T> {
     public concat(inner: Iterable<T>): __Collection<T> {
         __assertIterable(inner);
 
-        const outer = this;
+        const outer = <__Collection<T>>this;
 
         return new __Collection(function* () {
             yield* outer;
@@ -225,7 +234,7 @@ class __Collection<T> implements BasicCollection<T> {
         __assertFunction(outerKeySelector);
         __assertFunction(innerKeySelector);
         __assertFunction(resultSelectorFn);
-        __assertFunction(keyEqualityCompareFn);
+        __assertFunction(<Function>keyEqualityCompareFn);
 
         const outer = this;
 
@@ -324,7 +333,7 @@ class __Collection<T> implements BasicCollection<T> {
             if (!firstResult.done && !equalityCompareFn(firstResult.value, secondResult.value)) {
                 return false;
             }
-        } while(!firstResult.done);
+        } while (!firstResult.done);
 
         return true;
     }
@@ -383,7 +392,7 @@ class __Collection<T> implements BasicCollection<T> {
          * GroupBy(keySelector)
          */
         function groupByOneArgument<K>(keySelector: (e: T) => K): Map<K, Array<T>> {
-            return groupBy(keySelector, elem => elem, undefined, __defaultEqualityCompareFn);
+            return groupBy(keySelector, elem => elem, undefined, <(a: any, b: any) => boolean>__defaultEqualityCompareFn);
         }
 
         /*
@@ -402,7 +411,7 @@ class __Collection<T> implements BasicCollection<T> {
                 elementSelector = inner;
             }
 
-            return groupByThreeArguments(keySelector, elementSelector, keyComparator);
+            return groupByThreeArguments(keySelector, elementSelector, <Function>keyComparator);
         }
 
         /*
@@ -479,16 +488,16 @@ class __Collection<T> implements BasicCollection<T> {
         let fn: Function;
         switch (args.length) {
             case 0:
-                fn = groupByOneArgument;
+                fn = <Function>groupByOneArgument;
                 break;
             case 1:
-                fn = groupByTwoArguments;
+                fn = <Function>groupByTwoArguments;
                 break;
             case 2:
-                fn = groupByThreeArguments;
+                fn = <Function>groupByThreeArguments;
                 break;
             case 3:
-                fn = groupBy;
+                fn = <Function>groupBy;
                 break;
             default:
                 throw new Error('GroupBy parameter count can not be greater than 4!');
@@ -603,13 +612,13 @@ class __Collection<T> implements BasicCollection<T> {
     }
 
     public orderBy(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
-        __assertFunction(comparator);
+        __assertFunction(<Function>comparator);
 
-        return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
+        return new __OrderedCollection(<__Collection<T>>this, __getComparatorFromKeySelector(keySelector, <(a: T, b: T) => number>comparator));
     }
 
     public orderByDescending(keySelector: any, comparator = defaultComparator): OrderedCollection<T> {
-        return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
+        return new __OrderedCollection(<__Collection<T>>this, __getComparatorFromKeySelector(keySelector, (a: any, b: any) => comparator(b, a)));
     }
 
     public shuffle(): __Collection<T> {
@@ -675,11 +684,11 @@ class __Collection<T> implements BasicCollection<T> {
         });
     }
 
-    public conditionalWhere(condition: boolean, predicate: any) {
+    public conditionalWhere(condition: boolean, predicate: any): __Collection<T> {
         if (condition) {
             return this.where(predicate);
         } else {
-            return this;
+            return <__Collection<T>>this;
         }
     }
 
@@ -696,7 +705,7 @@ class __Collection<T> implements BasicCollection<T> {
     }
 
     public any(predicate: any = null): boolean {
-        if (__isEmpty(this)) {
+        if (__isEmpty(<__Collection<T>>this)) {
             return false;
         }
 
@@ -725,9 +734,9 @@ class __Collection<T> implements BasicCollection<T> {
         if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
             return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, (elem: any) => elem);
         } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
-            return __aggregateCollection(this, seedOrAccumulator, accumulator, (elem: any) => elem);
+            return __aggregateCollection(<__Collection<T>>this, seedOrAccumulator, accumulator, (elem: any) => elem);
         } else {
-            return __aggregateCollection(this, seedOrAccumulator, accumulator, resultTransformFn);
+            return __aggregateCollection(<__Collection<T>>this, seedOrAccumulator, accumulator, resultTransformFn);
         }
     }
 
@@ -779,7 +788,7 @@ class __Collection<T> implements BasicCollection<T> {
     public distinct(equalityCompareFn: any = __defaultEqualityCompareFn): __Collection<T> {
         __assertFunction(equalityCompareFn);
 
-        return __removeDuplicates(this, equalityCompareFn);
+        return __removeDuplicates(<__Collection<T>>this, equalityCompareFn);
     }
 
     public toArray(): Array<T> {

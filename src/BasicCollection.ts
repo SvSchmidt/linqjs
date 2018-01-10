@@ -1,3 +1,5 @@
+import {OrderedCollection} from "./OrderedCollection";
+
 /**
  * Represents a collection of iterable values.
  */
@@ -441,7 +443,7 @@ export interface BasicCollection<T> extends Iterable<T> {
      * @param constructor The default value type.
      * @return This collection or a new one containing a default value of the given type.
      */
-    defaultIfEmpty<V>(constructor: V): this | BasicCollection<V>;
+    defaultIfEmpty<V>(constructor: V): BasicCollection<T> | BasicCollection<V>;
 
     //#endregion
 

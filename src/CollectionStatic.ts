@@ -1,3 +1,5 @@
+import {BasicCollection} from "./BasicCollection";
+
 export interface CollectionStatic {
 
     /**

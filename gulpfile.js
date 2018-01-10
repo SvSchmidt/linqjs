@@ -6,9 +6,9 @@ const concat = require("gulp-concat");
 const uglify = require("gulp-uglify-es").default;
 const filter = require("gulp-filter");
 const babel = require("gulp-babel");
-const exec = require("child_process").exec;
 const mocha = require("gulp-mocha");
 const runSequence = require("gulp-sequence");
+const stripLine = require("gulp-strip-line");
 
 /*
  * Clean tasks
@@ -32,6 +32,7 @@ function typescriptSource() {
         "./src/internal/OrderedCollection.ts",
         "./src/module.ts"
     ])
+        .pipe(stripLine(/import\s.*?;/))
         .pipe(concat("linq.ts"))
         .pipe(gulp.dest("./build"));
 }

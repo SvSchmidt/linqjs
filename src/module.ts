@@ -1,3 +1,7 @@
+import {CollectionStatic} from "./CollectionStatic";
+import {__Collection} from "./internal/Collection";
+import {__isFunction} from "./helper/is";
+
 export const Collection: CollectionStatic = __Collection;
 export default Collection;
 

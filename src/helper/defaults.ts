@@ -1,7 +1,8 @@
 /**
  * @private
+ * @internal
  */
-function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
+export function __defaultEqualityCompareFn<T>(first: T, second: T): boolean {
     return first === second;
 }
 

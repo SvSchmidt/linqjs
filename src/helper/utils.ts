@@ -1,7 +1,13 @@
+import {__defaultEqualityCompareFn, defaultComparator} from "./defaults";
+import {__Collection} from "../internal/Collection";
+import {__assertArray, __assertFunction, __AssertionError, __assertIterable, __assertNotEmpty} from "./assert";
+import {__isFunction, __isNative, __isString} from "./is";
+
 /**
  * @private
+ * @internal
  */
-function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
+export function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
     __assertNotEmpty(coll);
@@ -15,8 +21,9 @@ function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumula
 
 /**
  * @private
+ * @internal
  */
-function __removeDuplicates<T>(coll: __Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = __defaultEqualityCompareFn): __Collection<T> {
+export function __removeDuplicates<T>(coll: __Collection<T>, equalityCompareFn: (a: T, b: T) => boolean = <(a: T, b: T) => boolean>__defaultEqualityCompareFn): __Collection<T> {
     __assertIterable(coll);
     __assertFunction(equalityCompareFn);
 
@@ -39,8 +46,9 @@ function __removeDuplicates<T>(coll: __Collection<T>, equalityCompareFn: (a: T, 
 
 /**
  * @private
+ * @internal
  */
-function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
+export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
     __assertArray(arr);
 
     let elementsBefore: Array<T> = [];
@@ -61,8 +69,9 @@ function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
 
 /**
  * @private
+ * @internal
  */
-function __getDefault(constructorOrValue: any = Object): any {
+export function __getDefault(constructorOrValue: any = Object): any {
     if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         let defaultValue = constructorOrValue();
 
@@ -78,8 +87,9 @@ function __getDefault(constructorOrValue: any = Object): any {
 
 /**
  * @private
+ * @internal
  */
-function __getParameterCount(fn: Function): number {
+export function __getParameterCount(fn: Function): number {
     __assertFunction(fn);
 
     return fn.length;
@@ -87,8 +97,9 @@ function __getParameterCount(fn: Function): number {
 
 /**
  * @private
+ * @internal
  */
-function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = defaultComparator): (a: T, b: T) => number {
+export function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = <(a: K, b: K) => number>defaultComparator): (a: T, b: T) => number {
     if (__isFunction(selector)) {
         return <any>(new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
     } else if (__isString(selector)) {

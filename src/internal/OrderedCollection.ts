@@ -1,7 +1,15 @@
+import {__Collection} from "./Collection";
+import {OrderedCollection} from "../OrderedCollection";
+import {__assertFunction} from "../helper/assert";
+import {defaultComparator} from "../helper/defaults";
+import {__getComparatorFromKeySelector} from "../helper/utils";
+import {__MinHeap} from "./MinHeap";
+
 /**
  * @private
+ * @internal
  */
-class __OrderedCollection<T> extends __Collection<T> implements OrderedCollection<T> {
+export class __OrderedCollection<T> extends __Collection<T> implements OrderedCollection<T> {
 
     private __comparator: (a: T, b: T) => number;
 
@@ -13,7 +21,7 @@ class __OrderedCollection<T> extends __Collection<T> implements OrderedCollectio
 
     public thenBy(keySelector: any, comparator = defaultComparator) {
         const currentComparator = this.__comparator;
-        const additionalComparator = __getComparatorFromKeySelector(keySelector, comparator);
+        const additionalComparator = __getComparatorFromKeySelector(keySelector, <(a: T, b: T) => number>comparator);
 
         const newComparator = (a: any, b: any) => {
             const res = currentComparator(a, b);

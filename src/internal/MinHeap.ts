@@ -1,7 +1,11 @@
+import {defaultComparator} from "../helper/defaults";
+import {__assertArray, __assertFunction} from "../helper/assert";
+
 /**
  * HeapElement class that also provides the element index for sorting.
  *
  * @private
+ * @internal
  */
 class __HeapElement<T> {
 
@@ -34,6 +38,7 @@ class __HeapElement<T> {
  * Partially sorted heap that contains the smallest element within root position.
  *
  * @private
+ * @internal
  */
 // only exported for testing
 export class __MinHeap<T> implements Iterable<T> {
@@ -48,7 +53,7 @@ export class __MinHeap<T> implements Iterable<T> {
      * @param elements Array with elements to create the heap from. Will be modified in place for heap logic.
      * @param comparator Comparator function (same as the one for Array.sort()).
      */
-    public constructor(elements: Array<T>, comparator: (a: T, b: T) => number = defaultComparator) {
+    public constructor(elements: Array<T>, comparator: (a: T, b: T) => number = <(a: T, b: T) => number>defaultComparator) {
         __assertArray(elements);
         __assertFunction(comparator);
 
