@@ -3,6 +3,7 @@ System.register([], function (exports_1, context_1) {
     var __moduleName = context_1 && context_1.id;
     /**
      * @private
+     * @internal
      */
     function __assert(condition, ...args) {
         if (!condition) {
@@ -14,63 +15,81 @@ System.register([], function (exports_1, context_1) {
             }
         }
     }
+    exports_1("__assert", __assert);
     /**
      * @private
+     * @internal
      */
     function __assertFunction(param) {
         __assert(__isFunction(param), 'function', param);
     }
+    exports_1("__assertFunction", __assertFunction);
     /**
      * @private
+     * @internal
      */
     function __assertArray(param) {
         __assert(__isArray(param), 'array', param);
     }
+    exports_1("__assertArray", __assertArray);
     /**
      * @private
+     * @internal
      */
     function __assertNotEmpty(self) {
         __assert(!__isEmpty(self), 'Sequence is empty!');
     }
+    exports_1("__assertNotEmpty", __assertNotEmpty);
     /**
      * @private
+     * @internal
      */
     function __assertIterable(obj) {
         __assert(__isIterable(obj), 'iterable', obj);
     }
+    exports_1("__assertIterable", __assertIterable);
     /**
      * @private
+     * @internal
      */
     function __assertCollection(obj) {
         __assert(__isCollection(obj), 'collection', obj);
     }
     /**
      * @private
+     * @internal
      */
     function __assertNumeric(obj) {
         __assert(__isNumeric(obj), 'numeric value', obj);
     }
+    exports_1("__assertNumeric", __assertNumeric);
     /**
      * @private
+     * @internal
      */
     function __assertNumberBetween(num, min, max = Infinity) {
         __assertNumeric(num);
         __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`);
     }
+    exports_1("__assertNumberBetween", __assertNumberBetween);
     /**
      * @private
+     * @internal
      */
     function __assertIndexInRange(self, index) {
         __assertCollection(self);
         __assert(__isNumeric(index), 'number', index);
         __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
     }
+    exports_1("__assertIndexInRange", __assertIndexInRange);
     /**
      * @private
+     * @internal
      */
     function __defaultEqualityCompareFn(first, second) {
         return first === second;
     }
+    exports_1("__defaultEqualityCompareFn", __defaultEqualityCompareFn);
     /**
      * Default comparator implementation that uses the "<" operator.
      * Returns values as specified by the comparator function fir Array.sort().
@@ -93,86 +112,110 @@ System.register([], function (exports_1, context_1) {
     exports_1("defaultComparator", defaultComparator);
     /**
      * @private
+     * @internal
      */
     function __isArray(obj) {
         return obj instanceof Array;
     }
+    exports_1("__isArray", __isArray);
     /**
      * @private
+     * @internal
      */
     function __isFunction(obj) {
         return typeof obj === 'function';
     }
+    exports_1("__isFunction", __isFunction);
     /**
      * @private
+     * @internal
      */
     function __isNumeric(n) {
         return !isNaN(parseFloat(n));
     }
+    exports_1("__isNumeric", __isNumeric);
     /**
      * @private
+     * @internal
      */
     function __isEmpty(iterable) {
         return iterable[Symbol.iterator]().next().done;
     }
+    exports_1("__isEmpty", __isEmpty);
     /**
      * @private
+     * @internal
      */
     function __isIterable(obj) {
         return (Symbol.iterator in Object(obj));
     }
+    exports_1("__isIterable", __isIterable);
     /**
      * @private
+     * @internal
      */
     function __isString(obj) {
         return typeof obj === 'string';
     }
+    exports_1("__isString", __isString);
     /**
      * @private
+     * @internal
      */
     function __isCollection(obj) {
         return obj instanceof __Collection;
     }
+    exports_1("__isCollection", __isCollection);
     /**
      * @private
+     * @internal
      */
     function __isGenerator(obj) {
         return obj instanceof (function* () {
         }).constructor;
     }
+    exports_1("__isGenerator", __isGenerator);
     /**
      * @private
+     * @internal
      */
     function __isUndefined(obj) {
         return typeof obj === typeof undefined;
     }
+    exports_1("__isUndefined", __isUndefined);
     /**
      * @private
+     * @internal
      */
     function __isPredicate(obj) {
         return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
     }
+    exports_1("__isPredicate", __isPredicate);
     /**
      * @private
+     * @internal
      */
     function __isNative(obj) {
         return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
     }
+    exports_1("__isNative", __isNative);
     /**
      * @private
+     * @internal
      */
     function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
         __assertFunction(accumulator);
         __assertFunction(resultTransformFn);
-        __assertNotEmpty(coll);
         let value = seed;
         for (let element of coll) {
             value = accumulator(value, element);
         }
         return resultTransformFn(value);
     }
+    exports_1("__aggregateCollection", __aggregateCollection);
     /**
      * @private
+     * @internal
      */
     function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn) {
         __assertIterable(coll);
@@ -190,8 +233,10 @@ System.register([], function (exports_1, context_1) {
             }
         });
     }
+    exports_1("__removeDuplicates", __removeDuplicates);
     /**
      * @private
+     * @internal
      */
     function __removeFromArray(arr, value) {
         __assertArray(arr);
@@ -207,8 +252,10 @@ System.register([], function (exports_1, context_1) {
         arr.unshift(...elementsBefore);
         return elementFound;
     }
+    exports_1("__removeFromArray", __removeFromArray);
     /**
      * @private
+     * @internal
      */
     function __getDefault(constructorOrValue = Object) {
         if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
@@ -222,15 +269,19 @@ System.register([], function (exports_1, context_1) {
         }
         return constructorOrValue;
     }
+    exports_1("__getDefault", __getDefault);
     /**
      * @private
+     * @internal
      */
     function __getParameterCount(fn) {
         __assertFunction(fn);
         return fn.length;
     }
+    exports_1("__getParameterCount", __getParameterCount);
     /**
      * @private
+     * @internal
      */
     function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
         if (__isFunction(selector)) {
@@ -244,6 +295,7 @@ System.register([], function (exports_1, context_1) {
         }
         throw new __AssertionError("string or function", selector);
     }
+    exports_1("__getComparatorFromKeySelector", __getComparatorFromKeySelector);
     /**
      * Extends the given prototype to have quick access to all collection methods.
      *
@@ -322,18 +374,22 @@ System.register([], function (exports_1, context_1) {
         execute: function () {
             /**
              * @private
+             * @internal
              */
             __AssertionError = class __AssertionError extends Error {
                 constructor(expected, got) {
                     super(`Expected ${expected}, got ${got}!`);
                 }
             };
+            exports_1("__AssertionError", __AssertionError);
             /**
              * @private
+             * @internal
              */
             __nativeConstructors = [Object, Number, Boolean, String, Symbol];
             /**
              * @private
+             * @internal
              */
             __Collection = class __Collection {
                 //#region Constructor
@@ -379,7 +435,7 @@ System.register([], function (exports_1, context_1) {
                 }
                 elementAt(index) {
                     __assertIndexInRange(this, index);
-                    return this.skip(index).take(1).toArray()[0];
+                    return this.skip(index).first();
                 }
                 take(count = 0) {
                     __assertNumeric(count);
@@ -443,7 +499,7 @@ System.register([], function (exports_1, context_1) {
                 first(predicate = (x) => true) {
                     __assertFunction(predicate);
                     __assertNotEmpty(this);
-                    return this.skipWhile(elem => !predicate(elem)).take(1).toArray()[0];
+                    return this.skipWhile(elem => !predicate(elem))[Symbol.iterator]().next().value;
                 }
                 firstOrDefault(predicateOrConstructor = (x) => true, constructor = Object) {
                     return this.__resultOrDefault(this.first, predicateOrConstructor, constructor);
@@ -563,18 +619,21 @@ System.register([], function (exports_1, context_1) {
                     if (!__isIterable(second)) {
                         return false;
                     }
-                    const first = this.toArray();
-                    second = __Collection.from(second).toArray();
-                    if (first.length !== second.length) {
-                        return false;
-                    }
-                    for (let i = 0; i < first.length; i++) {
-                        let firstVal = first[i];
-                        let secondVal = second[i];
-                        if (!equalityCompareFn(firstVal, secondVal)) {
+                    const firstIterator = this[Symbol.iterator]();
+                    const secondIterator = second[Symbol.iterator]();
+                    let firstResult;
+                    let secondResult;
+                    do {
+                        firstResult = firstIterator.next();
+                        secondResult = secondIterator.next();
+                        if (firstResult.done != secondResult.done) {
                             return false;
                         }
-                    }
+                        // only call the compare function if there are values
+                        if (!firstResult.done && !equalityCompareFn(firstResult.value, secondResult.value)) {
+                            return false;
+                        }
+                    } while (!firstResult.done);
                     return true;
                 }
                 //#endregion
@@ -739,7 +798,7 @@ System.register([], function (exports_1, context_1) {
                     }
                     return new __Collection(function* () {
                         for (let [key, values] of groups) {
-                            yield resultSelector(key, values.toArray());
+                            yield resultSelector(key, values);
                         }
                     });
                 }
@@ -749,8 +808,8 @@ System.register([], function (exports_1, context_1) {
                     this.insert(value, this.count());
                 }
                 insert(value, index) {
-                    __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
                     const oldValues = this.toArray();
+                    __assert(index >= 0 && index <= oldValues.length, 'Index is out of bounds!');
                     this.__iterable = function* () {
                         yield* oldValues.slice(0, index);
                         yield value;
@@ -773,12 +832,12 @@ System.register([], function (exports_1, context_1) {
                 min(mapFn = (x) => x) {
                     __assertFunction(mapFn);
                     __assertNotEmpty(this);
-                    return Math.min.apply(null, this.select(mapFn).toArray());
+                    return this.select(mapFn).aggregate((a, b) => a < b ? a : b);
                 }
                 max(mapFn = (x) => x) {
                     __assertFunction(mapFn);
                     __assertNotEmpty(this);
-                    return Math.max.apply(null, this.select(mapFn).toArray());
+                    return this.select(mapFn).aggregate((a, b) => a > b ? a : b);
                 }
                 sum(mapFn = (x) => x) {
                     __assertNotEmpty(this);
@@ -954,8 +1013,7 @@ System.register([], function (exports_1, context_1) {
                     __assertFunction(elementSelectorOrKeyComparator);
                     let usedKeys = [];
                     let result = new Map();
-                    const input = this.toArray();
-                    for (let value of input) {
+                    for (let value of this) {
                         let key = keySelector(value);
                         let elem = elementSelectorOrKeyComparator(value);
                         __assert(key != null, 'Key is not allowed to be null!');
@@ -1024,10 +1082,12 @@ System.register([], function (exports_1, context_1) {
                     return new __Collection([]);
                 }
             };
+            exports_1("__Collection", __Collection);
             /**
              * HeapElement class that also provides the element index for sorting.
              *
              * @private
+             * @internal
              */
             __HeapElement = class __HeapElement {
                 constructor(index, value) {
@@ -1053,6 +1113,7 @@ System.register([], function (exports_1, context_1) {
              * Partially sorted heap that contains the smallest element within root position.
              *
              * @private
+             * @internal
              */
             // only exported for testing
             __MinHeap = class __MinHeap {
@@ -1166,6 +1227,7 @@ System.register([], function (exports_1, context_1) {
             exports_1("__MinHeap", __MinHeap);
             /**
              * @private
+             * @internal
              */
             __OrderedCollection = class __OrderedCollection extends __Collection {
                 constructor(iterableOrGenerator, comparator) {
@@ -1197,6 +1259,7 @@ System.register([], function (exports_1, context_1) {
                     }();
                 }
             };
+            exports_1("__OrderedCollection", __OrderedCollection);
             exports_1("Collection", Collection = __Collection);
             exports_1("default", Collection);
         }

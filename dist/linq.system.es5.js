@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
@@ -24,6 +24,7 @@ System.register([], function (exports_1, context_1) {
     var __moduleName = context_1 && context_1.id;
     /**
      * @private
+     * @internal
      */
     function __assert(condition) {
         if (!condition) {
@@ -34,65 +35,83 @@ System.register([], function (exports_1, context_1) {
             }
         }
     }
+    exports_1("__assert", __assert);
     /**
      * @private
+     * @internal
      */
     function __assertFunction(param) {
         __assert(__isFunction(param), 'function', param);
     }
+    exports_1("__assertFunction", __assertFunction);
     /**
      * @private
+     * @internal
      */
     function __assertArray(param) {
         __assert(__isArray(param), 'array', param);
     }
+    exports_1("__assertArray", __assertArray);
     /**
      * @private
+     * @internal
      */
     function __assertNotEmpty(self) {
         __assert(!__isEmpty(self), 'Sequence is empty!');
     }
+    exports_1("__assertNotEmpty", __assertNotEmpty);
     /**
      * @private
+     * @internal
      */
     function __assertIterable(obj) {
         __assert(__isIterable(obj), 'iterable', obj);
     }
+    exports_1("__assertIterable", __assertIterable);
     /**
      * @private
+     * @internal
      */
     function __assertCollection(obj) {
         __assert(__isCollection(obj), 'collection', obj);
     }
     /**
      * @private
+     * @internal
      */
     function __assertNumeric(obj) {
         __assert(__isNumeric(obj), 'numeric value', obj);
     }
+    exports_1("__assertNumeric", __assertNumeric);
     /**
      * @private
+     * @internal
      */
     function __assertNumberBetween(num, min) {
         var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
 
         __assertNumeric(num);
-        __assert(num >= min && num <= max, 'Number must be between ' + min + ' and ' + max + '!');
+        __assert(num >= min && num <= max, "Number must be between " + min + " and " + max + "!");
     }
+    exports_1("__assertNumberBetween", __assertNumberBetween);
     /**
      * @private
+     * @internal
      */
     function __assertIndexInRange(self, index) {
         __assertCollection(self);
         __assert(__isNumeric(index), 'number', index);
         __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
     }
+    exports_1("__assertIndexInRange", __assertIndexInRange);
     /**
      * @private
+     * @internal
      */
     function __defaultEqualityCompareFn(first, second) {
         return first === second;
     }
+    exports_1("__defaultEqualityCompareFn", __defaultEqualityCompareFn);
     /**
      * Default comparator implementation that uses the "<" operator.
      * Returns values as specified by the comparator function fir Array.sort().
@@ -115,48 +134,63 @@ System.register([], function (exports_1, context_1) {
     exports_1("defaultComparator", defaultComparator);
     /**
      * @private
+     * @internal
      */
     function __isArray(obj) {
         return obj instanceof Array;
     }
+    exports_1("__isArray", __isArray);
     /**
      * @private
+     * @internal
      */
     function __isFunction(obj) {
         return typeof obj === 'function';
     }
+    exports_1("__isFunction", __isFunction);
     /**
      * @private
+     * @internal
      */
     function __isNumeric(n) {
         return !isNaN(parseFloat(n));
     }
+    exports_1("__isNumeric", __isNumeric);
     /**
      * @private
+     * @internal
      */
     function __isEmpty(iterable) {
         return iterable[Symbol.iterator]().next().done;
     }
+    exports_1("__isEmpty", __isEmpty);
     /**
      * @private
+     * @internal
      */
     function __isIterable(obj) {
         return Symbol.iterator in Object(obj);
     }
+    exports_1("__isIterable", __isIterable);
     /**
      * @private
+     * @internal
      */
     function __isString(obj) {
         return typeof obj === 'string';
     }
+    exports_1("__isString", __isString);
     /**
      * @private
+     * @internal
      */
     function __isCollection(obj) {
         return obj instanceof __Collection;
     }
+    exports_1("__isCollection", __isCollection);
     /**
      * @private
+     * @internal
      */
     function __isGenerator(obj) {
         return obj instanceof /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -164,39 +198,46 @@ System.register([], function (exports_1, context_1) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
-                        case 'end':
+                        case "end":
                             return _context.stop();
                     }
                 }
             }, _callee, this);
         }).constructor;
     }
+    exports_1("__isGenerator", __isGenerator);
     /**
      * @private
+     * @internal
      */
     function __isUndefined(obj) {
-        return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined));
+        return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === (typeof undefined === "undefined" ? "undefined" : _typeof(undefined));
     }
+    exports_1("__isUndefined", __isUndefined);
     /**
      * @private
+     * @internal
      */
     function __isPredicate(obj) {
         return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
     }
+    exports_1("__isPredicate", __isPredicate);
     /**
      * @private
+     * @internal
      */
     function __isNative(obj) {
         return (/native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj)
         );
     }
+    exports_1("__isNative", __isNative);
     /**
      * @private
+     * @internal
      */
     function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
         __assertFunction(accumulator);
         __assertFunction(resultTransformFn);
-        __assertNotEmpty(coll);
         var value = seed;
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -225,8 +266,10 @@ System.register([], function (exports_1, context_1) {
 
         return resultTransformFn(value);
     }
+    exports_1("__aggregateCollection", __aggregateCollection);
     /**
      * @private
+     * @internal
      */
     function __removeDuplicates(coll) {
         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
@@ -273,7 +316,7 @@ System.register([], function (exports_1, context_1) {
                                 break;
                             }
 
-                            return _context2.abrupt('continue', 36);
+                            return _context2.abrupt("continue", 36);
 
                         case 16:
                             _iteratorNormalCompletion3 = true;
@@ -286,7 +329,7 @@ System.register([], function (exports_1, context_1) {
 
                         case 21:
                             _context2.prev = 21;
-                            _context2.t0 = _context2['catch'](10);
+                            _context2.t0 = _context2["catch"](10);
                             _didIteratorError3 = true;
                             _iteratorError3 = _context2.t0;
 
@@ -330,7 +373,7 @@ System.register([], function (exports_1, context_1) {
 
                         case 41:
                             _context2.prev = 41;
-                            _context2.t1 = _context2['catch'](3);
+                            _context2.t1 = _context2["catch"](3);
                             _didIteratorError2 = true;
                             _iteratorError2 = _context2.t1;
 
@@ -359,15 +402,17 @@ System.register([], function (exports_1, context_1) {
                             return _context2.finish(45);
 
                         case 53:
-                        case 'end':
+                        case "end":
                             return _context2.stop();
                     }
                 }
             }, _callee2, this, [[3, 41, 45, 53], [10, 21, 25, 33], [26,, 28, 32], [46,, 48, 52]]);
         }));
     }
+    exports_1("__removeDuplicates", __removeDuplicates);
     /**
      * @private
+     * @internal
      */
     function __removeFromArray(arr, value) {
         __assertArray(arr);
@@ -383,8 +428,10 @@ System.register([], function (exports_1, context_1) {
         arr.unshift.apply(arr, elementsBefore);
         return elementFound;
     }
+    exports_1("__removeFromArray", __removeFromArray);
     /**
      * @private
+     * @internal
      */
     function __getDefault() {
         var constructorOrValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Object;
@@ -399,29 +446,34 @@ System.register([], function (exports_1, context_1) {
         }
         return constructorOrValue;
     }
+    exports_1("__getDefault", __getDefault);
     /**
      * @private
+     * @internal
      */
     function __getParameterCount(fn) {
         __assertFunction(fn);
         return fn.length;
     }
+    exports_1("__getParameterCount", __getParameterCount);
     /**
      * @private
+     * @internal
      */
     function __getComparatorFromKeySelector(selector) {
         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
         if (__isFunction(selector)) {
-            return new Function('comparator', 'keySelectorFn', 'a', 'b', 'return comparator(keySelectorFn(a), keySelectorFn(b))').bind(null, comparator, selector);
+            return new Function('comparator', 'keySelectorFn', 'a', 'b', "return comparator(keySelectorFn(a), keySelectorFn(b))").bind(null, comparator, selector);
         } else if (__isString(selector)) {
             if (!(selector.startsWith('[') || selector.startsWith('.'))) {
-                selector = '.' + selector;
+                selector = "." + selector;
             }
-            return new Function('comparator', 'a', 'b', 'return comparator(a' + selector + ', b' + selector + ')').bind(null, comparator);
+            return new Function('comparator', 'a', 'b', "return comparator(a" + selector + ", b" + selector + ")").bind(null, comparator);
         }
         throw new __AssertionError("string or function", selector);
     }
+    exports_1("__getComparatorFromKeySelector", __getComparatorFromKeySelector);
     /**
      * Extends the given prototype to have quick access to all collection methods.
      *
@@ -449,7 +501,7 @@ System.register([], function (exports_1, context_1) {
 
                 if (!key.startsWith('_') && !ex.contains(key) && __isFunction(Collection.empty[key])) {
                     if (key in prototype) {
-                        throw new Error('The method "' + key + '" already exists on the "' + (prototype.constructor && prototype.constructor.name) + '" prototype. ' + 'Use the exclude parameter to patch without this method.');
+                        throw new Error("The method \"" + key + "\" already exists on the \"" + (prototype.constructor && prototype.constructor.name) + "\" prototype. " + "Use the exclude parameter to patch without this method.");
                     } else {
                         patchProperties.push(key);
                     }
@@ -572,6 +624,7 @@ System.register([], function (exports_1, context_1) {
         execute: function execute() {
             /**
              * @private
+             * @internal
              */
             __AssertionError = function (_Error) {
                 _inherits(__AssertionError, _Error);
@@ -579,17 +632,20 @@ System.register([], function (exports_1, context_1) {
                 function __AssertionError(expected, got) {
                     _classCallCheck(this, __AssertionError);
 
-                    return _possibleConstructorReturn(this, (__AssertionError.__proto__ || Object.getPrototypeOf(__AssertionError)).call(this, 'Expected ' + expected + ', got ' + got + '!'));
+                    return _possibleConstructorReturn(this, (__AssertionError.__proto__ || Object.getPrototypeOf(__AssertionError)).call(this, "Expected " + expected + ", got " + got + "!"));
                 }
 
                 return __AssertionError;
             }(Error);
+            exports_1("__AssertionError", __AssertionError);
             /**
              * @private
+             * @internal
              */
             __nativeConstructors = [Object, Number, Boolean, String, Symbol];
             /**
              * @private
+             * @internal
              */
             __Collection = function () {
                 //#region Constructor
@@ -615,10 +671,10 @@ System.register([], function (exports_1, context_1) {
                                         while (1) {
                                             switch (_context3.prev = _context3.next) {
                                                 case 0:
-                                                    return _context3.delegateYield(iterable, 't0', 1);
+                                                    return _context3.delegateYield(iterable, "t0", 1);
 
                                                 case 1:
-                                                case 'end':
+                                                case "end":
                                                     return _context3.stop();
                                             }
                                         }
@@ -631,7 +687,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Access
 
                 }, {
-                    key: '__resultOrDefault',
+                    key: "__resultOrDefault",
                     value: function __resultOrDefault(originalFn) {
                         var predicateOrDefault = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (x) {
                             return true;
@@ -659,13 +715,13 @@ System.register([], function (exports_1, context_1) {
                         return result;
                     }
                 }, {
-                    key: 'elementAt',
+                    key: "elementAt",
                     value: function elementAt(index) {
                         __assertIndexInRange(this, index);
-                        return this.skip(index).take(1).toArray()[0];
+                        return this.skip(index).first();
                     }
                 }, {
-                    key: 'take',
+                    key: "take",
                     value: function take() {
                         var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
@@ -704,7 +760,7 @@ System.register([], function (exports_1, context_1) {
                                                 break;
                                             }
 
-                                            return _context4.abrupt('break', 15);
+                                            return _context4.abrupt("break", 15);
 
                                         case 12:
                                             _iteratorNormalCompletion6 = true;
@@ -717,7 +773,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 17:
                                             _context4.prev = 17;
-                                            _context4.t0 = _context4['catch'](4);
+                                            _context4.t0 = _context4["catch"](4);
                                             _didIteratorError6 = true;
                                             _iteratorError6 = _context4.t0;
 
@@ -746,7 +802,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context4.finish(21);
 
                                         case 29:
-                                        case 'end':
+                                        case "end":
                                             return _context4.stop();
                                     }
                                 }
@@ -754,7 +810,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'skip',
+                    key: "skip",
                     value: function skip() {
                         var count = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
@@ -767,7 +823,7 @@ System.register([], function (exports_1, context_1) {
                         });
                     }
                 }, {
-                    key: 'takeWhile',
+                    key: "takeWhile",
                     value: function takeWhile() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
                             return true;
@@ -810,7 +866,7 @@ System.register([], function (exports_1, context_1) {
                                             break;
 
                                         case 13:
-                                            return _context5.abrupt('break', 17);
+                                            return _context5.abrupt("break", 17);
 
                                         case 14:
                                             _iteratorNormalCompletion7 = true;
@@ -823,7 +879,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 19:
                                             _context5.prev = 19;
-                                            _context5.t0 = _context5['catch'](4);
+                                            _context5.t0 = _context5["catch"](4);
                                             _didIteratorError7 = true;
                                             _iteratorError7 = _context5.t0;
 
@@ -852,7 +908,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context5.finish(23);
 
                                         case 31:
-                                        case 'end':
+                                        case "end":
                                             return _context5.stop();
                                     }
                                 }
@@ -860,7 +916,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'takeUntil',
+                    key: "takeUntil",
                     value: function takeUntil() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
                             return false;
@@ -871,7 +927,7 @@ System.register([], function (exports_1, context_1) {
                         });
                     }
                 }, {
-                    key: 'skipWhile',
+                    key: "skipWhile",
                     value: function skipWhile() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
                             return true;
@@ -907,7 +963,7 @@ System.register([], function (exports_1, context_1) {
                                                 break;
                                             }
 
-                                            return _context6.abrupt('continue', 14);
+                                            return _context6.abrupt("continue", 14);
 
                                         case 11:
                                             endSkip = true;
@@ -925,7 +981,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 19:
                                             _context6.prev = 19;
-                                            _context6.t0 = _context6['catch'](5);
+                                            _context6.t0 = _context6["catch"](5);
                                             _didIteratorError8 = true;
                                             _iteratorError8 = _context6.t0;
 
@@ -954,7 +1010,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context6.finish(23);
 
                                         case 31:
-                                        case 'end':
+                                        case "end":
                                             return _context6.stop();
                                     }
                                 }
@@ -962,7 +1018,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'skipUntil',
+                    key: "skipUntil",
                     value: function skipUntil() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
                             return false;
@@ -973,7 +1029,7 @@ System.register([], function (exports_1, context_1) {
                         });
                     }
                 }, {
-                    key: 'first',
+                    key: "first",
                     value: function first() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return true;
@@ -983,10 +1039,10 @@ System.register([], function (exports_1, context_1) {
                         __assertNotEmpty(this);
                         return this.skipWhile(function (elem) {
                             return !predicate(elem);
-                        }).take(1).toArray()[0];
+                        })[Symbol.iterator]().next().value;
                     }
                 }, {
-                    key: 'firstOrDefault',
+                    key: "firstOrDefault",
                     value: function firstOrDefault() {
                         var predicateOrConstructor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return true;
@@ -996,7 +1052,7 @@ System.register([], function (exports_1, context_1) {
                         return this.__resultOrDefault(this.first, predicateOrConstructor, constructor);
                     }
                 }, {
-                    key: 'last',
+                    key: "last",
                     value: function last() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return true;
@@ -1007,7 +1063,7 @@ System.register([], function (exports_1, context_1) {
                         return this.reverse().first(predicate);
                     }
                 }, {
-                    key: 'lastOrDefault',
+                    key: "lastOrDefault",
                     value: function lastOrDefault() {
                         var predicateOrConstructor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return true;
@@ -1017,7 +1073,7 @@ System.register([], function (exports_1, context_1) {
                         return this.__resultOrDefault(this.last, predicateOrConstructor, constructor);
                     }
                 }, {
-                    key: 'single',
+                    key: "single",
                     value: function single() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return true;
@@ -1064,7 +1120,7 @@ System.register([], function (exports_1, context_1) {
                         return result;
                     }
                 }, {
-                    key: 'singleOrDefault',
+                    key: "singleOrDefault",
                     value: function singleOrDefault() {
                         var predicateOrConstructor = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return true;
@@ -1074,7 +1130,7 @@ System.register([], function (exports_1, context_1) {
                         return this.__resultOrDefault(this.single, predicateOrConstructor, constructor);
                     }
                 }, {
-                    key: 'defaultIfEmpty',
+                    key: "defaultIfEmpty",
                     value: function defaultIfEmpty(constructor) {
                         if (!__isEmpty(this)) {
                             return this;
@@ -1085,7 +1141,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Concatenation
 
                 }, {
-                    key: 'concat',
+                    key: "concat",
                     value: function concat(inner) {
                         __assertIterable(inner);
                         var outer = this;
@@ -1094,13 +1150,13 @@ System.register([], function (exports_1, context_1) {
                                 while (1) {
                                     switch (_context7.prev = _context7.next) {
                                         case 0:
-                                            return _context7.delegateYield(outer, 't0', 1);
+                                            return _context7.delegateYield(outer, "t0", 1);
 
                                         case 1:
-                                            return _context7.delegateYield(inner, 't1', 2);
+                                            return _context7.delegateYield(inner, "t1", 2);
 
                                         case 2:
-                                        case 'end':
+                                        case "end":
                                             return _context7.stop();
                                     }
                                 }
@@ -1108,7 +1164,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'union',
+                    key: "union",
                     value: function union(inner) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
@@ -1116,7 +1172,7 @@ System.register([], function (exports_1, context_1) {
                         return this.concat(inner).distinct(equalityCompareFn);
                     }
                 }, {
-                    key: 'join',
+                    key: "join",
                     value: function join(inner, outerKeySelector, innerKeySelector, resultSelectorFn) {
                         var keyEqualityCompareFn = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : __defaultEqualityCompareFn;
 
@@ -1181,7 +1237,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 24:
                                             _context8.prev = 24;
-                                            _context8.t0 = _context8['catch'](11);
+                                            _context8.t0 = _context8["catch"](11);
                                             _didIteratorError11 = true;
                                             _iteratorError11 = _context8.t0;
 
@@ -1220,7 +1276,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 41:
                                             _context8.prev = 41;
-                                            _context8.t1 = _context8['catch'](3);
+                                            _context8.t1 = _context8["catch"](3);
                                             _didIteratorError10 = true;
                                             _iteratorError10 = _context8.t1;
 
@@ -1249,7 +1305,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context8.finish(45);
 
                                         case 53:
-                                        case 'end':
+                                        case "end":
                                             return _context8.stop();
                                     }
                                 }
@@ -1257,7 +1313,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'except',
+                    key: "except",
                     value: function except(inner) {
                         __assertIterable(inner);
                         if (!__isCollection(inner)) {
@@ -1304,7 +1360,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 15:
                                             _context9.prev = 15;
-                                            _context9.t0 = _context9['catch'](3);
+                                            _context9.t0 = _context9["catch"](3);
                                             _didIteratorError12 = true;
                                             _iteratorError12 = _context9.t0;
 
@@ -1333,7 +1389,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context9.finish(19);
 
                                         case 27:
-                                        case 'end':
+                                        case "end":
                                             return _context9.stop();
                                     }
                                 }
@@ -1341,7 +1397,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'zip',
+                    key: "zip",
                     value: function zip(inner, resultSelectorFn) {
                         __assertIterable(inner);
                         __assertFunction(resultSelectorFn);
@@ -1374,7 +1430,7 @@ System.register([], function (exports_1, context_1) {
                                                 break;
                                             }
 
-                                            return _context10.abrupt('break', 16);
+                                            return _context10.abrupt("break", 16);
 
                                         case 11:
                                             _context10.next = 13;
@@ -1391,7 +1447,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 18:
                                             _context10.prev = 18;
-                                            _context10.t0 = _context10['catch'](4);
+                                            _context10.t0 = _context10["catch"](4);
                                             _didIteratorError13 = true;
                                             _iteratorError13 = _context10.t0;
 
@@ -1420,7 +1476,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context10.finish(22);
 
                                         case 30:
-                                        case 'end':
+                                        case "end":
                                             return _context10.stop();
                                     }
                                 }
@@ -1428,7 +1484,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'intersect',
+                    key: "intersect",
                     value: function intersect(inner) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
@@ -1461,7 +1517,7 @@ System.register([], function (exports_1, context_1) {
                                                                 return val;
 
                                                             case 3:
-                                                            case 'end':
+                                                            case "end":
                                                                 return _context11.stop();
                                                         }
                                                     }
@@ -1480,7 +1536,7 @@ System.register([], function (exports_1, context_1) {
                                             }
 
                                             val = _step14.value;
-                                            return _context12.delegateYield(_loop2(val), 't0', 10);
+                                            return _context12.delegateYield(_loop2(val), "t0", 10);
 
                                         case 10:
                                             _iteratorNormalCompletion14 = true;
@@ -1493,7 +1549,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 15:
                                             _context12.prev = 15;
-                                            _context12.t1 = _context12['catch'](5);
+                                            _context12.t1 = _context12["catch"](5);
                                             _didIteratorError14 = true;
                                             _iteratorError14 = _context12.t1;
 
@@ -1522,7 +1578,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context12.finish(19);
 
                                         case 27:
-                                        case 'end':
+                                        case "end":
                                             return _context12.stop();
                                     }
                                 }
@@ -1533,25 +1589,28 @@ System.register([], function (exports_1, context_1) {
                     //#region Equality
 
                 }, {
-                    key: 'sequenceEqual',
+                    key: "sequenceEqual",
                     value: function sequenceEqual(second) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
                         if (!__isIterable(second)) {
                             return false;
                         }
-                        var first = this.toArray();
-                        second = __Collection.from(second).toArray();
-                        if (first.length !== second.length) {
-                            return false;
-                        }
-                        for (var i = 0; i < first.length; i++) {
-                            var firstVal = first[i];
-                            var secondVal = second[i];
-                            if (!equalityCompareFn(firstVal, secondVal)) {
+                        var firstIterator = this[Symbol.iterator]();
+                        var secondIterator = second[Symbol.iterator]();
+                        var firstResult = void 0;
+                        var secondResult = void 0;
+                        do {
+                            firstResult = firstIterator.next();
+                            secondResult = secondIterator.next();
+                            if (firstResult.done != secondResult.done) {
                                 return false;
                             }
-                        }
+                            // only call the compare function if there are values
+                            if (!firstResult.done && !equalityCompareFn(firstResult.value, secondResult.value)) {
+                                return false;
+                            }
+                        } while (!firstResult.done);
                         return true;
                     }
                     //#endregion
@@ -1566,7 +1625,7 @@ System.register([], function (exports_1, context_1) {
                      */
 
                 }, {
-                    key: 'groupBy',
+                    key: "groupBy",
                     value: function groupBy(keySelector) {
                         var self = this;
                         /**
@@ -1725,7 +1784,7 @@ System.register([], function (exports_1, context_1) {
                         return fn.apply(undefined, [keySelector].concat(args));
                     }
                 }, {
-                    key: 'groupJoin',
+                    key: "groupJoin",
                     value: function groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
                         var equalityCompareFn = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : __defaultEqualityCompareFn;
 
@@ -1778,7 +1837,7 @@ System.register([], function (exports_1, context_1) {
 
                                             case 15:
                                                 _context14.prev = 15;
-                                                _context14.t0 = _context14['catch'](3);
+                                                _context14.t0 = _context14["catch"](3);
                                                 _didIteratorError18 = true;
                                                 _iteratorError18 = _context14.t0;
 
@@ -1807,7 +1866,7 @@ System.register([], function (exports_1, context_1) {
                                                 return _context14.finish(19);
 
                                             case 27:
-                                            case 'end':
+                                            case "end":
                                                 return _context14.stop();
                                         }
                                     }
@@ -1864,7 +1923,7 @@ System.register([], function (exports_1, context_1) {
                                             key = _ref2[0];
                                             values = _ref2[1];
                                             _context13.next = 12;
-                                            return resultSelector(key, values.toArray());
+                                            return resultSelector(key, values);
 
                                         case 12:
                                             _iteratorNormalCompletion17 = true;
@@ -1877,7 +1936,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 17:
                                             _context13.prev = 17;
-                                            _context13.t0 = _context13['catch'](3);
+                                            _context13.t0 = _context13["catch"](3);
                                             _didIteratorError17 = true;
                                             _iteratorError17 = _context13.t0;
 
@@ -1906,7 +1965,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context13.finish(21);
 
                                         case 29:
-                                        case 'end':
+                                        case "end":
                                             return _context13.stop();
                                     }
                                 }
@@ -1917,31 +1976,31 @@ System.register([], function (exports_1, context_1) {
                     //#region Insert & Remove
 
                 }, {
-                    key: 'add',
+                    key: "add",
                     value: function add(value) {
                         this.insert(value, this.count());
                     }
                 }, {
-                    key: 'insert',
+                    key: "insert",
                     value: function insert(value, index) {
-                        __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
                         var oldValues = this.toArray();
+                        __assert(index >= 0 && index <= oldValues.length, 'Index is out of bounds!');
                         this.__iterable = /*#__PURE__*/regeneratorRuntime.mark(function _callee14() {
                             return regeneratorRuntime.wrap(function _callee14$(_context15) {
                                 while (1) {
                                     switch (_context15.prev = _context15.next) {
                                         case 0:
-                                            return _context15.delegateYield(oldValues.slice(0, index), 't0', 1);
+                                            return _context15.delegateYield(oldValues.slice(0, index), "t0", 1);
 
                                         case 1:
                                             _context15.next = 3;
                                             return value;
 
                                         case 3:
-                                            return _context15.delegateYield(oldValues.slice(index, oldValues.length), 't1', 4);
+                                            return _context15.delegateYield(oldValues.slice(index, oldValues.length), "t1", 4);
 
                                         case 4:
-                                        case 'end':
+                                        case "end":
                                             return _context15.stop();
                                     }
                                 }
@@ -1949,7 +2008,7 @@ System.register([], function (exports_1, context_1) {
                         });
                     }
                 }, {
-                    key: 'remove',
+                    key: "remove",
                     value: function remove(value) {
                         var values = this.toArray();
                         var result = __removeFromArray(values, value);
@@ -1961,10 +2020,10 @@ System.register([], function (exports_1, context_1) {
                                 while (1) {
                                     switch (_context16.prev = _context16.next) {
                                         case 0:
-                                            return _context16.delegateYield(values, 't0', 1);
+                                            return _context16.delegateYield(values, "t0", 1);
 
                                         case 1:
-                                        case 'end':
+                                        case "end":
                                             return _context16.stop();
                                     }
                                 }
@@ -1976,7 +2035,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Math
 
                 }, {
-                    key: 'min',
+                    key: "min",
                     value: function min() {
                         var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return x;
@@ -1984,10 +2043,12 @@ System.register([], function (exports_1, context_1) {
 
                         __assertFunction(mapFn);
                         __assertNotEmpty(this);
-                        return Math.min.apply(null, this.select(mapFn).toArray());
+                        return this.select(mapFn).aggregate(function (a, b) {
+                            return a < b ? a : b;
+                        });
                     }
                 }, {
-                    key: 'max',
+                    key: "max",
                     value: function max() {
                         var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return x;
@@ -1995,10 +2056,12 @@ System.register([], function (exports_1, context_1) {
 
                         __assertFunction(mapFn);
                         __assertNotEmpty(this);
-                        return Math.max.apply(null, this.select(mapFn).toArray());
+                        return this.select(mapFn).aggregate(function (a, b) {
+                            return a > b ? a : b;
+                        });
                     }
                 }, {
-                    key: 'sum',
+                    key: "sum",
                     value: function sum() {
                         var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return x;
@@ -2010,7 +2073,7 @@ System.register([], function (exports_1, context_1) {
                         });
                     }
                 }, {
-                    key: 'average',
+                    key: "average",
                     value: function average() {
                         var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return x;
@@ -2023,7 +2086,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Ordering
 
                 }, {
-                    key: 'order',
+                    key: "order",
                     value: function order() {
                         var comparator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultComparator;
 
@@ -2032,7 +2095,7 @@ System.register([], function (exports_1, context_1) {
                         }, comparator);
                     }
                 }, {
-                    key: 'orderDescending',
+                    key: "orderDescending",
                     value: function orderDescending() {
                         var comparator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultComparator;
 
@@ -2041,7 +2104,7 @@ System.register([], function (exports_1, context_1) {
                         }, comparator);
                     }
                 }, {
-                    key: 'orderBy',
+                    key: "orderBy",
                     value: function orderBy(keySelector) {
                         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
@@ -2049,7 +2112,7 @@ System.register([], function (exports_1, context_1) {
                         return new __OrderedCollection(this, __getComparatorFromKeySelector(keySelector, comparator));
                     }
                 }, {
-                    key: 'orderByDescending',
+                    key: "orderByDescending",
                     value: function orderByDescending(keySelector) {
                         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
@@ -2058,7 +2121,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'shuffle',
+                    key: "shuffle",
                     value: function shuffle() {
                         return this.orderBy(function () {
                             return Math.floor(Math.random() * 3) - 1;
@@ -2068,7 +2131,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Search
 
                 }, {
-                    key: 'indexOf',
+                    key: "indexOf",
                     value: function indexOf(element) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
@@ -2105,7 +2168,7 @@ System.register([], function (exports_1, context_1) {
                         return -1;
                     }
                 }, {
-                    key: 'lastIndexOf',
+                    key: "lastIndexOf",
                     value: function lastIndexOf(element) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
@@ -2143,14 +2206,14 @@ System.register([], function (exports_1, context_1) {
                         return lastIndex;
                     }
                 }, {
-                    key: 'contains',
+                    key: "contains",
                     value: function contains(elem) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
                         return !!~this.indexOf(elem, equalityCompareFn);
                     }
                 }, {
-                    key: 'where',
+                    key: "where",
                     value: function where() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem, index) {
                             return true;
@@ -2202,7 +2265,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 17:
                                             _context17.prev = 17;
-                                            _context17.t0 = _context17['catch'](4);
+                                            _context17.t0 = _context17["catch"](4);
                                             _didIteratorError21 = true;
                                             _iteratorError21 = _context17.t0;
 
@@ -2231,7 +2294,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context17.finish(21);
 
                                         case 29:
-                                        case 'end':
+                                        case "end":
                                             return _context17.stop();
                                     }
                                 }
@@ -2239,7 +2302,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'conditionalWhere',
+                    key: "conditionalWhere",
                     value: function conditionalWhere(condition, predicate) {
                         if (condition) {
                             return this.where(predicate);
@@ -2248,7 +2311,7 @@ System.register([], function (exports_1, context_1) {
                         }
                     }
                 }, {
-                    key: 'count',
+                    key: "count",
                     value: function count() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem) {
                             return true;
@@ -2263,7 +2326,7 @@ System.register([], function (exports_1, context_1) {
                         return count;
                     }
                 }, {
-                    key: 'any',
+                    key: "any",
                     value: function any() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -2277,7 +2340,7 @@ System.register([], function (exports_1, context_1) {
                         return !this.where(predicate)[Symbol.iterator]().next().done;
                     }
                 }, {
-                    key: 'all',
+                    key: "all",
                     value: function all() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (elem) {
                             return true;
@@ -2294,7 +2357,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Transformation
 
                 }, {
-                    key: 'aggregate',
+                    key: "aggregate",
                     value: function aggregate(seedOrAccumulator) {
                         var accumulator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
                         var resultTransformFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -2312,7 +2375,7 @@ System.register([], function (exports_1, context_1) {
                         }
                     }
                 }, {
-                    key: 'select',
+                    key: "select",
                     value: function select() {
                         var mapFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (x) {
                             return x;
@@ -2357,7 +2420,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 15:
                                             _context18.prev = 15;
-                                            _context18.t0 = _context18['catch'](3);
+                                            _context18.t0 = _context18["catch"](3);
                                             _didIteratorError22 = true;
                                             _iteratorError22 = _context18.t0;
 
@@ -2386,7 +2449,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context18.finish(19);
 
                                         case 27:
-                                        case 'end':
+                                        case "end":
                                             return _context18.stop();
                                     }
                                 }
@@ -2394,14 +2457,14 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'flatten',
+                    key: "flatten",
                     value: function flatten() {
                         return this.selectMany(function (x) {
                             return x;
                         });
                     }
                 }, {
-                    key: 'selectMany',
+                    key: "selectMany",
                     value: function selectMany(mapFn) {
                         var resultSelector = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (x, y) {
                             return y;
@@ -2466,7 +2529,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 25:
                                             _context19.prev = 25;
-                                            _context19.t0 = _context19['catch'](14);
+                                            _context19.t0 = _context19["catch"](14);
                                             _didIteratorError24 = true;
                                             _iteratorError24 = _context19.t0;
 
@@ -2508,7 +2571,7 @@ System.register([], function (exports_1, context_1) {
 
                                         case 43:
                                             _context19.prev = 43;
-                                            _context19.t1 = _context19['catch'](4);
+                                            _context19.t1 = _context19["catch"](4);
                                             _didIteratorError23 = true;
                                             _iteratorError23 = _context19.t1;
 
@@ -2537,7 +2600,7 @@ System.register([], function (exports_1, context_1) {
                                             return _context19.finish(47);
 
                                         case 55:
-                                        case 'end':
+                                        case "end":
                                             return _context19.stop();
                                     }
                                 }
@@ -2545,7 +2608,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'distinct',
+                    key: "distinct",
                     value: function distinct() {
                         var equalityCompareFn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : __defaultEqualityCompareFn;
 
@@ -2553,12 +2616,12 @@ System.register([], function (exports_1, context_1) {
                         return __removeDuplicates(this, equalityCompareFn);
                     }
                 }, {
-                    key: 'toArray',
+                    key: "toArray",
                     value: function toArray() {
                         return [].concat(_toConsumableArray(this));
                     }
                 }, {
-                    key: 'toDictionary',
+                    key: "toDictionary",
                     value: function toDictionary(keySelector) {
                         var elementSelectorOrKeyComparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
                         var keyComparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -2583,7 +2646,6 @@ System.register([], function (exports_1, context_1) {
                         __assertFunction(elementSelectorOrKeyComparator);
                         var usedKeys = [];
                         var result = new Map();
-                        var input = this.toArray();
 
                         var _loop4 = function _loop4(value) {
                             var key = keySelector(value);
@@ -2591,7 +2653,7 @@ System.register([], function (exports_1, context_1) {
                             __assert(key != null, 'Key is not allowed to be null!');
                             __assert(!__Collection.from(usedKeys).any(function (x) {
                                 return keyComparator(x, key);
-                            }), 'Key \'' + key + '\' is already in use!');
+                            }), "Key '" + key + "' is already in use!");
                             usedKeys.push(key);
                             result.set(key, elem);
                         };
@@ -2601,7 +2663,7 @@ System.register([], function (exports_1, context_1) {
                         var _iteratorError25 = undefined;
 
                         try {
-                            for (var _iterator25 = input[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+                            for (var _iterator25 = this[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
                                 var value = _step25.value;
 
                                 _loop4(value);
@@ -2624,7 +2686,7 @@ System.register([], function (exports_1, context_1) {
                         return result;
                     }
                 }, {
-                    key: 'toLookup',
+                    key: "toLookup",
                     value: function toLookup(keySelector) {
                         var elementSelectorOrKeyComparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
                         var keyComparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
@@ -2646,7 +2708,7 @@ System.register([], function (exports_1, context_1) {
                         return this.groupBy(keySelector, elementSelectorOrKeyComparator, keyComparator);
                     }
                 }, {
-                    key: 'reverse',
+                    key: "reverse",
                     value: function reverse() {
                         var arr = this.toArray();
                         return new __Collection( /*#__PURE__*/regeneratorRuntime.mark(function _callee19() {
@@ -2672,7 +2734,7 @@ System.register([], function (exports_1, context_1) {
                                             break;
 
                                         case 7:
-                                        case 'end':
+                                        case "end":
                                             return _context20.stop();
                                     }
                                 }
@@ -2680,7 +2742,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'forEach',
+                    key: "forEach",
                     value: function forEach(fn) {
                         __assertFunction(fn);
                         var _iteratorNormalCompletion26 = true;
@@ -2712,7 +2774,7 @@ System.register([], function (exports_1, context_1) {
                     //#region Static
 
                 }], [{
-                    key: '__getEqualKey',
+                    key: "__getEqualKey",
                     value: function __getEqualKey(groupKeys, key, keyComparator) {
                         var _iteratorNormalCompletion27 = true;
                         var _didIteratorError27 = false;
@@ -2744,12 +2806,12 @@ System.register([], function (exports_1, context_1) {
                         return key;
                     }
                 }, {
-                    key: 'from',
+                    key: "from",
                     value: function from(iterable) {
                         return new __Collection(iterable);
                     }
                 }, {
-                    key: 'range',
+                    key: "range",
                     value: function range(start, count) {
                         __assertNumberBetween(count, 0, Infinity);
                         return new __Collection( /*#__PURE__*/regeneratorRuntime.mark(function _callee20() {
@@ -2774,7 +2836,7 @@ System.register([], function (exports_1, context_1) {
                                             break;
 
                                         case 6:
-                                        case 'end':
+                                        case "end":
                                             return _context21.stop();
                                     }
                                 }
@@ -2782,7 +2844,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'repeat',
+                    key: "repeat",
                     value: function repeat(val, count) {
                         __assertNumberBetween(count, 0, Infinity);
                         return new __Collection( /*#__PURE__*/regeneratorRuntime.mark(function _callee21() {
@@ -2808,7 +2870,7 @@ System.register([], function (exports_1, context_1) {
                                             break;
 
                                         case 7:
-                                        case 'end':
+                                        case "end":
                                             return _context22.stop();
                                     }
                                 }
@@ -2816,7 +2878,7 @@ System.register([], function (exports_1, context_1) {
                         }));
                     }
                 }, {
-                    key: 'empty',
+                    key: "empty",
                     get: function get() {
                         return new __Collection([]);
                     }
@@ -2824,10 +2886,12 @@ System.register([], function (exports_1, context_1) {
 
                 return __Collection;
             }();
+            exports_1("__Collection", __Collection);
             /**
              * HeapElement class that also provides the element index for sorting.
              *
              * @private
+             * @internal
              */
             __HeapElement = function () {
                 function __HeapElement(index, value) {
@@ -2847,7 +2911,7 @@ System.register([], function (exports_1, context_1) {
 
 
                 _createClass(__HeapElement, null, [{
-                    key: '__createHeapElement',
+                    key: "__createHeapElement",
                     value: function __createHeapElement(index, obj) {
                         if (obj === undefined || obj instanceof __HeapElement) {
                             return obj;
@@ -2862,6 +2926,7 @@ System.register([], function (exports_1, context_1) {
              * Partially sorted heap that contains the smallest element within root position.
              *
              * @private
+             * @internal
              */
             // only exported for testing
             __MinHeap = function () {
@@ -2901,7 +2966,7 @@ System.register([], function (exports_1, context_1) {
 
 
                 _createClass(__MinHeap, [{
-                    key: '__heapify',
+                    key: "__heapify",
                     value: function __heapify(elements, comparator, i) {
                         var right = 2 * (i + 1);
                         var left = right - 1;
@@ -2938,7 +3003,7 @@ System.register([], function (exports_1, context_1) {
                      */
 
                 }, {
-                    key: '__createHeap',
+                    key: "__createHeap",
                     value: function __createHeap(elements, comparator) {
                         // special case: empty array
                         if (elements.length === 0) {
@@ -2951,12 +3016,12 @@ System.register([], function (exports_1, context_1) {
                         }
                     }
                 }, {
-                    key: '__hasTopElement',
+                    key: "__hasTopElement",
                     value: function __hasTopElement() {
                         return this.__elements.length > 0;
                     }
                 }, {
-                    key: '__getTopElement',
+                    key: "__getTopElement",
                     value: function __getTopElement() {
                         // special case: only one element left
                         if (this.__elements.length === 1) {
@@ -2995,6 +3060,7 @@ System.register([], function (exports_1, context_1) {
             exports_1("__MinHeap", __MinHeap);
             /**
              * @private
+             * @internal
              */
             __OrderedCollection = function (_Collection) {
                 _inherits(__OrderedCollection, _Collection);
@@ -3011,7 +3077,7 @@ System.register([], function (exports_1, context_1) {
                 }
 
                 _createClass(__OrderedCollection, [{
-                    key: 'thenBy',
+                    key: "thenBy",
                     value: function thenBy(keySelector) {
                         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
@@ -3027,7 +3093,7 @@ System.register([], function (exports_1, context_1) {
                         return new __OrderedCollection(this.__iterable, newComparator);
                     }
                 }, {
-                    key: 'thenByDescending',
+                    key: "thenByDescending",
                     value: function thenByDescending(keySelector) {
                         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
@@ -3045,10 +3111,10 @@ System.register([], function (exports_1, context_1) {
                                     while (1) {
                                         switch (_context23.prev = _context23.next) {
                                             case 0:
-                                                return _context23.delegateYield(new __MinHeap([].concat(_toConsumableArray(_defineProperty({}, Symbol.iterator, parentIterator))), self.__comparator), 't0', 1);
+                                                return _context23.delegateYield(new __MinHeap([].concat(_toConsumableArray(_defineProperty({}, Symbol.iterator, parentIterator))), self.__comparator), "t0", 1);
 
                                             case 1:
-                                            case 'end':
+                                            case "end":
                                                 return _context23.stop();
                                         }
                                     }
@@ -3060,6 +3126,7 @@ System.register([], function (exports_1, context_1) {
 
                 return __OrderedCollection;
             }(__Collection);
+            exports_1("__OrderedCollection", __OrderedCollection);
             exports_1("Collection", Collection = __Collection);
             exports_1("default", Collection);
         }

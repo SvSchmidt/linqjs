@@ -423,7 +423,7 @@ export interface BasicCollection<T> extends Iterable<T> {
      * @param constructor The default value type.
      * @return This collection or a new one containing a default value of the given type.
      */
-    defaultIfEmpty<V>(constructor: V): this | BasicCollection<V>;
+    defaultIfEmpty<V>(constructor: V): BasicCollection<T> | BasicCollection<V>;
     /**
      * Concatenates two sequences.
      *
@@ -711,7 +711,7 @@ export interface BasicCollection<T> extends Iterable<T> {
      * @param resultSelector A function of the form (key, values) => any to select the final result from each grouping.
      * @return A collection with the grouped values.
      */
-    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V): BasicCollection<V>;
+    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: BasicCollection<T>) => V): BasicCollection<V>;
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * The provided custom keyComparator is used to compare keys.
@@ -725,7 +725,7 @@ export interface BasicCollection<T> extends Iterable<T> {
      * @param keyComparator A function to compare keys for equality.
      * @return A collection with the grouped values.
      */
-    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
+    groupJoin<K, V>(inner: Iterable<T>, outerKeySelector: (e: T) => K, innerKeySelector: (e: T) => K, resultSelector: (key: K, values: BasicCollection<T>) => V, keyComparator: (a: K, b: K) => boolean): BasicCollection<V>;
     /**
      * Adds an element to the end of the sequence.
      *
@@ -1648,40 +1648,6 @@ export interface CollectionStatic {
      * empty collection.
      */
     empty: BasicCollection<any>;
-}
-/**
- * Partially sorted heap that contains the smallest element within root position.
- *
- * @private
- */
-export declare class __MinHeap<T> implements Iterable<T> {
-    private __elements;
-    private __comparator;
-    /**
-     * Creates the heap from the array of elements with the given comparator function.
-     *
-     * @param elements Array with elements to create the heap from. Will be modified in place for heap logic.
-     * @param comparator Comparator function (same as the one for Array.sort()).
-     */
-    constructor(elements: Array<T>, comparator?: (a: T, b: T) => number);
-    /**
-     * Places the element at the given position into the correct position within the heap.
-     *
-     * @param elements Array with elements used for the heap.
-     * @param comparator Comparator function (same as the one for Array.sort()).
-     * @param i Index of the element that will be placed to the correct position.
-     */
-    private __heapify(elements, comparator, i);
-    /**
-     * Creates a heap from the given array using the given comparator.
-     *
-     * @param elements Array with elements used for the heap. Will be modified in place for heap logic.
-     * @param comparator Comparator function (same as the one for Array.sort()).
-     */
-    private __createHeap(elements, comparator);
-    private __hasTopElement();
-    private __getTopElement();
-    [Symbol.iterator](): Iterator<T>;
 }
 export declare const Collection: CollectionStatic;
 export default Collection;

@@ -24,6 +24,7 @@ define(["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * @private
+     * @internal
      */
 
     var __AssertionError = function (_Error) {
@@ -37,11 +38,12 @@ define(["require", "exports"], function (require, exports) {
 
         return __AssertionError;
     }(Error);
+
+    exports.__AssertionError = __AssertionError;
     /**
      * @private
+     * @internal
      */
-
-
     function __assert(condition) {
         if (!condition) {
             if ((arguments.length <= 1 ? 0 : arguments.length - 1) === 2) {
@@ -51,44 +53,57 @@ define(["require", "exports"], function (require, exports) {
             }
         }
     }
+    exports.__assert = __assert;
     /**
      * @private
+     * @internal
      */
     function __assertFunction(param) {
         __assert(__isFunction(param), 'function', param);
     }
+    exports.__assertFunction = __assertFunction;
     /**
      * @private
+     * @internal
      */
     function __assertArray(param) {
         __assert(__isArray(param), 'array', param);
     }
+    exports.__assertArray = __assertArray;
     /**
      * @private
+     * @internal
      */
     function __assertNotEmpty(self) {
         __assert(!__isEmpty(self), 'Sequence is empty!');
     }
+    exports.__assertNotEmpty = __assertNotEmpty;
     /**
      * @private
+     * @internal
      */
     function __assertIterable(obj) {
         __assert(__isIterable(obj), 'iterable', obj);
     }
+    exports.__assertIterable = __assertIterable;
     /**
      * @private
+     * @internal
      */
     function __assertCollection(obj) {
         __assert(__isCollection(obj), 'collection', obj);
     }
     /**
      * @private
+     * @internal
      */
     function __assertNumeric(obj) {
         __assert(__isNumeric(obj), 'numeric value', obj);
     }
+    exports.__assertNumeric = __assertNumeric;
     /**
      * @private
+     * @internal
      */
     function __assertNumberBetween(num, min) {
         var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
@@ -96,20 +111,25 @@ define(["require", "exports"], function (require, exports) {
         __assertNumeric(num);
         __assert(num >= min && num <= max, "Number must be between " + min + " and " + max + "!");
     }
+    exports.__assertNumberBetween = __assertNumberBetween;
     /**
      * @private
+     * @internal
      */
     function __assertIndexInRange(self, index) {
         __assertCollection(self);
         __assert(__isNumeric(index), 'number', index);
         __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
     }
+    exports.__assertIndexInRange = __assertIndexInRange;
     /**
      * @private
+     * @internal
      */
     function __defaultEqualityCompareFn(first, second) {
         return first === second;
     }
+    exports.__defaultEqualityCompareFn = __defaultEqualityCompareFn;
     /**
      * Default comparator implementation that uses the "<" operator.
      * Returns values as specified by the comparator function fir Array.sort().
@@ -132,48 +152,63 @@ define(["require", "exports"], function (require, exports) {
     exports.defaultComparator = defaultComparator;
     /**
      * @private
+     * @internal
      */
     function __isArray(obj) {
         return obj instanceof Array;
     }
+    exports.__isArray = __isArray;
     /**
      * @private
+     * @internal
      */
     function __isFunction(obj) {
         return typeof obj === 'function';
     }
+    exports.__isFunction = __isFunction;
     /**
      * @private
+     * @internal
      */
     function __isNumeric(n) {
         return !isNaN(parseFloat(n));
     }
+    exports.__isNumeric = __isNumeric;
     /**
      * @private
+     * @internal
      */
     function __isEmpty(iterable) {
         return iterable[Symbol.iterator]().next().done;
     }
+    exports.__isEmpty = __isEmpty;
     /**
      * @private
+     * @internal
      */
     function __isIterable(obj) {
         return Symbol.iterator in Object(obj);
     }
+    exports.__isIterable = __isIterable;
     /**
      * @private
+     * @internal
      */
     function __isString(obj) {
         return typeof obj === 'string';
     }
+    exports.__isString = __isString;
     /**
      * @private
+     * @internal
      */
     function __isCollection(obj) {
         return obj instanceof __Collection;
     }
+    exports.__isCollection = __isCollection;
     /**
      * @private
+     * @internal
      */
     function __isGenerator(obj) {
         return obj instanceof /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -188,36 +223,44 @@ define(["require", "exports"], function (require, exports) {
             }, _callee, this);
         }).constructor;
     }
+    exports.__isGenerator = __isGenerator;
     /**
      * @private
+     * @internal
      */
     function __isUndefined(obj) {
         return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === (typeof undefined === "undefined" ? "undefined" : _typeof(undefined));
     }
+    exports.__isUndefined = __isUndefined;
     /**
      * @private
+     * @internal
      */
     function __isPredicate(obj) {
         return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
     }
+    exports.__isPredicate = __isPredicate;
     /**
      * @private
+     * @internal
      */
     var __nativeConstructors = [Object, Number, Boolean, String, Symbol];
     /**
      * @private
+     * @internal
      */
     function __isNative(obj) {
         return (/native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj)
         );
     }
+    exports.__isNative = __isNative;
     /**
      * @private
+     * @internal
      */
     function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
         __assertFunction(accumulator);
         __assertFunction(resultTransformFn);
-        __assertNotEmpty(coll);
         var value = seed;
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -246,8 +289,10 @@ define(["require", "exports"], function (require, exports) {
 
         return resultTransformFn(value);
     }
+    exports.__aggregateCollection = __aggregateCollection;
     /**
      * @private
+     * @internal
      */
     function __removeDuplicates(coll) {
         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
@@ -387,8 +432,10 @@ define(["require", "exports"], function (require, exports) {
             }, _callee2, this, [[3, 41, 45, 53], [10, 21, 25, 33], [26,, 28, 32], [46,, 48, 52]]);
         }));
     }
+    exports.__removeDuplicates = __removeDuplicates;
     /**
      * @private
+     * @internal
      */
     function __removeFromArray(arr, value) {
         __assertArray(arr);
@@ -404,8 +451,10 @@ define(["require", "exports"], function (require, exports) {
         arr.unshift.apply(arr, elementsBefore);
         return elementFound;
     }
+    exports.__removeFromArray = __removeFromArray;
     /**
      * @private
+     * @internal
      */
     function __getDefault() {
         var constructorOrValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Object;
@@ -420,15 +469,19 @@ define(["require", "exports"], function (require, exports) {
         }
         return constructorOrValue;
     }
+    exports.__getDefault = __getDefault;
     /**
      * @private
+     * @internal
      */
     function __getParameterCount(fn) {
         __assertFunction(fn);
         return fn.length;
     }
+    exports.__getParameterCount = __getParameterCount;
     /**
      * @private
+     * @internal
      */
     function __getComparatorFromKeySelector(selector) {
         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
@@ -443,8 +496,10 @@ define(["require", "exports"], function (require, exports) {
         }
         throw new __AssertionError("string or function", selector);
     }
+    exports.__getComparatorFromKeySelector = __getComparatorFromKeySelector;
     /**
      * @private
+     * @internal
      */
 
     var __Collection = function () {
@@ -518,7 +573,7 @@ define(["require", "exports"], function (require, exports) {
             key: "elementAt",
             value: function elementAt(index) {
                 __assertIndexInRange(this, index);
-                return this.skip(index).take(1).toArray()[0];
+                return this.skip(index).first();
             }
         }, {
             key: "take",
@@ -839,7 +894,7 @@ define(["require", "exports"], function (require, exports) {
                 __assertNotEmpty(this);
                 return this.skipWhile(function (elem) {
                     return !predicate(elem);
-                }).take(1).toArray()[0];
+                })[Symbol.iterator]().next().value;
             }
         }, {
             key: "firstOrDefault",
@@ -1396,18 +1451,21 @@ define(["require", "exports"], function (require, exports) {
                 if (!__isIterable(second)) {
                     return false;
                 }
-                var first = this.toArray();
-                second = __Collection.from(second).toArray();
-                if (first.length !== second.length) {
-                    return false;
-                }
-                for (var i = 0; i < first.length; i++) {
-                    var firstVal = first[i];
-                    var secondVal = second[i];
-                    if (!equalityCompareFn(firstVal, secondVal)) {
+                var firstIterator = this[Symbol.iterator]();
+                var secondIterator = second[Symbol.iterator]();
+                var firstResult = void 0;
+                var secondResult = void 0;
+                do {
+                    firstResult = firstIterator.next();
+                    secondResult = secondIterator.next();
+                    if (firstResult.done != secondResult.done) {
                         return false;
                     }
-                }
+                    // only call the compare function if there are values
+                    if (!firstResult.done && !equalityCompareFn(firstResult.value, secondResult.value)) {
+                        return false;
+                    }
+                } while (!firstResult.done);
                 return true;
             }
             //#endregion
@@ -1720,7 +1778,7 @@ define(["require", "exports"], function (require, exports) {
                                     key = _ref2[0];
                                     values = _ref2[1];
                                     _context13.next = 12;
-                                    return resultSelector(key, values.toArray());
+                                    return resultSelector(key, values);
 
                                 case 12:
                                     _iteratorNormalCompletion15 = true;
@@ -1780,8 +1838,8 @@ define(["require", "exports"], function (require, exports) {
         }, {
             key: "insert",
             value: function insert(value, index) {
-                __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
                 var oldValues = this.toArray();
+                __assert(index >= 0 && index <= oldValues.length, 'Index is out of bounds!');
                 this.__iterable = /*#__PURE__*/regeneratorRuntime.mark(function _callee14() {
                     return regeneratorRuntime.wrap(function _callee14$(_context15) {
                         while (1) {
@@ -1840,7 +1898,9 @@ define(["require", "exports"], function (require, exports) {
 
                 __assertFunction(mapFn);
                 __assertNotEmpty(this);
-                return Math.min.apply(null, this.select(mapFn).toArray());
+                return this.select(mapFn).aggregate(function (a, b) {
+                    return a < b ? a : b;
+                });
             }
         }, {
             key: "max",
@@ -1851,7 +1911,9 @@ define(["require", "exports"], function (require, exports) {
 
                 __assertFunction(mapFn);
                 __assertNotEmpty(this);
-                return Math.max.apply(null, this.select(mapFn).toArray());
+                return this.select(mapFn).aggregate(function (a, b) {
+                    return a > b ? a : b;
+                });
             }
         }, {
             key: "sum",
@@ -2439,7 +2501,6 @@ define(["require", "exports"], function (require, exports) {
                 __assertFunction(elementSelectorOrKeyComparator);
                 var usedKeys = [];
                 var result = new Map();
-                var input = this.toArray();
 
                 var _loop3 = function _loop3(value) {
                     var key = keySelector(value);
@@ -2457,7 +2518,7 @@ define(["require", "exports"], function (require, exports) {
                 var _iteratorError23 = undefined;
 
                 try {
-                    for (var _iterator23 = input[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+                    for (var _iterator23 = this[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
                         var value = _step23.value;
 
                         _loop3(value);
@@ -2680,12 +2741,14 @@ define(["require", "exports"], function (require, exports) {
 
         return __Collection;
     }();
+
+    exports.__Collection = __Collection;
     /**
      * HeapElement class that also provides the element index for sorting.
      *
      * @private
+     * @internal
      */
-
 
     var __HeapElement = function () {
         function __HeapElement(index, value) {
@@ -2720,6 +2783,7 @@ define(["require", "exports"], function (require, exports) {
      * Partially sorted heap that contains the smallest element within root position.
      *
      * @private
+     * @internal
      */
     // only exported for testing
 
@@ -2856,6 +2920,7 @@ define(["require", "exports"], function (require, exports) {
     exports.__MinHeap = __MinHeap;
     /**
      * @private
+     * @internal
      */
 
     var __OrderedCollection = function (_Collection) {
@@ -2923,6 +2988,7 @@ define(["require", "exports"], function (require, exports) {
         return __OrderedCollection;
     }(__Collection);
 
+    exports.__OrderedCollection = __OrderedCollection;
     exports.Collection = __Collection;
     exports.default = exports.Collection;
     /**

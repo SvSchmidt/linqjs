@@ -1,15 +1,17 @@
 /**
  * @private
+ * @internal
  */
-class __AssertionError extends Error {
+export class __AssertionError extends Error {
     constructor(expected, got) {
         super(`Expected ${expected}, got ${got}!`);
     }
 }
 /**
  * @private
+ * @internal
  */
-function __assert(condition, ...args) {
+export function __assert(condition, ...args) {
     if (!condition) {
         if (args.length === 2) {
             throw new __AssertionError(args[0], args[1]);
@@ -21,59 +23,68 @@ function __assert(condition, ...args) {
 }
 /**
  * @private
+ * @internal
  */
-function __assertFunction(param) {
+export function __assertFunction(param) {
     __assert(__isFunction(param), 'function', param);
 }
 /**
  * @private
+ * @internal
  */
-function __assertArray(param) {
+export function __assertArray(param) {
     __assert(__isArray(param), 'array', param);
 }
 /**
  * @private
+ * @internal
  */
-function __assertNotEmpty(self) {
+export function __assertNotEmpty(self) {
     __assert(!__isEmpty(self), 'Sequence is empty!');
 }
 /**
  * @private
+ * @internal
  */
-function __assertIterable(obj) {
+export function __assertIterable(obj) {
     __assert(__isIterable(obj), 'iterable', obj);
 }
 /**
  * @private
+ * @internal
  */
 function __assertCollection(obj) {
     __assert(__isCollection(obj), 'collection', obj);
 }
 /**
  * @private
+ * @internal
  */
-function __assertNumeric(obj) {
+export function __assertNumeric(obj) {
     __assert(__isNumeric(obj), 'numeric value', obj);
 }
 /**
  * @private
+ * @internal
  */
-function __assertNumberBetween(num, min, max = Infinity) {
+export function __assertNumberBetween(num, min, max = Infinity) {
     __assertNumeric(num);
     __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`);
 }
 /**
  * @private
+ * @internal
  */
-function __assertIndexInRange(self, index) {
+export function __assertIndexInRange(self, index) {
     __assertCollection(self);
     __assert(__isNumeric(index), 'number', index);
     __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
 }
 /**
  * @private
+ * @internal
  */
-function __defaultEqualityCompareFn(first, second) {
+export function __defaultEqualityCompareFn(first, second) {
     return first === second;
 }
 /**
@@ -97,82 +108,94 @@ export function defaultComparator(a, b) {
 }
 /**
  * @private
+ * @internal
  */
-function __isArray(obj) {
+export function __isArray(obj) {
     return obj instanceof Array;
 }
 /**
  * @private
+ * @internal
  */
-function __isFunction(obj) {
+export function __isFunction(obj) {
     return typeof obj === 'function';
 }
 /**
  * @private
+ * @internal
  */
-function __isNumeric(n) {
+export function __isNumeric(n) {
     return !isNaN(parseFloat(n));
 }
 /**
  * @private
+ * @internal
  */
-function __isEmpty(iterable) {
+export function __isEmpty(iterable) {
     return iterable[Symbol.iterator]().next().done;
 }
 /**
  * @private
+ * @internal
  */
-function __isIterable(obj) {
+export function __isIterable(obj) {
     return (Symbol.iterator in Object(obj));
 }
 /**
  * @private
+ * @internal
  */
-function __isString(obj) {
+export function __isString(obj) {
     return typeof obj === 'string';
 }
 /**
  * @private
+ * @internal
  */
-function __isCollection(obj) {
+export function __isCollection(obj) {
     return obj instanceof __Collection;
 }
 /**
  * @private
+ * @internal
  */
-function __isGenerator(obj) {
+export function __isGenerator(obj) {
     return obj instanceof (function* () {
     }).constructor;
 }
 /**
  * @private
+ * @internal
  */
-function __isUndefined(obj) {
+export function __isUndefined(obj) {
     return typeof obj === typeof undefined;
 }
 /**
  * @private
+ * @internal
  */
-function __isPredicate(obj) {
+export function __isPredicate(obj) {
     return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
 }
 /**
  * @private
+ * @internal
  */
 const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
 /**
  * @private
+ * @internal
  */
-function __isNative(obj) {
+export function __isNative(obj) {
     return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
 }
 /**
  * @private
+ * @internal
  */
-function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
+export function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
-    __assertNotEmpty(coll);
     let value = seed;
     for (let element of coll) {
         value = accumulator(value, element);
@@ -181,8 +204,9 @@ function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
 }
 /**
  * @private
+ * @internal
  */
-function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn) {
+export function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn) {
     __assertIterable(coll);
     __assertFunction(equalityCompareFn);
     const previous = [];
@@ -200,8 +224,9 @@ function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn
 }
 /**
  * @private
+ * @internal
  */
-function __removeFromArray(arr, value) {
+export function __removeFromArray(arr, value) {
     __assertArray(arr);
     let elementsBefore = [];
     let elementFound;
@@ -217,8 +242,9 @@ function __removeFromArray(arr, value) {
 }
 /**
  * @private
+ * @internal
  */
-function __getDefault(constructorOrValue = Object) {
+export function __getDefault(constructorOrValue = Object) {
     if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         let defaultValue = constructorOrValue();
         if (defaultValue instanceof Object || constructorOrValue === Date) {
@@ -232,15 +258,17 @@ function __getDefault(constructorOrValue = Object) {
 }
 /**
  * @private
+ * @internal
  */
-function __getParameterCount(fn) {
+export function __getParameterCount(fn) {
     __assertFunction(fn);
     return fn.length;
 }
 /**
  * @private
+ * @internal
  */
-function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
+export function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
     if (__isFunction(selector)) {
         return (new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
     }
@@ -254,8 +282,9 @@ function __getComparatorFromKeySelector(selector, comparator = defaultComparator
 }
 /**
  * @private
+ * @internal
  */
-class __Collection {
+export class __Collection {
     //#region Constructor
     constructor(iterableOrGenerator) {
         //#endregion
@@ -299,7 +328,7 @@ class __Collection {
     }
     elementAt(index) {
         __assertIndexInRange(this, index);
-        return this.skip(index).take(1).toArray()[0];
+        return this.skip(index).first();
     }
     take(count = 0) {
         __assertNumeric(count);
@@ -363,7 +392,7 @@ class __Collection {
     first(predicate = (x) => true) {
         __assertFunction(predicate);
         __assertNotEmpty(this);
-        return this.skipWhile(elem => !predicate(elem)).take(1).toArray()[0];
+        return this.skipWhile(elem => !predicate(elem))[Symbol.iterator]().next().value;
     }
     firstOrDefault(predicateOrConstructor = (x) => true, constructor = Object) {
         return this.__resultOrDefault(this.first, predicateOrConstructor, constructor);
@@ -483,18 +512,21 @@ class __Collection {
         if (!__isIterable(second)) {
             return false;
         }
-        const first = this.toArray();
-        second = __Collection.from(second).toArray();
-        if (first.length !== second.length) {
-            return false;
-        }
-        for (let i = 0; i < first.length; i++) {
-            let firstVal = first[i];
-            let secondVal = second[i];
-            if (!equalityCompareFn(firstVal, secondVal)) {
+        const firstIterator = this[Symbol.iterator]();
+        const secondIterator = second[Symbol.iterator]();
+        let firstResult;
+        let secondResult;
+        do {
+            firstResult = firstIterator.next();
+            secondResult = secondIterator.next();
+            if (firstResult.done != secondResult.done) {
                 return false;
             }
-        }
+            // only call the compare function if there are values
+            if (!firstResult.done && !equalityCompareFn(firstResult.value, secondResult.value)) {
+                return false;
+            }
+        } while (!firstResult.done);
         return true;
     }
     //#endregion
@@ -659,7 +691,7 @@ class __Collection {
         }
         return new __Collection(function* () {
             for (let [key, values] of groups) {
-                yield resultSelector(key, values.toArray());
+                yield resultSelector(key, values);
             }
         });
     }
@@ -669,8 +701,8 @@ class __Collection {
         this.insert(value, this.count());
     }
     insert(value, index) {
-        __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
         const oldValues = this.toArray();
+        __assert(index >= 0 && index <= oldValues.length, 'Index is out of bounds!');
         this.__iterable = function* () {
             yield* oldValues.slice(0, index);
             yield value;
@@ -693,12 +725,12 @@ class __Collection {
     min(mapFn = (x) => x) {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
-        return Math.min.apply(null, this.select(mapFn).toArray());
+        return this.select(mapFn).aggregate((a, b) => a < b ? a : b);
     }
     max(mapFn = (x) => x) {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
-        return Math.max.apply(null, this.select(mapFn).toArray());
+        return this.select(mapFn).aggregate((a, b) => a > b ? a : b);
     }
     sum(mapFn = (x) => x) {
         __assertNotEmpty(this);
@@ -874,8 +906,7 @@ class __Collection {
         __assertFunction(elementSelectorOrKeyComparator);
         let usedKeys = [];
         let result = new Map();
-        const input = this.toArray();
-        for (let value of input) {
+        for (let value of this) {
             let key = keySelector(value);
             let elem = elementSelectorOrKeyComparator(value);
             __assert(key != null, 'Key is not allowed to be null!');
@@ -948,6 +979,7 @@ class __Collection {
  * HeapElement class that also provides the element index for sorting.
  *
  * @private
+ * @internal
  */
 class __HeapElement {
     constructor(index, value) {
@@ -973,6 +1005,7 @@ class __HeapElement {
  * Partially sorted heap that contains the smallest element within root position.
  *
  * @private
+ * @internal
  */
 // only exported for testing
 export class __MinHeap {
@@ -1085,8 +1118,9 @@ export class __MinHeap {
 }
 /**
  * @private
+ * @internal
  */
-class __OrderedCollection extends __Collection {
+export class __OrderedCollection extends __Collection {
     constructor(iterableOrGenerator, comparator) {
         __assertFunction(comparator);
         super(iterableOrGenerator);
