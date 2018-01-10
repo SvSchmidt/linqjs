@@ -184,8 +184,8 @@ describe('grouping', function () {
                     pet => pet.Age,
                     (baseAge, ages) => ({
                         key: baseAge,
-                        min: ages.min(),
-                        max: ages.max(),
+                        min: ages.min(x => parseFloat(x)),
+                        max: ages.max(x => parseFloat(x)),
                     }),
                     (outer, inner) => Math.floor(parseFloat(outer)) === Math.floor(parseFloat(inner)))
 
