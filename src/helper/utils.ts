@@ -1,6 +1,6 @@
 import {__defaultEqualityCompareFn, defaultComparator} from "./defaults";
 import {__Collection} from "../internal/Collection";
-import {__assertArray, __assertFunction, __AssertionError, __assertIterable, __assertNotEmpty} from "./assert";
+import {__assertArray, __assertFunction, __AssertionError, __assertIterable} from "./assert";
 import {__isFunction, __isNative, __isString} from "./is";
 
 /**
@@ -10,7 +10,6 @@ import {__isFunction, __isNative, __isString} from "./is";
 export function __aggregateCollection<T, V, R>(coll: __Collection<T>, seed: V, accumulator: (v: V, t: T) => V, resultTransformFn: (v: V) => R): R {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
-    __assertNotEmpty(coll);
 
     let value = seed;
     for (let element of coll) {
