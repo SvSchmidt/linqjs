@@ -146,7 +146,7 @@ class __Collection<T> implements BasicCollection<T> {
         __assertFunction(predicate);
         __assertNotEmpty(this);
 
-        return this.skipWhile(elem => !predicate(elem)).take(1).toArray()[0];
+        return (<Iterator<T>>this.skipWhile(elem => !predicate(elem))[Symbol.iterator]()).next().value;
     }
 
     public firstOrDefault<V>(predicateOrConstructor: ((e: T) => boolean) | T = (x: T) => true, constructor: V = <any>Object): T | V {
