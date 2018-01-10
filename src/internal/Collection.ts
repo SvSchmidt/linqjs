@@ -577,7 +577,7 @@ export class __Collection<T> implements BasicCollection<T> {
         __assertFunction(mapFn);
         __assertNotEmpty(this);
 
-        return Math.min.apply(null, this.select(mapFn).toArray());
+        return this.select(mapFn).aggregate((a: number, b: number) => a < b ? a : b);
     }
 
     public max(mapFn = (x: any) => x): number {
