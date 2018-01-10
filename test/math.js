@@ -15,6 +15,10 @@ describe('Mathematics', function () {
     ];
 
     describe('Min', function () {
+        it('should work for collections with just one element', function () {
+            expect([42].min()).to.be.equal(42)
+        })
+
         it('should return the minimum of the array', function () {
             expect([1, 2, 3, 4, 5].min()).to.be.equal(1)
         })
