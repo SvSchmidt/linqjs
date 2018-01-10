@@ -62,7 +62,7 @@ class __Collection<T> implements BasicCollection<T> {
     public elementAt(index: number): T {
         __assertIndexInRange(this, index);
 
-        return this.skip(index).take(1).toArray()[0];
+        return this.skip(index).first();
     }
 
     public take(count: number = 0): __Collection<T> {
