@@ -40,6 +40,10 @@ describe('Mathematics', function () {
     })
 
     describe('Max', function () {
+        it('should work for collections with just one element', function () {
+            expect([42].max()).to.be.equal(42)
+        })
+
         it('should return the maximum of the array', function () {
             expect([1, 2, 3, 4, 5].max()).to.be.equal(5)
         })
