@@ -543,9 +543,9 @@ export class __Collection<T> implements BasicCollection<T> {
     }
 
     public insert(value: T, index: number): void {
-        __assert(index >= 0 && index <= this.count(), 'Index is out of bounds!');
-
         const oldValues = this.toArray();
+
+        __assert(index >= 0 && index <= oldValues.length, 'Index is out of bounds!');
 
         this.__iterable = function* () {
             yield* oldValues.slice(0, index);
