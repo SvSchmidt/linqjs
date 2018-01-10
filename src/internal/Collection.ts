@@ -309,21 +309,22 @@ class __Collection<T> implements BasicCollection<T> {
             return false;
         }
 
-        const first: Array<T> = this.toArray();
-        second = __Collection.from(second).toArray();
-
-        if (first.length !== (<Array<T>>second).length) {
-            return false;
-        }
-
-        for (let i = 0; i < first.length; i++) {
-            let firstVal = first[i];
-            let secondVal = (<Array<T>>second)[i];
-
-            if (!equalityCompareFn(firstVal, secondVal)) {
+        const firstIterator: Iterator<T> = this[Symbol.iterator]();
+        const secondIterator: Iterator<T> = second[Symbol.iterator]();
+        let firstResult: IteratorResult<T>;
+        let secondResult: IteratorResult<T>;
+        do {
+            firstResult = firstIterator.next();
+            secondResult = secondIterator.next();
+            if (firstResult.done != secondResult.done) {
                 return false;
             }
-        }
+
+            // only call the compare function if there are values
+            if (!firstResult.done && !equalityCompareFn(firstResult.value, secondResult.value)) {
+                return false;
+            }
+        } while(!firstResult.done);
 
         return true;
     }
