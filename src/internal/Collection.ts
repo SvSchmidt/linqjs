@@ -819,8 +819,7 @@ export class __Collection<T> implements BasicCollection<T> {
 
         let usedKeys = [];
         let result = new Map();
-        const input = this.toArray();
-        for (let value of input) {
+        for (let value of this) {
             let key = keySelector(value);
             let elem = elementSelectorOrKeyComparator(value);
 
