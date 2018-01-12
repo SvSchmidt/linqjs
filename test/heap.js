@@ -53,7 +53,7 @@ describe('heap.js', function () {
 
     describe('MinHeap', function () {
         it('should sort the array in descending order', function () {
-            const MinHeap = linq.__MinHeap;
+            const MinHeap = linq._MinHeap;
             const defaultComparator = linq.defaultComparator;
 
             for (var i; i < maxRepeat; i++) {
@@ -66,7 +66,7 @@ describe('heap.js', function () {
             }
         });
         it('should order "equal" elements by original index', function () {
-            const MinHeap = linq.__MinHeap;
+            const MinHeap = linq._MinHeap;
             const defaultComparator = linq.defaultComparator;
 
             const testComparator = (a, b) => defaultComparator(a.a, b.a);
@@ -85,13 +85,13 @@ describe('heap.js', function () {
             }
         });
         it('should return the empty array', function () {
-            const MinHeap = linq.__MinHeap;
+            const MinHeap = linq._MinHeap;
             const defaultComparator = linq.defaultComparator;
 
             expect([...(new MinHeap([], defaultComparator))]).to.be.deep.equal([]);
         });
         it('should return the array with one element', function () {
-            const MinHeap = linq.__MinHeap;
+            const MinHeap = linq._MinHeap;
             const defaultComparator = linq.defaultComparator;
 
             expect([...(new MinHeap([42], defaultComparator))]).to.be.deep.equal([42]);

@@ -40,8 +40,8 @@ class __HeapElement<T> {
  * @private
  * @internal
  */
-// only exported for testing
-export class __MinHeap<T> implements Iterable<T> {
+// the name starts with just a single "_" so the export does not get removed because we need it for testing
+export class _MinHeap<T> implements Iterable<T> {
 
     private __elements: Array<__HeapElement<T>>;
 

@@ -3,7 +3,7 @@ import {OrderedCollection} from "../OrderedCollection";
 import {__assertFunction} from "../helper/assert";
 import {defaultComparator} from "../helper/defaults";
 import {__getComparatorFromKeySelector} from "../helper/utils";
-import {__MinHeap} from "./MinHeap";
+import {_MinHeap} from "./MinHeap";
 
 /**
  * @private
@@ -44,7 +44,7 @@ export class __OrderedCollection<T> extends __Collection<T> implements OrderedCo
         let self = this;
         let parentIterator = super[Symbol.iterator].bind(this);
         return function* () {
-            yield* new __MinHeap([...{[Symbol.iterator]: parentIterator}], self.__comparator);
+            yield* new _MinHeap([...{[Symbol.iterator]: parentIterator}], self.__comparator);
         }();
     }
 }
