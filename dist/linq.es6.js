@@ -2,7 +2,7 @@
  * @private
  * @internal
  */
-export class __AssertionError extends Error {
+class __AssertionError extends Error {
     constructor(expected, got) {
         super(`Expected ${expected}, got ${got}!`);
     }
@@ -11,7 +11,7 @@ export class __AssertionError extends Error {
  * @private
  * @internal
  */
-export function __assert(condition, ...args) {
+function __assert(condition, ...args) {
     if (!condition) {
         if (args.length === 2) {
             throw new __AssertionError(args[0], args[1]);
@@ -25,28 +25,28 @@ export function __assert(condition, ...args) {
  * @private
  * @internal
  */
-export function __assertFunction(param) {
+function __assertFunction(param) {
     __assert(__isFunction(param), 'function', param);
 }
 /**
  * @private
  * @internal
  */
-export function __assertArray(param) {
+function __assertArray(param) {
     __assert(__isArray(param), 'array', param);
 }
 /**
  * @private
  * @internal
  */
-export function __assertNotEmpty(self) {
+function __assertNotEmpty(self) {
     __assert(!__isEmpty(self), 'Sequence is empty!');
 }
 /**
  * @private
  * @internal
  */
-export function __assertIterable(obj) {
+function __assertIterable(obj) {
     __assert(__isIterable(obj), 'iterable', obj);
 }
 /**
@@ -60,14 +60,14 @@ function __assertCollection(obj) {
  * @private
  * @internal
  */
-export function __assertNumeric(obj) {
+function __assertNumeric(obj) {
     __assert(__isNumeric(obj), 'numeric value', obj);
 }
 /**
  * @private
  * @internal
  */
-export function __assertNumberBetween(num, min, max = Infinity) {
+function __assertNumberBetween(num, min, max = Infinity) {
     __assertNumeric(num);
     __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`);
 }
@@ -75,7 +75,7 @@ export function __assertNumberBetween(num, min, max = Infinity) {
  * @private
  * @internal
  */
-export function __assertIndexInRange(self, index) {
+function __assertIndexInRange(self, index) {
     __assertCollection(self);
     __assert(__isNumeric(index), 'number', index);
     __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
@@ -84,7 +84,7 @@ export function __assertIndexInRange(self, index) {
  * @private
  * @internal
  */
-export function __defaultEqualityCompareFn(first, second) {
+function __defaultEqualityCompareFn(first, second) {
     return first === second;
 }
 /**
@@ -110,56 +110,56 @@ export function defaultComparator(a, b) {
  * @private
  * @internal
  */
-export function __isArray(obj) {
+function __isArray(obj) {
     return obj instanceof Array;
 }
 /**
  * @private
  * @internal
  */
-export function __isFunction(obj) {
+function __isFunction(obj) {
     return typeof obj === 'function';
 }
 /**
  * @private
  * @internal
  */
-export function __isNumeric(n) {
+function __isNumeric(n) {
     return !isNaN(parseFloat(n));
 }
 /**
  * @private
  * @internal
  */
-export function __isEmpty(iterable) {
+function __isEmpty(iterable) {
     return iterable[Symbol.iterator]().next().done;
 }
 /**
  * @private
  * @internal
  */
-export function __isIterable(obj) {
+function __isIterable(obj) {
     return (Symbol.iterator in Object(obj));
 }
 /**
  * @private
  * @internal
  */
-export function __isString(obj) {
+function __isString(obj) {
     return typeof obj === 'string';
 }
 /**
  * @private
  * @internal
  */
-export function __isCollection(obj) {
+function __isCollection(obj) {
     return obj instanceof __Collection;
 }
 /**
  * @private
  * @internal
  */
-export function __isGenerator(obj) {
+function __isGenerator(obj) {
     return obj instanceof (function* () {
     }).constructor;
 }
@@ -167,14 +167,14 @@ export function __isGenerator(obj) {
  * @private
  * @internal
  */
-export function __isUndefined(obj) {
+function __isUndefined(obj) {
     return typeof obj === typeof undefined;
 }
 /**
  * @private
  * @internal
  */
-export function __isPredicate(obj) {
+function __isPredicate(obj) {
     return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
 }
 /**
@@ -186,14 +186,14 @@ const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
  * @private
  * @internal
  */
-export function __isNative(obj) {
+function __isNative(obj) {
     return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
 }
 /**
  * @private
  * @internal
  */
-export function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
+function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
     __assertFunction(accumulator);
     __assertFunction(resultTransformFn);
     let value = seed;
@@ -206,7 +206,7 @@ export function __aggregateCollection(coll, seed, accumulator, resultTransformFn
  * @private
  * @internal
  */
-export function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn) {
+function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn) {
     __assertIterable(coll);
     __assertFunction(equalityCompareFn);
     const previous = [];
@@ -226,7 +226,7 @@ export function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCo
  * @private
  * @internal
  */
-export function __removeFromArray(arr, value) {
+function __removeFromArray(arr, value) {
     __assertArray(arr);
     let elementsBefore = [];
     let elementFound;
@@ -244,7 +244,7 @@ export function __removeFromArray(arr, value) {
  * @private
  * @internal
  */
-export function __getDefault(constructorOrValue = Object) {
+function __getDefault(constructorOrValue = Object) {
     if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         let defaultValue = constructorOrValue();
         if (defaultValue instanceof Object || constructorOrValue === Date) {
@@ -260,7 +260,7 @@ export function __getDefault(constructorOrValue = Object) {
  * @private
  * @internal
  */
-export function __getParameterCount(fn) {
+function __getParameterCount(fn) {
     __assertFunction(fn);
     return fn.length;
 }
@@ -268,7 +268,7 @@ export function __getParameterCount(fn) {
  * @private
  * @internal
  */
-export function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
+function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
     if (__isFunction(selector)) {
         return (new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
     }
@@ -284,7 +284,7 @@ export function __getComparatorFromKeySelector(selector, comparator = defaultCom
  * @private
  * @internal
  */
-export class __Collection {
+class __Collection {
     //#region Constructor
     constructor(iterableOrGenerator) {
         //#endregion
@@ -1007,8 +1007,8 @@ class __HeapElement {
  * @private
  * @internal
  */
-// only exported for testing
-export class __MinHeap {
+// the name starts with just a single "_" so the export does not get removed because we need it for testing
+export class _MinHeap {
     /**
      * Creates the heap from the array of elements with the given comparator function.
      *
@@ -1120,7 +1120,7 @@ export class __MinHeap {
  * @private
  * @internal
  */
-export class __OrderedCollection extends __Collection {
+class __OrderedCollection extends __Collection {
     constructor(iterableOrGenerator, comparator) {
         __assertFunction(comparator);
         super(iterableOrGenerator);
@@ -1146,7 +1146,7 @@ export class __OrderedCollection extends __Collection {
         let self = this;
         let parentIterator = super[Symbol.iterator].bind(this);
         return function* () {
-            yield* new __MinHeap([...{ [Symbol.iterator]: parentIterator }], self.__comparator);
+            yield* new _MinHeap([...{ [Symbol.iterator]: parentIterator }], self.__comparator);
         }();
     }
 }

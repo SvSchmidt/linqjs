@@ -9,7 +9,6 @@ class __AssertionError extends Error {
         super(`Expected ${expected}, got ${got}!`);
     }
 }
-exports.__AssertionError = __AssertionError;
 /**
  * @private
  * @internal
@@ -24,7 +23,6 @@ function __assert(condition, ...args) {
         }
     }
 }
-exports.__assert = __assert;
 /**
  * @private
  * @internal
@@ -32,7 +30,6 @@ exports.__assert = __assert;
 function __assertFunction(param) {
     __assert(__isFunction(param), 'function', param);
 }
-exports.__assertFunction = __assertFunction;
 /**
  * @private
  * @internal
@@ -40,7 +37,6 @@ exports.__assertFunction = __assertFunction;
 function __assertArray(param) {
     __assert(__isArray(param), 'array', param);
 }
-exports.__assertArray = __assertArray;
 /**
  * @private
  * @internal
@@ -48,7 +44,6 @@ exports.__assertArray = __assertArray;
 function __assertNotEmpty(self) {
     __assert(!__isEmpty(self), 'Sequence is empty!');
 }
-exports.__assertNotEmpty = __assertNotEmpty;
 /**
  * @private
  * @internal
@@ -56,7 +51,6 @@ exports.__assertNotEmpty = __assertNotEmpty;
 function __assertIterable(obj) {
     __assert(__isIterable(obj), 'iterable', obj);
 }
-exports.__assertIterable = __assertIterable;
 /**
  * @private
  * @internal
@@ -71,7 +65,6 @@ function __assertCollection(obj) {
 function __assertNumeric(obj) {
     __assert(__isNumeric(obj), 'numeric value', obj);
 }
-exports.__assertNumeric = __assertNumeric;
 /**
  * @private
  * @internal
@@ -80,7 +73,6 @@ function __assertNumberBetween(num, min, max = Infinity) {
     __assertNumeric(num);
     __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`);
 }
-exports.__assertNumberBetween = __assertNumberBetween;
 /**
  * @private
  * @internal
@@ -90,7 +82,6 @@ function __assertIndexInRange(self, index) {
     __assert(__isNumeric(index), 'number', index);
     __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
 }
-exports.__assertIndexInRange = __assertIndexInRange;
 /**
  * @private
  * @internal
@@ -98,7 +89,6 @@ exports.__assertIndexInRange = __assertIndexInRange;
 function __defaultEqualityCompareFn(first, second) {
     return first === second;
 }
-exports.__defaultEqualityCompareFn = __defaultEqualityCompareFn;
 /**
  * Default comparator implementation that uses the "<" operator.
  * Returns values as specified by the comparator function fir Array.sort().
@@ -126,7 +116,6 @@ exports.defaultComparator = defaultComparator;
 function __isArray(obj) {
     return obj instanceof Array;
 }
-exports.__isArray = __isArray;
 /**
  * @private
  * @internal
@@ -134,7 +123,6 @@ exports.__isArray = __isArray;
 function __isFunction(obj) {
     return typeof obj === 'function';
 }
-exports.__isFunction = __isFunction;
 /**
  * @private
  * @internal
@@ -142,7 +130,6 @@ exports.__isFunction = __isFunction;
 function __isNumeric(n) {
     return !isNaN(parseFloat(n));
 }
-exports.__isNumeric = __isNumeric;
 /**
  * @private
  * @internal
@@ -150,7 +137,6 @@ exports.__isNumeric = __isNumeric;
 function __isEmpty(iterable) {
     return iterable[Symbol.iterator]().next().done;
 }
-exports.__isEmpty = __isEmpty;
 /**
  * @private
  * @internal
@@ -158,7 +144,6 @@ exports.__isEmpty = __isEmpty;
 function __isIterable(obj) {
     return (Symbol.iterator in Object(obj));
 }
-exports.__isIterable = __isIterable;
 /**
  * @private
  * @internal
@@ -166,7 +151,6 @@ exports.__isIterable = __isIterable;
 function __isString(obj) {
     return typeof obj === 'string';
 }
-exports.__isString = __isString;
 /**
  * @private
  * @internal
@@ -174,7 +158,6 @@ exports.__isString = __isString;
 function __isCollection(obj) {
     return obj instanceof __Collection;
 }
-exports.__isCollection = __isCollection;
 /**
  * @private
  * @internal
@@ -183,7 +166,6 @@ function __isGenerator(obj) {
     return obj instanceof (function* () {
     }).constructor;
 }
-exports.__isGenerator = __isGenerator;
 /**
  * @private
  * @internal
@@ -191,7 +173,6 @@ exports.__isGenerator = __isGenerator;
 function __isUndefined(obj) {
     return typeof obj === typeof undefined;
 }
-exports.__isUndefined = __isUndefined;
 /**
  * @private
  * @internal
@@ -199,7 +180,6 @@ exports.__isUndefined = __isUndefined;
 function __isPredicate(obj) {
     return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
 }
-exports.__isPredicate = __isPredicate;
 /**
  * @private
  * @internal
@@ -212,7 +192,6 @@ const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
 function __isNative(obj) {
     return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
 }
-exports.__isNative = __isNative;
 /**
  * @private
  * @internal
@@ -226,7 +205,6 @@ function __aggregateCollection(coll, seed, accumulator, resultTransformFn) {
     }
     return resultTransformFn(value);
 }
-exports.__aggregateCollection = __aggregateCollection;
 /**
  * @private
  * @internal
@@ -247,7 +225,6 @@ function __removeDuplicates(coll, equalityCompareFn = __defaultEqualityCompareFn
         }
     });
 }
-exports.__removeDuplicates = __removeDuplicates;
 /**
  * @private
  * @internal
@@ -266,7 +243,6 @@ function __removeFromArray(arr, value) {
     arr.unshift(...elementsBefore);
     return elementFound;
 }
-exports.__removeFromArray = __removeFromArray;
 /**
  * @private
  * @internal
@@ -283,7 +259,6 @@ function __getDefault(constructorOrValue = Object) {
     }
     return constructorOrValue;
 }
-exports.__getDefault = __getDefault;
 /**
  * @private
  * @internal
@@ -292,7 +267,6 @@ function __getParameterCount(fn) {
     __assertFunction(fn);
     return fn.length;
 }
-exports.__getParameterCount = __getParameterCount;
 /**
  * @private
  * @internal
@@ -309,7 +283,6 @@ function __getComparatorFromKeySelector(selector, comparator = defaultComparator
     }
     throw new __AssertionError("string or function", selector);
 }
-exports.__getComparatorFromKeySelector = __getComparatorFromKeySelector;
 /**
  * @private
  * @internal
@@ -1005,7 +978,6 @@ class __Collection {
         return new __Collection([]);
     }
 }
-exports.__Collection = __Collection;
 /**
  * HeapElement class that also provides the element index for sorting.
  *
@@ -1038,8 +1010,8 @@ class __HeapElement {
  * @private
  * @internal
  */
-// only exported for testing
-class __MinHeap {
+// the name starts with just a single "_" so the export does not get removed because we need it for testing
+class _MinHeap {
     /**
      * Creates the heap from the array of elements with the given comparator function.
      *
@@ -1147,7 +1119,7 @@ class __MinHeap {
         };
     }
 }
-exports.__MinHeap = __MinHeap;
+exports._MinHeap = _MinHeap;
 /**
  * @private
  * @internal
@@ -1178,11 +1150,10 @@ class __OrderedCollection extends __Collection {
         let self = this;
         let parentIterator = super[Symbol.iterator].bind(this);
         return function* () {
-            yield* new __MinHeap([...{ [Symbol.iterator]: parentIterator }], self.__comparator);
+            yield* new _MinHeap([...{ [Symbol.iterator]: parentIterator }], self.__comparator);
         }();
     }
 }
-exports.__OrderedCollection = __OrderedCollection;
 exports.Collection = __Collection;
 exports.default = exports.Collection;
 /**

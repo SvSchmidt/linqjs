@@ -15,7 +15,6 @@ System.register([], function (exports_1, context_1) {
             }
         }
     }
-    exports_1("__assert", __assert);
     /**
      * @private
      * @internal
@@ -23,7 +22,6 @@ System.register([], function (exports_1, context_1) {
     function __assertFunction(param) {
         __assert(__isFunction(param), 'function', param);
     }
-    exports_1("__assertFunction", __assertFunction);
     /**
      * @private
      * @internal
@@ -31,7 +29,6 @@ System.register([], function (exports_1, context_1) {
     function __assertArray(param) {
         __assert(__isArray(param), 'array', param);
     }
-    exports_1("__assertArray", __assertArray);
     /**
      * @private
      * @internal
@@ -39,7 +36,6 @@ System.register([], function (exports_1, context_1) {
     function __assertNotEmpty(self) {
         __assert(!__isEmpty(self), 'Sequence is empty!');
     }
-    exports_1("__assertNotEmpty", __assertNotEmpty);
     /**
      * @private
      * @internal
@@ -47,7 +43,6 @@ System.register([], function (exports_1, context_1) {
     function __assertIterable(obj) {
         __assert(__isIterable(obj), 'iterable', obj);
     }
-    exports_1("__assertIterable", __assertIterable);
     /**
      * @private
      * @internal
@@ -62,7 +57,6 @@ System.register([], function (exports_1, context_1) {
     function __assertNumeric(obj) {
         __assert(__isNumeric(obj), 'numeric value', obj);
     }
-    exports_1("__assertNumeric", __assertNumeric);
     /**
      * @private
      * @internal
@@ -71,7 +65,6 @@ System.register([], function (exports_1, context_1) {
         __assertNumeric(num);
         __assert(num >= min && num <= max, `Number must be between ${min} and ${max}!`);
     }
-    exports_1("__assertNumberBetween", __assertNumberBetween);
     /**
      * @private
      * @internal
@@ -81,7 +74,6 @@ System.register([], function (exports_1, context_1) {
         __assert(__isNumeric(index), 'number', index);
         __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
     }
-    exports_1("__assertIndexInRange", __assertIndexInRange);
     /**
      * @private
      * @internal
@@ -89,7 +81,6 @@ System.register([], function (exports_1, context_1) {
     function __defaultEqualityCompareFn(first, second) {
         return first === second;
     }
-    exports_1("__defaultEqualityCompareFn", __defaultEqualityCompareFn);
     /**
      * Default comparator implementation that uses the "<" operator.
      * Returns values as specified by the comparator function fir Array.sort().
@@ -117,7 +108,6 @@ System.register([], function (exports_1, context_1) {
     function __isArray(obj) {
         return obj instanceof Array;
     }
-    exports_1("__isArray", __isArray);
     /**
      * @private
      * @internal
@@ -125,7 +115,6 @@ System.register([], function (exports_1, context_1) {
     function __isFunction(obj) {
         return typeof obj === 'function';
     }
-    exports_1("__isFunction", __isFunction);
     /**
      * @private
      * @internal
@@ -133,7 +122,6 @@ System.register([], function (exports_1, context_1) {
     function __isNumeric(n) {
         return !isNaN(parseFloat(n));
     }
-    exports_1("__isNumeric", __isNumeric);
     /**
      * @private
      * @internal
@@ -141,7 +129,6 @@ System.register([], function (exports_1, context_1) {
     function __isEmpty(iterable) {
         return iterable[Symbol.iterator]().next().done;
     }
-    exports_1("__isEmpty", __isEmpty);
     /**
      * @private
      * @internal
@@ -149,7 +136,6 @@ System.register([], function (exports_1, context_1) {
     function __isIterable(obj) {
         return (Symbol.iterator in Object(obj));
     }
-    exports_1("__isIterable", __isIterable);
     /**
      * @private
      * @internal
@@ -157,7 +143,6 @@ System.register([], function (exports_1, context_1) {
     function __isString(obj) {
         return typeof obj === 'string';
     }
-    exports_1("__isString", __isString);
     /**
      * @private
      * @internal
@@ -165,7 +150,6 @@ System.register([], function (exports_1, context_1) {
     function __isCollection(obj) {
         return obj instanceof __Collection;
     }
-    exports_1("__isCollection", __isCollection);
     /**
      * @private
      * @internal
@@ -174,7 +158,6 @@ System.register([], function (exports_1, context_1) {
         return obj instanceof (function* () {
         }).constructor;
     }
-    exports_1("__isGenerator", __isGenerator);
     /**
      * @private
      * @internal
@@ -182,7 +165,6 @@ System.register([], function (exports_1, context_1) {
     function __isUndefined(obj) {
         return typeof obj === typeof undefined;
     }
-    exports_1("__isUndefined", __isUndefined);
     /**
      * @private
      * @internal
@@ -190,7 +172,6 @@ System.register([], function (exports_1, context_1) {
     function __isPredicate(obj) {
         return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
     }
-    exports_1("__isPredicate", __isPredicate);
     /**
      * @private
      * @internal
@@ -198,7 +179,6 @@ System.register([], function (exports_1, context_1) {
     function __isNative(obj) {
         return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
     }
-    exports_1("__isNative", __isNative);
     /**
      * @private
      * @internal
@@ -212,7 +192,6 @@ System.register([], function (exports_1, context_1) {
         }
         return resultTransformFn(value);
     }
-    exports_1("__aggregateCollection", __aggregateCollection);
     /**
      * @private
      * @internal
@@ -233,7 +212,6 @@ System.register([], function (exports_1, context_1) {
             }
         });
     }
-    exports_1("__removeDuplicates", __removeDuplicates);
     /**
      * @private
      * @internal
@@ -252,7 +230,6 @@ System.register([], function (exports_1, context_1) {
         arr.unshift(...elementsBefore);
         return elementFound;
     }
-    exports_1("__removeFromArray", __removeFromArray);
     /**
      * @private
      * @internal
@@ -269,7 +246,6 @@ System.register([], function (exports_1, context_1) {
         }
         return constructorOrValue;
     }
-    exports_1("__getDefault", __getDefault);
     /**
      * @private
      * @internal
@@ -278,7 +254,6 @@ System.register([], function (exports_1, context_1) {
         __assertFunction(fn);
         return fn.length;
     }
-    exports_1("__getParameterCount", __getParameterCount);
     /**
      * @private
      * @internal
@@ -295,7 +270,6 @@ System.register([], function (exports_1, context_1) {
         }
         throw new __AssertionError("string or function", selector);
     }
-    exports_1("__getComparatorFromKeySelector", __getComparatorFromKeySelector);
     /**
      * Extends the given prototype to have quick access to all collection methods.
      *
@@ -368,7 +342,7 @@ System.register([], function (exports_1, context_1) {
         extendIterablePrototype(Set.prototype, ["add", "forEach"]);
     }
     exports_1("extendNativeTypes", extendNativeTypes);
-    var __AssertionError, __nativeConstructors, __Collection, __HeapElement, __MinHeap, __OrderedCollection, Collection;
+    var __AssertionError, __nativeConstructors, __Collection, __HeapElement, _MinHeap, __OrderedCollection, Collection;
     return {
         setters: [],
         execute: function () {
@@ -381,7 +355,6 @@ System.register([], function (exports_1, context_1) {
                     super(`Expected ${expected}, got ${got}!`);
                 }
             };
-            exports_1("__AssertionError", __AssertionError);
             /**
              * @private
              * @internal
@@ -1082,7 +1055,6 @@ System.register([], function (exports_1, context_1) {
                     return new __Collection([]);
                 }
             };
-            exports_1("__Collection", __Collection);
             /**
              * HeapElement class that also provides the element index for sorting.
              *
@@ -1115,8 +1087,8 @@ System.register([], function (exports_1, context_1) {
              * @private
              * @internal
              */
-            // only exported for testing
-            __MinHeap = class __MinHeap {
+            // the name starts with just a single "_" so the export does not get removed because we need it for testing
+            _MinHeap = class _MinHeap {
                 /**
                  * Creates the heap from the array of elements with the given comparator function.
                  *
@@ -1224,7 +1196,7 @@ System.register([], function (exports_1, context_1) {
                     };
                 }
             };
-            exports_1("__MinHeap", __MinHeap);
+            exports_1("_MinHeap", _MinHeap);
             /**
              * @private
              * @internal
@@ -1255,11 +1227,10 @@ System.register([], function (exports_1, context_1) {
                     let self = this;
                     let parentIterator = super[Symbol.iterator].bind(this);
                     return function* () {
-                        yield* new __MinHeap([...{ [Symbol.iterator]: parentIterator }], self.__comparator);
+                        yield* new _MinHeap([...{ [Symbol.iterator]: parentIterator }], self.__comparator);
                     }();
                 }
             };
-            exports_1("__OrderedCollection", __OrderedCollection);
             exports_1("Collection", Collection = __Collection);
             exports_1("default", Collection);
         }
