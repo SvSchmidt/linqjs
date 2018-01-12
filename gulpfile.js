@@ -8,7 +8,7 @@ const filter = require("gulp-filter");
 const babel = require("gulp-babel");
 const mocha = require("gulp-mocha");
 const runSequence = require("gulp-sequence");
-const stripLine = require("gulp-strip-line");
+const replace = require("gulp-replace");
 
 /*
  * Clean tasks
@@ -32,7 +32,13 @@ function typescriptSource() {
         "./src/internal/OrderedCollection.ts",
         "./src/module.ts"
     ])
-        .pipe(stripLine(/import\s.*?;/))
+
+        // remove import statements
+        .pipe(replace(/import\s[^;]+;/ig, ""))
+
+        // remove exports for hidden internal stuff starting with two "_",
+        // exports with just one "_" remain as they are required for testing
+        .pipe(replace(/export\s(\w+\s__)/ig, "$1"))
         .pipe(concat("linq.ts"))
         .pipe(gulp.dest("./build"));
 }
