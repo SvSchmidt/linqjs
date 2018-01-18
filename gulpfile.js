@@ -16,7 +16,7 @@ const replace = require("gulp-replace");
 gulp.task("clean:dist", () => del("./dist/**", {force: true}));
 gulp.task("clean:build", () => del("./build/**", {force: true}));
 gulp.task("clean:docs", () => del("./docs/**", {force: true}));
-gulp.task("clean", cb => runSequence("clean:dist", "clean:build", "clean:docs", cb));
+gulp.task("clean", ["clean:dist", "clean:build", "clean:docs"]);
 
 /*
  * Merge sources
@@ -88,20 +88,15 @@ for (let module of supportedModules) {
     let moduleBuildTasks = [];
     let taskName;
 
-    // task 1: compile to es6
+    // task 1: compile to es6 (and minify)
     taskName = "compile:" + moduleLower + ":tsc";
     moduleBuildTasks.push(taskName);
     gulp.task(taskName, () => {
         return compileTypescript(module)
             .pipe(concat("linq." + moduleLower + ".js"))
-            .pipe(gulp.dest("./dist"));
-    });
+            .pipe(gulp.dest("./dist"))
 
-    // task 2: compile to minified es6
-    taskName = "compile:" + moduleLower + ":tsc-min";
-    moduleBuildTasks.push(taskName);
-    gulp.task(taskName, () => {
-        return compileTypescript(module)
+            // and directly minify
             .pipe(uglify())
             .pipe(concat("linq." + moduleLower + ".min.js"))
             .pipe(gulp.dest("./dist"));
@@ -110,22 +105,14 @@ for (let module of supportedModules) {
     // only create es5 tasks for supported module systems
     if (module !== "ES6") {
 
-        // task 3: compile to es5
+        // task 2: compile to es5 (and minify)
         taskName = "compile:" + moduleLower + ":es5";
         moduleBuildTasks.push(taskName);
         gulp.task(taskName, () => {
             return compileTypescript(module)
                 .pipe(babel(babelConfig))
                 .pipe(concat("linq." + moduleLower + ".es5.js"))
-                .pipe(gulp.dest("./dist"));
-        });
-
-        // task 4: compile to minified es5
-        taskName = "compile:" + moduleLower + ":es5-min";
-        moduleBuildTasks.push(taskName);
-        gulp.task(taskName, () => {
-            return compileTypescript(module)
-                .pipe(babel(babelConfig))
+                .pipe(gulp.dest("./dist"))
                 .pipe(uglify())
                 .pipe(concat("linq." + moduleLower + ".es5.min.js"))
                 .pipe(gulp.dest("./dist"));
@@ -134,9 +121,9 @@ for (let module of supportedModules) {
 
     taskName = "compile:" + moduleLower;
     buildTasks.push(taskName);
-    gulp.task(taskName, cb => runSequence(...moduleBuildTasks, cb));
+    gulp.task(taskName, moduleBuildTasks);
 }
-gulp.task("compile", cb => runSequence(...buildTasks, cb));
+gulp.task("compile", buildTasks);
 
 /*
  * Declaration
@@ -163,7 +150,7 @@ gulp.task("test", () => {
 /*
  * Combined build task
  */
-gulp.task("build", cb => runSequence("declaration", "compile", "docs", cb));
+gulp.task("build",["declaration", "compile", "docs"]);
 
 /*
  * Compile and test task
