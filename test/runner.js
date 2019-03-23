@@ -20,6 +20,7 @@ describe("linqjs", function () {
     run('test/equality.js')
     run('test/grouping.js')
     run('test/heap.js')
+    run('test/helper-is.js')
     run('test/insert-and-remove.js')
     run('test/collection.js')
     run('test/math.js')
