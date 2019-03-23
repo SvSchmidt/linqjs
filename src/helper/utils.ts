@@ -1,7 +1,7 @@
 import {__defaultEqualityCompareFn, defaultComparator} from "./defaults";
 import {__Collection} from "../internal/Collection";
 import {__assertArray, __assertFunction, __AssertionError, __assertIterable} from "./assert";
-import {__isFunction, __isNative, __isString} from "./is";
+import {_isFunction, _isNative, _isString} from "./is";
 
 /**
  * @private
@@ -71,7 +71,7 @@ export function __removeFromArray<T>(arr: Array<T>, value: T): boolean {
  * @internal
  */
 export function __getDefault(constructorOrValue: any = Object): any {
-    if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
+    if (constructorOrValue && _isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         let defaultValue = constructorOrValue();
 
         if (defaultValue instanceof Object || constructorOrValue === Date) {
@@ -99,9 +99,9 @@ export function __getParameterCount(fn: Function): number {
  * @internal
  */
 export function __getComparatorFromKeySelector<T, K>(selector: ((e: T) => K) | string, comparator: (a: K, b: K) => number = <(a: K, b: K) => number>defaultComparator): (a: T, b: T) => number {
-    if (__isFunction(selector)) {
+    if (_isFunction(selector)) {
         return <any>(new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
-    } else if (__isString(selector)) {
+    } else if (_isString(selector)) {
         if (!(selector.startsWith('[') || selector.startsWith('.'))) {
             selector = `.${selector}`;
         }

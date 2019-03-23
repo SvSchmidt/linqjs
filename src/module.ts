@@ -1,6 +1,6 @@
 import {CollectionStatic} from "./CollectionStatic";
 import {__Collection} from "./internal/Collection";
-import {__isFunction} from "./helper/is";
+import {_isFunction} from "./helper/is";
 
 export const Collection: CollectionStatic = __Collection;
 export default Collection;
@@ -23,7 +23,7 @@ export function extendIterablePrototype(prototype: any, exclude: string[] = []):
     // check for conflicts
     let patchProperties: string[] = [];
     for (let key of Object.getOwnPropertyNames(Object.getPrototypeOf(Collection.empty))) {
-        if (!key.startsWith('_') && !ex.contains(key) && __isFunction((<any>Collection.empty)[key])) {
+        if (!key.startsWith('_') && !ex.contains(key) && _isFunction((<any>Collection.empty)[key])) {
             if (key in prototype) {
                 throw new Error(`The method "${key}" already exists on the "${prototype.constructor && prototype.constructor.name}" prototype. ` +
                     `Use the exclude parameter to patch without this method.`);
@@ -63,7 +63,7 @@ export function extendNativeTypes() {
 
     const originalIndexOf = Array.prototype.indexOf;
     Array.prototype.indexOf = function (...args: any[]): any {
-        if (args.length == 2 && __isFunction(args[1])) {
+        if (args.length == 2 && _isFunction(args[1])) {
             let collection: any = Collection.from(this);
             return collection.indexOf.call(collection, ...args);
         }
@@ -72,7 +72,7 @@ export function extendNativeTypes() {
 
     const originalLastIndexOf = Array.prototype.lastIndexOf;
     Array.prototype.lastIndexOf = function (...args: any[]): any {
-        if (args.length == 2 && __isFunction(args[1])) {
+        if (args.length == 2 && _isFunction(args[1])) {
             let collection: any = Collection.from(this);
             return collection.lastIndexOf.call(collection, ...args);
         }
