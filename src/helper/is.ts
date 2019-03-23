@@ -92,6 +92,6 @@ const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
  * @private
  * @internal
  */
-export function __isNative(obj: any): boolean {
-    return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
+export function _isNative(obj: any): boolean {
+    return (typeof obj === 'function' && /native code/.test(Object(obj).toString())) || !!~__nativeConstructors.indexOf(obj);
 }
