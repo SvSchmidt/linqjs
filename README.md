@@ -18,6 +18,11 @@ With [npm](https://npmjs.org/) installed, run
 $ npm install linq.js
 ```
 
+## Feature Complete
+
+We've completed the development of all linq features and consider this library *stable*.
+We'll still provide bug-fixes and if you're still missing something, please let us know.
+
 ## Usage
 
 Let's see a (very basic) example of what is possible by querying collections using linq.js:
