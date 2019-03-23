@@ -1,4 +1,4 @@
-# linq.js [![Build Status](https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master)](https://coveralls.io/github/SvSchmidt/linqjs) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# linq.js [![Build Status](https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master)](https://travis-ci.org/SvSchmidt/linqjs) [![Coverage Status](https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master)](https://coveralls.io/github/SvSchmidt/linqjs) ![David](https://img.shields.io/david/svschmidt/linqjs.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > Perform queries on collections in the manner of C#s System.Linq in JavaScript
 
