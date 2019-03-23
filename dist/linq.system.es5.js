@@ -21,6 +21,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 System.register([], function (exports_1, context_1) {
     "use strict";
 
+    var __AssertionError, __nativeConstructors, __Collection, __HeapElement, _MinHeap, __OrderedCollection, Collection;
     var __moduleName = context_1 && context_1.id;
     /**
      * @private
@@ -40,42 +41,42 @@ System.register([], function (exports_1, context_1) {
      * @internal
      */
     function __assertFunction(param) {
-        __assert(__isFunction(param), 'function', param);
+        __assert(_isFunction(param), 'function', param);
     }
     /**
      * @private
      * @internal
      */
     function __assertArray(param) {
-        __assert(__isArray(param), 'array', param);
+        __assert(_isArray(param), 'array', param);
     }
     /**
      * @private
      * @internal
      */
     function __assertNotEmpty(self) {
-        __assert(!__isEmpty(self), 'Sequence is empty!');
+        __assert(!_isEmpty(self), 'Sequence is empty!');
     }
     /**
      * @private
      * @internal
      */
     function __assertIterable(obj) {
-        __assert(__isIterable(obj), 'iterable', obj);
+        __assert(_isIterable(obj), 'iterable', obj);
     }
     /**
      * @private
      * @internal
      */
     function __assertCollection(obj) {
-        __assert(__isCollection(obj), 'collection', obj);
+        __assert(_isCollection(obj), 'collection', obj);
     }
     /**
      * @private
      * @internal
      */
     function __assertNumeric(obj) {
-        __assert(__isNumeric(obj), 'numeric value', obj);
+        __assert(_isNumeric(obj), 'numeric value', obj);
     }
     /**
      * @private
@@ -93,7 +94,7 @@ System.register([], function (exports_1, context_1) {
      */
     function __assertIndexInRange(self, index) {
         __assertCollection(self);
-        __assert(__isNumeric(index), 'number', index);
+        __assert(_isNumeric(index), 'number', index);
         __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
     }
     /**
@@ -127,56 +128,63 @@ System.register([], function (exports_1, context_1) {
      * @private
      * @internal
      */
-    function __isArray(obj) {
+    function _isArray(obj) {
         return obj instanceof Array;
     }
+    exports_1("_isArray", _isArray);
     /**
      * @private
      * @internal
      */
-    function __isFunction(obj) {
+    function _isFunction(obj) {
         return typeof obj === 'function';
     }
+    exports_1("_isFunction", _isFunction);
     /**
      * @private
      * @internal
      */
-    function __isNumeric(n) {
-        return !isNaN(parseFloat(n));
+    function _isNumeric(n) {
+        return typeof n === 'number' && !isNaN(n);
     }
+    exports_1("_isNumeric", _isNumeric);
     /**
      * @private
      * @internal
      */
-    function __isEmpty(iterable) {
-        return iterable[Symbol.iterator]().next().done;
+    function _isEmpty(iterable) {
+        return _isIterable(iterable) && iterable[Symbol.iterator]().next().done;
     }
+    exports_1("_isEmpty", _isEmpty);
     /**
      * @private
      * @internal
      */
-    function __isIterable(obj) {
+    function _isIterable(obj) {
         return Symbol.iterator in Object(obj);
     }
+    exports_1("_isIterable", _isIterable);
     /**
      * @private
      * @internal
      */
-    function __isString(obj) {
+    function _isString(obj) {
         return typeof obj === 'string';
     }
+    exports_1("_isString", _isString);
     /**
      * @private
      * @internal
      */
-    function __isCollection(obj) {
+    function _isCollection(obj) {
         return obj instanceof __Collection;
     }
+    exports_1("_isCollection", _isCollection);
     /**
      * @private
      * @internal
      */
-    function __isGenerator(obj) {
+    function _isGenerator(obj) {
         return obj instanceof /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
@@ -189,28 +197,31 @@ System.register([], function (exports_1, context_1) {
             }, _callee, this);
         }).constructor;
     }
+    exports_1("_isGenerator", _isGenerator);
     /**
      * @private
      * @internal
      */
-    function __isUndefined(obj) {
+    function _isUndefined(obj) {
         return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === (typeof undefined === 'undefined' ? 'undefined' : _typeof(undefined));
     }
+    exports_1("_isUndefined", _isUndefined);
     /**
      * @private
      * @internal
      */
-    function __isPredicate(obj) {
-        return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
+    function _isPredicate(obj) {
+        return !_isNative(obj) && _isFunction(obj) && __getParameterCount(obj) == 1;
     }
+    exports_1("_isPredicate", _isPredicate);
     /**
      * @private
      * @internal
      */
-    function __isNative(obj) {
-        return (/native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj)
-        );
+    function _isNative(obj) {
+        return typeof obj === 'function' && /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
     }
+    exports_1("_isNative", _isNative);
     /**
      * @private
      * @internal
@@ -413,7 +424,7 @@ System.register([], function (exports_1, context_1) {
     function __getDefault() {
         var constructorOrValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Object;
 
-        if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
+        if (constructorOrValue && _isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
             var defaultValue = constructorOrValue();
             if (defaultValue instanceof Object || constructorOrValue === Date) {
                 return null;
@@ -438,9 +449,9 @@ System.register([], function (exports_1, context_1) {
     function __getComparatorFromKeySelector(selector) {
         var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
-        if (__isFunction(selector)) {
+        if (_isFunction(selector)) {
             return new Function('comparator', 'keySelectorFn', 'a', 'b', 'return comparator(keySelectorFn(a), keySelectorFn(b))').bind(null, comparator, selector);
-        } else if (__isString(selector)) {
+        } else if (_isString(selector)) {
             if (!(selector.startsWith('[') || selector.startsWith('.'))) {
                 selector = '.' + selector;
             }
@@ -473,7 +484,7 @@ System.register([], function (exports_1, context_1) {
             for (var _iterator4 = Object.getOwnPropertyNames(Object.getPrototypeOf(Collection.empty))[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                 var key = _step4.value;
 
-                if (!key.startsWith('_') && !ex.contains(key) && __isFunction(Collection.empty[key])) {
+                if (!key.startsWith('_') && !ex.contains(key) && _isFunction(Collection.empty[key])) {
                     if (key in prototype) {
                         throw new Error('The method "' + key + '" already exists on the "' + (prototype.constructor && prototype.constructor.name) + '" prototype. ' + 'Use the exclude parameter to patch without this method.');
                     } else {
@@ -566,7 +577,7 @@ System.register([], function (exports_1, context_1) {
                 args[_key4] = arguments[_key4];
             }
 
-            if (args.length == 2 && __isFunction(args[1])) {
+            if (args.length == 2 && _isFunction(args[1])) {
                 var _collection$indexOf;
 
                 var collection = Collection.from(this);
@@ -580,7 +591,7 @@ System.register([], function (exports_1, context_1) {
                 args[_key5] = arguments[_key5];
             }
 
-            if (args.length == 2 && __isFunction(args[1])) {
+            if (args.length == 2 && _isFunction(args[1])) {
                 var _collection$lastIndex;
 
                 var collection = Collection.from(this);
@@ -592,7 +603,6 @@ System.register([], function (exports_1, context_1) {
         extendIterablePrototype(Set.prototype, ["add", "forEach"]);
     }
     exports_1("extendNativeTypes", extendNativeTypes);
-    var __AssertionError, __nativeConstructors, __Collection, __HeapElement, _MinHeap, __OrderedCollection, Collection;
     return {
         setters: [],
         execute: function execute() {
@@ -628,7 +638,7 @@ System.register([], function (exports_1, context_1) {
                     //#endregion
                     //#region Iterable
                     this.__iterable = null;
-                    __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
+                    __assert(_isIterable(iterableOrGenerator) || _isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
                     this.__iterable = iterableOrGenerator;
                 }
 
@@ -636,7 +646,7 @@ System.register([], function (exports_1, context_1) {
                     key: Symbol.iterator,
                     value: function value() {
                         var iterable = this.__iterable;
-                        if (__isGenerator(iterable)) {
+                        if (_isGenerator(iterable)) {
                             return iterable();
                         } else {
                             return (/*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
@@ -668,7 +678,7 @@ System.register([], function (exports_1, context_1) {
                         var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Object;
 
                         var predicate = void 0;
-                        if (__isPredicate(predicateOrDefault)) {
+                        if (_isPredicate(predicateOrDefault)) {
                             predicate = predicateOrDefault;
                         } else {
                             predicate = function predicate(x) {
@@ -678,7 +688,7 @@ System.register([], function (exports_1, context_1) {
                         }
                         __assertFunction(predicate);
                         var defaultVal = __getDefault(fallback);
-                        if (__isEmpty(this)) {
+                        if (_isEmpty(this)) {
                             return defaultVal;
                         }
                         var result = originalFn.call(this, predicate);
@@ -1105,7 +1115,7 @@ System.register([], function (exports_1, context_1) {
                 }, {
                     key: 'defaultIfEmpty',
                     value: function defaultIfEmpty(constructor) {
-                        if (!__isEmpty(this)) {
+                        if (!_isEmpty(this)) {
                             return this;
                         }
                         return new __Collection([__getDefault(constructor)]);
@@ -1289,7 +1299,7 @@ System.register([], function (exports_1, context_1) {
                     key: 'except',
                     value: function except(inner) {
                         __assertIterable(inner);
-                        if (!__isCollection(inner)) {
+                        if (!_isCollection(inner)) {
                             inner = new __Collection(inner);
                         }
                         var outer = this;
@@ -1566,7 +1576,7 @@ System.register([], function (exports_1, context_1) {
                     value: function sequenceEqual(second) {
                         var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
-                        if (!__isIterable(second)) {
+                        if (!_isIterable(second)) {
                             return false;
                         }
                         var firstIterator = this[Symbol.iterator]();
@@ -1683,7 +1693,7 @@ System.register([], function (exports_1, context_1) {
                         function groupBy(keySelector, elementSelector, resultSelector, keyComparator) {
                             __assertFunction(keySelector);
                             __assertFunction(elementSelector);
-                            __assert(__isUndefined(resultSelector) || __isFunction(resultSelector), 'resultSelector must be undefined or function!');
+                            __assert(_isUndefined(resultSelector) || _isFunction(resultSelector), 'resultSelector must be undefined or function!');
                             __assertFunction(keyComparator);
                             var groups = new Map();
                             var result = void 0;
@@ -2303,7 +2313,7 @@ System.register([], function (exports_1, context_1) {
                     value: function any() {
                         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-                        if (__isEmpty(this)) {
+                        if (_isEmpty(this)) {
                             return false;
                         }
                         if (!predicate) {
@@ -2335,11 +2345,11 @@ System.register([], function (exports_1, context_1) {
                         var accumulator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
                         var resultTransformFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-                        if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
+                        if (_isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
                             return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, function (elem) {
                                 return elem;
                             });
-                        } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
+                        } else if (!_isFunction(seedOrAccumulator) && _isFunction(accumulator) && !resultTransformFn) {
                             return __aggregateCollection(this, seedOrAccumulator, accumulator, function (elem) {
                                 return elem;
                             });
@@ -2470,7 +2480,7 @@ System.register([], function (exports_1, context_1) {
                                             mappedEntry = mapFn(current, index);
                                             newIterable = mappedEntry;
 
-                                            if (!__isIterable(mappedEntry)) {
+                                            if (!_isIterable(mappedEntry)) {
                                                 newIterable = [mappedEntry];
                                             } else {
                                                 newIterable = mappedEntry;

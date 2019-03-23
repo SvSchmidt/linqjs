@@ -29,42 +29,42 @@ define(["require", "exports"], function (require, exports) {
      * @internal
      */
     function __assertFunction(param) {
-        __assert(__isFunction(param), 'function', param);
+        __assert(_isFunction(param), 'function', param);
     }
     /**
      * @private
      * @internal
      */
     function __assertArray(param) {
-        __assert(__isArray(param), 'array', param);
+        __assert(_isArray(param), 'array', param);
     }
     /**
      * @private
      * @internal
      */
     function __assertNotEmpty(self) {
-        __assert(!__isEmpty(self), 'Sequence is empty!');
+        __assert(!_isEmpty(self), 'Sequence is empty!');
     }
     /**
      * @private
      * @internal
      */
     function __assertIterable(obj) {
-        __assert(__isIterable(obj), 'iterable', obj);
+        __assert(_isIterable(obj), 'iterable', obj);
     }
     /**
      * @private
      * @internal
      */
     function __assertCollection(obj) {
-        __assert(__isCollection(obj), 'collection', obj);
+        __assert(_isCollection(obj), 'collection', obj);
     }
     /**
      * @private
      * @internal
      */
     function __assertNumeric(obj) {
-        __assert(__isNumeric(obj), 'numeric value', obj);
+        __assert(_isNumeric(obj), 'numeric value', obj);
     }
     /**
      * @private
@@ -80,7 +80,7 @@ define(["require", "exports"], function (require, exports) {
      */
     function __assertIndexInRange(self, index) {
         __assertCollection(self);
-        __assert(__isNumeric(index), 'number', index);
+        __assert(_isNumeric(index), 'number', index);
         __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
     }
     /**
@@ -114,73 +114,83 @@ define(["require", "exports"], function (require, exports) {
      * @private
      * @internal
      */
-    function __isArray(obj) {
+    function _isArray(obj) {
         return obj instanceof Array;
     }
+    exports._isArray = _isArray;
     /**
      * @private
      * @internal
      */
-    function __isFunction(obj) {
+    function _isFunction(obj) {
         return typeof obj === 'function';
     }
+    exports._isFunction = _isFunction;
     /**
      * @private
      * @internal
      */
-    function __isNumeric(n) {
-        return !isNaN(parseFloat(n));
+    function _isNumeric(n) {
+        return typeof n === 'number' && !isNaN(n);
     }
+    exports._isNumeric = _isNumeric;
     /**
      * @private
      * @internal
      */
-    function __isEmpty(iterable) {
-        return iterable[Symbol.iterator]().next().done;
+    function _isEmpty(iterable) {
+        return _isIterable(iterable) && iterable[Symbol.iterator]().next().done;
     }
+    exports._isEmpty = _isEmpty;
     /**
      * @private
      * @internal
      */
-    function __isIterable(obj) {
+    function _isIterable(obj) {
         return (Symbol.iterator in Object(obj));
     }
+    exports._isIterable = _isIterable;
     /**
      * @private
      * @internal
      */
-    function __isString(obj) {
+    function _isString(obj) {
         return typeof obj === 'string';
     }
+    exports._isString = _isString;
     /**
      * @private
      * @internal
      */
-    function __isCollection(obj) {
+    function _isCollection(obj) {
         return obj instanceof __Collection;
     }
+    exports._isCollection = _isCollection;
     /**
      * @private
      * @internal
      */
-    function __isGenerator(obj) {
+    function _isGenerator(obj) {
         return obj instanceof (function* () {
         }).constructor;
     }
+    exports._isGenerator = _isGenerator;
     /**
      * @private
      * @internal
      */
-    function __isUndefined(obj) {
+    function _isUndefined(obj) {
         return typeof obj === typeof undefined;
     }
+    exports._isUndefined = _isUndefined;
     /**
      * @private
      * @internal
      */
-    function __isPredicate(obj) {
-        return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
+    function _isPredicate(obj) {
+        return !_isNative(obj) && _isFunction(obj) && __getParameterCount(obj) == 1;
     }
+    exports._isPredicate = _isPredicate;
     /**
      * @private
      * @internal
@@ -190,9 +200,10 @@ define(["require", "exports"], function (require, exports) {
      * @private
      * @internal
      */
-    function __isNative(obj) {
-        return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
+    function _isNative(obj) {
+        return (typeof obj === 'function' && /native code/.test(Object(obj).toString())) || !!~__nativeConstructors.indexOf(obj);
     }
+    exports._isNative = _isNative;
     /**
      * @private
      * @internal
@@ -249,7 +260,7 @@ define(["require", "exports"], function (require, exports) {
      * @internal
      */
     function __getDefault(constructorOrValue = Object) {
-        if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
+        if (constructorOrValue && _isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
             let defaultValue = constructorOrValue();
             if (defaultValue instanceof Object || constructorOrValue === Date) {
                 return null;
@@ -273,10 +284,10 @@ define(["require", "exports"], function (require, exports) {
      * @internal
      */
     function __getComparatorFromKeySelector(selector, comparator = defaultComparator) {
-        if (__isFunction(selector)) {
+        if (_isFunction(selector)) {
             return (new Function('comparator', 'keySelectorFn', 'a', 'b', `return comparator(keySelectorFn(a), keySelectorFn(b))`).bind(null, comparator, selector));
         }
-        else if (__isString(selector)) {
+        else if (_isString(selector)) {
             if (!(selector.startsWith('[') || selector.startsWith('.'))) {
                 selector = `.${selector}`;
             }
@@ -294,12 +305,12 @@ define(["require", "exports"], function (require, exports) {
             //#endregion
             //#region Iterable
             this.__iterable = null;
-            __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
+            __assert(_isIterable(iterableOrGenerator) || _isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
             this.__iterable = iterableOrGenerator;
         }
         [Symbol.iterator]() {
             const iterable = this.__iterable;
-            if (__isGenerator(iterable)) {
+            if (_isGenerator(iterable)) {
                 return iterable();
             }
             else {
@@ -312,7 +323,7 @@ define(["require", "exports"], function (require, exports) {
         //#region Access
         __resultOrDefault(originalFn, predicateOrDefault = x => true, fallback = Object) {
             let predicate;
-            if (__isPredicate(predicateOrDefault)) {
+            if (_isPredicate(predicateOrDefault)) {
                 predicate = predicateOrDefault;
             }
             else {
@@ -321,7 +332,7 @@ define(["require", "exports"], function (require, exports) {
             }
             __assertFunction(predicate);
             const defaultVal = __getDefault(fallback);
-            if (__isEmpty(this)) {
+            if (_isEmpty(this)) {
                 return defaultVal;
             }
             let result = originalFn.call(this, predicate);
@@ -430,7 +441,7 @@ define(["require", "exports"], function (require, exports) {
             return this.__resultOrDefault(this.single, predicateOrConstructor, constructor);
         }
         defaultIfEmpty(constructor) {
-            if (!__isEmpty(this)) {
+            if (!_isEmpty(this)) {
                 return this;
             }
             return new __Collection([__getDefault(constructor)]);
@@ -470,7 +481,7 @@ define(["require", "exports"], function (require, exports) {
         }
         except(inner) {
             __assertIterable(inner);
-            if (!__isCollection(inner)) {
+            if (!_isCollection(inner)) {
                 inner = new __Collection(inner);
             }
             const outer = this;
@@ -513,7 +524,7 @@ define(["require", "exports"], function (require, exports) {
         //#endregion
         //#region Equality
         sequenceEqual(second, equalityCompareFn = __defaultEqualityCompareFn) {
-            if (!__isIterable(second)) {
+            if (!_isIterable(second)) {
                 return false;
             }
             const firstIterator = this[Symbol.iterator]();
@@ -630,7 +641,7 @@ define(["require", "exports"], function (require, exports) {
             function groupBy(keySelector, elementSelector, resultSelector, keyComparator) {
                 __assertFunction(keySelector);
                 __assertFunction(elementSelector);
-                __assert(__isUndefined(resultSelector) || __isFunction(resultSelector), 'resultSelector must be undefined or function!');
+                __assert(_isUndefined(resultSelector) || _isFunction(resultSelector), 'resultSelector must be undefined or function!');
                 __assertFunction(keyComparator);
                 let groups = new Map();
                 let result;
@@ -821,7 +832,7 @@ define(["require", "exports"], function (require, exports) {
             return count;
         }
         any(predicate = null) {
-            if (__isEmpty(this)) {
+            if (_isEmpty(this)) {
                 return false;
             }
             if (!predicate) {
@@ -839,10 +850,10 @@ define(["require", "exports"], function (require, exports) {
         //#endregion
         //#region Transformation
         aggregate(seedOrAccumulator, accumulator = null, resultTransformFn = null) {
-            if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
+            if (_isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
                 return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, (elem) => elem);
             }
-            else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
+            else if (!_isFunction(seedOrAccumulator) && _isFunction(accumulator) && !resultTransformFn) {
                 return __aggregateCollection(this, seedOrAccumulator, accumulator, (elem) => elem);
             }
             else {
@@ -871,7 +882,7 @@ define(["require", "exports"], function (require, exports) {
                 for (let current of self) {
                     let mappedEntry = mapFn(current, index);
                     let newIterable = mappedEntry;
-                    if (!__isIterable(mappedEntry)) {
+                    if (!_isIterable(mappedEntry)) {
                         newIterable = [mappedEntry];
                     }
                     else {
@@ -1173,7 +1184,7 @@ define(["require", "exports"], function (require, exports) {
         // check for conflicts
         let patchProperties = [];
         for (let key of Object.getOwnPropertyNames(Object.getPrototypeOf(exports.Collection.empty))) {
-            if (!key.startsWith('_') && !ex.contains(key) && __isFunction(exports.Collection.empty[key])) {
+            if (!key.startsWith('_') && !ex.contains(key) && _isFunction(exports.Collection.empty[key])) {
                 if (key in prototype) {
                     throw new Error(`The method "${key}" already exists on the "${prototype.constructor && prototype.constructor.name}" prototype. ` +
                         `Use the exclude parameter to patch without this method.`);
@@ -1211,7 +1222,7 @@ define(["require", "exports"], function (require, exports) {
         };
         const originalIndexOf = Array.prototype.indexOf;
         Array.prototype.indexOf = function (...args) {
-            if (args.length == 2 && __isFunction(args[1])) {
+            if (args.length == 2 && _isFunction(args[1])) {
                 let collection = exports.Collection.from(this);
                 return collection.indexOf.call(collection, ...args);
             }
@@ -1219,7 +1230,7 @@ define(["require", "exports"], function (require, exports) {
         };
         const originalLastIndexOf = Array.prototype.lastIndexOf;
         Array.prototype.lastIndexOf = function (...args) {
-            if (args.length == 2 && __isFunction(args[1])) {
+            if (args.length == 2 && _isFunction(args[1])) {
                 let collection = exports.Collection.from(this);
                 return collection.lastIndexOf.call(collection, ...args);
             }

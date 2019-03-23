@@ -62,7 +62,7 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="linq-js-build-status-https-travis-ci-org-svschmidt-linqjs-svg-branch-master-https-travis-ci-org-svschmidt-linqjs-coverage-status-https-coveralls-io-repos-github-svschmidt-linqjs-badge-svg-branch-master-https-coveralls-io-github-svschmidt-linqjs-license-mit-https-img-shields-io-badge-license-mit-yellow-svg-https-opensource-org-licenses-mit-">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></h1>
+				<h1 id="linq-js-build-status-coverage-status-license-mit">linq.js <a href="https://travis-ci.org/SvSchmidt/linqjs"><img src="https://travis-ci.org/SvSchmidt/linqjs.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/SvSchmidt/linqjs"><img src="https://coveralls.io/repos/github/SvSchmidt/linqjs/badge.svg?branch=master" alt="Coverage Status"></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></h1>
 				<blockquote>
 					<p>Perform queries on collections in the manner of C#s System.Linq in JavaScript</p>
 				</blockquote>
@@ -72,7 +72,7 @@
 				<h2 id="install">Install</h2>
 				<p><a href="https://npmjs.org/package/linq.js"><img src="https://nodei.co/npm/linq.js.png" alt="NPM"></a></p>
 				<p>With <a href="https://npmjs.org/">npm</a> installed, run</p>
-				<pre><code><span class="hljs-meta">$</span><span class="bash"> npm install linq.js</span>
+				<pre><code>$ npm <span class="hljs-keyword">install</span> linq.js
 </code></pre><h2 id="usage">Usage</h2>
 				<p>Let&#39;s see a (very basic) example of what is possible by querying collections using linq.js:</p>
 				<pre><code class="lang-js"><span class="hljs-keyword">const</span> Collection = <span class="hljs-built_in">require</span>(<span class="hljs-string">'linqjs'</span>);
@@ -166,7 +166,7 @@ Collection.from(m).select(<span class="hljs-function"><span class="hljs-params">
 				</ul>
 				<p>See <a href="https://svschmidt.github.io/linqjs/modules/_linq_.html">the documentation</a> for tips and an overview of available methods and signatures.</p>
 				<h2 id="breaking-changes">Breaking changes</h2>
-				<h3 id="version-1-x-rarr-2-x">Version 1.x &rarr; 2.x</h3>
+				<h3 id="version-1-x-2-x">Version 1.x &rarr; 2.x</h3>
 				<ul>
 					<li>Method names now follow the javascript naming scheme.</li>
 					<li>Removed the faulty <code>toJSON</code> method (use, e.g., <code>JSON.stringify(collection.toArray())</code>).</li>
