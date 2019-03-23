@@ -21,8 +21,8 @@ export function __isFunction(obj: any): obj is Function {
  * @private
  * @internal
  */
-export function __isNumeric(n: any): n is number {
-    return !isNaN(parseFloat(n));
+export function _isNumeric(n: any): n is number {
+    return typeof n === 'number' && !isNaN(n);
 }
 
 /**
