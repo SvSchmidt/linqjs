@@ -1,7 +1,7 @@
 import {BasicCollection} from "../BasicCollection";
 import {__aggregateCollection, __getComparatorFromKeySelector, __getDefault, __getParameterCount, __removeDuplicates, __removeFromArray} from "../helper/utils";
 import {__defaultEqualityCompareFn, defaultComparator} from "../helper/defaults";
-import {__isCollection, __isEmpty, __isFunction, __isGenerator, __isIterable, __isPredicate, __isUndefined} from "../helper/is";
+import {_isCollection, _isEmpty, _isFunction, _isGenerator, _isIterable, _isPredicate, _isUndefined} from "../helper/is";
 import {__assert, __assertFunction, __assertIndexInRange, __assertIterable, __assertNotEmpty, __assertNumberBetween, __assertNumeric} from "../helper/assert";
 import {OrderedCollection} from "../OrderedCollection";
 import {__OrderedCollection} from "./OrderedCollection";
@@ -15,7 +15,7 @@ export class __Collection<T> implements BasicCollection<T> {
     //#region Constructor
 
     public constructor(iterableOrGenerator: Iterable<T> | (() => Iterator<T>)) {
-        __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
+        __assert(_isIterable(iterableOrGenerator) || _isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
         this.__iterable = iterableOrGenerator;
     }
 
@@ -28,7 +28,7 @@ export class __Collection<T> implements BasicCollection<T> {
     public [Symbol.iterator](): Iterator<T> {
         const iterable: Iterable<T> | (() => Iterator<T>) = this.__iterable;
 
-        if (__isGenerator(iterable)) {
+        if (_isGenerator(iterable)) {
             return iterable();
         } else {
             return function* () {
@@ -44,7 +44,7 @@ export class __Collection<T> implements BasicCollection<T> {
     private __resultOrDefault<V>(originalFn: (p: ((v: T) => boolean)) => T, predicateOrDefault: ((v: T) => boolean) | V = x => true, fallback: V = <any>Object): T | V {
         let predicate: (v: T) => boolean;
 
-        if (__isPredicate(predicateOrDefault)) {
+        if (_isPredicate(predicateOrDefault)) {
             predicate = predicateOrDefault;
         } else {
             predicate = x => true;
@@ -55,7 +55,7 @@ export class __Collection<T> implements BasicCollection<T> {
 
         const defaultVal: T = __getDefault(fallback);
 
-        if (__isEmpty(<__Collection<T>>this)) {
+        if (_isEmpty(<__Collection<T>>this)) {
             return defaultVal;
         }
 
@@ -201,7 +201,7 @@ export class __Collection<T> implements BasicCollection<T> {
     }
 
     public defaultIfEmpty<V>(constructor: V): __Collection<T> | __Collection<V> {
-        if (!__isEmpty(<__Collection<T>>this)) {
+        if (!_isEmpty(<__Collection<T>>this)) {
             return <__Collection<T>>this;
         }
 
@@ -256,7 +256,7 @@ export class __Collection<T> implements BasicCollection<T> {
     public except(inner: Iterable<T>): __Collection<T> {
         __assertIterable(inner);
 
-        if (!__isCollection(inner)) {
+        if (!_isCollection(inner)) {
             inner = new __Collection(inner);
         }
 
@@ -314,7 +314,7 @@ export class __Collection<T> implements BasicCollection<T> {
     //#region Equality
 
     public sequenceEqual(second: Iterable<T>, equalityCompareFn: any = __defaultEqualityCompareFn): boolean {
-        if (!__isIterable(second)) {
+        if (!_isIterable(second)) {
             return false;
         }
 
@@ -451,7 +451,7 @@ export class __Collection<T> implements BasicCollection<T> {
         function groupBy<K, V>(keySelector: (e: T) => K, elementSelector: (e: T) => V, resultSelector: (key: K, groupValues: Array<T>) => V, keyComparator: (a: K, b: K) => boolean): any {
             __assertFunction(keySelector);
             __assertFunction(elementSelector);
-            __assert(__isUndefined(resultSelector) || __isFunction(resultSelector), 'resultSelector must be undefined or function!');
+            __assert(_isUndefined(resultSelector) || _isFunction(resultSelector), 'resultSelector must be undefined or function!');
             __assertFunction(keyComparator);
 
             let groups = new Map();
@@ -705,7 +705,7 @@ export class __Collection<T> implements BasicCollection<T> {
     }
 
     public any(predicate: any = null): boolean {
-        if (__isEmpty(<__Collection<T>>this)) {
+        if (_isEmpty(<__Collection<T>>this)) {
             return false;
         }
 
@@ -731,9 +731,9 @@ export class __Collection<T> implements BasicCollection<T> {
     //#region Transformation
 
     public aggregate(seedOrAccumulator: any, accumulator: any = null, resultTransformFn: any = null): any {
-        if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
+        if (_isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
             return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, (elem: any) => elem);
-        } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
+        } else if (!_isFunction(seedOrAccumulator) && _isFunction(accumulator) && !resultTransformFn) {
             return __aggregateCollection(<__Collection<T>>this, seedOrAccumulator, accumulator, (elem: any) => elem);
         } else {
             return __aggregateCollection(<__Collection<T>>this, seedOrAccumulator, accumulator, resultTransformFn);
@@ -770,7 +770,7 @@ export class __Collection<T> implements BasicCollection<T> {
                 let mappedEntry = mapFn(current, index);
                 let newIterable = mappedEntry;
 
-                if (!__isIterable(mappedEntry)) {
+                if (!_isIterable(mappedEntry)) {
                     newIterable = [mappedEntry];
                 } else {
                     newIterable = mappedEntry;

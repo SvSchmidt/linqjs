@@ -1,5 +1,5 @@
 import {__Collection} from "../internal/Collection";
-import {__isArray, __isCollection, __isEmpty, __isFunction, __isIterable, __isNumeric} from "./is";
+import {_isArray, _isCollection, _isEmpty, _isFunction, _isIterable, _isNumeric} from "./is";
 
 /**
  * @private
@@ -30,7 +30,7 @@ export function __assert(condition: boolean, ...args: any[]): void {
  * @internal
  */
 export function __assertFunction(param: Function): void {
-    __assert(__isFunction(param), 'function', param);
+    __assert(_isFunction(param), 'function', param);
 }
 
 /**
@@ -38,7 +38,7 @@ export function __assertFunction(param: Function): void {
  * @internal
  */
 export function __assertArray<T>(param: Array<T>): void {
-    __assert(__isArray(param), 'array', param);
+    __assert(_isArray(param), 'array', param);
 }
 
 /**
@@ -46,7 +46,7 @@ export function __assertArray<T>(param: Array<T>): void {
  * @internal
  */
 export function __assertNotEmpty(self: any): void {
-    __assert(!__isEmpty(self), 'Sequence is empty!');
+    __assert(!_isEmpty(self), 'Sequence is empty!');
 }
 
 /**
@@ -54,7 +54,7 @@ export function __assertNotEmpty(self: any): void {
  * @internal
  */
 export function __assertIterable<T>(obj: Iterable<T>): void {
-    __assert(__isIterable(obj), 'iterable', obj);
+    __assert(_isIterable(obj), 'iterable', obj);
 }
 
 /**
@@ -62,7 +62,7 @@ export function __assertIterable<T>(obj: Iterable<T>): void {
  * @internal
  */
 function __assertCollection<T>(obj: __Collection<T>): void {
-    __assert(__isCollection(obj), 'collection', obj);
+    __assert(_isCollection(obj), 'collection', obj);
 }
 
 /**
@@ -70,7 +70,7 @@ function __assertCollection<T>(obj: __Collection<T>): void {
  * @internal
  */
 export function __assertNumeric(obj: number): void {
-    __assert(__isNumeric(obj), 'numeric value', obj);
+    __assert(_isNumeric(obj), 'numeric value', obj);
 }
 
 /**
@@ -88,6 +88,6 @@ export function __assertNumberBetween(num: number, min: number, max: number = In
  */
 export function __assertIndexInRange<T>(self: __Collection<T>, index: number): void {
     __assertCollection(self);
-    __assert(__isNumeric(index), 'number', index);
+    __assert(_isNumeric(index), 'number', index);
     __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
 }

@@ -55,42 +55,42 @@ function __assert(condition) {
  * @internal
  */
 function __assertFunction(param) {
-    __assert(__isFunction(param), 'function', param);
+    __assert(_isFunction(param), 'function', param);
 }
 /**
  * @private
  * @internal
  */
 function __assertArray(param) {
-    __assert(__isArray(param), 'array', param);
+    __assert(_isArray(param), 'array', param);
 }
 /**
  * @private
  * @internal
  */
 function __assertNotEmpty(self) {
-    __assert(!__isEmpty(self), 'Sequence is empty!');
+    __assert(!_isEmpty(self), 'Sequence is empty!');
 }
 /**
  * @private
  * @internal
  */
 function __assertIterable(obj) {
-    __assert(__isIterable(obj), 'iterable', obj);
+    __assert(_isIterable(obj), 'iterable', obj);
 }
 /**
  * @private
  * @internal
  */
 function __assertCollection(obj) {
-    __assert(__isCollection(obj), 'collection', obj);
+    __assert(_isCollection(obj), 'collection', obj);
 }
 /**
  * @private
  * @internal
  */
 function __assertNumeric(obj) {
-    __assert(__isNumeric(obj), 'numeric value', obj);
+    __assert(_isNumeric(obj), 'numeric value', obj);
 }
 /**
  * @private
@@ -108,7 +108,7 @@ function __assertNumberBetween(num, min) {
  */
 function __assertIndexInRange(self, index) {
     __assertCollection(self);
-    __assert(__isNumeric(index), 'number', index);
+    __assert(_isNumeric(index), 'number', index);
     __assert(index >= 0 && index < self.count(), 'Index is out of bounds');
 }
 /**
@@ -142,56 +142,63 @@ exports.defaultComparator = defaultComparator;
  * @private
  * @internal
  */
-function __isArray(obj) {
+function _isArray(obj) {
     return obj instanceof Array;
 }
+exports._isArray = _isArray;
 /**
  * @private
  * @internal
  */
-function __isFunction(obj) {
+function _isFunction(obj) {
     return typeof obj === 'function';
 }
+exports._isFunction = _isFunction;
 /**
  * @private
  * @internal
  */
-function __isNumeric(n) {
-    return !isNaN(parseFloat(n));
+function _isNumeric(n) {
+    return typeof n === 'number' && !isNaN(n);
 }
+exports._isNumeric = _isNumeric;
 /**
  * @private
  * @internal
  */
-function __isEmpty(iterable) {
-    return iterable[Symbol.iterator]().next().done;
+function _isEmpty(iterable) {
+    return _isIterable(iterable) && iterable[Symbol.iterator]().next().done;
 }
+exports._isEmpty = _isEmpty;
 /**
  * @private
  * @internal
  */
-function __isIterable(obj) {
+function _isIterable(obj) {
     return Symbol.iterator in Object(obj);
 }
+exports._isIterable = _isIterable;
 /**
  * @private
  * @internal
  */
-function __isString(obj) {
+function _isString(obj) {
     return typeof obj === 'string';
 }
+exports._isString = _isString;
 /**
  * @private
  * @internal
  */
-function __isCollection(obj) {
+function _isCollection(obj) {
     return obj instanceof __Collection;
 }
+exports._isCollection = _isCollection;
 /**
  * @private
  * @internal
  */
-function __isGenerator(obj) {
+function _isGenerator(obj) {
     return obj instanceof /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
         return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
@@ -204,20 +211,23 @@ function __isGenerator(obj) {
         }, _callee, this);
     }).constructor;
 }
+exports._isGenerator = _isGenerator;
 /**
  * @private
  * @internal
  */
-function __isUndefined(obj) {
+function _isUndefined(obj) {
     return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === (typeof undefined === "undefined" ? "undefined" : _typeof(undefined));
 }
+exports._isUndefined = _isUndefined;
 /**
  * @private
  * @internal
  */
-function __isPredicate(obj) {
-    return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
+function _isPredicate(obj) {
+    return !_isNative(obj) && _isFunction(obj) && __getParameterCount(obj) == 1;
 }
+exports._isPredicate = _isPredicate;
 /**
  * @private
  * @internal
@@ -227,10 +237,10 @@ var __nativeConstructors = [Object, Number, Boolean, String, Symbol];
  * @private
  * @internal
  */
-function __isNative(obj) {
-    return (/native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj)
-    );
+function _isNative(obj) {
+    return typeof obj === 'function' && /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
 }
+exports._isNative = _isNative;
 /**
  * @private
  * @internal
@@ -433,7 +443,7 @@ function __removeFromArray(arr, value) {
 function __getDefault() {
     var constructorOrValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Object;
 
-    if (constructorOrValue && __isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
+    if (constructorOrValue && _isNative(constructorOrValue) && typeof constructorOrValue === 'function') {
         var defaultValue = constructorOrValue();
         if (defaultValue instanceof Object || constructorOrValue === Date) {
             return null;
@@ -458,9 +468,9 @@ function __getParameterCount(fn) {
 function __getComparatorFromKeySelector(selector) {
     var comparator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultComparator;
 
-    if (__isFunction(selector)) {
+    if (_isFunction(selector)) {
         return new Function('comparator', 'keySelectorFn', 'a', 'b', "return comparator(keySelectorFn(a), keySelectorFn(b))").bind(null, comparator, selector);
-    } else if (__isString(selector)) {
+    } else if (_isString(selector)) {
         if (!(selector.startsWith('[') || selector.startsWith('.'))) {
             selector = "." + selector;
         }
@@ -481,7 +491,7 @@ var __Collection = function () {
         //#endregion
         //#region Iterable
         this.__iterable = null;
-        __assert(__isIterable(iterableOrGenerator) || __isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
+        __assert(_isIterable(iterableOrGenerator) || _isGenerator(iterableOrGenerator), 'iterable or generator', iterableOrGenerator);
         this.__iterable = iterableOrGenerator;
     }
 
@@ -489,7 +499,7 @@ var __Collection = function () {
         key: Symbol.iterator,
         value: function value() {
             var iterable = this.__iterable;
-            if (__isGenerator(iterable)) {
+            if (_isGenerator(iterable)) {
                 return iterable();
             } else {
                 return (/*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
@@ -521,7 +531,7 @@ var __Collection = function () {
             var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Object;
 
             var predicate = void 0;
-            if (__isPredicate(predicateOrDefault)) {
+            if (_isPredicate(predicateOrDefault)) {
                 predicate = predicateOrDefault;
             } else {
                 predicate = function predicate(x) {
@@ -531,7 +541,7 @@ var __Collection = function () {
             }
             __assertFunction(predicate);
             var defaultVal = __getDefault(fallback);
-            if (__isEmpty(this)) {
+            if (_isEmpty(this)) {
                 return defaultVal;
             }
             var result = originalFn.call(this, predicate);
@@ -958,7 +968,7 @@ var __Collection = function () {
     }, {
         key: "defaultIfEmpty",
         value: function defaultIfEmpty(constructor) {
-            if (!__isEmpty(this)) {
+            if (!_isEmpty(this)) {
                 return this;
             }
             return new __Collection([__getDefault(constructor)]);
@@ -1142,7 +1152,7 @@ var __Collection = function () {
         key: "except",
         value: function except(inner) {
             __assertIterable(inner);
-            if (!__isCollection(inner)) {
+            if (!_isCollection(inner)) {
                 inner = new __Collection(inner);
             }
             var outer = this;
@@ -1419,7 +1429,7 @@ var __Collection = function () {
         value: function sequenceEqual(second) {
             var equalityCompareFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : __defaultEqualityCompareFn;
 
-            if (!__isIterable(second)) {
+            if (!_isIterable(second)) {
                 return false;
             }
             var firstIterator = this[Symbol.iterator]();
@@ -1536,7 +1546,7 @@ var __Collection = function () {
             function groupBy(keySelector, elementSelector, resultSelector, keyComparator) {
                 __assertFunction(keySelector);
                 __assertFunction(elementSelector);
-                __assert(__isUndefined(resultSelector) || __isFunction(resultSelector), 'resultSelector must be undefined or function!');
+                __assert(_isUndefined(resultSelector) || _isFunction(resultSelector), 'resultSelector must be undefined or function!');
                 __assertFunction(keyComparator);
                 var groups = new Map();
                 var result = void 0;
@@ -2156,7 +2166,7 @@ var __Collection = function () {
         value: function any() {
             var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-            if (__isEmpty(this)) {
+            if (_isEmpty(this)) {
                 return false;
             }
             if (!predicate) {
@@ -2188,11 +2198,11 @@ var __Collection = function () {
             var accumulator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
             var resultTransformFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-            if (__isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
+            if (_isFunction(seedOrAccumulator) && !accumulator && !resultTransformFn) {
                 return __aggregateCollection(this.skip(1), this.first(), seedOrAccumulator, function (elem) {
                     return elem;
                 });
-            } else if (!__isFunction(seedOrAccumulator) && __isFunction(accumulator) && !resultTransformFn) {
+            } else if (!_isFunction(seedOrAccumulator) && _isFunction(accumulator) && !resultTransformFn) {
                 return __aggregateCollection(this, seedOrAccumulator, accumulator, function (elem) {
                     return elem;
                 });
@@ -2323,7 +2333,7 @@ var __Collection = function () {
                                 mappedEntry = mapFn(current, index);
                                 newIterable = mappedEntry;
 
-                                if (!__isIterable(mappedEntry)) {
+                                if (!_isIterable(mappedEntry)) {
                                     newIterable = [mappedEntry];
                                 } else {
                                     newIterable = mappedEntry;
@@ -2985,7 +2995,7 @@ function extendIterablePrototype(prototype) {
         for (var _iterator26 = Object.getOwnPropertyNames(Object.getPrototypeOf(exports.Collection.empty))[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
             var _key2 = _step26.value;
 
-            if (!_key2.startsWith('_') && !ex.contains(_key2) && __isFunction(exports.Collection.empty[_key2])) {
+            if (!_key2.startsWith('_') && !ex.contains(_key2) && _isFunction(exports.Collection.empty[_key2])) {
                 if (_key2 in prototype) {
                     throw new Error("The method \"" + _key2 + "\" already exists on the \"" + (prototype.constructor && prototype.constructor.name) + "\" prototype. " + "Use the exclude parameter to patch without this method.");
                 } else {
@@ -3078,7 +3088,7 @@ function extendNativeTypes() {
             args[_key6] = arguments[_key6];
         }
 
-        if (args.length == 2 && __isFunction(args[1])) {
+        if (args.length == 2 && _isFunction(args[1])) {
             var _collection$indexOf;
 
             var collection = exports.Collection.from(this);
@@ -3092,7 +3102,7 @@ function extendNativeTypes() {
             args[_key7] = arguments[_key7];
         }
 
-        if (args.length == 2 && __isFunction(args[1])) {
+        if (args.length == 2 && _isFunction(args[1])) {
             var _collection$lastIndex;
 
             var collection = exports.Collection.from(this);

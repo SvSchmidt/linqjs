@@ -5,7 +5,7 @@ import {__getParameterCount} from "./utils";
  * @private
  * @internal
  */
-export function __isArray<T>(obj: Array<T> | any): obj is Array<T> {
+export function _isArray<T>(obj: Array<T> | any): obj is Array<T> {
     return obj instanceof Array;
 }
 
@@ -13,7 +13,7 @@ export function __isArray<T>(obj: Array<T> | any): obj is Array<T> {
  * @private
  * @internal
  */
-export function __isFunction(obj: any): obj is Function {
+export function _isFunction(obj: any): obj is Function {
     return typeof obj === 'function';
 }
 
@@ -21,23 +21,23 @@ export function __isFunction(obj: any): obj is Function {
  * @private
  * @internal
  */
-export function __isNumeric(n: any): n is number {
-    return !isNaN(parseFloat(n));
+export function _isNumeric(n: any): n is number {
+    return typeof n === 'number' && !isNaN(n);
 }
 
 /**
  * @private
  * @internal
  */
-export function __isEmpty<T>(iterable: Iterable<T>): boolean {
-    return iterable[Symbol.iterator]().next().done;
+export function _isEmpty<T>(iterable: Iterable<T>): boolean {
+    return _isIterable(iterable) && iterable[Symbol.iterator]().next().done;
 }
 
 /**
  * @private
  * @internal
  */
-export function __isIterable<T>(obj: Iterable<T> | any): obj is Iterable<T> {
+export function _isIterable<T>(obj: Iterable<T> | any): obj is Iterable<T> {
     return (Symbol.iterator in Object(obj));
 }
 
@@ -45,7 +45,7 @@ export function __isIterable<T>(obj: Iterable<T> | any): obj is Iterable<T> {
  * @private
  * @internal
  */
-export function __isString(obj: any): obj is string {
+export function _isString(obj: any): obj is string {
     return typeof obj === 'string';
 }
 
@@ -53,7 +53,7 @@ export function __isString(obj: any): obj is string {
  * @private
  * @internal
  */
-export function __isCollection<T>(obj: __Collection<T> | any): obj is __Collection<T> {
+export function _isCollection<T>(obj: __Collection<T> | any): obj is __Collection<T> {
     return obj instanceof __Collection;
 }
 
@@ -61,7 +61,7 @@ export function __isCollection<T>(obj: __Collection<T> | any): obj is __Collecti
  * @private
  * @internal
  */
-export function __isGenerator<T>(obj: (() => Iterator<T>) | any): obj is () => Iterator<T> {
+export function _isGenerator<T>(obj: (() => Iterator<T>) | any): obj is () => Iterator<T> {
     return obj instanceof (function* (): any {
     }).constructor;
 }
@@ -70,7 +70,7 @@ export function __isGenerator<T>(obj: (() => Iterator<T>) | any): obj is () => I
  * @private
  * @internal
  */
-export function __isUndefined(obj: any): obj is undefined {
+export function _isUndefined(obj: any): obj is undefined {
     return typeof obj === typeof undefined;
 }
 
@@ -78,8 +78,8 @@ export function __isUndefined(obj: any): obj is undefined {
  * @private
  * @internal
  */
-export function __isPredicate<T>(obj: ((v: T) => boolean) | any): obj is (v: T) => boolean {
-    return !__isNative(obj) && __isFunction(obj) && __getParameterCount(obj) == 1;
+export function _isPredicate<T>(obj: ((v: T) => boolean) | any): obj is (v: T) => boolean {
+    return !_isNative(obj) && _isFunction(obj) && __getParameterCount(obj) == 1;
 }
 
 /**
@@ -92,6 +92,6 @@ const __nativeConstructors = [Object, Number, Boolean, String, Symbol];
  * @private
  * @internal
  */
-export function __isNative(obj: any): boolean {
-    return /native code/.test(Object(obj).toString()) || !!~__nativeConstructors.indexOf(obj);
+export function _isNative(obj: any): boolean {
+    return (typeof obj === 'function' && /native code/.test(Object(obj).toString())) || !!~__nativeConstructors.indexOf(obj);
 }
