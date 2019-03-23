@@ -29,8 +29,8 @@ export function _isNumeric(n: any): n is number {
  * @private
  * @internal
  */
-export function __isEmpty<T>(iterable: Iterable<T>): boolean {
-    return iterable[Symbol.iterator]().next().done;
+export function _isEmpty<T>(iterable: Iterable<T>): boolean {
+    return _isIterable(iterable) && iterable[Symbol.iterator]().next().done;
 }
 
 /**
